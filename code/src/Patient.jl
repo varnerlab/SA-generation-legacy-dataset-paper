@@ -20,7 +20,9 @@ const _COL_PCOS = 6
 const _COL_PE = 7
 const _COL_HTN = 8
 const _COL_ASSAY_START = 10  # first biochemical assay column (Estradiol)
-const _COL_ASSAY_END = 55    # last protein assay column (C5b-9), before TGA Y/N flags
+const _COL_ASSAY_END = 104   # last column (Viscoelastic AUC TF+tPA)
+const _SKIP_COLS = Set([56,57,58,59,60,61,62,63,  # Y/N flags (TGA and ROTEM)
+                        89, 97])                    # Tag strings (Viscoelastic)
 
 """
     load_legacy_data(filepath) -> DataFrame
@@ -33,11 +35,47 @@ function load_legacy_data(filepath::String)
     xf = XLSX.readxlsx(filepath)
     ws = xf["Assay Values"]
 
-    # read header names from row 3
+    # ── Build unique header names ──────────────────────────────────────────
+    # Row 1 has group type (Hormones, Coagulation, TGA Parameters, …)
+    # Row 2 has sub-group / initiator (TF Initiator, TF Only, TF + tPA, …)
+    # Row 3 has the measurement name (Lagtime, Peak, MCF, …)
+    # Many measurement names repeat across groups, so we combine them.
     headers = String[]
+    assay_cols = Int[]  # actual Excel column indices we keep
+    current_type = ""
+    current_sub = ""
     for col in _COL_ASSAY_START:_COL_ASSAY_END
-        val = ws[_HEADER_ROW, col]
-        push!(headers, val === nothing ? "Assay_$col" : string(val))
+        # always update group/sub-group tracking, even for skipped columns
+        r1 = ws[1, col]
+        r2 = ws[2, col]
+        if r1 !== nothing && !ismissing(r1)
+            current_type = strip(string(r1))
+        end
+        if r2 !== nothing && !ismissing(r2)
+            current_sub = strip(string(r2))
+        end
+
+        col in _SKIP_COLS && continue  # skip Y/N flags and Tag columns
+
+        r3 = ws[3, col]
+        meas_name = (r3 === nothing || ismissing(r3)) ? "Col$col" : strip(string(r3))
+
+        # build unique name: for the first 46 assay columns (10-55) the
+        # measurement name is already unique; for TGA/Viscoelastic we
+        # prefix with sub-group to disambiguate repeated names
+        if col <= 55
+            header = meas_name
+        else
+            header = "$(current_sub) $(meas_name)"
+        end
+
+        # ensure uniqueness
+        if header in headers
+            header = "$(header)_$(col)"
+        end
+
+        push!(headers, header)
+        push!(assay_cols, col)
     end
 
     n_assays = length(headers)
@@ -56,14 +94,13 @@ function load_legacy_data(filepath::String)
     # track subject ID (only filled in first visit row)
     current_subject = 0
     for row in _DATA_START_ROW:ws.dimension.stop.row_number
-        # subject ID: propagate from last non-empty value
         sid_raw = ws[row, _COL_SUBJECT_ID]
         if sid_raw !== nothing && sid_raw !== ""
             current_subject = Int(sid_raw)
         end
 
         visit_raw = ws[row, _COL_VISIT]
-        visit_raw === nothing && continue  # skip empty rows
+        visit_raw === nothing && continue
 
         push!(records["SubjectID"], current_subject)
         push!(records["Visit"], Int(visit_raw))
@@ -83,14 +120,14 @@ function load_legacy_data(filepath::String)
         htn_raw = ws[row, _COL_HTN]
         push!(records["DevelopedHTN"], htn_raw === nothing ? "" : string(htn_raw))
 
-        for (j, col) in enumerate(_COL_ASSAY_START:_COL_ASSAY_END)
+        for (j, col) in enumerate(assay_cols)
             val = ws[row, col]
-            if val === nothing || val === "" || (val isa String && (val == "#N/A" || val == "---"))
+            if val === nothing || val === "" || ismissing(val) ||
+               (val isa String && (val == "#N/A" || val == "---" || val == "No Activity"))
                 push!(records[headers[j]], missing)
             elseif val isa Number
                 push!(records[headers[j]], Float64(val))
             else
-                # try to parse as number
                 parsed = tryparse(Float64, string(val))
                 push!(records[headers[j]], parsed === nothing ? missing : parsed)
             end
@@ -289,6 +326,36 @@ end
 
 
 """
+    build_memory_matrix_raw(Z; pratio=0.95) -> (X̂, pca_model, d_orig, norms)
+
+Alternative pipeline: standardized data → PCA → **no unit-norm projection**.
+
+For continuous patient data, the PCA projection norms carry real information
+(how far a patient is from the population mean). Unit-norming erases this,
+producing isotropic samples that lack the anisotropic spread of the real data.
+
+Returns the raw PCA projections plus their norms (for diagnostics).
+"""
+function build_memory_matrix_raw(Z::Matrix{Float64}; pratio::Float64=0.95)
+    n, p = size(Z)
+    Z_t = Z'  # p × n
+
+    pca_model = MultivariateStats.fit(PCA, Z_t; pratio=pratio)
+    d_pca = MultivariateStats.outdim(pca_model)
+    X_pca = MultivariateStats.transform(pca_model, Z_t)  # d_pca × n
+    var_retained = round(100 * sum(MultivariateStats.principalvars(pca_model)) /
+                         MultivariateStats.tvar(pca_model), digits=1)
+    @info "  PCA: $p → $d_pca dimensions ($var_retained% variance retained)"
+
+    K = size(X_pca, 2)
+    norms = [norm(X_pca[:, k]) for k in 1:K]
+    @info "  Memory matrix (raw): $d_pca × $K — norm range: [$(round(minimum(norms), digits=2)), $(round(maximum(norms), digits=2))], mean=$(round(mean(norms), digits=2))"
+
+    return X_pca, pca_model, p, norms
+end
+
+
+"""
     decode_sample(ξ_pca, pca_model, std_params) -> Vector{Float64}
 
 Decode a PCA-space vector back to the original biochemical measurement space.
@@ -392,6 +459,127 @@ function generate_conditioned_patients(X̂::Matrix{Float64}, pca_model,
         result = weighted_sample(X̂, ξ₀, T, ρ; β=β, α=α)
         ξ_final = result.Ξ[end, :]
         measurements = decode_sample(ξ_final, pca_model, std_params)
+        results[i, :] = measurements
+    end
+
+    df_synth = DataFrame(results, std_params.col_names)
+    return df_synth
+end
+
+
+"""
+    generate_patients_rescaled(X̂_unit, pca_model, std_params, pca_norms,
+                               n_samples, T; β, α=0.1, seed=nothing) -> DataFrame
+
+Generate synthetic patients using the **direction–magnitude decomposition**:
+
+1. SA samples **directions** on the unit sphere (unit-norm memory, well-behaved
+   Hopfield energy, good theory for β*).
+2. Each sample is then **rescaled** by a norm drawn from the empirical
+   distribution of PCA projection norms from the real data.
+
+This preserves the anisotropic variance structure that unit-norm SA alone erases:
+patients far from the population mean (large PCA norm) remain far out, while
+patients near the mean stay near the center.
+
+# Arguments
+- `X̂_unit`: Unit-norm memory matrix (d × K).
+- `pca_model`: Fitted PCA model.
+- `std_params`: Standardization parameters.
+- `pca_norms`: Vector of PCA projection norms from the real data (length K).
+- `n_samples`, `T`: Number of samples and Langevin steps.
+"""
+function generate_patients_rescaled(X̂_unit::Matrix{Float64}, pca_model,
+                                     std_params::StandardizationParams,
+                                     pca_norms::Vector{Float64},
+                                     n_samples::Int, T::Int;
+                                     β::Float64, α::Float64=0.1,
+                                     seed::Union{Int, Nothing}=nothing)
+    if seed !== nothing
+        Random.seed!(seed)
+    end
+
+    d, K = size(X̂_unit)
+    results = Matrix{Float64}(undef, n_samples, length(std_params.col_names))
+
+    for i in 1:n_samples
+        # Step 1: SA samples a direction on the unit sphere
+        k0 = rand(1:K)
+        ξ₀ = X̂_unit[:, k0] .+ 0.01 .* randn(d)
+        ξ₀ ./= norm(ξ₀)
+
+        result = sample(X̂_unit, ξ₀, T; β=β, α=α)
+        ξ_dir = result.Ξ[end, :]
+        ξ_dir ./= (norm(ξ_dir) + 1e-12)  # ensure unit norm
+
+        # Step 2: Draw a magnitude from the empirical norm distribution
+        r = rand(pca_norms)
+
+        # Step 3: Combine direction × magnitude
+        ξ_rescaled = r .* ξ_dir
+
+        # decode
+        measurements = decode_sample(ξ_rescaled, pca_model, std_params)
+        results[i, :] = measurements
+    end
+
+    df_synth = DataFrame(results, std_params.col_names)
+    return df_synth
+end
+
+
+"""
+    generate_conditioned_patients_rescaled(X̂_unit, pca_model, std_params,
+        pca_norms, condition_mask, n_samples, T; β, α=0.1, ρ_ratio=10.0,
+        seed=nothing) -> DataFrame
+
+Conditioned version of rescaled generation. Uses multiplicity-weighted SA
+for direction sampling and draws norms from the condition-specific subset.
+"""
+function generate_conditioned_patients_rescaled(X̂_unit::Matrix{Float64}, pca_model,
+                                                 std_params::StandardizationParams,
+                                                 pca_norms::Vector{Float64},
+                                                 condition_mask::BitVector,
+                                                 n_samples::Int, T::Int;
+                                                 β::Float64, α::Float64=0.1,
+                                                 ρ_ratio::Float64=10.0,
+                                                 seed::Union{Int, Nothing}=nothing)
+    if seed !== nothing
+        Random.seed!(seed)
+    end
+
+    d, K = size(X̂_unit)
+    length(condition_mask) == K || throw(DimensionMismatch(
+        "condition_mask length $(length(condition_mask)) ≠ K=$K"))
+
+    # multiplicity vector
+    ρ = ones(K)
+    for k in 1:K
+        if condition_mask[k]
+            ρ[k] = ρ_ratio
+        end
+    end
+
+    # condition-specific norms for magnitude sampling
+    cond_norms = pca_norms[condition_mask]
+    isempty(cond_norms) && (cond_norms = pca_norms)  # fallback to all
+
+    results = Matrix{Float64}(undef, n_samples, length(std_params.col_names))
+
+    for i in 1:n_samples
+        cond_indices = findall(condition_mask)
+        k0 = isempty(cond_indices) ? rand(1:K) : rand(cond_indices)
+        ξ₀ = X̂_unit[:, k0] .+ 0.01 .* randn(d)
+        ξ₀ ./= norm(ξ₀)
+
+        result = weighted_sample(X̂_unit, ξ₀, T, ρ; β=β, α=α)
+        ξ_dir = result.Ξ[end, :]
+        ξ_dir ./= (norm(ξ_dir) + 1e-12)
+
+        r = rand(cond_norms)
+        ξ_rescaled = r .* ξ_dir
+
+        measurements = decode_sample(ξ_rescaled, pca_model, std_params)
         results[i, :] = measurements
     end
 
