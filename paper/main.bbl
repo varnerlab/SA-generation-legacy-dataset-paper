@@ -1,0 +1,43 @@
+\begin{thebibliography}{5}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Grouzi et~al.(2022)Grouzi, Pouliakis, Aktypi, et~al.]{Grouzi2022}
+E~Grouzi, A~Pouliakis, A~Aktypi, et~al.
+\newblock Pregnancy and thrombosis risk for women without a history of
+  thrombotic events: a retrospective study of the real risks.
+\newblock \emph{Thrombosis Journal}, 20\penalty0 (60), 2022.
+\newblock \doi{10.1186/s12959-022-00419-6}.
+
+\bibitem[Trost et~al.(2022)Trost, Beauregard, Njie, et~al.]{Trost2022}
+Susanna~L Trost, Jennifer Beauregard, Fanta Njie, et~al.
+\newblock Pregnancy-related deaths: Data from maternal mortality review
+  committees in 36 {US} states, 2017--2019, 2022.
+
+\bibitem[Harris(2023)]{Harris2023}
+Emily Harris.
+\newblock {US} maternal mortality continues to worsen.
+\newblock \emph{JAMA}, 329\penalty0 (15):\penalty0 1248, 2023.
+\newblock \doi{10.1001/jama.2023.5254}.
+
+\bibitem[Bravo et~al.(2023)Bravo, Orfeo, Bernstein, Vadhin, Lakshmi, and
+  Varner]{Varner2023JuliaCon}
+Maria Bravo, Thomas Orfeo, Ira Bernstein, Sandra Vadhin, Divya Lakshmi, and
+  Jeffrey~D Varner.
+\newblock {BSTModelKit.jl}: Building biochemical systems theory models of
+  individualized coagulation dynamics during pregnancy, 2023.
+\newblock JuliaCon 2023.
+
+\bibitem[Ramsauer et~al.(2021)Ramsauer, Sch{\"a}fl, Lehner, Seidl, Widrich,
+  Adler, Gruber, Holzleitner, Pavlovi{\'c}, Sandve, et~al.]{Ramsauer2021}
+Hubert Ramsauer, Bernhard Sch{\"a}fl, Johannes Lehner, Philipp Seidl, Michael
+  Widrich, Thomas Adler, Lukas Gruber, Markus Holzleitner, Milena Pavlovi{\'c},
+  Geir~Kjetil Sandve, et~al.
+\newblock Hopfield networks is all you need.
+\newblock \emph{International Conference on Learning Representations (ICLR)},
+  2021.
+
+\end{thebibliography}

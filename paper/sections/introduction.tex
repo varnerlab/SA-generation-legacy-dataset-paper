@@ -1,0 +1,58 @@
+\section{Introduction}
+\label{sec:intro}
+
+% Motivation: small clinical datasets, maternal mortality, coagulation in pregnancy
+Pregnancy induces profound changes in the coagulation and fibrinolytic systems,
+shifting the hemostatic balance toward a hypercoagulable state \citep{Grouzi2022}.
+Pregnant and postpartum women face a 4--5 fold increased risk of venous
+thromboembolism compared with non-pregnant women, and between 2017 and 2019,
+thrombotic embolisms caused 8.7\% of pregnancy-related deaths in the United States,
+while hemorrhage caused 13.7\% \citep{Trost2022,Harris2023}. Understanding
+patient-specific coagulation dynamics during pregnancy is therefore critical for
+risk stratification and clinical decision-making.
+
+However, longitudinal clinical datasets capturing the full coagulation, fibrinolysis,
+thrombin generation, and viscoelastic profiles across pregnancy are rare and expensive
+to collect. Typical cohort sizes are on the order of tens of patients, far too small
+for training machine learning models or performing robust statistical analyses.
+Synthetic data generation offers a path forward: by augmenting small real datasets
+with statistically faithful synthetic records, we can enable downstream computational
+analyses that would otherwise be infeasible.
+
+% Previous approach and its limitations
+In prior work, we generated synthetic patient populations using multivariate normal
+distributions fitted independently to each clinical visit \citep{Varner2023JuliaCon}.
+While this approach captured first- and second-order statistics, it assumed Gaussian
+marginals and linear correlations, and it generated each visit independently rather
+than as part of a coherent longitudinal trajectory.
+
+% SA and its connection to Hopfield networks
+Stochastic Attention (SA) provides an alternative framework rooted in modern Hopfield
+network theory \citep{Ramsauer2021}. Modern Hopfield networks define an energy
+landscape over continuous state vectors:
+\begin{equation}
+    E(\vxi) = \frac{1}{2}\norm{\vxi}^2
+    - \frac{1}{\beta}\log\sum_{k=1}^{K}\exp\left(\beta\,\mathbf{m}_k^\top\vxi\right)
+    \label{eq:hopfield_energy}
+\end{equation}
+where $\{\mathbf{m}_k\}_{k=1}^K$ are stored memory patterns and $\beta$ is an inverse
+temperature parameter controlling the sharpness of retrieval. By running Langevin
+dynamics on this energy landscape, SA generates novel samples that interpolate between
+stored patterns in a manner governed by the attention mechanism.
+
+% What we do in this paper
+In this work, we adapt SA for continuous clinical data and longitudinal patient
+trajectories. Our contributions are:
+\begin{enumerate}
+    \item We formulate a pipeline for applying SA to continuous multivariate clinical
+    measurements, including a direction-magnitude decomposition that preserves
+    anisotropic variance structure lost by unit-norm projection.
+    \item We introduce concatenated-visit patterns that treat each patient's full
+    longitudinal profile as an atomic unit, enabling SA to generate coherent
+    multi-visit trajectories.
+    \item We demonstrate that SA-generated synthetic patients faithfully reproduce
+    summary statistics, correlation structure, and biologically meaningful pregnancy
+    trajectories from a 72-feature, 3-visit coagulation dataset.
+    \item We compare SA against multivariate normal generation, showing improved
+    preservation of non-Gaussian features and nonlinear dependencies.
+\end{enumerate}

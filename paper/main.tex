@@ -1,0 +1,74 @@
+\documentclass[11pt]{article}
+
+% ── packages ──────────────────────────────────────────────────────────────────
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{natbib}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{lineno}
+\linenumbers
+
+% ── paths ─────────────────────────────────────────────────────────────────────
+\graphicspath{{../code/figs/}}
+
+% ── macros ────────────────────────────────────────────────────────────────────
+\newcommand{\vxi}{\boldsymbol{\xi}}
+\newcommand{\vmu}{\boldsymbol{\mu}}
+\newcommand{\vsigma}{\boldsymbol{\sigma}}
+\newcommand{\mX}{\mathbf{X}}
+\newcommand{\mZ}{\mathbf{Z}}
+\newcommand{\mhat}[1]{\hat{\mathbf{#1}}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\title{Generating Synthetic Longitudinal Patient Data Using Stochastic Attention: \\
+Application to Coagulation Dynamics During Pregnancy}
+
+\author{
+Jeffrey D.\ Varner$^{1,*}$,
+Maria Bravo$^{2}$,
+Thomas Orfeo$^{2}$,
+Ira Bernstein$^{3}$
+\\[6pt]
+{\small $^{1}$Robert F.\ Smith School of Chemical and Biomolecular Engineering,} \\
+{\small Cornell University, Ithaca, NY 14850} \\
+{\small $^{2}$Department of Biochemistry, The Robert Larner, M.D.\ College of Medicine,} \\
+{\small University of Vermont Medical Center, Burlington, VT 05401} \\
+{\small $^{3}$Department of Obstetrics, Gynecology, and Reproductive Sciences,} \\
+{\small The Robert Larner, M.D.\ College of Medicine,} \\
+{\small University of Vermont Medical Center, Burlington, VT 05401} \\[6pt]
+{\small $^{*}$Corresponding author: jdv27@cornell.edu}
+}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+% ── Abstract ──────────────────────────────────────────────────────────────────
+\begin{abstract}
+\input{sections/abstract}
+\end{abstract}
+
+% ── Sections ──────────────────────────────────────────────────────────────────
+\input{sections/introduction}
+\input{sections/methods}
+\input{sections/results}
+\input{sections/discussion}
+\input{sections/conclusion}
+\input{sections/acknowledgments}
+
+% ── Bibliography ──────────────────────────────────────────────────────────────
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+
+\end{document}

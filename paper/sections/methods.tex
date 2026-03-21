@@ -1,0 +1,101 @@
+\section{Methods}
+\label{sec:methods}
+
+\subsection{Clinical Dataset}
+\label{sec:dataset}
+We analyzed a longitudinal dataset of coagulation, fibrinolysis, thrombin generation
+assay (TGA), and rotational thromboelastometry (ROTEM) measurements collected from
+pregnant patients at three clinical visits: Visit~1 (pre-pregnancy baseline),
+Visit~2 (first trimester), and Visit~3 (third trimester). The dataset contained
+153 total records across approximately 50 subjects. After removing columns with
+$>30\%$ missing values and retaining only subjects with complete data across all
+three visits, we obtained $K=23$ complete longitudinal profiles across $n=72$
+assay measurements per visit.
+
+The 72 assay measurements spanned five categories: (i)~hormones (estradiol,
+progesterone), (ii)~coagulation factors and inhibitors (Factors~II, V, VII, VIII,
+IX, X, XI, XII; AT, PC, TFPI, vWF, fibrinogen, etc.), (iii)~fibrinolytic markers
+(plasminogen, PAI-1, PAI-2, $\alpha_2$-AP, TAFI, tPA, D-dimer equivalents),
+(iv)~thrombin generation parameters under four initiator conditions (TF, TF+TM,
+No~TF, No~TF+anti-FXIa), and (v)~ROTEM/viscoelastic parameters (CT, MCF, alpha
+angle, LOT, ML, LT, AUC under TF~Only and TF+tPA conditions).
+
+
+\subsection{Stochastic Attention Framework}
+\label{sec:sa}
+
+\subsubsection{Modern Hopfield Energy and Langevin Sampling}
+We store $K$ memory patterns as columns of a matrix $\mhat{X}\in\R^{d\times K}$
+and sample from the associated Hopfield energy landscape (Eq.~\ref{eq:hopfield_energy})
+using an Unadjusted Langevin Algorithm (ULA):
+\begin{equation}
+    \vxi_{t+1} = (1-\alpha)\,\vxi_t
+    + \alpha\,\mhat{X}\,\text{softmax}\!\left(\beta\,\mhat{X}^\top\vxi_t\right)
+    + \sqrt{\frac{2\alpha}{\beta}}\,\boldsymbol{\varepsilon}_t
+    \label{eq:ula}
+\end{equation}
+where $\alpha$ is a step size, $\beta$ is the inverse temperature, and
+$\boldsymbol{\varepsilon}_t\sim\mathcal{N}(\mathbf{0},\mathbf{I})$. The deterministic
+component drives $\vxi_t$ toward an attention-weighted combination of memory patterns,
+while the stochastic component enables exploration and novelty.
+
+\subsubsection{Phase Transition and $\beta^*$ Selection}
+The inverse temperature $\beta$ controls the trade-off between retrieval (large $\beta$,
+converging to nearest memory) and generation (small $\beta$, uniform mixing). We identify
+the critical $\beta^*$ at the phase transition by computing the normalized attention
+entropy:
+\begin{equation}
+    \bar{H}(\beta) = -\frac{1}{\log K}\sum_{k=1}^{K}p_k\log p_k,
+    \qquad p_k = \text{softmax}\!\left(\beta\,\mhat{X}^\top\vxi\right)_k
+\end{equation}
+and finding the inflection point (maximum of the numerical second derivative) of
+$\bar{H}(\beta)$ over a logarithmic sweep of $\beta$ values. Operating near $\beta^*$
+produces samples that are novel yet statistically consistent with the stored patterns.
+
+
+\subsection{Pipeline for Continuous Clinical Data}
+\label{sec:pipeline}
+
+\subsubsection{Longitudinal Concatenation}
+For each of the $K=23$ subjects with complete data, we concatenate the $n=72$ assay
+measurements across all three visits into a single vector of dimension
+$d_{\text{concat}} = 3n = 216$:
+\begin{equation}
+    \mathbf{x}_k = \begin{bmatrix} \mathbf{x}_k^{(V1)} \\ \mathbf{x}_k^{(V2)} \\ \mathbf{x}_k^{(V3)} \end{bmatrix} \in \R^{216}
+\end{equation}
+This ensures that generated synthetic patients have internally consistent
+longitudinal trajectories.
+
+\subsubsection{Standardization and PCA}
+We standardize each feature to zero mean and unit variance, then apply PCA retaining
+95\% of the variance, reducing dimensionality from $d_{\text{concat}}=216$ to
+$d_{\text{PCA}}=18$. This yields a memory-to-dimension ratio of $K/d_{\text{PCA}}
+\approx 1.28$, which is in the regime where SA generates diverse yet faithful samples.
+
+\subsubsection{Direction-Magnitude Decomposition (Rescaled SA)}
+\label{sec:rescaled}
+Standard SA operates on unit-norm patterns: $\hat{\mathbf{m}}_k = \mathbf{m}_k /
+\norm{\mathbf{m}_k}$. While appropriate for discrete data (e.g., one-hot protein
+sequences), unit-norm projection destroys the anisotropic variance structure of
+continuous clinical data, collapsing dispersion in all principal components.
+
+We address this with a direction-magnitude decomposition:
+\begin{enumerate}
+    \item Record the PCA-space norms $\{r_k = \norm{\mathbf{m}_k}\}_{k=1}^K$ before
+    normalization.
+    \item Run SA on unit-norm patterns to obtain a direction $\hat{\vxi}$.
+    \item Draw a magnitude $r$ from the empirical distribution of $\{r_k\}$.
+    \item Reconstruct: $\vxi_{\text{rescaled}} = r \cdot \hat{\vxi}$.
+\end{enumerate}
+This preserves the directional structure learned by SA while restoring the
+natural scale of variation.
+
+\subsubsection{Inverse Transform}
+The rescaled PCA vector is mapped back to the original feature space via inverse
+PCA and destandardization:
+\begin{equation}
+    \mathbf{x}_{\text{synth}} = \vsigma \odot \left(\mathbf{W}^\top\vxi_{\text{rescaled}} + \bar{\mathbf{z}}\right) + \vmu
+\end{equation}
+where $\mathbf{W}$ is the PCA loading matrix, $\bar{\mathbf{z}}$ is the PCA mean,
+and $\vmu,\vsigma$ are the original feature means and standard deviations. The
+216-dimensional synthetic vector is then split into three 72-dimensional visit records.

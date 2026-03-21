@@ -1,0 +1,19 @@
+Small longitudinal clinical datasets pose a fundamental challenge for computational modeling
+and machine learning in biomedical research. We present a method for generating synthetic
+patient data using Stochastic Attention (SA), a sampling framework based on modern Hopfield
+networks. We apply SA to a longitudinal dataset of coagulation, fibrinolysis, thrombin
+generation, and viscoelastic measurements collected from pregnant patients across three
+clinical visits (pre-pregnancy baseline, first trimester, and third trimester). Our approach
+concatenates multi-visit patient profiles into unified patterns, applies PCA for dimensionality
+reduction, and uses Langevin dynamics on the Hopfield energy landscape to generate novel
+synthetic trajectories. A direction-magnitude decomposition preserves the natural variance
+structure of continuous clinical measurements. We demonstrate that SA-generated synthetic
+patients faithfully reproduce per-feature summary statistics (mean relative error $<3\%$),
+cross-feature correlation structure, and the characteristic pregnancy-driven shift in the
+Factor~X versus Maximum Clot Firmness (MCF) plane. Compared with multivariate normal
+sampling, SA better preserves non-Gaussian marginal distributions and nonlinear
+inter-feature dependencies while generating clinically plausible novel patient trajectories.
+
+\medskip
+\noindent\textbf{Keywords:} synthetic data generation, stochastic attention, modern Hopfield networks,
+coagulation, pregnancy, longitudinal data
