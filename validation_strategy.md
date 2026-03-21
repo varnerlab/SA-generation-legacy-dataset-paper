@@ -37,14 +37,25 @@ Can SA amplify rare subpopulations while preserving condition-specific signature
 
 **Why it matters:** Clinical utility of synthetic data requires generating specific patient populations. SA's multiplicity-weighted sampling enables this; MVN has no mechanism for it.
 
-## Level 4: Mechanistic Consistency (BZ2012 population-level)
-**Script:** `code/experiments/validate_hockin_mann.jl` (exists), `code/experiments/calibrate_hockin_mann.jl` (exists)
+## Level 4: Mechanistic Consistency (Hockin/Mann BZ2012)
+**Script:** `code/experiments/validate_mechanistic_plausibility.jl` (main validation)
+**Supporting:** `code/experiments/calibrate_hockin_mann.jl` (calibration), `code/experiments/validate_hockin_mann.jl` (exploratory), `code/experiments/validate_hockin_mann_analysis.jl` (IIa-only investigation)
 
 Do synthetic patients' factor-to-TGA relationships fall within the same mechanistically-predicted range as real patients?
-- BZ2012 coagulation model (58 species, 64 frozen literature rate constants)
+- Hockin/Mann BZ2012 coagulation model (58 species, 64 rate constants) via HockinMannModel.jl package
 - Two conditions per patient: TF-only (TM=0) and TF+TM (TM=1nM)
-- Global calibration: fit 5 rate constants on V1 real patients, test on V2/V3 + synthetic
+- Global calibration: 5 rate constants fit on V1 real patients (prothrombinase_kcat, intrinsic/extrinsic_xase_kcat, PC_activation_kcat, mIIa_conversion_k), remaining 59 at literature values
+- Runs ALL real patients (23 × 3 visits) + ALL synthetic patients, both conditions
 - Population-level check: synthetic patients produce the same predicted-vs-measured cloud as real patients
+- Cloud overlap metric: % of synthetic pred/meas ratios within real 5th–95th percentile
+- Rank correlations (Spearman ρ) by source, visit, condition, and feature
+
+**Calibration results (from calibrate_hockin_mann.jl):**
+- prothrombinase_kcat: 63.5 → 21.94 s⁻¹ (0.345x)
+- intrinsic_xase_kcat: 8.2 → 0.1693 s⁻¹ (0.021x)
+- extrinsic_xase_kcat: 6.0 → 93.21 s⁻¹ (15.5x)
+- PC_activation_kcat: 0.41 → 0.8896 s⁻¹ (2.17x)
+- mIIa_conversion_k: 2.3e8 → 1.153e9 M⁻¹s⁻¹ (5.01x)
 
 **Current results:**
 - TF-only calibration generalizes across visits (pred/meas ≈ 1.0x for V2/V3)
@@ -52,7 +63,13 @@ Do synthetic patients' factor-to-TGA relationships fall within the same mechanis
 - Rank correlations are weak — model captures population-level but not inter-patient variability
 - ETP is the best-predicted feature (Spearman ρ ≈ 0.6-0.8 for TF-only)
 
-**Framing:** Not a patient-level predictor, but an independent mechanistic plausibility check. Synthetic patients land in the same cloud as real patients → the SA-generated factor-to-TGA mapping is biologically reasonable.
+**Plots generated:**
+- `validate_mechanistic_tf_only.pdf` / `tf_tm.pdf` — predicted vs measured scatter (real + synth, colored by visit)
+- `validate_mechanistic_ratios_tf_only.pdf` / `tf_tm.pdf` — pred/meas ratio distributions
+- `validate_mechanistic_rankcorr_tf_only.pdf` / `tf_tm.pdf` — rank correlation bar charts
+- `validate_mechanistic_generalization_tf_only.pdf` / `tf_tm.pdf` — visit transfer boxplots
+
+**Framing:** Not a patient-level predictor, but an independent mechanistic plausibility check. Synthetic patients land in the same cloud as real patients → the SA-generated factor-to-TGA mapping is biologically reasonable. Note: BST model was considered but not used; HockinMann BZ2012 is the mechanistic validator.
 
 ## Paper Narrative Arc
 
