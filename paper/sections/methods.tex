@@ -16,11 +16,14 @@ The 72 assay measurements spanned five categories: (i)~hormones (estradiol,
 progesterone), (ii)~coagulation factors and inhibitors (Factors~II, V, VII, VIII,
 IX, X, XI, XII; AT, PC, TFPI, vWF, fibrinogen, etc.), (iii)~fibrinolytic markers
 (plasminogen, PAI-1, PAI-2, $\alpha_2$-AP, TAFI, tPA, D-dimer equivalents),
-(iv)~thrombin generation parameters under four initiator conditions (TF, TF+TM,
-No~TF, No~TF+anti-FXIa), and (v)~ROTEM/viscoelastic parameters (CT, MCF, alpha
-angle, LOT, ML, LT, AUC under TF~Only and TF+tPA conditions). The dataset included
-three clinical subgroups: Healthy ($n{=}14$), polycystic ovary syndrome (PCOS, $n{=}3$),
-and preeclampsia (PE, $n{=}5$), with the remaining patient having other complications.
+(iv)~thrombin generation parameters under four initiator conditions (TF at 5~pM,
+TF+TM, No~TF, No~TF+anti-FXIa), and (v)~ROTEM/viscoelastic parameters (CT, MCF, alpha
+angle, LOT, ML, LT, AUC under TF~Only and TF+tPA conditions). The dataset included three enrollment conditions: Healthy ($n{=}14$), prior
+preeclampsia (Prior~PE, $n{=}6$), and polycystic ovary syndrome (PCOS, $n{=}3$).
+For conditional generation, we defined subgroups by clinical outcome rather than
+enrollment condition: Healthy ($n{=}14$), PCOS ($n{=}3$), and patients who
+developed PE during the study ($n{=}5$, partially overlapping with the Prior~PE
+and PCOS enrollment groups).
 
 
 \subsection{Multiplicity-Weighted Stochastic Attention}
@@ -65,7 +68,7 @@ second derivative of $\bar{H}(\beta)$ in log-$\beta$ space) over a logarithmic s
 of 80 values from $\beta = 0.1$ to $1000$. This procedure is domain-agnostic: the
 phase transition is a geometric property of $K$ patterns in $d$ dimensions, not a
 property of the features they represent. For our dataset ($K{=}23$, $d_{\text{PCA}}{=}18$),
-the empirical inflection yielded $\beta^* \approx 5.27$, close to the theoretical
+the empirical inflection yielded $\beta^* \approx 2.94$, close to the theoretical
 prediction $\beta^* = \sqrt{d} \approx 4.24$. A sensitivity analysis across
 $\beta/\beta^* \in [0.1, 3.0]$ confirmed that the operating point balanced generation
 novelty against fidelity (Supplementary Table~S1). For weighted sampling, the entropy
@@ -125,8 +128,10 @@ the scale of variation matched the target subpopulation rather than the full coh
 
 
 The complete generation pipeline is summarized in Algorithm~\ref{alg:sa-pipeline}.
-All experiments used step size $\alpha = 0.05$, $T = 2{,}000$ Langevin iterations
-per sample, and random seed 42 for reproducibility. The pipeline was implemented in
+All experiments used step size $\alpha = 0.01$, $T = 2{,}000$ Langevin iterations
+per sample, and random seed 42 for reproducibility. At this step size, the
+Unadjusted Langevin Algorithm is valid without a Metropolis--Hastings acceptance
+correction. The pipeline was implemented in
 Julia (v1.12) using the packages listed in the code repository.
 
 \begin{algorithm}[ht]
@@ -142,7 +147,7 @@ Julia (v1.12) using the packages listed in the code repository.
 \State Record norms: $r_k^{\text{mag}} \gets \|\mathbf{m}_k\|$; normalize $\hat{\mathbf{m}}_k \gets \mathbf{m}_k / r_k^{\text{mag}}$
 \State Find $\beta^*$ via entropy inflection on $\hat{\mathbf{M}} = [\hat{\mathbf{m}}_1, \ldots, \hat{\mathbf{m}}_K]$
 \For{$i = 1, \ldots, N$}
-    \State Initialize $\hat{\vxi}_0 \sim \mathcal{N}(\mathbf{0}, \mathbf{I}_{18})$; normalize to unit norm
+    \State Initialize $\hat{\vxi}_0 \sim \mathrm{Uniform}(\mathcal{S}^{17})$ \Comment{random point on unit sphere}
     \For{$t = 0, \ldots, T-1$} \Comment{Langevin dynamics}
         \State $\hat{\vxi}_{t+1} \gets (1-\alpha)\hat{\vxi}_t + \alpha\hat{\mathbf{M}}\,\mathrm{softmax}(\beta^*\hat{\mathbf{M}}^\top\hat{\vxi}_t + \log\mathbf{r}) + \sqrt{2\alpha/\beta^*}\,\boldsymbol{\varepsilon}_t$
     \EndFor

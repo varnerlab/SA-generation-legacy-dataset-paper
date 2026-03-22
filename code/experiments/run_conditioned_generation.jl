@@ -137,7 +137,7 @@ for config in cohort_configs
 
         # weighted sample with multiplicity bias
         result = weighted_sample(X̂, ξ₀, T_steps, config.r;
-                                  β=config.β_star, α=0.05)
+                                  β=config.β_star, α=0.01)
 
         # extract final direction + rescale by empirical norm
         ξ_dir = result.Ξ[end, :]

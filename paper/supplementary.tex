@@ -92,7 +92,7 @@ measures (correlation MAE).}
 \begin{table}[ht]
 \centering
 \caption{\textbf{Inverse temperature sensitivity analysis.} SA generation
-quality as a function of $\beta / \beta^*$, where $\beta^* \approx 5.27$ was
+quality as a function of $\beta / \beta^*$, where $\beta^* \approx 2.94$ was
 identified via entropy inflection in the 18-dimensional PCA space ($K{=}23$
 stored patterns). The theoretical prediction $\beta^* = \sqrt{d} = \sqrt{18}
 \approx 4.24$ is close to the empirical value. Operating at $\beta = \beta^*$
@@ -102,19 +102,19 @@ but less novel samples (approaching memorization). MRE = median relative error
 of per-feature means; Corr MAE = mean absolute error of the correlation matrix;
 Novelty = $1 - \max_k \cos(\hat{\xi}, \hat{m}_k)$.}
 \label{stab:beta-sweep}
-\begin{tabular}{rrccccc}
+\begin{tabular}{rrcccc}
 \toprule
-$\beta/\beta^*$ & $\beta$ & Noise scale & PC1 std ratio & Novelty & MRE (\%) & Corr MAE \\
+$\beta/\beta^*$ & $\beta$ & Noise scale & PC1 std ratio & Novelty & Med MRE (\%) \\
 \midrule
-0.1 & 0.53 & 0.436 & 0.455 & 0.501 & 3.6 & 0.242 \\
-0.2 & 1.05 & 0.308 & 0.343 & 0.495 & 2.8 & 0.236 \\
-0.3 & 1.58 & 0.252 & 0.297 & 0.488 & 2.4 & 0.230 \\
-0.5 & 2.63 & 0.195 & 0.252 & 0.476 & 2.1 & 0.220 \\
-0.7 & 3.69 & 0.165 & 0.230 & 0.463 & 1.9 & 0.212 \\
-\textbf{1.0} & \textbf{5.27} & \textbf{0.138} & \textbf{0.212} & \textbf{0.444} & \textbf{1.8} & \textbf{0.200} \\
-1.5 & 7.90 & 0.113 & 0.197 & 0.415 & 1.5 & 0.183 \\
-2.0 & 10.53 & 0.097 & 0.184 & 0.389 & 1.6 & 0.173 \\
-3.0 & 15.80 & 0.080 & 0.174 & 0.336 & 1.4 & 0.154 \\
+0.1 & 0.29 & 0.261 & 0.538 & 0.542 & 0.7 \\
+0.2 & 0.59 & 0.184 & 0.545 & 0.539 & 0.7 \\
+0.3 & 0.88 & 0.151 & 0.550 & 0.536 & 0.7 \\
+0.5 & 1.47 & 0.117 & 0.562 & 0.528 & 0.7 \\
+0.7 & 2.06 & 0.099 & 0.573 & 0.518 & 0.7 \\
+\textbf{1.0} & \textbf{2.94} & \textbf{0.082} & \textbf{0.589} & \textbf{0.502} & \textbf{0.6} \\
+1.5 & 4.41 & 0.067 & 0.613 & 0.474 & 0.7 \\
+2.0 & 5.88 & 0.058 & 0.638 & 0.446 & 0.7 \\
+3.0 & 8.82 & 0.048 & 0.689 & 0.403 & 0.8 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -142,6 +142,86 @@ PE      & 5  & 18 & 14.40 & 0.80 & 7.7 \\
 \end{tabular}
 \end{table}
 
+% ── Table S7: PCA sensitivity ────────────────────────────────────────────
+\begin{table}[ht]
+\centering
+\caption{\textbf{PCA variance threshold sensitivity analysis.} SA generation
+quality as a function of the PCA variance retention threshold ($d_{\text{PCA}}$
+ranges from 13 to 21 dimensions). The 95\% threshold used in the main text
+(bold) is not a critical choice: median MRE is stable at 1.2--1.8\% across all
+thresholds, and correlation MAE varies modestly (0.116--0.148). Higher
+thresholds retain more variance but reduce the $K/d$ ratio, approaching the
+regime where SA has fewer stored patterns than dimensions. Novelty increases
+with $d_{\text{PCA}}$ because more dimensions provide more room for
+interpolation.}
+\label{stab:pca-sensitivity}
+\begin{tabular}{rrccccc}
+\toprule
+Threshold & $d_{\text{PCA}}$ & $K/d$ & $\beta^*$ & Novelty & Med MRE & Corr MAE \\
+\midrule
+85\% & 13 & 1.77 & 2.94 & 0.413 & 0.012 & 0.116 \\
+90\% & 15 & 1.53 & 2.94 & 0.462 & 0.018 & 0.131 \\
+\textbf{95\%} & \textbf{18} & \textbf{1.28} & \textbf{2.94} & \textbf{0.516} & \textbf{0.012} & \textbf{0.148} \\
+98\% & 20 & 1.15 & 2.94 & 0.538 & 0.013 & 0.127 \\
+99\% & 21 & 1.10 & 2.94 & 0.540 & 0.013 & 0.133 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ── Table S6: CTGAN/TVAE comparison ──────────────────────────────────────
+\begin{table}[ht]
+\centering
+\caption{\textbf{Comparison with deep generative baselines.} CTGAN and TVAE
+(from the Synthetic Data Vault library) were trained on the
+same 90 per-visit records (23 patients $\times$ 3 visits, 72 features) at three
+epoch counts. SA and MVN results from the main text are shown for reference.
+CTGAN fails catastrophically at this sample size (median MRE $\approx$~19\%,
+$10\times$ worse than SA), consistent with known GAN mode collapse behavior on
+small datasets. TVAE achieves comparable marginal fidelity to SA at high epoch
+counts (MRE~1.8\% at 3,000 epochs) but operates on per-visit rows rather than
+concatenated longitudinal profiles, so it cannot capture cross-visit covariance
+structure and has no mechanism for conditional subgroup generation. Med KS =
+median two-sample KS statistic across all features; Corr MAE = mean absolute
+error of the within-visit correlation matrix.}
+\label{stab:ctgan}
+\begin{tabular}{lcccc}
+\toprule
+Method & Epochs & Med MRE & Med KS & Corr MAE \\
+\midrule
+SA              & ---   & 0.019 & 0.169 & 0.200 \\
+MVN             & ---   & 0.024 & 0.161 & 0.090 \\
+\midrule
+CTGAN           & 300   & 0.189 & 0.364 & 0.261 \\
+CTGAN           & 1,000 & 0.195 & 0.349 & 0.265 \\
+CTGAN           & 3,000 & 0.187 & 0.341 & 0.180 \\
+\midrule
+TVAE            & 300   & 0.037 & 0.174 & 0.152 \\
+TVAE            & 1,000 & 0.026 & 0.248 & 0.082 \\
+TVAE            & 3,000 & 0.018 & 0.224 & 0.092 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ── Table S5: Full MRE summary ───────────────────────────────────────────
+\begin{table}[ht]
+\centering
+\caption{\textbf{Summary of mean relative errors across all 72 features.}
+Per-visit distribution of MREs between real and SA-generated synthetic patient
+means. The full feature-by-feature table (72 features $\times$ 3 visits = 216
+entries) is provided in the code repository as
+\texttt{paper\_summary\_statistics.csv}.}
+\label{stab:mre-summary}
+\begin{tabular}{lccccc}
+\toprule
+Visit & Median MRE & Mean MRE & 25th pctl & 75th pctl & Max MRE \\
+\midrule
+V1 (baseline) & 0.019 & 0.027 & 0.010 & 0.033 & 0.157 \\
+V2 (1st tri)  & 0.019 & 0.027 & 0.009 & 0.034 & 0.124 \\
+V3 (3rd tri)  & 0.016 & 0.025 & 0.006 & 0.040 & 0.110 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 % ── Table S3: SA Hyperparameters ──────────────────────────────────────────
 \begin{table}[ht]
 \centering
@@ -153,9 +233,9 @@ and conditioned generation except where noted.}
 \toprule
 Parameter & Value & Description \\
 \midrule
-$\alpha$ & 0.05 & Langevin step size \\
+$\alpha$ & 0.01 & Langevin step size (ULA valid without MH correction) \\
 $T$ & 2,000 & Langevin iterations per sample \\
-$\beta^*$ & 5.27 & Inverse temperature (entropy inflection) \\
+$\beta^*$ & 2.94 & Inverse temperature (entropy inflection) \\
 PCA threshold & 95\% & Variance retained \\
 $d_{\text{PCA}}$ & 18 & PCA dimensionality \\
 $N$ & 100 & Synthetic patients per cohort \\

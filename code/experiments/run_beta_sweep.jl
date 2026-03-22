@@ -11,15 +11,54 @@ include(joinpath(@__DIR__, "..", "Include.jl"))
 # ══════════════════════════════════════════════════════════════════════════════
 # Load saved pipeline
 # ══════════════════════════════════════════════════════════════════════════════
-@info "Loading saved pipeline …"
-JLD2.@load joinpath(_PATH_TO_DATA, "patient_memory.jld2") X̂ pca_model std_params df_clean kept_cols
+@info "Loading data from CSV …"
+df_real = CSV.read(joinpath(_PATH_TO_DATA, "cleaned_full_data.csv"), DataFrame)
+df_synth_ref = CSV.read(joinpath(_PATH_TO_DATA, "synthetic_full_longitudinal.csv"), DataFrame)
 
-d_pca, K = size(X̂)
+# Complete subjects
+all_s = unique(df_real.SubjectID)
+complete_subjects = [s for s in all_s
+    if sum(df_real.SubjectID .== s) == 3 &&
+       all(v -> any((df_real.SubjectID .== s) .& (df_real.Visit .== v)), 1:3)]
+K = length(complete_subjects)
+
+# Feature columns and concatenation
+synth_meta = [:SyntheticID, :Visit]
+kept_cols = [c for c in Symbol.(names(df_synth_ref)) if c ∉ synth_meta]
+n_assays = length(kept_cols)
+n_visits = 3
+
+concat_cols = Symbol[]
+for v in 1:n_visits
+    for col in kept_cols
+        push!(concat_cols, Symbol("V$(v)_$(col)"))
+    end
+end
+
+concat_data = Matrix{Float64}(undef, K, length(concat_cols))
+for (i, s) in enumerate(complete_subjects)
+    for v in 1:n_visits
+        row = findfirst((df_real.SubjectID .== s) .& (df_real.Visit .== v))
+        offset = (v - 1) * n_assays
+        for (j, col) in enumerate(kept_cols)
+            concat_data[i, offset + j] = Float64(df_real[row, col])
+        end
+    end
+end
+df_clean = DataFrame(concat_data, concat_cols)
+
+# Standardize + PCA + memory
+Z_real, std_params = standardize(df_clean, concat_cols)
+X_pca_raw, pca_model, d_orig, pca_norms = build_memory_matrix_raw(Z_real; pratio=0.95)
+d_pca = size(X_pca_raw, 1)
+
+X̂ = copy(X_pca_raw)
+for k in 1:K
+    X̂[:, k] ./= (norm(X̂[:, k]) + 1e-12)
+end
 @info "  Memory: d=$d_pca, K=$K"
 
-# compute real data PCA projections for reference
-Z_real, _ = standardize(df_clean, kept_cols)
-X_real_pca = MultivariateStats.transform(pca_model, Z_real')  # d_pca × K
+X_real_pca = X_pca_raw  # d_pca × K
 
 # real data dispersion metrics (target to match)
 real_pc1_std = std(X_real_pca[1, :])
@@ -49,7 +88,7 @@ phase = find_entropy_inflection(X̂; α=0.01, n_betas=80, β_range=(0.1, 1000.0)
 
 n_synth = 200
 T_steps = 2000
-α_step = 0.05
+α_step = 0.01
 
 results = DataFrame(
     β_frac = Float64[],
@@ -76,11 +115,11 @@ for (i, β) in enumerate(β_values)
     @info "  β = $(round(β, digits=2)) ($(frac)×β*), noise_scale = $(round(noise, digits=4))"
 
     # generate
-    df_synth = generate_patients(X̂, pca_model, std_params, n_synth, T_steps;
-                                  β=β, α=α_step, seed=42)
+    df_synth = generate_patients_rescaled(X̂, pca_model, std_params, pca_norms,
+                                          n_synth, T_steps; β=β, α=α_step, seed=42)
 
     # project to PCA
-    Z_synth = Matrix{Float64}(df_synth[!, kept_cols])
+    Z_synth = Matrix{Float64}(df_synth[!, concat_cols])
     Z_synth_std = (Z_synth .- std_params.μ') ./ std_params.σ'
     X_synth_pca = MultivariateStats.transform(pca_model, Z_synth_std')
 
@@ -99,13 +138,13 @@ for (i, β) in enumerate(β_values)
     div = sample_diversity(samples_vec)
 
     # feature fidelity
-    comparison = feature_summary_comparison(df_clean, df_synth, kept_cols)
+    comparison = feature_summary_comparison(df_clean, df_synth, concat_cols)
     mean_re = mean(comparison.Mean_Rel_Error)
     median_re = median(comparison.Mean_Rel_Error)
 
     # correlation
-    cor_real = column_correlation_matrix(df_clean, kept_cols)
-    cor_synth = column_correlation_matrix(df_synth, kept_cols)
+    cor_real = column_correlation_matrix(df_clean, concat_cols)
+    cor_synth = column_correlation_matrix(df_synth, concat_cols)
     cor_mae = mean(abs.(cor_real .- cor_synth))
 
     push!(results, (frac, β, noise, pc1_s, pc2_s,

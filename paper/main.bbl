@@ -1,4 +1,4 @@
-\begin{thebibliography}{23}
+\begin{thebibliography}{24}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -156,6 +156,12 @@ Diederik~P Kingma and Max Welling.
 \newblock Auto-encoding variational {B}ayes.
 \newblock In \emph{International Conference on Learning Representations
   (ICLR)}, 2014.
+
+\bibitem[Xu et~al.(2019)Xu, Skoularidou, Cuesta-Infante, and
+  Veeramachaneni]{Xu2019CTGAN}
+Lei Xu, Maria Skoularidou, Alfredo Cuesta-Infante, and Kalyan Veeramachaneni.
+\newblock Modeling tabular data using conditional {GAN}.
+\newblock 32, 2019.
 
 \bibitem[Ramsauer et~al.(2021)Ramsauer, Sch{\"a}fl, Lehner, Seidl, Widrich,
   Adler, Gruber, Holzleitner, Pavlovi{\'c}, Sandve, Greiff, Kreil, Kopp,

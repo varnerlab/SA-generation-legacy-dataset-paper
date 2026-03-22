@@ -124,7 +124,7 @@ for i in 1:n_synth
     k0 = rand(1:K)
     ξ₀ = X̂[:, k0] .+ 0.01 .* randn(d_pca)
     ξ₀ ./= norm(ξ₀)
-    result = sample(X̂, ξ₀, T_steps; β=β_star, α=0.05)
+    result = sample(X̂, ξ₀, T_steps; β=β_star, α=0.01)
     ξ_dir = result.Ξ[end, :]
     ξ_dir ./= (norm(ξ_dir) + 1e-12)
     r = rand(pca_norms)

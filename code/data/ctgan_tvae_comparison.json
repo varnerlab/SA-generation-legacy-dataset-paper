@@ -1,0 +1,82 @@
+{
+  "CTGAN-300": {
+    "method": "CTGAN-300",
+    "median_mre": 0.1889,
+    "mean_mre": 0.2406,
+    "max_mre": 1.1269,
+    "median_ks": 0.3639,
+    "corr_mae": 0.2614,
+    "pct_negative": 0.0,
+    "median_unique": 236
+  },
+  "CTGAN-1000": {
+    "method": "CTGAN-1000",
+    "median_mre": 0.1953,
+    "mean_mre": 0.223,
+    "max_mre": 0.8277,
+    "median_ks": 0.3494,
+    "corr_mae": 0.2646,
+    "pct_negative": 0.0,
+    "median_unique": 244
+  },
+  "CTGAN-3000": {
+    "method": "CTGAN-3000",
+    "median_mre": 0.1874,
+    "mean_mre": 0.2144,
+    "max_mre": 1.0051,
+    "median_ks": 0.3406,
+    "corr_mae": 0.18,
+    "pct_negative": 0.0,
+    "median_unique": 218
+  },
+  "TVAE-300": {
+    "method": "TVAE-300",
+    "median_mre": 0.037,
+    "mean_mre": 0.0759,
+    "max_mre": 0.362,
+    "median_ks": 0.1739,
+    "corr_mae": 0.1522,
+    "pct_negative": 0.0,
+    "median_unique": 297
+  },
+  "TVAE-1000": {
+    "method": "TVAE-1000",
+    "median_mre": 0.026,
+    "mean_mre": 0.0348,
+    "max_mre": 0.2119,
+    "median_ks": 0.2483,
+    "corr_mae": 0.0823,
+    "pct_negative": 0.0,
+    "median_unique": 300
+  },
+  "TVAE-3000": {
+    "method": "TVAE-3000",
+    "median_mre": 0.0179,
+    "mean_mre": 0.0353,
+    "max_mre": 0.2181,
+    "median_ks": 0.2239,
+    "corr_mae": 0.0917,
+    "pct_negative": 0.0,
+    "median_unique": 300
+  },
+  "SA": {
+    "method": "SA",
+    "median_mre": 0.019,
+    "mean_mre": 0.027,
+    "max_mre": 0.157,
+    "median_ks": 0.169,
+    "corr_mae": 0.2,
+    "pct_negative": 0.0,
+    "median_unique": 300
+  },
+  "MVN": {
+    "method": "MVN",
+    "median_mre": 0.024,
+    "mean_mre": 0.03,
+    "max_mre": 0.145,
+    "median_ks": 0.161,
+    "corr_mae": 0.09,
+    "pct_negative": 0.0,
+    "median_unique": 300
+  }
+}

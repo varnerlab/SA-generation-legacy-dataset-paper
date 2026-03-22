@@ -18,9 +18,9 @@ that prepares for delivery~\citep{Hellgren2003,Grouzi2022,Bremme2003}:
 procoagulant factors including fibrinogen, Factor~VIII, and von Willebrand factor
 increase substantially across gestation, while natural anticoagulants such as
 antithrombin and protein~S decline. Conditions such as polycystic ovary syndrome
-(PCOS)---a hormonal disorder affecting 6--12\% of reproductive-age
-women~\citep{Azziz2004} that is associated with elevated Factor~VIII and impaired
-fibrinolysis---and preeclampsia (PE)---a hypertensive disorder of pregnancy
+(PCOS)---a hormonal and metabolic disorder affecting 6--12\% of reproductive-age
+women~\citep{Azziz2004} that has been associated with secondary hemostatic changes
+including elevated Factor~VIII and impaired fibrinolysis---and preeclampsia (PE)---a hypertensive disorder of pregnancy
 characterized by endothelial dysfunction, platelet activation, and altered thrombin
 generation that complicates 2--8\% of pregnancies
 worldwide~\citep{Abalos2013}---further perturb this balance in ways that remain incompletely
@@ -53,9 +53,10 @@ regularized~\citep{Ledoit2004}, introducing bias that distorts the joint distrib
 MVN also assumes Gaussian marginals, linear correlations, and provides no mechanism
 for conditional generation---it cannot amplify a specific subpopulation while
 preserving its signatures. More expressive models such as GANs and
-VAEs~\citep{Goodfellow2014,Kingma2014}, including recent longitudinal
+VAEs~\citep{Goodfellow2014,Kingma2014,Xu2019CTGAN}, including recent longitudinal
 extensions~\citep{Murtaza2024}, require substantially larger training sets and are
-prone to mode collapse at $n{=}23$.
+prone to mode collapse at small $n$ (we confirm this empirically for CTGAN at
+$n{=}23$ in this work).
 
 Stochastic Attention (SA) provides an alternative framework rooted in modern Hopfield
 network theory~\citep{Ramsauer2021}---a continuous generalization of the associative
@@ -85,5 +86,5 @@ subgroup amplification, and mechanistic consistency with the BZ2012 ODE
 model~\citep{BrummelZiedins2012}---and demonstrated that SA-generated patients passed
 all four levels when applied to a 72-feature, 3-visit pregnancy coagulation dataset
 ($K{=}23$ patients, including 3 PCOS and 5 PE), while MVN failed at levels~2
-through~4, and that the BZ2012 model confirmed 86--94\% cloud overlap between real
+through~4, and that the BZ2012 model confirmed 83--92\% cloud overlap between real
 and synthetic patients under physiological conditions.

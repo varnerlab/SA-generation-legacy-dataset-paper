@@ -1,10 +1,13 @@
 \section{Results}
 \label{sec:results}
 
-We generated $N{=}100$ synthetic longitudinal patient profiles using SA and compared
-them against the $K{=}23$ real patients across four progressively stringent validation
-levels. As a baseline, we also generated $N{=}100$ patients from a regularized
-multivariate normal (MVN) distribution fitted to the same data.
+We generated $N{=}100$ synthetic longitudinal patient profiles using SA---chosen to
+provide approximately 4$\times$ amplification over the real cohort while remaining
+within the regime where SA's attention mechanism produces diverse, non-degenerate
+samples---and compared them against the $K{=}23$ real patients across four
+progressively stringent validation levels. As a baseline, we also generated $N{=}100$
+patients from a regularized multivariate normal (MVN) distribution fitted to the
+same data.
 
 \subsection{Marginal Plausibility}
 \label{sec:results-l1}
@@ -17,12 +20,17 @@ tendencies of the real population. Representative coagulation factors---includin
 Factor~II (MRE $<$ 1.5\%), Factor~VIII (MRE $<$ 3\%), antithrombin (MRE $<$ 2\%),
 and fibrinogen (MRE $<$ 1.2\%)---showed particularly strong agreement across all
 visits. MVN also performed well at this level (median MRE $\approx$ 2--3\%), which
-was expected since moment-matching is guaranteed by construction. We verified
-that synthetic patients were not memorized copies of real patients: the mean
-novelty score (defined as $1 - \max_k \cos(\hat{\vxi}, \hat{\mathbf{m}}_k)$,
-where the maximum is over all stored patterns) was 0.44 at the operating point
-$\beta = \beta^*$, indicating that generated samples were on average 44\% away
-from their nearest stored pattern in angular distance (Supplementary Table~S1).
+was expected since moment-matching is guaranteed by construction. We verified that synthetic patients were not memorized copies of real patients
+using two complementary metrics. First, the mean novelty score (defined as
+$1 - \max_k \cos(\hat{\vxi}, \hat{\mathbf{m}}_k)$) was 0.50 at $\beta = \beta^*$,
+indicating that generated samples were on average 50\% away from their nearest
+stored pattern in angular distance (Supplementary Table~S1). Second, we computed
+nearest-neighbor distances in standardized feature space: the median distance from
+each synthetic patient to their closest real patient was 6.14 (standardized units),
+compared with 6.70 for the median real-to-real nearest-neighbor distance---a ratio
+of 0.92, indicating that synthetic patients were approximately as far from real
+patients as real patients were from each other, with no evidence of memorization or
+privacy-compromising proximity.
 
 We next examined whether known physiological relationships were preserved in the
 synthetic cohort. We plotted pairwise scatter plots of coagulation factor levels
@@ -172,7 +180,10 @@ indistinguishable). Across all 24 feature--condition pairs, 19 (79\%) achieved
 $p > 0.05$ in $\geq$90\% of replicates, with a median non-significance fraction
 of 96.2\%. The five features that fell below 90\% were concentrated in
 high-variance features (FIX, FVII, fibrinogen) where the real data exhibited large
-inter-patient variability. PCA projections of the conditioned cohorts are provided
+inter-patient variability. No multiple-testing correction was applied to the 24
+simultaneous comparisons; the failing features had consistently low non-significance
+fractions (68--88\%) rather than borderline values, so correction would not change
+the classification. PCA projections of the conditioned cohorts are provided
 in Supplementary Figs.~S5--S6. These results demonstrated that SA's
 multiplicity-weighted interpolation on the data manifold can meaningfully amplify
 rare subgroups in a way that preserves their distinguishing clinical features---a
@@ -236,15 +247,14 @@ SA had generated patients with biologically implausible factor combinations, the
 model would process them differently, producing a shifted or broadened ratio
 distribution. Instead, the distributions overlapped substantially, with cloud overlap
 (fraction of synthetic ratios within the 5th--95th percentile of real ratios) ranging
-from 86\% for lagtime to 94\% for maximum rate, and two-sample Kolmogorov--Smirnov
+from 83\% for ETP to 92\% for lagtime, and two-sample Kolmogorov--Smirnov
 tests confirmed that the ratio distributions were statistically indistinguishable
-across all five TGA features (KS $D = 0.086$--$0.143$, all $p > 0.20$). The median
-ratio was 0.92$\times$ for synthetic patients versus 0.91$\times$ for real patients.
+across all five TGA features (KS $D = 0.081$--$0.123$, all $p > 0.35$).
 Under TF+TM conditions, the model systematically overcorrected the protein~C
 anticoagulant pathway, producing peak and maximum rate predictions approximately
 0.5$\times$ measured values for both real and synthetic patients (Supplementary
 Fig.~S7), yet this shared systematic bias was itself informative---cloud overlap
-remained high at 88--91\%, confirming that the model processed real and synthetic
+remained high at 88--92\%, confirming that the model processed real and synthetic
 patients identically even under conditions where the calibration was imperfect.
 
 The calibration also generalized across pregnancy timepoints: although fitted only
@@ -283,7 +293,7 @@ ODE-predicted/dataset ratio distributions for real (blue) and synthetic
 combinations, the ODE model would process them differently, producing divergent
 ratio distributions. Instead, the distributions overlap substantially. Each
 panel is annotated with cloud overlap (OL), the two-sample Kolmogorov--Smirnov
-statistic ($D$), and $p$-value. All five features show $p > 0.20$, confirming
+statistic ($D$), and $p$-value. All five features show $p > 0.35$, confirming
 that the ODE model cannot distinguish real from synthetic patients.}
 \label{fig:mechanistic-combined}
 \end{figure}
