@@ -60,15 +60,34 @@ we observed under TF+TM conditions reinforced this interpretation: both real and
 synthetic patients were processed identically by the mechanistic model, producing the
 same pattern of overcorrection in the protein~C pathway.
 
-Several limitations warrant discussion. First, our study used a single longitudinal
-dataset of $K{=}23$ patients, and further evaluation on independent datasets and
-across different clinical domains is needed to establish generalizability. Second, the
-PCA dimensionality reduction assumed a linear structure in the feature space;
-nonlinear manifold learning methods may better capture complex clinical relationships,
-though at the cost of reduced interpretability. Third, the mechanistic validation
-under TF+TM conditions revealed systematic model bias, limiting the interpretability
-of Level~4 results under that condition to the observation that real and synthetic
-patients shared the same bias pattern. Fourth, we did not validate synthetic patients
-against clinical outcomes---our validation was restricted to statistical and
-mechanistic plausibility, and prospective validation against real clinical
-decision-making remains an important future direction.
+The bootstrap Mann--Whitney analysis at Level~3 revealed that 5 of 24 (21\%)
+feature--condition pairs were statistically distinguishable at equal sample sizes,
+warranting careful interpretation. Notably, the mean relative errors for these
+features remained small (7--15\%), indicating that the central tendencies were
+well-preserved. The Mann--Whitney test is sensitive to distributional shape, not
+just location, and the detected differences likely reflected SA's tendency to
+compress distributional tails rather than shift means. This tail compression arises
+from two sources: the PCA dimensionality reduction (18 components from 216 features),
+which cannot fully represent the higher-order moments of every feature, and the
+direction-magnitude decomposition, which draws magnitudes from a finite empirical
+distribution of $K{=}23$ norms. Features with large real-data skewness---such as
+Factor~IX (coefficient of variation $\approx$~25\%) and plasminogen---were
+disproportionately affected. For the PCOS subgroup, the additional pull of synthetic
+means toward the population mean (due to background pattern influence in the
+multiplicity-weighted energy) contributed to the plasminogen failure (MRE 14.6\%,
+$p > 0.05$ in only 68\% of replicates). These results represented an honest
+trade-off: SA sacrifices some tail fidelity in exchange for preserving the
+manifold geometry that parametric methods cannot capture in the $n < p$ regime.
+
+Several additional limitations warrant discussion. First, our study used a single
+longitudinal dataset of $K{=}23$ patients, and further evaluation on independent
+datasets and across different clinical domains is needed to establish
+generalizability. Second, the PCA dimensionality reduction assumed a linear structure
+in the feature space; nonlinear manifold learning methods may better capture complex
+clinical relationships, though at the cost of reduced interpretability. Third, the
+mechanistic validation under TF+TM conditions revealed systematic model bias,
+limiting the interpretability of Level~4 results under that condition to the
+observation that real and synthetic patients shared the same bias pattern. Fourth, we
+did not validate synthetic patients against clinical outcomes---our validation was
+restricted to statistical and mechanistic plausibility, and prospective validation
+against real clinical decision-making remains an important future direction.
