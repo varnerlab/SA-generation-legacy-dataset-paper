@@ -1,4 +1,4 @@
-\begin{thebibliography}{10}
+\begin{thebibliography}{11}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -52,6 +52,13 @@ Hubert Ramsauer, Bernhard Sch{\"a}fl, Johannes Lehner, Philipp Seidl, Michael
 \newblock Hopfield networks is all you need.
 \newblock \emph{International Conference on Learning Representations (ICLR)},
   2021.
+
+\bibitem[Varner(2024)]{Varner2024SA}
+Jeffrey~D Varner.
+\newblock Multiplicity-weighted stochastic attention for conditional sequence
+  generation, 2024.
+\newblock Available at
+  \url{https://github.com/varnerlab/SA-Binding-Generation-Study}.
 
 \bibitem[Bravo et~al.(2023)Bravo, Orfeo, Bernstein, Vadhin, Lakshmi, and
   Varner]{Varner2023JuliaCon}

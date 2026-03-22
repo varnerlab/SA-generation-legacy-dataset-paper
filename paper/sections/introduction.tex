@@ -41,27 +41,35 @@ network theory~\citep{Ramsauer2021}. Modern Hopfield networks define an energy
 landscape over continuous state vectors where stored patient profiles serve as memory
 patterns, and by running Langevin dynamics on this energy landscape, SA generates
 novel samples that interpolate between stored patterns in a manner governed by the
-attention mechanism. Crucially, SA operates on the data manifold directly rather than
-fitting a parametric distribution, making it well-suited to the $n < p$ regime where
-parametric approaches must regularize or truncate the high-dimensional structure of
-the data. In prior work, we generated synthetic patient populations using multivariate
-normal distributions fitted independently to each clinical
+attention mechanism. We recently introduced a multiplicity-weighted extension of the
+Hopfield energy that adds per-pattern weights $r_k$ to the log-sum-exp term, enabling
+continuous interpolation between unconditioned generation and targeted subpopulation
+amplification at inference time without retraining the energy
+landscape~\citep{Varner2024SA}. Crucially, SA operates on the data manifold directly
+rather than fitting a parametric distribution, making it well-suited to the $n < p$
+regime where parametric approaches must regularize or truncate the high-dimensional
+structure of the data. In prior work, we generated synthetic patient populations using
+multivariate normal distributions fitted independently to each clinical
 visit~\citep{Varner2023JuliaCon}. While this approach captured per-visit statistics,
 it assumed Gaussian marginals and generated each visit independently rather than as
 part of a coherent longitudinal trajectory.
 
-In this work, we adapted SA for longitudinal clinical data and introduced a four-level
-validation framework to rigorously assess synthetic patient quality. We formulated a
-pipeline for applying SA to continuous multivariate longitudinal measurements,
-including concatenated-visit patterns that treat each patient's full longitudinal
-profile as an atomic unit, PCA dimensionality reduction, and a direction-magnitude
-decomposition that preserves the anisotropic variance structure lost by unit-norm
-projection. We validated the resulting synthetic patients through four progressively
-stringent levels: marginal plausibility of individual features, preservation of
-cross-visit covariance structure, amplification of rare clinical subgroups with
-preserved condition-specific signatures, and mechanistic consistency with an
-independent 58-species ODE model of the coagulation cascade. We demonstrated that
-SA-generated synthetic patients passed all four validation levels when applied to a
-72-feature, 3-visit pregnancy coagulation dataset, while MVN generation failed at
-levels~2 through~4, and that an independent mechanistic model confirmed 86--94\%
-cloud overlap between real and synthetic patients under physiological conditions.
+In this work, we adapted multiplicity-weighted SA for longitudinal clinical data and
+introduced a four-level validation framework to rigorously assess synthetic patient
+quality. We formulated a pipeline for applying SA to continuous multivariate
+longitudinal measurements, including concatenated-visit patterns that treat each
+patient's full longitudinal profile as an atomic unit, PCA dimensionality reduction,
+and a direction-magnitude decomposition that preserves the anisotropic variance
+structure lost by unit-norm projection. The multiplicity-weighted energy provided a
+unified mechanism for both unconditioned generation (all weights equal) and targeted
+amplification of rare clinical subgroups (designated patterns upweighted), without
+requiring separate models or retraining. We validated the resulting synthetic patients
+through four progressively stringent levels: marginal plausibility of individual
+features, preservation of cross-visit covariance structure, amplification of rare
+clinical subgroups with preserved condition-specific signatures, and mechanistic
+consistency with an independent 58-species ODE model of the coagulation cascade.
+We demonstrated that SA-generated synthetic patients passed all four validation
+levels when applied to a 72-feature, 3-visit pregnancy coagulation dataset, while
+MVN generation failed at levels~2 through~4, and that an independent mechanistic
+model confirmed 86--94\% cloud overlap between real and synthetic patients under
+physiological conditions.
