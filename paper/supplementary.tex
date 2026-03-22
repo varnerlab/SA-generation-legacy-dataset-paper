@@ -142,6 +142,54 @@ PE      & 5  & 18 & 14.40 & 0.80 & 7.7 \\
 \end{tabular}
 \end{table}
 
+% ── Table S3: SA Hyperparameters ──────────────────────────────────────────
+\begin{table}[ht]
+\centering
+\caption{\textbf{SA generation hyperparameters.} All parameters used for
+synthetic patient generation. The same values were used for unconditioned
+and conditioned generation except where noted.}
+\label{stab:hyperparams}
+\begin{tabular}{lll}
+\toprule
+Parameter & Value & Description \\
+\midrule
+$\alpha$ & 0.05 & Langevin step size \\
+$T$ & 2,000 & Langevin iterations per sample \\
+$\beta^*$ & 5.27 & Inverse temperature (entropy inflection) \\
+PCA threshold & 95\% & Variance retained \\
+$d_{\text{PCA}}$ & 18 & PCA dimensionality \\
+$N$ & 100 & Synthetic patients per cohort \\
+Random seed & 42 & For reproducibility \\
+$f_{\text{target}}$ & 0.80 & Target attention fraction (conditioned only) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ── Table S4: ODE Calibration Details ────────────────────────────────────
+\begin{table}[ht]
+\centering
+\caption{\textbf{BZ2012 ODE model calibration.} Five rate constants were
+calibrated on Visit~1 real patients ($n{=}23$) using bounded Nelder--Mead
+optimization (Fminbox) in log-scale-factor space. The cost function was the
+mean normalized relative squared error across five TGA features (lagtime,
+peak, time-to-peak, maximum rate, ETP) under both TF-only and TF+TM
+conditions. Bounds: $\pm\log(100)$ (0.01$\times$ to 100$\times$ default).
+Convergence: $f_{\text{tol}} = 10^{-6}$, 500 iterations.}
+\label{stab:ode-calibration}
+\begin{tabular}{llrrl}
+\toprule
+Rate constant & Role & Default & Calibrated & Scale \\
+\midrule
+prothrombinase $k_{\text{cat}}$ & Thrombin burst & 63.5 s$^{-1}$ & 21.94 s$^{-1}$ & 0.35$\times$ \\
+intrinsic Xase $k_{\text{cat}}$ & Amplification Xa & 8.2 s$^{-1}$ & 0.169 s$^{-1}$ & 0.021$\times$ \\
+extrinsic Xase $k_{\text{cat}}$ & Initiation Xa & 6.0 s$^{-1}$ & 93.2 s$^{-1}$ & 15.5$\times$ \\
+PC activation $k_{\text{cat}}$ & Protein C activation & 0.41 s$^{-1}$ & 0.890 s$^{-1}$ & 2.17$\times$ \\
+mIIa conversion $k$ & mIIa$\to$IIa & $2.3{\times}10^8$ & $1.15{\times}10^9$ & 5.01$\times$ \\
+\bottomrule
+\multicolumn{5}{l}{\small Units for mIIa conversion: M$^{-1}$s$^{-1}$} \\
+\end{tabular}
+\end{table}
+
 % ══════════════════════════════════════════════════════════════════════════════
 \section*{Supplementary Figures}
 

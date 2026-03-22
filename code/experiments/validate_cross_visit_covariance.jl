@@ -240,7 +240,6 @@ for p in [p1, p2, p3, p4, p5, p6]
 end
 
 p_heat = plot(p1, p2, p3, p4, p5, p6; layout=(2, 3), size=(1400, 900),
-              plot_title="Level 2: Cross-Visit Correlation Structure",
               margin=3Plots.mm)
 savefig(p_heat, joinpath(_PATH_TO_FIG, "validate_cross_visit_corr.pdf"))
 savefig(p_heat, joinpath(_PATH_TO_FIG, "validate_cross_visit_corr.png"))
@@ -259,7 +258,6 @@ for p in [p4s, p5s, p6s]
     hline!(p, [n_assays + 0.5, 2*n_assays + 0.5]; lc=:black, lw=1, label="")
 end
 p_heat_supp = plot(p1, p2, p3, p4s, p5s, p6s; layout=(2, 3), size=(1400, 900),
-                   plot_title="Level 2: Cross-Visit Correlation Structure (±0.5 residual scale)",
                    margin=3Plots.mm)
 savefig(p_heat_supp, joinpath(_PATH_TO_FIG, "validate_cross_visit_corr_supp.pdf"))
 savefig(p_heat_supp, joinpath(_PATH_TO_FIG, "validate_cross_visit_corr_supp.png"))
@@ -278,7 +276,7 @@ eig_m_plot = max.(eig_mvn[1:n_mvn_show], eig_floor)
 p_eig = plot(1:n_show, eig_r_plot; label="Real (rank 22)", lw=2.5, mc=:steelblue,
              marker=:circle, ms=4, ma=0.8,
              xlabel="Component", ylabel="Eigenvalue",
-             title="Covariance Eigenvalue Spectrum",
+             title="",
              yscale=:log10, legend=:right, size=(650, 450),
              ylim=(1e-14, maximum(eig_real) * 3),
              yticks=[1e-12, 1e-10, 1e-8, 1e-6, 1e-4, 1e-2, 1e0, 1e1, 1e2],

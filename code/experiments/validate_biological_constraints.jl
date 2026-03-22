@@ -262,29 +262,52 @@ plot_pairs = [
     (:AT, Symbol("TF Initiator ETP (nM·min)"), "AT (% nominal)", "TF ETP (nM·min)"),
 ]
 
+visit_colors = [RGB(0.10, 0.45, 0.70), RGB(0.25, 0.65, 0.25), RGB(0.85, 0.35, 0.10)]
+visit_labels_short = ["V1 (BL)", "V2 (1st tri)", "V3 (3rd tri)"]
+bg_color = RGB(0.97, 0.97, 0.98)
+
 panels = []
-for (xcol, ycol, xlab, ylab) in plot_pairs
-    p = plot(; xlabel=xlab, ylabel=ylab, legend=:topright, size=(400, 400))
+for (pi, (xcol, ycol, xlab, ylab)) in enumerate(plot_pairs)
+    p = plot(; xlabel=xlab, ylabel=ylab,
+             legend= pi == 1 ? :topright : false,
+             background_color_inside=bg_color,
+             grid=false, framestyle=:box,
+             guidefontsize=9, tickfontsize=7, legendfontsize=7,
+             margin=4Plots.mm)
+
+    # Synth first (behind), then Real on top
+    for v in 1:3
+        sv = df_synth[df_synth.Visit .== v, :]
+        s_x = collect(skipmissing(sv[:, xcol]))
+        s_y = collect(skipmissing(sv[:, ycol]))
+        n = min(length(s_x), length(s_y))
+        if n > 0
+            scatter!(p, s_x[1:n], s_y[1:n];
+                     label="Synth $(visit_labels_short[v])",
+                     color=visit_colors[v], ms=3.5, ma=0.4,
+                     markerstrokecolor=visit_colors[v], markerstrokewidth=1.0,
+                     markershape=:circle, fillalpha=0.0)
+        end
+    end
 
     for v in 1:3
         rv = df_real[df_real.Visit .== v, :]
         r_x = collect(skipmissing(rv[:, xcol]))
         r_y = collect(skipmissing(rv[:, ycol]))
         n = min(length(r_x), length(r_y))
-        scatter!(p, r_x[1:n], r_y[1:n]; label=(v==1 ? "Real" : ""), mc=:steelblue,
-                 ms=4, ma=0.6, shape=[:circle, :diamond, :utriangle][v])
-    end
-
-    for v in 1:3
-        sv = df_synth[df_synth.Visit .== v, :]
-        scatter!(p, sv[:, xcol], sv[:, ycol]; label=(v==1 ? "Synth" : ""), mc=:coral,
-                 ms=3, ma=0.3, shape=[:circle, :diamond, :utriangle][v])
+        if n > 0
+            scatter!(p, r_x[1:n], r_y[1:n];
+                     label="Real $(visit_labels_short[v])",
+                     color=visit_colors[v], ms=5, ma=0.85,
+                     markerstrokecolor=:white, markerstrokewidth=0.8,
+                     markershape=:circle)
+        end
     end
     push!(panels, p)
 end
 
-p_corr = plot(panels...; layout=(2, 2), size=(900, 800),
-              plot_title="Level 1: Physiological Correlations", margin=5Plots.mm)
+p_corr = plot(panels...; layout=(2, 2), size=(1000, 850),
+              margin=5Plots.mm)
 savefig(p_corr, joinpath(_PATH_TO_FIG, "validate_bio_correlations.pdf"))
 savefig(p_corr, joinpath(_PATH_TO_FIG, "validate_bio_correlations.png"))
 @info "  Saved validate_bio_correlations.pdf"
@@ -311,7 +334,7 @@ for col in prog_cols
 end
 
 p_prog = plot(prog_panels...; layout=(2, 3), size=(1000, 600),
-              plot_title="Level 1: Pregnancy Progression", margin=5Plots.mm)
+              margin=5Plots.mm)
 savefig(p_prog, joinpath(_PATH_TO_FIG, "validate_pregnancy_progression.pdf"))
 savefig(p_prog, joinpath(_PATH_TO_FIG, "validate_pregnancy_progression.png"))
 @info "  Saved validate_pregnancy_progression.pdf"

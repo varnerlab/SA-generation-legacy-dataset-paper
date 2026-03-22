@@ -1,23 +1,23 @@
 \section{Discussion}
 \label{sec:discussion}
 
-The four-level validation framework provided complementary evidence that SA-generated
-synthetic patients faithfully represented the real clinical population. Level~1
-confirmed that marginal distributions were preserved---a necessary but insufficient
-condition that MVN also satisfied by construction. Level~2 demonstrated that SA
-preserved the joint cross-visit covariance structure that MVN's rank-deficient estimate
-could not faithfully represent, a difference made visible in the eigenvalue spectrum
-where MVN introduced spurious variance in null dimensions while SA respected the
-low-rank geometry of the data. Level~3 showed that SA could amplify clinically
-meaningful rare subgroups---generating 100 synthetic PCOS patients from only 3 real
-ones---while preserving subgroup-specific signatures that MVN fundamentally could not
-capture. Level~4 provided orthogonal mechanistic evidence: an independent ODE model,
-encoding decades of coagulation biochemistry and calibrated exclusively on real
-patients, confirmed that the factor-to-thrombin-generation mapping in synthetic
-patients was biologically plausible, with 86--94\% cloud overlap under TF-only
-conditions. Taken together, these results established that SA-generated synthetic
-patients were not merely statistically similar to real patients but were consistent
-with the underlying biology at multiple levels of resolution.
+The central question of this work was whether a geometry-preserving generative method
+could produce synthetic patients from a very small longitudinal cohort that were not
+merely statistically similar to real patients but consistent with the underlying
+coagulation biology. Our results provided evidence at multiple levels of resolution
+that SA-generated patients met this standard. Individual feature distributions were
+faithfully reproduced, which MVN also achieved by construction; but SA additionally
+preserved the joint cross-visit covariance structure that MVN's rank-deficient
+estimate could not represent---a difference made visible in the eigenvalue spectrum,
+where MVN introduced spurious variance in 194 null dimensions while SA respected the
+low-rank geometry of the data. SA could amplify clinically meaningful rare
+subgroups---generating 100 synthetic PCOS patients from only 3 real ones---while
+preserving subgroup-specific signatures, a capability that MVN fundamentally lacks.
+And an independent ODE model encoding decades of coagulation biochemistry, calibrated
+exclusively on real patients, confirmed that the factor-to-thrombin-generation mapping
+in synthetic patients was biologically plausible, with 86--94\% cloud overlap and
+Kolmogorov--Smirnov tests unable to distinguish the two populations ($p > 0.20$ for
+all five TGA features).
 
 The ability to generate validated synthetic cohorts from very small longitudinal
 datasets has immediate practical implications for maternal health research. Rare
@@ -27,86 +27,64 @@ requires years of recruitment across multiple clinical sites. Our results sugges
 that SA can enable hypothesis generation, power analyses, and computational modeling
 studies for these understudied populations by generating synthetic cohorts that
 preserve both the statistical and mechanistic properties of the real data. The
-conditional generation capability demonstrated at Level~3 is particularly relevant:
-rather than requiring researchers to collect additional rare patients, SA can amplify
-existing small subgroups into cohorts large enough for meaningful analysis.
+conditional generation capability is particularly relevant: rather than requiring
+researchers to collect additional rare patients, SA can amplify existing small
+subgroups into cohorts large enough for meaningful analysis.
 
 The key insight underlying SA's advantage over parametric alternatives is geometric.
 SA generates samples on the data manifold by interpolating between stored patient
 profiles via the Hopfield energy landscape, rather than fitting a parametric
 distribution that must regularize or truncate high-dimensional structure. In the
 $n < p$ regime that characterizes most small clinical studies, any parametric
-distribution---whether Gaussian or otherwise---faces a fundamental identifiability
-problem: there are more parameters to estimate than observations to estimate them
-from. SA sidesteps this by operating in a PCA-reduced space where the
-memory-to-dimension ratio is favorable ($K/d_{\text{PCA}} \approx 1.28$) and by
-preserving the full directional structure of the data through the attention mechanism.
-The eigenvalue spectrum comparison (Supplementary Fig.~S3) made this
-distinction concrete: SA's spectrum faithfully reflected the rank-18 PCA structure,
-while MVN's regularized spectrum introduced artificial variance in 194 additional
-dimensions.
+distribution faces a fundamental identifiability problem: there are more parameters
+to estimate than observations to estimate them from. SA sidesteps this by operating
+in a PCA-reduced space where the memory-to-dimension ratio is favorable
+($K/d_{\text{PCA}} \approx 1.28$) and by preserving the full directional structure of
+the data through the attention mechanism. A natural concern is whether the $\beta^*$
+selection procedure---originally developed for protein sequence
+generation~\citep{Varner2024SA}---transfers to clinical coagulation data. The entropy
+inflection method identifies the phase transition in the Hopfield energy landscape,
+which is a geometric property of $K$ patterns in $d$ dimensions, not a property of
+what the features represent; for our dataset the empirical inflection
+($\beta^* \approx 5.27$) was close to the theoretical prediction
+($\sqrt{d} \approx 4.24$), and a sensitivity analysis confirmed that generation
+quality degraded gracefully across $\beta/\beta^* \in [0.1, 3.0]$ (Supplementary
+Table~S1). The multiplicity weighting for conditional generation introduced an
+additional consideration: achieving 80\% attention on the PCOS subgroup required
+$\rho \approx 26.7$, reducing the effective pattern count to $K_{\text{eff}} \approx
+4.6$ (Supplementary Table~S2), which explains the larger MREs observed for PCOS
+features---the energy landscape was effectively shaped by fewer than 5 independent
+patterns, pulling means toward the population average.
 
-A natural concern is whether the $\beta^*$ selection procedure---originally developed
-for protein sequence generation~\citep{Varner2024SA}---transfers to clinical
-coagulation data. The entropy inflection method identifies the phase transition in
-the Hopfield energy landscape, which is a geometric property of $K$ patterns in $d$
-dimensions, not a property of what the features represent. As long as the
-memory-to-dimension ratio $K/d$ is in a comparable regime, the same inflection
-criterion locates the operating point that balances novelty against fidelity. For our
-dataset, the empirical inflection ($\beta^* \approx 5.27$) was close to the
-theoretical prediction ($\sqrt{d} \approx 4.24$), and a sensitivity analysis across
-$\beta/\beta^* \in [0.1, 3.0]$ confirmed that generation quality degraded gracefully
-in both directions (Supplementary Table~S1). The multiplicity weighting for
-conditional generation introduced an additional consideration: achieving
-$f_{\text{target}} = 0.80$ for the PCOS subgroup required $\rho \approx 26.7$,
-reducing the effective pattern count to $K_{\text{eff}} \approx 4.6$
-(Supplementary Table~S2). This low $K_{\text{eff}}$ explains the larger MREs observed
-for PCOS features at Level~3---the energy landscape was effectively shaped by fewer
-than 5 independent patterns, limiting the diversity of generated samples and pulling
-means toward the population average.
-
-The mechanistic validation at Level~4 introduced a paradigm that we believe is broadly
-applicable beyond coagulation. Rather than relying solely on statistical comparisons
-between real and synthetic distributions, we tested whether synthetic patients
-produced biologically consistent outputs when processed by a domain-specific
-computational model. This approach is available whenever a validated mechanistic model
-exists for the domain of interest---pharmacokinetic models in drug development,
-physiological models in critical care, or metabolic models in oncology. The
-requirement is not that the mechanistic model be a perfect predictor (ours had weak
-rank correlations at the individual patient level), but that synthetic patients fall
-within the same model-predicted envelope as real patients. The shared systematic bias
-we observed under TF+TM conditions reinforced this interpretation: both real and
-synthetic patients were processed identically by the mechanistic model, producing the
-same pattern of overcorrection in the protein~C pathway.
-
-The bootstrap Mann--Whitney analysis at Level~3 revealed that 5 of 24 (21\%)
-feature--condition pairs were statistically distinguishable at equal sample sizes,
-warranting careful interpretation. Notably, the mean relative errors for these
-features remained small (7--15\%), indicating that the central tendencies were
-well-preserved. The Mann--Whitney test is sensitive to distributional shape, not
-just location, and the detected differences likely reflected SA's tendency to
-compress distributional tails rather than shift means. This tail compression arises
-from two sources: the PCA dimensionality reduction (18 components from 216 features),
-which cannot fully represent the higher-order moments of every feature, and the
+The mechanistic validation introduced a paradigm that we believe is broadly applicable
+beyond coagulation: rather than relying solely on statistical comparisons between real
+and synthetic distributions, we tested whether synthetic patients produced biologically
+consistent outputs when processed by an independent computational model. This approach
+is available whenever a validated mechanistic model exists for the domain of
+interest---pharmacokinetic models in drug development, physiological models in
+critical care, or metabolic models in oncology---and the requirement is not that the
+model be a perfect predictor, but that synthetic patients fall within the same
+model-predicted envelope as real patients. The bootstrap Mann--Whitney analysis of
+condition-specific features revealed that 5 of 24 (21\%) feature--condition pairs
+were statistically distinguishable at equal sample sizes, but the mean relative errors
+for these features remained small (7--15\%), and the detected differences likely
+reflected SA's tendency to compress distributional tails rather than shift means. This
+tail compression arises from two sources: the PCA dimensionality reduction, which
+cannot fully represent higher-order moments of every feature, and the
 direction-magnitude decomposition, which draws magnitudes from a finite empirical
-distribution of $K{=}23$ norms. Features with large real-data skewness---such as
-Factor~IX (coefficient of variation $\approx$~25\%) and plasminogen---were
-disproportionately affected. For the PCOS subgroup, the additional pull of synthetic
-means toward the population mean (due to background pattern influence in the
-multiplicity-weighted energy) contributed to the plasminogen failure (MRE 14.6\%,
-$p > 0.05$ in only 68\% of replicates). These results represented an honest
-trade-off: SA sacrifices some tail fidelity in exchange for preserving the
-manifold geometry that parametric methods cannot capture in the $n < p$ regime.
+distribution of $K{=}23$ norms. These results represent an honest trade-off: SA
+sacrifices some tail fidelity in exchange for preserving the manifold geometry that
+parametric methods cannot capture in the $n < p$ regime.
 
-Several additional limitations warrant discussion. First, our study used a single
+Several additional limitations warrant discussion. Our study used a single
 longitudinal dataset of $K{=}23$ patients, and further evaluation on independent
 datasets and across different clinical domains is needed to establish
-generalizability. Second, the PCA dimensionality reduction assumed a linear structure
-in the feature space; nonlinear manifold learning methods may better capture complex
-clinical relationships, though at the cost of reduced interpretability. Third, the
-mechanistic validation under TF+TM conditions revealed systematic model bias,
-limiting the interpretability of Level~4 results under that condition to the
-observation that real and synthetic patients shared the same bias pattern. Fourth, we
-did not validate synthetic patients against clinical outcomes---our validation was
-restricted to statistical and mechanistic plausibility, and prospective validation
-against real clinical decision-making remains an important future direction.
+generalizability. The PCA dimensionality reduction assumed linear structure in the
+feature space; nonlinear manifold learning methods may better capture complex clinical
+relationships, though at the cost of reduced interpretability. The mechanistic
+validation under TF+TM conditions revealed systematic ODE model bias, though the
+observation that real and synthetic patients shared the same bias pattern was itself
+informative. Finally, we did not validate synthetic patients against clinical
+outcomes---our validation was restricted to statistical and mechanistic plausibility,
+and prospective validation against real clinical decision-making remains an important
+future direction.

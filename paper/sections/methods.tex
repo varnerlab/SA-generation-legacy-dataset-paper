@@ -85,52 +85,89 @@ designated and background pattern counts, respectively.
 \subsection{Pipeline for Continuous Longitudinal Data}
 \label{sec:pipeline}
 
-\textbf{Longitudinal concatenation.}
-For each of the $K=23$ patients, we concatenated the $n=72$ measurements across all
-three visits into a single vector of dimension $d_{\text{concat}} = 3n = 216$, ensuring
-that generated synthetic patients had internally consistent longitudinal trajectories.
-
-\textbf{Standardization and PCA.}
-We standardized each feature to zero mean and unit variance, then applied PCA retaining
-95\% of the variance, reducing dimensionality from 216 to $d_{\text{PCA}}=18$. This
-yielded a memory-to-dimension ratio of $K/d_{\text{PCA}} \approx 1.28$, placing SA in
-a favorable operating regime where the number of stored patterns exceeded the
+Applying SA to continuous longitudinal clinical data required several adaptations
+beyond the standard Hopfield sampling framework. We first concatenated each patient's
+$n{=}72$ assay measurements across all three visits into a single vector of dimension
+$d_{\text{concat}} = 3n = 216$, so that each stored memory pattern encoded a
+complete longitudinal profile and generated synthetic patients would have internally
+consistent multi-visit trajectories. We then standardized each feature to zero mean
+and unit variance and applied PCA retaining 95\% of the variance, reducing
+dimensionality from 216 to $d_{\text{PCA}}{=}18$. This compression served two
+purposes: it removed collinearity among the 216 features and yielded a
+memory-to-dimension ratio of $K/d_{\text{PCA}} \approx 1.28$, placing SA in a
+favorable operating regime where the number of stored patterns exceeded the
 dimensionality of the representation.
 
-\textbf{Direction-magnitude decomposition.}
-Standard SA operates on unit-norm patterns, which destroys the anisotropic variance
-structure of continuous data. We addressed this by recording PCA-space norms
-$\{r_k\}$ before normalization, running SA on unit-norm patterns to obtain a direction
-$\hat{\vxi}$, drawing a magnitude from the empirical distribution of norms, and
-reconstructing $\vxi_{\text{rescaled}} = r \cdot \hat{\vxi}$. The rescaled vector
-was mapped back to feature space via inverse PCA and destandardization, then split
-into three 72-dimensional visit records.
+Standard SA operates on unit-norm patterns, which is appropriate for discrete data
+(e.g., one-hot protein sequences) but destroys the anisotropic variance structure
+of continuous clinical measurements---collapsing dispersion across all principal
+components to a unit sphere. We addressed this with a direction-magnitude
+decomposition: before normalization, we recorded each pattern's PCA-space norm
+$r_k = \|\mathbf{m}_k\|$; we then ran SA on unit-norm patterns to obtain a
+directional sample $\hat{\vxi}$, drew a magnitude $r$ from the empirical
+distribution of $\{r_k\}$, and reconstructed the rescaled sample as
+$\vxi_{\text{rescaled}} = r \cdot \hat{\vxi}$. This preserved the directional
+structure learned by the Hopfield energy while restoring the natural scale of
+variation. The rescaled PCA vector was mapped back to the original feature space via
+inverse PCA and destandardization, then split into three 72-dimensional visit records.
 
-\textbf{Conditional generation.}
 To generate condition-specific cohorts (e.g., PCOS-only), we set the multiplicity
-$r_k = \rho$ for the designated patterns and $r_k = 1$ for all others, and sampled
-using the weighted Langevin update (Eq.~\ref{eq:ula}). The multiplicity $\rho$ was
-computed to achieve a target effective fraction $f_{\text{target}} = 0.80$ of softmax
-attention on the designated subset, via $\rho = f_{\text{target}} \cdot K_{\text{bg}}
-/ (K_{\text{des}} \cdot (1 - f_{\text{target}}))$. For the PCOS subgroup ($K_{\text{des}}{=}3$),
-this required $\rho \approx 26.7$, reducing the effective pattern count to
-$K_{\text{eff}} \approx 4.6$ (Supplementary Table~S2). Magnitudes for the
-direction-magnitude decomposition were drawn from the condition-specific subset of
-norms, ensuring that the scale of variation matched the target subpopulation.
+$r_k = \rho$ for patterns belonging to the target subgroup and $r_k = 1$ for all
+others, and sampled using the weighted Langevin update (Eq.~\ref{eq:ula}). The
+multiplicity $\rho$ was computed to achieve a target effective fraction
+$f_{\text{target}} = 0.80$ of softmax attention on the designated subset, via
+$\rho = f_{\text{target}} \cdot K_{\text{bg}} / (K_{\text{des}} \cdot (1 -
+f_{\text{target}}))$. For the PCOS subgroup ($K_{\text{des}}{=}3$), this required
+$\rho \approx 26.7$, reducing the effective pattern count to $K_{\text{eff}}
+\approx 4.6$ (Supplementary Table~S2). Magnitudes for the direction-magnitude
+decomposition were drawn from the condition-specific subset of norms, ensuring that
+the scale of variation matched the target subpopulation rather than the full cohort.
 
 
-\subsection{Multivariate Normal Baseline}
-\label{sec:mvn}
-As a baseline, we generated synthetic patients by fitting a multivariate normal
-distribution to the same $K{=}23$ concatenated patient profiles ($p{=}216$). Because
-$K < p$, the sample covariance matrix had rank at most~22 and was regularized using
-Ledoit--Wolf shrinkage~\citep{Ledoit2004}.
+The complete generation pipeline is summarized in Algorithm~\ref{alg:sa-pipeline}.
+All experiments used step size $\alpha = 0.05$, $T = 2{,}000$ Langevin iterations
+per sample, and random seed 42 for reproducibility. The pipeline was implemented in
+Julia (v1.12) using the packages listed in the code repository.
 
+\begin{algorithm}[ht]
+\caption{Multiplicity-Weighted SA for Longitudinal Patient Generation}
+\label{alg:sa-pipeline}
+\begin{algorithmic}[1]
+\Require Patient data $\{\mathbf{x}_k^{(v)}\}$ for $k=1,\ldots,K$ patients, $v=1,2,3$ visits
+\Require Multiplicity vector $\mathbf{r}$ (all ones for unconditioned; $r_k = \rho$ for designated subset)
+\Ensure $N$ synthetic longitudinal patient profiles
+\State Concatenate: $\mathbf{x}_k \gets [\mathbf{x}_k^{(1)}; \mathbf{x}_k^{(2)}; \mathbf{x}_k^{(3)}] \in \mathbb{R}^{216}$
+\State Standardize: $\mathbf{z}_k \gets (\mathbf{x}_k - \boldsymbol{\mu}) \oslash \boldsymbol{\sigma}$
+\State PCA: $\mathbf{m}_k \gets \mathbf{W}^\top \mathbf{z}_k \in \mathbb{R}^{18}$ \Comment{95\% variance retained}
+\State Record norms: $r_k^{\text{mag}} \gets \|\mathbf{m}_k\|$; normalize $\hat{\mathbf{m}}_k \gets \mathbf{m}_k / r_k^{\text{mag}}$
+\State Find $\beta^*$ via entropy inflection on $\hat{\mathbf{M}} = [\hat{\mathbf{m}}_1, \ldots, \hat{\mathbf{m}}_K]$
+\For{$i = 1, \ldots, N$}
+    \State Initialize $\hat{\vxi}_0 \sim \mathcal{N}(\mathbf{0}, \mathbf{I}_{18})$; normalize to unit norm
+    \For{$t = 0, \ldots, T-1$} \Comment{Langevin dynamics}
+        \State $\hat{\vxi}_{t+1} \gets (1-\alpha)\hat{\vxi}_t + \alpha\hat{\mathbf{M}}\,\mathrm{softmax}(\beta^*\hat{\mathbf{M}}^\top\hat{\vxi}_t + \log\mathbf{r}) + \sqrt{2\alpha/\beta^*}\,\boldsymbol{\varepsilon}_t$
+    \EndFor
+    \State Draw magnitude: $r \sim \{r_k^{\text{mag}}\}$ \Comment{condition-specific if weighted}
+    \State Rescale: $\mathbf{m}_{\text{synth}} \gets r \cdot \hat{\vxi}_T / \|\hat{\vxi}_T\|$
+    \State Inverse PCA + destandardize: $\mathbf{x}_{\text{synth}} \gets \boldsymbol{\sigma} \odot (\mathbf{W}\,\mathbf{m}_{\text{synth}} + \bar{\mathbf{z}}) + \boldsymbol{\mu}$
+    \State Split into visit records: $\mathbf{x}_{\text{synth}}^{(1)}, \mathbf{x}_{\text{synth}}^{(2)}, \mathbf{x}_{\text{synth}}^{(3)}$
+\EndFor
+\end{algorithmic}
+\end{algorithm}
 
-\subsection{Validation Framework}
+\subsection{Baseline and Validation Framework}
 \label{sec:validation}
 
-We evaluated synthetic patient quality through four progressively stringent levels.
+As a baseline, we generated synthetic patients by fitting a single multivariate
+normal (MVN) distribution to the same $K{=}23$ concatenated 216-dimensional patient
+profiles. Critically, both SA and MVN operated on the same concatenated
+representation---each patient's three visits were joined into one vector before
+generation, so that both methods had the opportunity to capture cross-visit
+dependencies. For SA, this structure was preserved through the Hopfield energy
+landscape operating on 18-dimensional PCA projections of the concatenated vectors.
+For MVN, the $216 \times 216$ sample covariance matrix had rank at most~22 and was
+regularized using Ledoit--Wolf shrinkage~\citep{Ledoit2004}, which inflated
+eigenvalues in the 194 null dimensions. We then evaluated both SA and MVN synthetic
+patients through four progressively stringent validation levels.
 \textbf{Level~1 (Marginal Plausibility)} tested whether individual feature
 distributions matched, using per-feature means, standard deviations, and known
 physiological relationships. \textbf{Level~2 (Joint Structure)} tested whether the
@@ -142,7 +179,7 @@ cohorts of 100 patients each from the Healthy ($n{=}14$), PCOS ($n{=}3$), and PE
 ($n{=}5$) subgroups using multiplicity-weighted sampling. \textbf{Level~4 (Mechanistic
 Consistency)} tested whether synthetic patients produced biologically plausible
 outputs under an independent mechanistic model. We used the Hockin--Mann BZ2012
-coagulation model~\citep{Hockin2002,Luan2007}, a system of 58 ODEs with 64 rate
+coagulation model~\citep{Hockin2002,BrummelZiedins2012}, a system of 58 ODEs with 64 rate
 constants, in which 5 rate constants were calibrated on Visit~1 real patients at the
 population level and the remaining 59 were held at literature values. We ran the model
 on all real and synthetic patients under two conditions (TF-only and TF+TM) and

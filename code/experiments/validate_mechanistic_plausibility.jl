@@ -332,11 +332,16 @@ end
 @info "\nGenerating plots …"
 
 # ── Plot 1: Predicted vs Measured scatter (real + synthetic, by visit) ────────
+# Color = visit (teal/green/orange), fill = source (solid=Real, open=Synth)
+visit_colors = [RGB(0.05, 0.40, 0.40), RGB(0.05, 0.40, 0.05), RGB(0.65, 0.20, 0.05)]
+visit_labels_short = ["V1 (BL)", "V2 (1st tri)", "V3 (3rd tri)"]
+bg_color = RGB(0.97, 0.97, 0.98)
+
 for cond in ["TF-only", "TF+TM"]
     csub = filter(r -> r.Condition == cond, results)
 
     plots_list = []
-    for feat in FEATURE_LABELS
+    for (fi, feat) in enumerate(FEATURE_LABELS)
         fsub = filter(r -> r.Feature == feat, csub)
 
         all_vals = vcat(fsub.Measured, fsub.Predicted)
@@ -344,34 +349,39 @@ for cond in ["TF-only", "TF+TM"]
         margin = 0.1 * max(hi - lo, 1e-6)
         lo -= margin; hi += margin
 
-        p = plot(; xlabel="Measured", ylabel="Predicted", title=feat,
-                 legend=:topleft, size=(400, 400), xlim=(lo, hi), ylim=(lo, hi),
-                 guidefontsize=8, titlefontsize=9)
-        plot!(p, [lo, hi], [lo, hi]; ls=:dash, lc=:gray, lw=1.5, label="y=x")
+        p = plot(; xlabel="Measured", ylabel= fi == 1 ? "Predicted" : "",
+                 title=feat,
+                 legend= fi == 5 ? :topleft : false,
+                 xlim=(lo, hi), ylim=(lo, hi),
+                 guidefontsize=9, titlefontsize=10, tickfontsize=7,
+                 background_color_inside=bg_color,
+                 grid=false, framestyle=:box,
+                 margin=4Plots.mm, aspect_ratio=1)
+        plot!(p, [lo, hi], [lo, hi]; ls=:dash, lc=:gray50, lw=1.5, label="y=x")
 
-        # Real patients by visit
-        for (v, mc, ms_shape, lbl) in [
-            (1, :steelblue, :circle,    "Real V1"),
-            (2, :royalblue, :square,    "Real V2"),
-            (3, :navy,      :utriangle, "Real V3"),
-        ]
+        # Real patients: filled circles, by visit
+        for v in 1:3
             vsub = filter(r -> r.Source == "Real" && r.Visit == v, fsub)
             if nrow(vsub) > 0
                 scatter!(p, vsub.Measured, vsub.Predicted;
-                         label=lbl, mc=mc, ms=5, ma=0.7, shape=ms_shape)
+                         label="Real $(visit_labels_short[v])",
+                         color=visit_colors[v], ms=6, ma=0.85,
+                         markerstrokecolor=:white, markerstrokewidth=0.8,
+                         markershape=:circle)
             end
         end
 
-        # Synthetic patients by visit
-        for (v, mc, ms_shape, lbl) in [
-            (1, :coral,      :diamond,   "Synth V1"),
-            (2, :orangered,  :dtriangle, "Synth V2"),
-            (3, :darkred,    :hexagon,   "Synth V3"),
-        ]
+        # Synthetic patients: open markers (same color, ring only), by visit
+        for v in 1:3
             vsub = filter(r -> r.Source == "Synthetic" && r.Visit == v, fsub)
             if nrow(vsub) > 0
                 scatter!(p, vsub.Measured, vsub.Predicted;
-                         label=lbl, mc=mc, ms=4, ma=0.5, shape=ms_shape)
+                         label="Synth $(visit_labels_short[v])",
+                         color=visit_colors[v], ms=4, ma=0.5,
+                         markerstrokecolor=visit_colors[v], markerstrokewidth=1.2,
+                         markershape=:circle,
+                         markerstrokealpha=0.6,
+                         fillalpha=0.0)
             end
         end
 
@@ -379,9 +389,10 @@ for cond in ["TF-only", "TF+TM"]
     end
 
     cond_tag = cond == "TF-only" ? "tf_only" : "tf_tm"
-    p_all = plot(plots_list...; layout=(1, 5), size=(2200, 450),
+    p_all = plot(plots_list...; layout=(1, 5), size=(2200, 500),
                  plot_title="Level 4: BZ2012 Predicted vs Measured — $cond",
-                 margin=8Plots.mm)
+                 plot_titlefontsize=13,
+                 margin=6Plots.mm, left_margin=10Plots.mm)
     savefig(p_all, joinpath(_PATH_TO_FIG, "validate_mechanistic_$(cond_tag).pdf"))
     savefig(p_all, joinpath(_PATH_TO_FIG, "validate_mechanistic_$(cond_tag).png"))
     @info "  Saved validate_mechanistic_$(cond_tag).pdf"

@@ -63,32 +63,41 @@ Z_sa = (X_sa .- μ_r) ./ σ_r
 P_sa = MultivariateStats.transform(pca_rec, Z_sa)
 sa_visits = Int.(df_synth.Visit)
 
-# MVN synthetic — generate per-visit (independent MVN per visit, like the JuliaCon baseline)
+# MVN synthetic — concatenated MVN (single 216-dim distribution, matching methods section)
 complete_subjects = let
     all_s = unique(df_real.SubjectID)
     [s for s in all_s if sum(df_real.SubjectID .== s) == 3 &&
        all(v -> any((df_real.SubjectID .== s) .& (df_real.Visit .== v)), 1:3)]
 end
+K = length(complete_subjects)
+n_visits = 3
+d_concat = n_assays * n_visits
 n_mvn = 100
 
-Random.seed!(42)
-mvn_rows = Vector{Float64}[]
-mvn_visits_vec = Int[]
-for v in 1:3
-    # get real data for this visit
-    visit_data = Float64[]
-    for s in complete_subjects
+# Build concatenated real matrix (K × d_concat) for MVN fitting
+X_real_concat = Matrix{Float64}(undef, K, d_concat)
+for (i, s) in enumerate(complete_subjects)
+    for v in 1:n_visits
         row = findfirst((df_real.SubjectID .== s) .& (df_real.Visit .== v))
-        for col in kept_cols
-            push!(visit_data, Float64(df_real[row, col]))
+        offset = (v - 1) * n_assays
+        for (j, col) in enumerate(kept_cols)
+            X_real_concat[i, offset + j] = Float64(df_real[row, col])
         end
     end
-    X_v = reshape(visit_data, n_assays, length(complete_subjects))
-    μ_v = vec(mean(X_v, dims=2))
-    Σ_v = cov(X_v'); Σ_v = (Σ_v + Σ_v') / 2; Σ_v += 1e-6 * I
-    samples = rand(MvNormal(μ_v, Σ_v), n_mvn)
-    for i in 1:n_mvn
-        push!(mvn_rows, samples[:, i])
+end
+μ_mvn = vec(mean(X_real_concat, dims=1))
+Σ_mvn = cov(X_real_concat); Σ_mvn = (Σ_mvn + Σ_mvn') / 2; Σ_mvn += 1e-6 * I
+
+Random.seed!(42)
+X_mvn_concat = rand(MvNormal(μ_mvn, Σ_mvn), n_mvn)'  # n_mvn × d_concat
+
+# Split into per-visit rows for PCA projection (same as real and SA)
+mvn_rows = Vector{Float64}[]
+mvn_visits_vec = Int[]
+for i in 1:n_mvn
+    for v in 1:n_visits
+        offset = (v - 1) * n_assays
+        push!(mvn_rows, X_mvn_concat[i, offset+1:offset+n_assays])
         push!(mvn_visits_vec, v)
     end
 end
@@ -99,8 +108,8 @@ P_mvn = MultivariateStats.transform(pca_rec, Z_mvn)
 @info "  Real rows: $(size(X_real, 2)), SA rows: $(nrow(df_synth)), MVN rows: $(length(mvn_visits_vec))"
 
 # ── Colors ───────────────────────────────────────────────────────────────────
-synth_colors = [RGB(0.35, 0.70, 0.70), RGB(0.40, 0.68, 0.40), RGB(0.85, 0.50, 0.35)]
-real_colors  = [RGB(0.05, 0.40, 0.40), RGB(0.05, 0.40, 0.05), RGB(0.65, 0.20, 0.05)]
+synth_colors = [RGB(0.45, 0.70, 0.88), RGB(0.55, 0.80, 0.55), RGB(0.92, 0.60, 0.40)]
+real_colors  = [RGB(0.10, 0.45, 0.70), RGB(0.25, 0.65, 0.25), RGB(0.85, 0.35, 0.10)]
 visit_labels = ["V1: not pregnant", "V2: first trimester", "V3: third trimester"]
 bg_color = RGB(0.97, 0.97, 0.98)
 
@@ -140,8 +149,7 @@ for v in 1:3
 end
 
 p_pca = plot(panels...; layout=(2, 3), size=(1500, 900),
-    plot_title="PCA Projection: SA vs MVN by Visit",
-    plot_titlefontsize=14, margin=5Plots.mm)
+    margin=5Plots.mm)
 savefig(p_pca, joinpath(_PATH_TO_FIG, "sa_vs_mvn_pca_by_visit.pdf"))
 savefig(p_pca, joinpath(_PATH_TO_FIG, "sa_vs_mvn_pca_by_visit.png"))
 @info "  Saved sa_vs_mvn_pca_by_visit.pdf"

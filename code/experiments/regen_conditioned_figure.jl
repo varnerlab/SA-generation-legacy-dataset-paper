@@ -158,8 +158,7 @@ for (ci, (cond_label, df_r, df_s)) in enumerate(zip(cond_labels, real_dfs, synth
 end
 
 p_cond = plot(panels...; layout=(1, 3), size=(1800, 600),
-    plot_title="Level 3: Condition-Specific Feature Preservation",
-    plot_titlefontsize=13, left_margin=10Plots.mm, margin=6Plots.mm)
+    left_margin=10Plots.mm, margin=6Plots.mm)
 savefig(p_cond, joinpath(_PATH_TO_FIG, "validate_conditioned_features.pdf"))
 savefig(p_cond, joinpath(_PATH_TO_FIG, "validate_conditioned_features.png"))
 @info "  Saved validate_conditioned_features.pdf"
