@@ -10,15 +10,35 @@
 # SA preserves the data manifold geometry directly.
 # ======================================================================================== #
 
-include(joinpath(@__DIR__, "..", "Include.jl"))
+using Pkg
+Pkg.activate(joinpath(@__DIR__, ".."))
 
-# ── Load pipeline state ───────────────────────────────────────────────────────
-@info "Loading pipeline state …"
-JLD2.@load joinpath(_PATH_TO_DATA, "full_longitudinal_memory.jld2") X̂ pca_concat std_params_concat pca_norms complete_subjects subject_conditions kept_cols n_assays df_clean
+using CSV, DataFrames, Statistics, Plots, StatsBase, LinearAlgebra, Random
+using Distributions
 
-d_pca, K = size(X̂)
+const _ROOT = joinpath(@__DIR__, "..")
+const _PATH_TO_DATA = joinpath(_ROOT, "data")
+const _PATH_TO_FIG  = joinpath(_ROOT, "figs")
+
+# ── Load data from CSVs ──────────────────────────────────────────────────────
+@info "Loading data from CSVs …"
+df_real  = CSV.read(joinpath(_PATH_TO_DATA, "cleaned_full_data.csv"), DataFrame)
+df_synth = CSV.read(joinpath(_PATH_TO_DATA, "synthetic_full_longitudinal.csv"), DataFrame)
+
+# Identify complete real patients (all 3 visits)
+all_subjects = unique(df_real.SubjectID)
+complete_subjects = [s for s in all_subjects
+    if sum(df_real.SubjectID .== s) == 3 &&
+       all(v -> any((df_real.SubjectID .== s) .& (df_real.Visit .== v)), 1:3)]
+
+# Identify assay columns (shared between real and synth CSVs)
+meta_cols = [:SubjectID, :Visit, :DrawTag, :Condition, :PCOS, :DevelopedPE, :DevelopedHTN]
+synth_meta = [:SyntheticID, :Visit]
+kept_cols = [c for c in Symbol.(names(df_synth)) if c ∉ synth_meta]
+n_assays = length(kept_cols)
 n_visits = 3
 d_concat = n_assays * n_visits
+K = length(complete_subjects)
 
 @info "  $K complete subjects, $n_assays features/visit, $d_concat total dimensions"
 
@@ -29,17 +49,16 @@ d_concat = n_assays * n_visits
 X_real = Matrix{Float64}(undef, K, d_concat)
 for (i, s) in enumerate(complete_subjects)
     for v in 1:n_visits
-        mask = (df_clean.SubjectID .== s) .& (df_clean.Visit .== v)
+        mask = (df_real.SubjectID .== s) .& (df_real.Visit .== v)
         row = findfirst(mask)
         offset = (v - 1) * n_assays
         for (j, col) in enumerate(kept_cols)
-            X_real[i, offset + j] = df_clean[row, col]
+            X_real[i, offset + j] = Float64(df_real[row, col])
         end
     end
 end
 
 # SA synthetic data
-df_synth = CSV.read(joinpath(_PATH_TO_DATA, "synthetic_full_longitudinal.csv"), DataFrame)
 n_synth = length(unique(df_synth.SyntheticID))
 X_sa = Matrix{Float64}(undef, n_synth, d_concat)
 for i in 1:n_synth
@@ -47,13 +66,13 @@ for i in 1:n_synth
         row_idx = findfirst((df_synth.SyntheticID .== i) .& (df_synth.Visit .== v))
         offset = (v - 1) * n_assays
         for (j, col) in enumerate(kept_cols)
-            X_sa[i, offset + j] = df_synth[row_idx, col]
+            X_sa[i, offset + j] = Float64(df_synth[row_idx, col])
         end
     end
 end
 @info "  SA: $n_synth patients"
 
-# MVN synthetic data (generate inline — same method as paper_sa_vs_mvn.jl)
+# MVN synthetic data
 @info "  Generating MVN synthetic data …"
 μ_mvn = vec(mean(X_real, dims=1))
 Σ_mvn = cov(X_real)
@@ -188,40 +207,101 @@ rank_mvn  = sum(eig_mvn .> thresh)
 
 # Correlation heatmaps
 clim = (-1, 1)
-p1 = heatmap(C_real; title="Real", c=:RdBu, clim=clim, aspect_ratio=1,
-             xticks=false, yticks=false, size=(400, 400))
-p2 = heatmap(C_sa; title="SA", c=:RdBu, clim=clim, aspect_ratio=1,
-             xticks=false, yticks=false, size=(400, 400))
-p3 = heatmap(C_mvn; title="MVN", c=:RdBu, clim=clim, aspect_ratio=1,
-             xticks=false, yticks=false, size=(400, 400))
+hm_kw = (c=:RdBu, aspect_ratio=1, xticks=false, yticks=false,
+          axis=false, border=:none, colorbar_titlefontsize=8, yflip=true)
+# First panel (Real) gets visit labels on axes
+mid1 = div(n_assays, 2)
+mid2 = n_assays + mid1
+mid3 = 2*n_assays + mid1
+visit_ticks = ([mid1, mid2, mid3], ["V1", "V2", "V3"])
 
-# Difference heatmaps
-dlim = (-0.5, 0.5)
-p4 = heatmap(C_sa - C_real; title="SA - Real", c=:RdBu, clim=dlim, aspect_ratio=1,
-             xticks=false, yticks=false, size=(400, 400))
-p5 = heatmap(C_mvn - C_real; title="MVN - Real", c=:RdBu, clim=dlim, aspect_ratio=1,
-             xticks=false, yticks=false, size=(400, 400))
+p1 = heatmap(C_real; title="Real", clim=clim, hm_kw...)
+# Add V1/V2/V3 labels as annotations on the Real panel
+d = size(C_real, 1)
+for (label, mid) in [("V1", mid1), ("V2", mid2), ("V3", mid3)]
+    # bottom edge (x-axis labels)
+    annotate!(p1, mid, d + 8, text(label, 9, :center, :black))
+    # left edge (y-axis labels)
+    annotate!(p1, -8, mid, text(label, 9, :center, :black))
+end
+# Other panels without axis labels
+p2 = heatmap(C_sa; title="SA", clim=clim, hm_kw...)
+p3 = heatmap(C_mvn; title="MVN", clim=clim, hm_kw...)
+
+# Difference heatmaps (all three pairwise) — same scale as top row
+p4 = heatmap(C_sa - C_real; title="SA − Real", clim=clim, hm_kw...)
+p5 = heatmap(C_mvn - C_real; title="MVN − Real", clim=clim, hm_kw...)
+p6 = heatmap(C_sa - C_mvn; title="SA − MVN", clim=clim, hm_kw...)
 
 # add block dividers
-for p in [p1, p2, p3, p4, p5]
+for p in [p1, p2, p3, p4, p5, p6]
     vline!(p, [n_assays + 0.5, 2*n_assays + 0.5]; lc=:black, lw=1, label="")
     hline!(p, [n_assays + 0.5, 2*n_assays + 0.5]; lc=:black, lw=1, label="")
 end
 
-p_heat = plot(p1, p2, p3, p4, p5; layout=(2, 3), size=(1200, 800),
-              plot_title="Level 2: Cross-Visit Correlation Structure")
+p_heat = plot(p1, p2, p3, p4, p5, p6; layout=(2, 3), size=(1400, 900),
+              plot_title="Level 2: Cross-Visit Correlation Structure",
+              margin=3Plots.mm)
 savefig(p_heat, joinpath(_PATH_TO_FIG, "validate_cross_visit_corr.pdf"))
 savefig(p_heat, joinpath(_PATH_TO_FIG, "validate_cross_visit_corr.png"))
 @info "  Saved validate_cross_visit_corr.pdf"
 
-# Eigenvalue spectrum
+# Supplementary version: ±0.5 scale on residuals to reveal fine structure
+dlim = (-0.5, 0.5)
+frob_sa_real = round(norm(C_sa - C_real), digits=2)
+frob_mvn_real = round(norm(C_mvn - C_real), digits=2)
+frob_sa_mvn = round(norm(C_sa - C_mvn), digits=2)
+p4s = heatmap(C_sa - C_real; title="SA − Real (‖Δ‖=$frob_sa_real)", clim=dlim, hm_kw...)
+p5s = heatmap(C_mvn - C_real; title="MVN − Real (‖Δ‖=$frob_mvn_real)", clim=dlim, hm_kw...)
+p6s = heatmap(C_sa - C_mvn; title="SA − MVN (‖Δ‖=$frob_sa_mvn)", clim=dlim, hm_kw...)
+for p in [p4s, p5s, p6s]
+    vline!(p, [n_assays + 0.5, 2*n_assays + 0.5]; lc=:black, lw=1, label="")
+    hline!(p, [n_assays + 0.5, 2*n_assays + 0.5]; lc=:black, lw=1, label="")
+end
+p_heat_supp = plot(p1, p2, p3, p4s, p5s, p6s; layout=(2, 3), size=(1400, 900),
+                   plot_title="Level 2: Cross-Visit Correlation Structure (±0.5 residual scale)",
+                   margin=3Plots.mm)
+savefig(p_heat_supp, joinpath(_PATH_TO_FIG, "validate_cross_visit_corr_supp.pdf"))
+savefig(p_heat_supp, joinpath(_PATH_TO_FIG, "validate_cross_visit_corr_supp.png"))
+@info "  Saved validate_cross_visit_corr_supp.pdf"
+
+# Eigenvalue spectrum — full range to show the MVN hallucination gap
 n_show = min(40, length(eig_real))
-p_eig = plot(1:n_show, eig_real[1:n_show]; label="Real", lw=2, mc=:steelblue, marker=:circle,
-             xlabel="Component", ylabel="Eigenvalue", title="Covariance Eigenvalue Spectrum",
-             yscale=:log10, legend=:topright)
-plot!(p_eig, 1:n_show, eig_sa[1:n_show]; label="SA", lw=2, mc=:coral, marker=:diamond)
-plot!(p_eig, 1:min(n_show, length(eig_mvn)), eig_mvn[1:min(n_show, length(eig_mvn))];
-      label="MVN", lw=2, mc=:green, marker=:utriangle)
+n_mvn_show = min(n_show, length(eig_mvn))
+
+# Clamp only true zeros to a small floor for log display (keep real values)
+eig_floor = 1e-14
+eig_r_plot = max.(eig_real[1:n_show], eig_floor)
+eig_s_plot = max.(eig_sa[1:n_show], eig_floor)
+eig_m_plot = max.(eig_mvn[1:n_mvn_show], eig_floor)
+
+p_eig = plot(1:n_show, eig_r_plot; label="Real (rank 22)", lw=2.5, mc=:steelblue,
+             marker=:circle, ms=4, ma=0.8,
+             xlabel="Component", ylabel="Eigenvalue",
+             title="Covariance Eigenvalue Spectrum",
+             yscale=:log10, legend=:right, size=(650, 450),
+             ylim=(1e-14, maximum(eig_real) * 3),
+             yticks=[1e-12, 1e-10, 1e-8, 1e-6, 1e-4, 1e-2, 1e0, 1e1, 1e2],
+             guidefontsize=11, titlefontsize=12, tickfontsize=8, legendfontsize=9)
+plot!(p_eig, 1:n_show, eig_s_plot; label="SA (rank 18)", lw=2.5, mc=:coral,
+      marker=:diamond, ms=4, ma=0.8)
+plot!(p_eig, 1:n_mvn_show, eig_m_plot; label="MVN (rank 23+)", lw=2.5, mc=:forestgreen,
+      marker=:utriangle, ms=4, ma=0.8)
+
+# Annotate the rank drop points
+vline!(p_eig, [18.5]; lc=:coral, ls=:dash, lw=1.5, label="")
+vline!(p_eig, [22.5]; lc=:steelblue, ls=:dash, lw=1.5, label="")
+annotate!(p_eig, 18.5, maximum(eig_real) * 1.5, text("PCA\ntrunc.", 7, :center, :coral))
+annotate!(p_eig, 22.5, maximum(eig_real) * 1.5, text("K−1\nrank", 7, :center, :steelblue))
+
+# Shade the "spurious MVN variance" region
+plot!(p_eig, Shape([23, n_show, n_show, 23],
+      [1e-14, 1e-14, maximum(eig_real) * 3, maximum(eig_real) * 3]);
+      fillalpha=0.08, fc=:forestgreen, lc=:transparent, label="")
+
+# Label the gap
+annotate!(p_eig, 32, 1e-1, text("MVN: spurious\nvariance", 8, :center, :forestgreen))
+
 savefig(p_eig, joinpath(_PATH_TO_FIG, "validate_eigenvalue_spectrum.pdf"))
 savefig(p_eig, joinpath(_PATH_TO_FIG, "validate_eigenvalue_spectrum.png"))
 @info "  Saved validate_eigenvalue_spectrum.pdf"

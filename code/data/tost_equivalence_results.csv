@@ -1,0 +1,25 @@
+Condition,Feature,MRE,TOST_p,Equivalent
+Healthy (n=14),FVIII,0.017,0.0795,No
+Healthy (n=14),vWF,0.069,0.3831,No
+Healthy (n=14),FIX,0.071,0.2133,No
+Healthy (n=14),FV,0.002,0.0,Yes
+Healthy (n=14),α₂-AP,0.094,0.4532,No
+Healthy (n=14),FVII,0.077,0.3268,No
+Healthy (n=14),Fbgn,0.009,0.0084,Yes
+Healthy (n=14),Plgn,0.044,0.0456,Yes
+PCOS (n=3),FVIII,0.129,0.6045,No
+PCOS (n=3),vWF,0.206,0.7344,No
+PCOS (n=3),FIX,0.1,0.5015,No
+PCOS (n=3),FV,0.056,0.1377,No
+PCOS (n=3),α₂-AP,0.086,0.4441,No
+PCOS (n=3),FVII,0.03,0.2507,No
+PCOS (n=3),Fbgn,0.049,0.2465,No
+PCOS (n=3),Plgn,0.146,0.7869,No
+PE (n=5),FVIII,0.111,0.5561,No
+PE (n=5),vWF,0.062,0.3675,No
+PE (n=5),FIX,0.078,0.3299,No
+PE (n=5),FV,0.005,0.0025,Yes
+PE (n=5),α₂-AP,0.025,0.0913,No
+PE (n=5),FVII,0.04,0.2239,No
+PE (n=5),Fbgn,0.046,0.19,No
+PE (n=5),Plgn,0.08,0.3324,No

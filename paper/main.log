@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  22 MAR 2026 01:16
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  22 MAR 2026 09:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -561,50 +561,44 @@ Overfull \hbox (30.66064pt too wide) in paragraph at lines 93--104
 off-diagonal blocks re-flect-ing cross-visit dependencies---
  []
 
-<../code/figs/validate_cross_visit_corr.pdf, id=148, 1204.5pt x 803.0pt>
+<../code/figs/validate_cross_visit_corr.pdf, id=147, 1405.25pt x 903.375pt>
 File: ../code/figs/validate_cross_visit_corr.pdf Graphic file (type pdf)
 <use ../code/figs/validate_cross_visit_corr.pdf>
 Package pdftex.def Info: ../code/figs/validate_cross_visit_corr.pdf  used on in
-put line 120.
-(pdftex.def)             Requested size: 469.75502pt x 313.16875pt.
-<../code/figs/validate_eigenvalue_spectrum.pdf, id=149, 602.25pt x 401.5pt>
-File: ../code/figs/validate_eigenvalue_spectrum.pdf Graphic file (type pdf)
-<use ../code/figs/validate_eigenvalue_spectrum.pdf>
-Package pdftex.def Info: ../code/figs/validate_eigenvalue_spectrum.pdf  used on
- input line 132.
-(pdftex.def)             Requested size: 305.33789pt x 203.56764pt.
-<../code/figs/sa_vs_mvn_pca_by_visit.pdf, id=150, 1505.625pt x 903.375pt>
+put line 119.
+(pdftex.def)             Requested size: 469.75502pt x 301.98808pt.
+<../code/figs/sa_vs_mvn_pca_by_visit.pdf, id=148, 1505.625pt x 903.375pt>
 File: ../code/figs/sa_vs_mvn_pca_by_visit.pdf Graphic file (type pdf)
 <use ../code/figs/sa_vs_mvn_pca_by_visit.pdf>
 Package pdftex.def Info: ../code/figs/sa_vs_mvn_pca_by_visit.pdf  used on input
- line 144.
+ line 143.
 (pdftex.def)             Requested size: 469.75502pt x 281.8491pt.
 
 
 [6]
-<../code/figs/validate_conditioned_pca.pdf, id=161, 702.625pt x 602.25pt>
-File: ../code/figs/validate_conditioned_pca.pdf Graphic file (type pdf)
-<use ../code/figs/validate_conditioned_pca.pdf>
-Package pdftex.def Info: ../code/figs/validate_conditioned_pca.pdf  used on inp
-ut line 183.
-(pdftex.def)             Requested size: 305.33789pt x 261.72852pt.
+<../code/figs/validate_conditioned_features.pdf, id=159, 1806.75pt x 602.25pt>
+File: ../code/figs/validate_conditioned_features.pdf Graphic file (type pdf)
+<use ../code/figs/validate_conditioned_features.pdf>
+Package pdftex.def Info: ../code/figs/validate_conditioned_features.pdf  used o
+n input line 197.
+(pdftex.def)             Requested size: 469.75502pt x 156.5813pt.
 
 
 [7]
-<../code/figs/validate_mechanistic_tf_only.pdf, id=177, 2208.25pt x 451.6875pt>
+<../code/figs/validate_mechanistic_tf_only.pdf, id=174, 2208.25pt x 451.6875pt>
 
 File: ../code/figs/validate_mechanistic_tf_only.pdf Graphic file (type pdf)
 <use ../code/figs/validate_mechanistic_tf_only.pdf>
 Package pdftex.def Info: ../code/figs/validate_mechanistic_tf_only.pdf  used on
- input line 249.
+ input line 269.
 (pdftex.def)             Requested size: 469.75502pt x 96.08397pt.
-<../code/figs/validate_mechanistic_ratios_tf_only.pdf, id=178, 2208.25pt x 451.
+<../code/figs/validate_mechanistic_ratios_tf_only.pdf, id=175, 2208.25pt x 451.
 6875pt>
 File: ../code/figs/validate_mechanistic_ratios_tf_only.pdf Graphic file (type p
 df)
 <use ../code/figs/validate_mechanistic_ratios_tf_only.pdf>
 Package pdftex.def Info: ../code/figs/validate_mechanistic_ratios_tf_only.pdf  
-used on input line 262.
+used on input line 282.
 (pdftex.def)             Requested size: 469.75502pt x 96.08397pt.
 ) (./sections/discussion.tex
 
@@ -627,11 +621,10 @@ cmr/m/n/10.95 .
 
 [13 <../code/figs/validate_cross_visit_corr.pdf>]
 
-[14 <../code/figs/validate_eigenvalue_spectrum.pdf> <../code/figs/sa_vs_mvn_pca
-_by_visit.pdf>]
+[14 <../code/figs/sa_vs_mvn_pca_by_visit.pdf>]
 
-[15 <../code/figs/validate_conditioned_pca.pdf> <../code/figs/validate_mechanis
-tic_tf_only.pdf>]
+[15 <../code/figs/validate_conditioned_features.pdf> <../code/figs/validate_mec
+hanistic_tf_only.pdf>]
 
 [16 <../code/figs/validate_mechanistic_ratios_tf_only.pdf>] (./main.aux)
  ***********
@@ -642,13 +635,13 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 2CE86942A4C2345C39A0A278AB378C8D;2332.
  ) 
 Here is how much of TeX's memory you used:
- 13734 strings out of 473190
- 217155 string characters out of 5715801
- 640790 words of memory out of 5000000
- 36735 multiletter control sequences out of 15000+600000
+ 13723 strings out of 473190
+ 216700 string characters out of 5715801
+ 643434 words of memory out of 5000000
+ 36725 multiletter control sequences out of 15000+600000
  571832 words of font info for 85 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,9n,79p,686b,576s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,9n,79p,1501b,546s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
@@ -667,10 +660,10 @@ e/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive
 5/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2025
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025/
 texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (16 pages, 1304786 bytes).
+Output written on main.pdf (16 pages, 1312558 bytes).
 PDF statistics:
- 333 PDF objects out of 1000 (max. 8388607)
- 258 compressed objects within 3 object streams
- 56 named destinations out of 1000 (max. 500000)
- 153 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 330 PDF objects out of 1000 (max. 8388607)
+ 254 compressed objects within 3 object streams
+ 55 named destinations out of 1000 (max. 500000)
+ 148 words of extra memory for PDF output out of 10000 (max. 10000000)
 

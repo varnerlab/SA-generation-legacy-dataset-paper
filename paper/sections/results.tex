@@ -104,49 +104,56 @@ where MVN systematically underestimated cross-visit dependencies that SA retaine
 
 We examined the eigenvalue spectrum of the sample covariance matrix to understand the
 structural origin of this difference. The real data had rank~22 (eigenvalues dropping
-to numerical zero at component~23), reflecting the $K{=}23$ patient constraint
-(Fig.~\ref{fig:eigenvalue-spectrum}). SA's spectrum dropped at component~18, the PCA
-truncation point, faithfully reflecting the low-rank structure without introducing
-variance in null dimensions. In contrast, MVN's Ledoit--Wolf regularization inflated
-eigenvalues beyond component~22, producing spurious variance in dimensions where the
-data contained none. This spurious variance manifested as the increased dispersion
-visible in PCA projections: SA-generated patients occupied the same region of PCA
-space as real patients across all three visits, while MVN-generated patients showed
-substantially greater scatter, particularly at Visits~2 and~3
-(Fig.~\ref{fig:pca-by-visit}).
+to numerical zero at component~23), reflecting the $K{=}23$ patient constraint. SA's
+spectrum dropped at component~18 (the PCA truncation point), faithfully reflecting
+the low-rank structure without introducing variance in null dimensions. In contrast,
+MVN's Ledoit--Wolf regularization inflated eigenvalues beyond component~22, producing
+spurious variance in 194 dimensions where the data contained none (Supplementary
+Fig.~S3). This spurious variance manifested as the increased dispersion visible in
+PCA projections: SA-generated patients occupied the same region of PCA space as real
+patients across all three visits, while MVN-generated patients showed substantially
+greater scatter, particularly at Visits~2 and~3 (Fig.~\ref{fig:pca-by-visit}).
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{validate_cross_visit_corr.pdf}
 \caption{\textbf{Cross-visit correlation structure.} Top row: full $216 \times 216$
-Pearson correlation matrices for Real (left), SA (center), and MVN (right)
-populations, with black lines delineating the three $72 \times 72$ visit blocks.
-Bottom row: residual matrices (SA$-$Real and MVN$-$Real). SA preserves the
-off-diagonal block structure encoding cross-visit dependencies; MVN's
-regularized estimate shrinks these correlations toward zero.}
+Pearson correlation matrices for Real ($K{=}23$, left), SA ($N{=}100$, center),
+and MVN ($N{=}100$, right) populations. Each matrix is organized as a
+$3 \times 3$ grid of $72 \times 72$ blocks (delineated by black lines), where
+the diagonal blocks capture within-visit feature correlations (V1--V1, V2--V2,
+V3--V3) and the off-diagonal blocks capture cross-visit dependencies (e.g.,
+V1--V3: does a patient's baseline Factor~VIII predict their third-trimester
+Factor~VIII?). SA preserves both the within-visit and cross-visit block
+structure. Bottom row: pairwise residual matrices (element-wise subtraction),
+all plotted on the same $\pm 1$ color scale as the top row. The SA$-$Real
+residual shows small, unstructured deviations distributed throughout. The
+MVN$-$Real residual is notably smoother---particularly in the off-diagonal
+blocks---reflecting the Ledoit--Wolf regularization that systematically shrinks
+cross-visit correlations toward zero. The SA$-$MVN residual confirms that the
+two methods differ most in precisely these off-diagonal blocks, where SA
+retains longitudinal dependencies that MVN's rank-deficient covariance estimate
+cannot represent. A version with amplified residual color scale ($\pm 0.5$) and
+Frobenius norms is provided in Supplementary Fig.~S1.}
 \label{fig:cross-visit-corr}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.65\textwidth]{validate_eigenvalue_spectrum.pdf}
-\caption{\textbf{Covariance eigenvalue spectrum.} Log-scale eigenvalues of the
-$216 \times 216$ sample covariance for Real ($K{=}23$, rank~22), SA ($N{=}100$),
-and MVN ($N{=}100$) populations. SA's spectrum drops at component~18 (the PCA
-truncation), matching the low-rank data structure. MVN's Ledoit--Wolf
-regularization inflates eigenvalues beyond component~22, introducing spurious
-variance in null dimensions.}
-\label{fig:eigenvalue-spectrum}
-\end{figure}
-
-\begin{figure}[ht]
-\centering
 \includegraphics[width=\textwidth]{sa_vs_mvn_pca_by_visit.pdf}
-\caption{\textbf{PCA projections by visit.} Top row: SA-generated patients (light)
-overlaid on real patients (dark) for each visit. Bottom row: MVN-generated
-patients overlaid on real patients. SA patients concentrate around the real data
-cloud at all visits, while MVN patients show greater dispersion, particularly
-at Visits~2 and~3.}
+\caption{\textbf{PCA projections by visit: SA vs.\ MVN.} Each panel shows the
+first two principal components (PC1: 27.7\% variance, PC2: 15.4\%) computed
+from standardized per-visit real patient data ($K{=}23$ patients per visit,
+72 features). Dark markers indicate real patients; lighter markers indicate
+synthetic patients ($N{=}100$). Top row: SA-generated patients (circles)
+cluster tightly around the real data cloud at all three visits, indicating
+that SA preserves the geometry of the data manifold. Bottom row: MVN-generated
+patients (diamonds) show substantially greater dispersion, particularly at
+Visits~2 (first trimester) and~3 (third trimester), where MVN patients extend
+well beyond the convex hull of the real data. This excess scatter reflects the
+spurious variance introduced by Ledoit--Wolf regularization of the
+rank-deficient covariance (Supplementary Fig.~S3). Colors encode visit: teal
+(V1, not pregnant), green (V2, first trimester), orange (V3, third trimester).}
 \label{fig:pca-by-visit}
 \end{figure}
 
@@ -160,36 +167,49 @@ too small for any independent statistical analysis. We used SA's multiplicity-we
 sampling to generate condition-specific cohorts of 100 patients each by upweighting
 attention on the relevant stored patterns.
 
-We projected all real and generated patients into PCA space and observed that the three
-synthetic cohorts separated consistently with the real between-group differences, with
-synthetic Healthy, PCOS, and PE patients clustering around their respective real
-counterparts (Fig.~\ref{fig:conditioned-pca}). This separation was maintained across
-all three individual visits (Supplementary Fig.~S3), indicating that condition-specific
-structure was preserved not only in aggregate but at each pregnancy timepoint.
-Condition-specific feature means were well-preserved: the Healthy cohort showed a
-median MRE of approximately 4\%, while the smaller PCOS cohort had a median MRE of
-approximately 8\%, reflecting the greater uncertainty inherent in amplifying from only
-three stored patterns. These results suggested that SA's attention-weighted
-interpolation on the data manifold can meaningfully amplify rare subgroups in a way
-that preserves their distinguishing clinical features---a capability with direct
-relevance to hypothesis generation and power analysis in understudied patient
-populations. MVN has no mechanism for this: fitting a separate MVN to three PCOS
-patients across 216 features is mathematically impossible (rank~2 covariance), and
-post-hoc subsetting of unconditional MVN samples does not preserve
+We compared condition-specific feature means between real and SA-generated patients
+across eight coagulation features that exhibited between-condition variation
+(Fig.~\ref{fig:conditioned-features}). SA-generated cohorts preserved the
+condition-specific patterns: PCOS patients showed elevated Factor~VIII and vWF
+relative to Healthy patients in both real and synthetic data, PE patients showed
+elevated $\alpha_2$-AP and Factor~IX, and the between-condition rank ordering was
+maintained across all eight features. To quantify equivalence, we performed a
+bootstrap Mann--Whitney test: for each feature and condition, we subsampled the
+synthetic cohort to match the real sample size ($n_{\text{real}}$), applied a
+Mann--Whitney U test, and repeated 1,000 times. We reported the fraction of
+replicates where $p > 0.05$ (i.e., real and synthetic were statistically
+indistinguishable). Across all 24 feature--condition pairs, 19 (79\%) achieved
+$p > 0.05$ in $\geq$90\% of replicates, with a median non-significance fraction
+of 96.2\%. The five features that fell below 90\% were concentrated in
+high-variance features (FIX, FVII, fibrinogen) where the real data exhibited large
+inter-patient variability. PCA projections of the conditioned cohorts are provided
+in Supplementary Figs.~S5--S6. These results demonstrated that SA's
+multiplicity-weighted interpolation on the data manifold can meaningfully amplify
+rare subgroups in a way that preserves their distinguishing clinical features---a
+capability with direct relevance to hypothesis generation and power analysis in
+understudied patient populations. MVN has no mechanism for this: fitting a separate
+MVN to three PCOS patients across 216 features is mathematically impossible (rank~2
+covariance), and post-hoc subsetting of unconditional MVN samples does not preserve
 subgroup-specific structure.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.65\textwidth]{validate_conditioned_pca.pdf}
-\caption{\textbf{Conditional generation of rare clinical subgroups.} PCA
-projection of condition-specific synthetic cohorts generated by
-multiplicity-weighted SA. Large markers: real patients (blue = Healthy,
-$n{=}14$; orange = PCOS, $n{=}3$; red = PE, $n{=}5$). Small markers:
-synthetic patients ($N{=}100$ per condition). Each synthetic cohort clusters
-around its corresponding real patients, demonstrating that SA preserves
-condition-specific signatures even when amplifying from as few as three
-stored patterns.}
-\label{fig:conditioned-pca}
+\includegraphics[width=\textwidth]{validate_conditioned_features.pdf}
+\caption{\textbf{Condition-specific feature preservation.} Grouped bar charts
+comparing real (dark bars) and SA-generated synthetic (light bars) patient
+means ($\pm$ SD error bars) for eight coagulation features, shown separately
+for each clinical subgroup: Healthy ($n{=}14$, left, blue), PCOS ($n{=}3$,
+center, orange), and PE ($n{=}5$, right, red). Values are pooled across all
+three visits. Gray percentages indicate the mean relative error (MRE). Green
+annotations show the bootstrap Mann--Whitney equivalence result: the fraction
+of 1,000 bootstrap replicates (synthetic subsampled to $n_{\text{real}}$) in
+which $p > 0.05$, i.e., real and synthetic could not be distinguished.
+Features achieving $\geq$90\% are shown in green; $<$90\% in red. Across all
+24 feature--condition pairs, 19 (79\%) were statistically indistinguishable in
+$\geq$90\% of replicates (median: 96.2\%). The five features below this
+threshold were concentrated in high-variance features (FIX, FVII, fibrinogen)
+where large inter-patient variability reduced test power.}
+\label{fig:conditioned-features}
 \end{figure}
 
 \subsection{Mechanistic Consistency}
@@ -224,7 +244,7 @@ population level.
 Under TF+TM conditions, the model systematically overcorrected the protein~C
 anticoagulant pathway, producing peak and maximum rate predictions approximately
 0.5$\times$ measured values for both real and synthetic patients (Supplementary
-Fig.~S4). This shared systematic bias was itself informative: if synthetic patients
+Fig.~S7). This shared systematic bias was itself informative: if synthetic patients
 had violated the underlying coagulation biology, they would have deviated from real
 patients in how the mechanistic model processed their factor levels. Instead, cloud
 overlap under TF+TM remained high at 88--91\%.
@@ -232,11 +252,11 @@ overlap under TF+TM remained high at 88--91\%.
 We also verified that the calibration generalized across pregnancy timepoints. The
 model was calibrated only on Visit~1 real patients, yet the predicted-to-measured
 ratios at Visits~2 and~3 under TF-only conditions were 0.96$\times$ and 1.07$\times$,
-respectively (Supplementary Fig.~S6), confirming that the calibrated rate constants
+respectively (Supplementary Fig.~S9), confirming that the calibrated rate constants
 captured a stable population-level property of the coagulation system rather than
 overfitting to the training visit. Spearman rank correlations between predicted and
 measured values were moderate for ETP ($\rho \approx 0.6$--$0.8$ for real patients,
-$\rho \approx 0.6$--$0.65$ for synthetic; Supplementary Fig.~S7) and weak for other
+$\rho \approx 0.6$--$0.65$ for synthetic; Supplementary Fig.~S10) and weak for other
 features, which was expected given that the Hockin--Mann model was not designed to
 resolve inter-patient variability from a 5-parameter population-level calibration.
 The key finding was not patient-level prediction but population-level plausibility:
