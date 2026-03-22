@@ -1,4 +1,4 @@
-\begin{thebibliography}{5}
+\begin{thebibliography}{10}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -23,13 +23,26 @@ Emily Harris.
 \newblock \emph{JAMA}, 329\penalty0 (15):\penalty0 1248, 2023.
 \newblock \doi{10.1001/jama.2023.5254}.
 
-\bibitem[Bravo et~al.(2023)Bravo, Orfeo, Bernstein, Vadhin, Lakshmi, and
-  Varner]{Varner2023JuliaCon}
-Maria Bravo, Thomas Orfeo, Ira Bernstein, Sandra Vadhin, Divya Lakshmi, and
-  Jeffrey~D Varner.
-\newblock {BSTModelKit.jl}: Building biochemical systems theory models of
-  individualized coagulation dynamics during pregnancy, 2023.
-\newblock JuliaCon 2023.
+\bibitem[Ledoit and Wolf(2004)]{Ledoit2004}
+Olivier Ledoit and Michael Wolf.
+\newblock A well-conditioned estimator for large-dimensional covariance
+  matrices.
+\newblock \emph{Journal of Multivariate Analysis}, 88\penalty0 (2):\penalty0
+  365--411, 2004.
+\newblock \doi{10.1016/S0047-259X(03)00096-4}.
+
+\bibitem[Goodfellow et~al.(2014)Goodfellow, Pouget-Abadie, Mirza, Xu,
+  Warde-Farley, Ozair, Courville, and Bengio]{Goodfellow2014}
+Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley,
+  Sherjil Ozair, Aaron Courville, and Yoshua Bengio.
+\newblock Generative adversarial nets.
+\newblock \emph{Advances in Neural Information Processing Systems}, 27, 2014.
+
+\bibitem[Kingma and Welling(2014)]{Kingma2014}
+Diederik~P Kingma and Max Welling.
+\newblock Auto-encoding variational {B}ayes.
+\newblock \emph{International Conference on Learning Representations (ICLR)},
+  2014.
 
 \bibitem[Ramsauer et~al.(2021)Ramsauer, Sch{\"a}fl, Lehner, Seidl, Widrich,
   Adler, Gruber, Holzleitner, Pavlovi{\'c}, Sandve, et~al.]{Ramsauer2021}
@@ -39,5 +52,28 @@ Hubert Ramsauer, Bernhard Sch{\"a}fl, Johannes Lehner, Philipp Seidl, Michael
 \newblock Hopfield networks is all you need.
 \newblock \emph{International Conference on Learning Representations (ICLR)},
   2021.
+
+\bibitem[Bravo et~al.(2023)Bravo, Orfeo, Bernstein, Vadhin, Lakshmi, and
+  Varner]{Varner2023JuliaCon}
+Maria Bravo, Thomas Orfeo, Ira Bernstein, Sandra Vadhin, Divya Lakshmi, and
+  Jeffrey~D Varner.
+\newblock {BSTModelKit.jl}: Building biochemical systems theory models of
+  individualized coagulation dynamics during pregnancy, 2023.
+\newblock JuliaCon 2023.
+
+\bibitem[Hockin et~al.(2002)Hockin, Jones, Everse, and Mann]{Hockin2002}
+Mark~F Hockin, Kenneth~C Jones, Stephen~J Everse, and Kenneth~G Mann.
+\newblock A model for the stoichiometric regulation of blood coagulation.
+\newblock \emph{Journal of Biological Chemistry}, 277\penalty0 (21):\penalty0
+  18322--18333, 2002.
+\newblock \doi{10.1074/jbc.M201173200}.
+
+\bibitem[Luan et~al.(2007)Luan, Zai, and Varner]{Luan2007}
+Deyan Luan, Michael Zai, and Jeffrey~D Varner.
+\newblock Computationally derived points of fragility of a human cascade are
+  consistent with current therapeutic strategies.
+\newblock \emph{PLoS Computational Biology}, 3\penalty0 (7):\penalty0 e142,
+  2007.
+\newblock \doi{10.1371/journal.pcbi.0030142}.
 
 \end{thebibliography}

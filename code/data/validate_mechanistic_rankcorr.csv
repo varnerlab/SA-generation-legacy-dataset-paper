@@ -1,0 +1,61 @@
+Source,Condition,Visit,Feature,Spearman,N
+Real,TF-only,1,Lagtime (min),-0.45451137947238146,23
+Real,TF-only,1,Peak (nM),0.23517786561264822,23
+Real,TF-only,1,T.Peak (min),0.1982143367622486,23
+Real,TF-only,1,Max Rate (nM/min),-0.26383399209486164,23
+Real,TF-only,1,ETP (nM·min),0.7539525691699605,23
+Real,TF-only,2,Lagtime (min),-0.0852812308379174,23
+Real,TF-only,2,Peak (nM),0.6047430830039525,23
+Real,TF-only,2,T.Peak (min),0.07091432373212835,23
+Real,TF-only,2,Max Rate (nM/min),0.516798418972332,23
+Real,TF-only,2,ETP (nM·min),0.7806324110671937,23
+Real,TF-only,3,Lagtime (min),-0.006024431164412205,23
+Real,TF-only,3,Peak (nM),0.22233201581027667,23
+Real,TF-only,3,T.Peak (min),0.10669062049560396,23
+Real,TF-only,3,Max Rate (nM/min),-0.025691699604743084,23
+Real,TF-only,3,ETP (nM·min),0.43774703557312256,23
+Synthetic,TF-only,1,Lagtime (min),-0.2987690289907623,100
+Synthetic,TF-only,1,Peak (nM),0.24154815481548156,100
+Synthetic,TF-only,1,T.Peak (min),0.07388156057628173,100
+Synthetic,TF-only,1,Max Rate (nM/min),-0.08416441644164416,100
+Synthetic,TF-only,1,ETP (nM·min),0.5862946294629463,100
+Synthetic,TF-only,2,Lagtime (min),-0.2670530108326962,100
+Synthetic,TF-only,2,Peak (nM),0.6128292829282929,100
+Synthetic,TF-only,2,T.Peak (min),-0.37090507484162055,100
+Synthetic,TF-only,2,Max Rate (nM/min),0.49598559855985597,100
+Synthetic,TF-only,2,ETP (nM·min),0.6524812481248125,100
+Synthetic,TF-only,3,Lagtime (min),-0.13849819917153638,100
+Synthetic,TF-only,3,Peak (nM),-0.16516051605160517,100
+Synthetic,TF-only,3,T.Peak (min),0.035898529700126254,100
+Synthetic,TF-only,3,Max Rate (nM/min),-0.2805640564056406,100
+Synthetic,TF-only,3,ETP (nM·min),0.20915691569156916,100
+Real,TF+TM,1,Lagtime (min),-0.482028063657577,23
+Real,TF+TM,1,Peak (nM),-0.3201581027667984,23
+Real,TF+TM,1,T.Peak (min),0.1610379921477185,23
+Real,TF+TM,1,Max Rate (nM/min),0.05632411067193676,23
+Real,TF+TM,1,ETP (nM·min),-0.1600790513833992,23
+Real,TF+TM,2,Lagtime (min),-0.0538324739656434,23
+Real,TF+TM,2,Peak (nM),0.3547430830039526,23
+Real,TF+TM,2,T.Peak (min),0.08422741789860715,23
+Real,TF+TM,2,Max Rate (nM/min),0.41798418972332013,23
+Real,TF+TM,2,ETP (nM·min),0.34189723320158105,23
+Real,TF+TM,3,Lagtime (min),-0.06591843905967099,23
+Real,TF+TM,3,Peak (nM),0.016798418972332016,23
+Real,TF+TM,3,T.Peak (min),0.17150491873008472,23
+Real,TF+TM,3,Max Rate (nM/min),0.1966403162055336,23
+Real,TF+TM,3,ETP (nM·min),0.20454545454545456,23
+Synthetic,TF+TM,1,Lagtime (min),-0.40965683616828974,100
+Synthetic,TF+TM,1,Peak (nM),-0.03997599759975998,100
+Synthetic,TF+TM,1,T.Peak (min),0.19434043148426225,100
+Synthetic,TF+TM,1,Max Rate (nM/min),0.1329012901290129,100
+Synthetic,TF+TM,1,ETP (nM·min),-0.004524452445244524,100
+Synthetic,TF+TM,2,Lagtime (min),-0.29537196647888964,100
+Synthetic,TF+TM,2,Peak (nM),0.3833903390339034,100
+Synthetic,TF+TM,2,T.Peak (min),-0.2154909353796446,100
+Synthetic,TF+TM,2,Max Rate (nM/min),0.15675967596759677,100
+Synthetic,TF+TM,2,ETP (nM·min),0.46005400540054003,100
+Synthetic,TF+TM,3,Lagtime (min),-0.23857219316293704,100
+Synthetic,TF+TM,3,Peak (nM),-0.40307230723072307,100
+Synthetic,TF+TM,3,T.Peak (min),0.06835272988192855,100
+Synthetic,TF+TM,3,Max Rate (nM/min),-0.2700750075007501,100
+Synthetic,TF+TM,3,ETP (nM·min),-0.3124152415241524,100

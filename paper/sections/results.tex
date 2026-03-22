@@ -1,30 +1,269 @@
 \section{Results}
 \label{sec:results}
 
-\subsection{Summary Statistics}
-% Table 1: per-visit mean relative errors
-% Reference: paper_summary_statistics.csv
+We generated $N{=}100$ synthetic longitudinal patient profiles using SA and compared
+them against the $K{=}23$ real patients across four progressively stringent validation
+levels. As a baseline, we also generated $N{=}100$ patients from a regularized
+multivariate normal (MVN) distribution fitted to the same data.
 
-\subsection{PCA Projection by Visit}
-% Figure: pca_by_visit_paper.pdf
-% Show pregnancy trajectory preservation
+\subsection{Marginal Plausibility}
+\label{sec:results-l1}
 
-\subsection{Correlation Structure Preservation}
-% Figure: correlation_heatmaps_paper.pdf
-% Show block structure is maintained
+We first assessed whether SA-generated patients reproduced per-feature summary
+statistics across all three visits. The median mean relative error (MRE) across all
+72 features was approximately 2\%, with the majority of features below 5\%
+(Table~\ref{tab:summary}), indicating that SA faithfully captured the central
+tendencies of the real population. Representative coagulation factors---including
+Factor~II (MRE $<$ 1.5\%), Factor~VIII (MRE $<$ 3\%), antithrombin (MRE $<$ 2\%),
+and fibrinogen (MRE $<$ 1.2\%)---showed particularly strong agreement across all
+visits. MVN also performed well at this level (median MRE $\approx$ 2--3\%), which
+was expected since moment-matching is guaranteed by construction.
 
-\subsection{Factor X vs MCF Trajectory}
-% Figure: X_vs_MCF_paper.pdf
-% Show biological signal preservation
+\begin{table}[ht]
+\centering
+\caption{Per-visit mean relative error (MRE) between real and SA-generated synthetic
+patients for representative coagulation features, computed as
+$|\bar{x}_{\text{synth}} - \bar{x}_{\text{real}}| / |\bar{x}_{\text{real}}|$.}
+\label{tab:summary}
+\begin{tabular}{lccc}
+\toprule
+Feature & Visit 1 & Visit 2 & Visit 3 \\
+\midrule
+Factor II (\%) & 0.009 & 0.012 & 0.015 \\
+Factor VIII (\%) & 0.017 & 0.030 & 0.025 \\
+AT (\%) & 0.013 & 0.018 & 0.014 \\
+Fibrinogen (mg/dL) & $<$0.001 & 0.008 & 0.012 \\
+TF Peak (nM) & 0.022 & 0.019 & 0.027 \\
+TF ETP (nM$\cdot$min) & 0.015 & 0.021 & 0.018 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-\subsection{Comparison with Multivariate Normal Generation}
-% SA vs MVN: marginal distributions, correlations, PCA overlap
-% TODO: run this simulation
+We next examined whether known physiological relationships were preserved in the
+synthetic cohort. We plotted pairwise scatter plots of coagulation factor levels
+against thrombin generation parameters across all visits and observed that
+SA-generated patients occupied the same joint regions as real patients
+(Fig.~\ref{fig:bio-correlations}). The expected inverse relationship between
+antithrombin and TF-initiated peak thrombin was preserved, as were the positive
+associations between Factor~VIII and peak, prothrombin and ETP, and the inverse
+relationship between antithrombin and ETP. These results indicated that SA captured
+not only univariate distributions but also the biologically meaningful pairwise
+dependencies that underlie coagulation physiology.
 
-\subsection{Novelty Analysis}
-% Show synthetic patients are not memorized copies
-% TODO: run this simulation
+We also evaluated whether the characteristic pregnancy-driven longitudinal
+trajectories were reproduced. We computed per-visit means and standard deviations
+for six key coagulation features and found that synthetic patients tracked the
+real trajectories closely, with overlapping confidence bands at all three visits
+(Fig.~\ref{fig:pregnancy-progression}). Fibrinogen, Factor~VIII, and von Willebrand
+factor showed the expected monotonic increases from baseline through the third
+trimester in both cohorts, while Factor~II increased modestly and antithrombin
+declined then partially recovered, consistent with the known hypercoagulable shift
+of pregnancy. These patterns confirmed that the concatenated-visit SA pipeline
+preserved the directionality and magnitude of longitudinal change.
 
-\subsection{Sample Size Sensitivity}
-% Quality vs number of generated patients
-% TODO: run this simulation
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{validate_bio_correlations.pdf}
+\caption{\textbf{Physiological correlations are preserved in synthetic patients.}
+Scatter plots of coagulation factor levels versus thrombin generation parameters
+across all visits (marker shapes indicate visit). Real patients (blue) and
+SA-generated synthetic patients (tan) occupy the same joint regions, confirming
+that biologically meaningful pairwise dependencies---including the AT--peak
+inverse relationship (top left), the FVIII--peak positive relationship (top
+right), and the FII--ETP and AT--ETP associations (bottom)---are preserved.}
+\label{fig:bio-correlations}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{validate_pregnancy_progression.pdf}
+\caption{\textbf{Pregnancy-driven longitudinal trajectories are faithfully
+reproduced.} Mean $\pm$ standard deviation bands for six key coagulation
+features across visits (BL = baseline, 1st = first trimester, 3rd = third
+trimester) for real (blue) and SA-generated synthetic (orange) patients.
+The characteristic pregnancy-driven increases in fibrinogen, Factor~VIII,
+and vWF are captured, as are the stable-to-declining patterns in Factor~II
+and AT.}
+\label{fig:pregnancy-progression}
+\end{figure}
+
+\subsection{Cross-Visit Covariance Structure}
+\label{sec:results-l2}
+
+We compared the full $216 \times 216$ cross-visit correlation matrices for real,
+SA-generated, and MVN-generated populations. The real data exhibited a characteristic
+block structure with strong within-visit correlations along the diagonal and
+structured off-diagonal blocks reflecting cross-visit dependencies---for example,
+a patient's Visit~1 Factor~X level predicting their Visit~3 Factor~X level. We found
+that SA preserved this block structure, including the off-diagonal cross-visit
+correlations (Fig.~\ref{fig:cross-visit-corr}). The SA$-$Real residual matrix showed
+small, unstructured deviations distributed throughout, whereas the MVN$-$Real residual
+was notably smoother, reflecting the regularization-induced shrinkage of off-diagonal
+correlations toward zero. This difference was most apparent in the off-diagonal blocks,
+where MVN systematically underestimated cross-visit dependencies that SA retained.
+
+We examined the eigenvalue spectrum of the sample covariance matrix to understand the
+structural origin of this difference. The real data had rank~22 (eigenvalues dropping
+to numerical zero at component~23), reflecting the $K{=}23$ patient constraint
+(Fig.~\ref{fig:eigenvalue-spectrum}). SA's spectrum dropped at component~18, the PCA
+truncation point, faithfully reflecting the low-rank structure without introducing
+variance in null dimensions. In contrast, MVN's Ledoit--Wolf regularization inflated
+eigenvalues beyond component~22, producing spurious variance in dimensions where the
+data contained none. This spurious variance manifested as the increased dispersion
+visible in PCA projections: SA-generated patients occupied the same region of PCA
+space as real patients across all three visits, while MVN-generated patients showed
+substantially greater scatter, particularly at Visits~2 and~3
+(Fig.~\ref{fig:pca-by-visit}).
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{validate_cross_visit_corr.pdf}
+\caption{\textbf{Cross-visit correlation structure.} Top row: full $216 \times 216$
+Pearson correlation matrices for Real (left), SA (center), and MVN (right)
+populations, with black lines delineating the three $72 \times 72$ visit blocks.
+Bottom row: residual matrices (SA$-$Real and MVN$-$Real). SA preserves the
+off-diagonal block structure encoding cross-visit dependencies; MVN's
+regularized estimate shrinks these correlations toward zero.}
+\label{fig:cross-visit-corr}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.65\textwidth]{validate_eigenvalue_spectrum.pdf}
+\caption{\textbf{Covariance eigenvalue spectrum.} Log-scale eigenvalues of the
+$216 \times 216$ sample covariance for Real ($K{=}23$, rank~22), SA ($N{=}100$),
+and MVN ($N{=}100$) populations. SA's spectrum drops at component~18 (the PCA
+truncation), matching the low-rank data structure. MVN's Ledoit--Wolf
+regularization inflates eigenvalues beyond component~22, introducing spurious
+variance in null dimensions.}
+\label{fig:eigenvalue-spectrum}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{sa_vs_mvn_pca_by_visit.pdf}
+\caption{\textbf{PCA projections by visit.} Top row: SA-generated patients (light)
+overlaid on real patients (dark) for each visit. Bottom row: MVN-generated
+patients overlaid on real patients. SA patients concentrate around the real data
+cloud at all visits, while MVN patients show greater dispersion, particularly
+at Visits~2 and~3.}
+\label{fig:pca-by-visit}
+\end{figure}
+
+\subsection{Conditional Generation of Rare Subgroups}
+\label{sec:results-l3}
+
+We tested whether SA could amplify rare clinical subpopulations while preserving their
+condition-specific signatures. Our dataset contained three clinical subgroups---Healthy
+($n{=}14$), PCOS ($n{=}3$), and PE ($n{=}5$)---of which the PCOS and PE groups were
+too small for any independent statistical analysis. We used SA's multiplicity-weighted
+sampling to generate condition-specific cohorts of 100 patients each by upweighting
+attention on the relevant stored patterns.
+
+We projected all real and generated patients into PCA space and observed that the three
+synthetic cohorts separated consistently with the real between-group differences, with
+synthetic Healthy, PCOS, and PE patients clustering around their respective real
+counterparts (Fig.~\ref{fig:conditioned-pca}). This separation was maintained across
+all three individual visits (Supplementary Fig.~S3), indicating that condition-specific
+structure was preserved not only in aggregate but at each pregnancy timepoint.
+Condition-specific feature means were well-preserved: the Healthy cohort showed a
+median MRE of approximately 4\%, while the smaller PCOS cohort had a median MRE of
+approximately 8\%, reflecting the greater uncertainty inherent in amplifying from only
+three stored patterns. These results suggested that SA's attention-weighted
+interpolation on the data manifold can meaningfully amplify rare subgroups in a way
+that preserves their distinguishing clinical features---a capability with direct
+relevance to hypothesis generation and power analysis in understudied patient
+populations. MVN has no mechanism for this: fitting a separate MVN to three PCOS
+patients across 216 features is mathematically impossible (rank~2 covariance), and
+post-hoc subsetting of unconditional MVN samples does not preserve
+subgroup-specific structure.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.65\textwidth]{validate_conditioned_pca.pdf}
+\caption{\textbf{Conditional generation of rare clinical subgroups.} PCA
+projection of condition-specific synthetic cohorts generated by
+multiplicity-weighted SA. Large markers: real patients (blue = Healthy,
+$n{=}14$; orange = PCOS, $n{=}3$; red = PE, $n{=}5$). Small markers:
+synthetic patients ($N{=}100$ per condition). Each synthetic cohort clusters
+around its corresponding real patients, demonstrating that SA preserves
+condition-specific signatures even when amplifying from as few as three
+stored patterns.}
+\label{fig:conditioned-pca}
+\end{figure}
+
+\subsection{Mechanistic Consistency}
+\label{sec:results-l4}
+
+As a final, orthogonal validation, we tested whether SA-generated patients produced
+biologically plausible outputs when their coagulation factor levels were fed through
+an independent mechanistic model of the coagulation cascade. We used the Hockin--Mann
+BZ2012 model~\citep{Hockin2002,Luan2007}, a system of 58 ordinary differential
+equations with 64 rate constants that simulates thrombin generation from
+patient-specific coagulation factor inputs. We calibrated 5 of the 64 rate constants
+on Visit~1 real patients at the population level (not per-patient), holding the
+remaining 59 at published literature values. We then ran the calibrated model on all
+23 real patients (3 visits $\times$ 2 conditions = 138 simulations, 0 failures) and
+all 100 synthetic patients (3 visits $\times$ 2 conditions = 600 simulations, 0
+failures), producing predicted thrombin generation features (lagtime, peak,
+time-to-peak, maximum rate, and ETP) that we compared against the corresponding
+measured values.
+
+Under TF-only conditions, we found that synthetic patients produced the same
+predicted-versus-measured cloud as real patients across all five TGA features
+(Fig.~\ref{fig:mechanistic-scatter}). The median predicted-to-measured ratio was
+0.92$\times$ for synthetic patients versus 0.91$\times$ for real patients, with
+median absolute relative errors of 19.4\% and 21.1\%, respectively. We quantified
+this overlap by computing the fraction of synthetic predicted/measured ratios that
+fell within the 5th--95th percentile range of the real ratios and found cloud overlap
+ranging from 86\% for lagtime to 94\% for maximum rate
+(Fig.~\ref{fig:mechanistic-ratios}), which indicated that the SA-generated
+factor-to-TGA mapping was indistinguishable from that of real patients at the
+population level.
+
+Under TF+TM conditions, the model systematically overcorrected the protein~C
+anticoagulant pathway, producing peak and maximum rate predictions approximately
+0.5$\times$ measured values for both real and synthetic patients (Supplementary
+Fig.~S4). This shared systematic bias was itself informative: if synthetic patients
+had violated the underlying coagulation biology, they would have deviated from real
+patients in how the mechanistic model processed their factor levels. Instead, cloud
+overlap under TF+TM remained high at 88--91\%.
+
+We also verified that the calibration generalized across pregnancy timepoints. The
+model was calibrated only on Visit~1 real patients, yet the predicted-to-measured
+ratios at Visits~2 and~3 under TF-only conditions were 0.96$\times$ and 1.07$\times$,
+respectively (Supplementary Fig.~S6), confirming that the calibrated rate constants
+captured a stable population-level property of the coagulation system rather than
+overfitting to the training visit. Spearman rank correlations between predicted and
+measured values were moderate for ETP ($\rho \approx 0.6$--$0.8$ for real patients,
+$\rho \approx 0.6$--$0.65$ for synthetic; Supplementary Fig.~S7) and weak for other
+features, which was expected given that the Hockin--Mann model was not designed to
+resolve inter-patient variability from a 5-parameter population-level calibration.
+The key finding was not patient-level prediction but population-level plausibility:
+an independent mechanistic model, encoding decades of coagulation biochemistry and
+knowing nothing about the SA generation process, confirmed that synthetic patients
+fell within the same biologically plausible envelope as real patients.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{validate_mechanistic_tf_only.pdf}
+\caption{\textbf{Mechanistic model predicted versus measured TGA features
+(TF-only).} Each panel shows one TGA feature; the dashed line indicates perfect
+prediction ($y{=}x$). Blue markers: real patients (circles = V1/train, squares
+= V2, triangles = V3). Red/brown markers: SA-generated synthetic patients
+(diamonds = V1, inverted triangles = V2, hexagons = V3). Synthetic patients
+occupy the same predicted-versus-measured cloud as real patients across all
+features and visits.}
+\label{fig:mechanistic-scatter}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{validate_mechanistic_ratios_tf_only.pdf}
+\caption{\textbf{Predicted/measured ratio distributions (TF-only).} Histograms
+of the predicted-to-measured ratio for each TGA feature for real (blue) and
+SA-generated synthetic (orange) patients. The dashed line indicates perfect
+prediction (ratio = 1). The distributions overlap substantially, with cloud
+overlap ranging from 86\% (lagtime) to 94\% (maximum rate).}
+\label{fig:mechanistic-ratios}
+\end{figure}

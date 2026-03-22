@@ -1,6 +1,74 @@
 \section{Discussion}
 \label{sec:discussion}
 
-% Key findings
-% Limitations (K=23 is small, PCA assumes linear structure)
-% Future directions (conditional generation, more datasets)
+The four-level validation framework provided complementary evidence that SA-generated
+synthetic patients faithfully represented the real clinical population. Level~1
+confirmed that marginal distributions were preserved---a necessary but insufficient
+condition that MVN also satisfied by construction. Level~2 demonstrated that SA
+preserved the joint cross-visit covariance structure that MVN's rank-deficient estimate
+could not faithfully represent, a difference made visible in the eigenvalue spectrum
+where MVN introduced spurious variance in null dimensions while SA respected the
+low-rank geometry of the data. Level~3 showed that SA could amplify clinically
+meaningful rare subgroups---generating 100 synthetic PCOS patients from only 3 real
+ones---while preserving subgroup-specific signatures that MVN fundamentally could not
+capture. Level~4 provided orthogonal mechanistic evidence: an independent ODE model,
+encoding decades of coagulation biochemistry and calibrated exclusively on real
+patients, confirmed that the factor-to-thrombin-generation mapping in synthetic
+patients was biologically plausible, with 86--94\% cloud overlap under TF-only
+conditions. Taken together, these results established that SA-generated synthetic
+patients were not merely statistically similar to real patients but were consistent
+with the underlying biology at multiple levels of resolution.
+
+The ability to generate validated synthetic cohorts from very small longitudinal
+datasets has immediate practical implications for maternal health research. Rare
+pregnancy complications such as PCOS, preeclampsia, and gestational thrombophilia are
+difficult to study because assembling large, well-characterized longitudinal cohorts
+requires years of recruitment across multiple clinical sites. Our results suggested
+that SA can enable hypothesis generation, power analyses, and computational modeling
+studies for these understudied populations by generating synthetic cohorts that
+preserve both the statistical and mechanistic properties of the real data. The
+conditional generation capability demonstrated at Level~3 is particularly relevant:
+rather than requiring researchers to collect additional rare patients, SA can amplify
+existing small subgroups into cohorts large enough for meaningful analysis.
+
+The key insight underlying SA's advantage over parametric alternatives is geometric.
+SA generates samples on the data manifold by interpolating between stored patient
+profiles via the Hopfield energy landscape, rather than fitting a parametric
+distribution that must regularize or truncate high-dimensional structure. In the
+$n < p$ regime that characterizes most small clinical studies, any parametric
+distribution---whether Gaussian or otherwise---faces a fundamental identifiability
+problem: there are more parameters to estimate than observations to estimate them
+from. SA sidesteps this by operating in a PCA-reduced space where the
+memory-to-dimension ratio is favorable ($K/d_{\text{PCA}} \approx 1.28$) and by
+preserving the full directional structure of the data through the attention mechanism.
+The eigenvalue spectrum comparison (Fig.~\ref{fig:eigenvalue-spectrum}) made this
+distinction concrete: SA's spectrum faithfully reflected the rank-18 PCA structure,
+while MVN's regularized spectrum introduced artificial variance in 194 additional
+dimensions.
+
+The mechanistic validation at Level~4 introduced a paradigm that we believe is broadly
+applicable beyond coagulation. Rather than relying solely on statistical comparisons
+between real and synthetic distributions, we tested whether synthetic patients
+produced biologically consistent outputs when processed by a domain-specific
+computational model. This approach is available whenever a validated mechanistic model
+exists for the domain of interest---pharmacokinetic models in drug development,
+physiological models in critical care, or metabolic models in oncology. The
+requirement is not that the mechanistic model be a perfect predictor (ours had weak
+rank correlations at the individual patient level), but that synthetic patients fall
+within the same model-predicted envelope as real patients. The shared systematic bias
+we observed under TF+TM conditions reinforced this interpretation: both real and
+synthetic patients were processed identically by the mechanistic model, producing the
+same pattern of overcorrection in the protein~C pathway.
+
+Several limitations warrant discussion. First, our study used a single longitudinal
+dataset of $K{=}23$ patients, and further evaluation on independent datasets and
+across different clinical domains is needed to establish generalizability. Second, the
+PCA dimensionality reduction assumed a linear structure in the feature space;
+nonlinear manifold learning methods may better capture complex clinical relationships,
+though at the cost of reduced interpretability. Third, the mechanistic validation
+under TF+TM conditions revealed systematic model bias, limiting the interpretability
+of Level~4 results under that condition to the observation that real and synthetic
+patients shared the same bias pattern. Fourth, we did not validate synthetic patients
+against clinical outcomes---our validation was restricted to statistical and
+mechanistic plausibility, and prospective validation against real clinical
+decision-making remains an important future direction.

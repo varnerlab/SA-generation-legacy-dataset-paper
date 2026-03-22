@@ -2,8 +2,8 @@ This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded forma
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**main
-(./main.tex
+**supplementary
+(./supplementary.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
 (/usr/local/texlive/2025/texmf-dist/tex/latex/base/article.cls
@@ -168,13 +168,6 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \@lastruleclass=\count288
 \@thisrulewidth=\dimen173
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/natbib/natbib.sty
-Package: natbib 2010/09/13 8.31b (PWD, AO)
-\bibhang=\skip54
-\bibsep=\skip55
-LaTeX Info: Redefining \cite on input line 694.
-\c@NAT@ctr=\count289
-)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2024-11-05 v7.01l Hypertext links for LaTeX
 
@@ -216,19 +209,19 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
  (/usr/local/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 ))
-\c@section@level=\count290
+\c@section@level=\count289
 )
 (/usr/local/texlive/2025/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2025/02/11 v2.5l e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count291
+\etb@tempcnta=\count290
 )
 (/usr/local/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 )
 )
 \@linkdim=\dimen174
-\Hy@linkcounter=\count292
-\Hy@pagecounter=\count293
+\Hy@linkcounter=\count291
+\Hy@pagecounter=\count292
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2024-11-05 v7.01l Hyperref: PDFDocEncoding definition (HO)
@@ -238,7 +231,7 @@ Now handling font encoding PD1 ...
 (/usr/local/texlive/2025/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count294
+\Hy@SavedSpaceFactor=\count293
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2024-11-05 v7.01l Hyperref: PDF Unicode definition (HO)
@@ -252,7 +245,7 @@ Package hyperref Info: Plain pages OFF on input line 4172.
 Package hyperref Info: Backreferencing OFF on input line 4177.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4424.
-\c@Hy@tempcnt=\count295
+\c@Hy@tempcnt=\count294
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip18
@@ -268,7 +261,7 @@ Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
-\Fld@menulength=\count296
+\Fld@menulength=\count295
 \Field@Width=\dimen176
 \Fld@charsize=\dimen177
 Package hyperref Info: Hyper figures OFF on input line 6042.
@@ -283,9 +276,9 @@ Package hyperref Info: PDF/A mode OFF on input line 6072.
 Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
 package with kernel methods
 )
-\Hy@abspage=\count297
-\c@Item=\count298
-\c@Hfootnote=\count299
+\Hy@abspage=\count296
+\c@Item=\count297
+\c@Hfootnote=\count298
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
 
@@ -297,8 +290,8 @@ Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend pac
 kage
 with kernel methods
 )
-\Fld@listcount=\count300
-\c@bookmark@seq@number=\count301
+\Fld@listcount=\count299
+\c@bookmark@seq@number=\count300
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
 Package: rerunfilecheck 2022-07-10 v1.10 Rerun checks for auxiliary files (HO)
@@ -309,7 +302,7 @@ Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 85.
 )
-\Hy@SectionHShift=\skip56
+\Hy@SectionHShift=\skip54
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
 
@@ -329,122 +322,58 @@ Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/algorithms/algorithm.sty
-Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
-nment
-
-(/usr/local/texlive/2025/texmf-dist/tex/latex/float/float.sty
-Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count302
-\float@exts=\toks24
-\float@box=\box54
-\@float@everytoks=\toks25
-\@floatcapt=\box55
-)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/base/ifthen.sty
-Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
-)
-\@float@every@algorithm=\toks26
-\c@algorithm=\count303
-)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty
-Package: algpseudocode 
-
-(/usr/local/texlive/2025/texmf-dist/tex/latex/algorithmicx/algorithmicx.sty
-Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
-
-Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
-\c@ALG@line=\count304
-\c@ALG@rem=\count305
-\c@ALG@nested=\count306
-\ALG@tlm=\skip57
-\ALG@thistlm=\skip58
-\c@ALG@Lnr=\count307
-\c@ALG@blocknr=\count308
-\c@ALG@storecount=\count309
-\c@ALG@tmpcounter=\count310
-\ALG@tmplength=\skip59
-)
-Document Style - pseudocode environments for use with the `algorithmicx' style
-) (/usr/local/texlive/2025/texmf-dist/tex/latex/multirow/multirow.sty
-Package: multirow 2024/11/12 v2.9 Span multiple rows of a table
-\multirow@colwidth=\skip60
-\multirow@cntb=\count311
-\multirow@dima=\skip61
-\bigstrutjot=\dimen178
-)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/caption/caption.sty
 Package: caption 2023/08/05 v3.6o Customizing captions (AR)
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/caption/caption3.sty
 Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
-\caption@tempdima=\dimen179
-\captionmargin=\dimen180
-\caption@leftmargin=\dimen181
-\caption@rightmargin=\dimen182
-\caption@width=\dimen183
-\caption@indent=\dimen184
-\caption@parindent=\dimen185
-\caption@hangindent=\dimen186
+\caption@tempdima=\dimen178
+\captionmargin=\dimen179
+\caption@leftmargin=\dimen180
+\caption@rightmargin=\dimen181
+\caption@width=\dimen182
+\caption@indent=\dimen183
+\caption@parindent=\dimen184
+\caption@hangindent=\dimen185
 Package caption Info: Standard document class detected.
 )
-\c@caption@flags=\count312
-\c@continuedfloat=\count313
-Package caption Info: float package is loaded.
+\c@caption@flags=\count301
+\c@continuedfloat=\count302
 Package caption Info: hyperref package is loaded.
 )
 (/usr/local/texlive/2025/texmf-dist/tex/latex/caption/subcaption.sty
 Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
 Package caption Info: New subtype `subfigure' on input line 238.
-\c@subfigure=\count314
+\c@subfigure=\count303
 Package caption Info: New subtype `subtable' on input line 238.
-\c@subtable=\count315
-)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/lineno/lineno.sty
-Package: lineno 2025/01/29 line numbers on paragraphs v5.4
-\linenopenalty=\count316
-\output=\toks27
-\linenoprevgraf=\count317
-\linenumbersep=\dimen187
-\linenumberwidth=\dimen188
-\c@linenumber=\count318
-\c@pagewiselinenumber=\count319
-\c@LN@truepage=\count320
-\c@internallinenumber=\count321
-\c@internallinenumbers=\count322
-\quotelinenumbersep=\dimen189
-\bframerule=\dimen190
-\bframesep=\dimen191
-\bframebox=\box56
-\@LN@amsmath@ams@eqpen=\count323
-LaTeX Info: Redefining \\ on input line 3187.
+\c@subtable=\count304
 )
 (/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count324
-\l__pdf_internal_box=\box57
+\l__color_backend_stack_int=\count305
+\l__pdf_internal_box=\box54
 )
-(./main.aux)
-\openout1 = `main.aux'.
+(./supplementary.aux)
+\openout1 = `supplementary.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -482,17 +411,17 @@ LaTeX Font Info:    ... okay on input line 54.
 
 (/usr/local/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count325
-\scratchdimen=\dimen192
-\scratchbox=\box58
-\nofMPsegments=\count326
-\nofMParguments=\count327
-\everyMPshowfont=\toks28
-\MPscratchCnt=\count328
-\MPscratchDim=\dimen193
-\MPnumerator=\count329
-\makeMPintoPDFobject=\count330
-\everyMPtoPDFconversion=\toks29
+\scratchcounter=\count306
+\scratchdimen=\dimen186
+\scratchbox=\box55
+\nofMPsegments=\count307
+\nofMParguments=\count308
+\everyMPshowfont=\toks24
+\MPscratchCnt=\count309
+\MPscratchDim=\dimen187
+\MPnumerator=\count310
+\makeMPintoPDFobject=\count311
+\everyMPtoPDFconversion=\toks25
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -502,185 +431,147 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring OFF on input line 54.
+Package hyperref Info: Link coloring OFF on input line 24.
 
-(./main.out) (./main.out)
+(./supplementary.out) (./supplementary.out)
 \@outlinefile=\write3
-\openout3 = `main.out'.
+\openout3 = `supplementary.out'.
 
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 56.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 26.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 56.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 26.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-(./sections/abstract.tex) (./sections/introduction.tex
+<../code/figs/correlation_heatmaps_paper.pdf, id=4, 1806.75pt x 1204.5pt>
+File: ../code/figs/correlation_heatmaps_paper.pdf Graphic file (type pdf)
+<use ../code/figs/correlation_heatmaps_paper.pdf>
+Package pdftex.def Info: ../code/figs/correlation_heatmaps_paper.pdf  used on i
+nput line 38.
+(pdftex.def)             Requested size: 469.75502pt x 313.16261pt.
+<../code/figs/sa_vs_mvn_metrics_bar.pdf, id=5, 1405.25pt x 451.6875pt>
+File: ../code/figs/sa_vs_mvn_metrics_bar.pdf Graphic file (type pdf)
+<use ../code/figs/sa_vs_mvn_metrics_bar.pdf>
+Package pdftex.def Info: ../code/figs/sa_vs_mvn_metrics_bar.pdf  used on input 
+line 47.
+(pdftex.def)             Requested size: 328.82707pt x 105.69168pt.
+<../code/figs/validate_conditioned_pca_by_visit.pdf, id=6, 1204.5pt x 401.5pt>
+File: ../code/figs/validate_conditioned_pca_by_visit.pdf Graphic file (type pdf
+)
+<use ../code/figs/validate_conditioned_pca_by_visit.pdf>
+Package pdftex.def Info: ../code/figs/validate_conditioned_pca_by_visit.pdf  us
+ed on input line 59.
+(pdftex.def)             Requested size: 469.75502pt x 156.58437pt.
+<../code/figs/validate_mechanistic_tf_tm.pdf, id=7, 2208.25pt x 451.6875pt>
+File: ../code/figs/validate_mechanistic_tf_tm.pdf Graphic file (type pdf)
+<use ../code/figs/validate_mechanistic_tf_tm.pdf>
+Package pdftex.def Info: ../code/figs/validate_mechanistic_tf_tm.pdf  used on i
+nput line 70.
+(pdftex.def)             Requested size: 469.75502pt x 96.08397pt.
+<../code/figs/validate_mechanistic_ratios_tf_tm.pdf, id=8, 2208.25pt x 451.6875
+pt>
+File: ../code/figs/validate_mechanistic_ratios_tf_tm.pdf Graphic file (type pdf
+)
+<use ../code/figs/validate_mechanistic_ratios_tf_tm.pdf>
+Package pdftex.def Info: ../code/figs/validate_mechanistic_ratios_tf_tm.pdf  us
+ed on input line 82.
+(pdftex.def)             Requested size: 469.75502pt x 96.08397pt.
+<../code/figs/validate_mechanistic_generalization_tf_only.pdf, id=9, 1606.0pt x
+ 401.5pt>
+File: ../code/figs/validate_mechanistic_generalization_tf_only.pdf Graphic file
+ (type pdf)
+<use ../code/figs/validate_mechanistic_generalization_tf_only.pdf>
+Package pdftex.def Info: ../code/figs/validate_mechanistic_generalization_tf_on
+ly.pdf  used on input line 92.
+(pdftex.def)             Requested size: 469.75502pt x 117.43674pt.
+<../code/figs/validate_mechanistic_rankcorr_tf_only.pdf, id=10, 602.25pt x 401.
+5pt>
+File: ../code/figs/validate_mechanistic_rankcorr_tf_only.pdf Graphic file (type
+ pdf)
+<use ../code/figs/validate_mechanistic_rankcorr_tf_only.pdf>
+Package pdftex.def Info: ../code/figs/validate_mechanistic_rankcorr_tf_only.pdf
+  used on input line 103.
+(pdftex.def)             Requested size: 328.82707pt x 219.22668pt.
+<../code/figs/validate_mechanistic_generalization_tf_tm.pdf, id=11, 1606.0pt x 
+401.5pt>
+File: ../code/figs/validate_mechanistic_generalization_tf_tm.pdf Graphic file (
+type pdf)
+<use ../code/figs/validate_mechanistic_generalization_tf_tm.pdf>
+Package pdftex.def Info: ../code/figs/validate_mechanistic_generalization_tf_tm
+.pdf  used on input line 114.
+(pdftex.def)             Requested size: 469.75502pt x 117.43674pt.
+<../code/figs/validate_mechanistic_rankcorr_tf_tm.pdf, id=14, 602.25pt x 401.5p
+t>
+File: ../code/figs/validate_mechanistic_rankcorr_tf_tm.pdf Graphic file (type p
+df)
+<use ../code/figs/validate_mechanistic_rankcorr_tf_tm.pdf>
+Package pdftex.def Info: ../code/figs/validate_mechanistic_rankcorr_tf_tm.pdf  
+used on input line 124.
+(pdftex.def)             Requested size: 328.82707pt x 219.22668pt.
+<../code/figs/X_vs_MCF_paper.pdf, id=17, 1505.625pt x 501.875pt>
+File: ../code/figs/X_vs_MCF_paper.pdf Graphic file (type pdf)
+<use ../code/figs/X_vs_MCF_paper.pdf>
+Package pdftex.def Info: ../code/figs/X_vs_MCF_paper.pdf  used on input line 13
+5.
+(pdftex.def)             Requested size: 469.75502pt x 156.58282pt.
+<../code/figs/full_longitudinal_trajectories.pdf, id=18, 903.375pt x 602.25pt>
+File: ../code/figs/full_longitudinal_trajectories.pdf Graphic file (type pdf)
+<use ../code/figs/full_longitudinal_trajectories.pdf>
+Package pdftex.def Info: ../code/figs/full_longitudinal_trajectories.pdf  used 
+on input line 145.
+(pdftex.def)             Requested size: 469.75502pt x 313.1718pt.
+
 
 [1
 
-{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}])
-(./sections/methods.tex
+{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <../code
+/figs/correlation_heatmaps_paper.pdf>]
 
-[2]
+[2 <../code/figs/sa_vs_mvn_metrics_bar.pdf> <../code/figs/validate_conditioned_
+pca_by_visit.pdf> <../code/figs/validate_mechanistic_tf_tm.pdf>]
 
-[3]
-Overfull \hbox (6.9062pt too wide) in paragraph at lines 80--86
-[]\OT1/cmr/bx/n/10.95 Conditional gen-er-a-tion. \OT1/cmr/m/n/10.95 To gen-er-a
-te condition-specific co-horts (e.g., PCOS-only), we weighted
- []
+[3 <../code/figs/validate_mechanistic_ratios_tf_tm.pdf> <../code/figs/validate_
+mechanistic_generalization_tf_only.pdf> <../code/figs/validate_mechanistic_rank
+corr_tf_only.pdf>]
 
-) (./sections/results.tex
-Overfull \hbox (11.95865pt too wide) in paragraph at lines 99--1
-\OT1/cmr/m/n/10.95 We eval-u-ated syn-thetic pa-tient qual-ity through four pro
--gres-sively strin-gent lev-els. \OT1/cmr/bx/n/10.95 Level 1 (Marginal
- []
+[4 <../code/figs/validate_mechanistic_generalization_tf_tm.pdf> <../code/figs/v
+alidate_mechanistic_rankcorr_tf_tm.pdf>]
 
-
-
-[4]
-<../code/figs/validate_bio_correlations.pdf, id=132, 903.375pt x 803.0pt>
-File: ../code/figs/validate_bio_correlations.pdf Graphic file (type pdf)
-<use ../code/figs/validate_bio_correlations.pdf>
-Package pdftex.def Info: ../code/figs/validate_bio_correlations.pdf  used on in
-put line 66.
-(pdftex.def)             Requested size: 469.75502pt x 417.56241pt.
-<../code/figs/validate_pregnancy_progression.pdf, id=133, 1003.75pt x 602.25pt>
-
-File: ../code/figs/validate_pregnancy_progression.pdf Graphic file (type pdf)
-<use ../code/figs/validate_pregnancy_progression.pdf>
-Package pdftex.def Info: ../code/figs/validate_pregnancy_progression.pdf  used 
-on input line 79.
-(pdftex.def)             Requested size: 469.75502pt x 281.8537pt.
-
-Overfull \hbox (30.66064pt too wide) in paragraph at lines 93--104
-\OT1/cmr/m/n/10.95 visit cor-re-la-tions along the di-ag-o-nal and struc-tured 
-off-diagonal blocks re-flect-ing cross-visit dependencies---
- []
-
-
-
-[5]
-<../code/figs/validate_cross_visit_corr.pdf, id=145, 1204.5pt x 803.0pt>
-File: ../code/figs/validate_cross_visit_corr.pdf Graphic file (type pdf)
-<use ../code/figs/validate_cross_visit_corr.pdf>
-Package pdftex.def Info: ../code/figs/validate_cross_visit_corr.pdf  used on in
-put line 120.
-(pdftex.def)             Requested size: 469.75502pt x 313.16875pt.
-<../code/figs/validate_eigenvalue_spectrum.pdf, id=146, 602.25pt x 401.5pt>
-File: ../code/figs/validate_eigenvalue_spectrum.pdf Graphic file (type pdf)
-<use ../code/figs/validate_eigenvalue_spectrum.pdf>
-Package pdftex.def Info: ../code/figs/validate_eigenvalue_spectrum.pdf  used on
- input line 132.
-(pdftex.def)             Requested size: 305.33789pt x 203.56764pt.
-<../code/figs/sa_vs_mvn_pca_by_visit.pdf, id=147, 1505.625pt x 903.375pt>
-File: ../code/figs/sa_vs_mvn_pca_by_visit.pdf Graphic file (type pdf)
-<use ../code/figs/sa_vs_mvn_pca_by_visit.pdf>
-Package pdftex.def Info: ../code/figs/sa_vs_mvn_pca_by_visit.pdf  used on input
- line 144.
-(pdftex.def)             Requested size: 469.75502pt x 281.8491pt.
-<../code/figs/validate_conditioned_pca.pdf, id=149, 702.625pt x 602.25pt>
-File: ../code/figs/validate_conditioned_pca.pdf Graphic file (type pdf)
-<use ../code/figs/validate_conditioned_pca.pdf>
-Package pdftex.def Info: ../code/figs/validate_conditioned_pca.pdf  used on inp
-ut line 183.
-(pdftex.def)             Requested size: 305.33789pt x 261.72852pt.
-
-
-[6]
-<../code/figs/validate_mechanistic_tf_only.pdf, id=163, 2208.25pt x 451.6875pt>
-
-File: ../code/figs/validate_mechanistic_tf_only.pdf Graphic file (type pdf)
-<use ../code/figs/validate_mechanistic_tf_only.pdf>
-Package pdftex.def Info: ../code/figs/validate_mechanistic_tf_only.pdf  used on
- input line 249.
-(pdftex.def)             Requested size: 469.75502pt x 96.08397pt.
-<../code/figs/validate_mechanistic_ratios_tf_only.pdf, id=164, 2208.25pt x 451.
-6875pt>
-File: ../code/figs/validate_mechanistic_ratios_tf_only.pdf Graphic file (type p
-df)
-<use ../code/figs/validate_mechanistic_ratios_tf_only.pdf>
-Package pdftex.def Info: ../code/figs/validate_mechanistic_ratios_tf_only.pdf  
-used on input line 262.
-(pdftex.def)             Requested size: 469.75502pt x 96.08397pt.
-) (./sections/discussion.tex
-
-[7]) (./sections/conclusion.tex)
-
-[8]
-Overfull \hbox (11.97287pt too wide) in paragraph at lines 71--77
-\OT1/cmr/m/n/10.95 datasets are avail-able at []$\OT1/cmtt/m/n/10.95 https : / 
-/ github . com / varnerlab / SA-[]generation-[]legacy-[]dataset-[]paper$[]\OT1/
-cmr/m/n/10.95 .
- []
-
-(./sections/acknowledgments.tex) (./main.bbl
-
-[9])
-
-[10]
-
-[11 <../code/figs/validate_bio_correlations.pdf>]
-
-[12 <../code/figs/validate_pregnancy_progression.pdf>]
-
-[13 <../code/figs/validate_cross_visit_corr.pdf>]
-
-[14 <../code/figs/validate_eigenvalue_spectrum.pdf> <../code/figs/sa_vs_mvn_pca
-_by_visit.pdf>]
-
-[15 <../code/figs/validate_conditioned_pca.pdf> <../code/figs/validate_mechanis
-tic_tf_only.pdf>]
-
-[16 <../code/figs/validate_mechanistic_ratios_tf_only.pdf>] (./main.aux)
+[5 <../code/figs/X_vs_MCF_paper.pdf> <../code/figs/full_longitudinal_trajectori
+es.pdf>] (./supplementary.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 2AB57B9B46674B82C7F1CCB7E07DAF21;2272.
+Package rerunfilecheck Info: File `supplementary.out' has not changed.
+(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 13730 strings out of 473190
- 217078 string characters out of 5715801
- 639728 words of memory out of 5000000
- 36732 multiletter control sequences out of 15000+600000
- 571832 words of font info for 85 fonts, out of 8000000 for 9000
+ 12220 strings out of 473190
+ 195029 string characters out of 5715801
+ 604587 words of memory out of 5000000
+ 35326 multiletter control sequences out of 15000+600000
+ 566242 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,9n,79p,686b,592s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,6n,79p,606b,445s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
-</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
-/usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></
-usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></us
-r/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></us
-r/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/
-local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/lo
-cal/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/loca
-l/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/t
-exlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texl
-ive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/local/texliv
-e/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive
-/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2
-025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/202
-5/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2025
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025/
-texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (16 pages, 1299126 bytes).
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
+/usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></u
+sr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr
+/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on supplementary.pdf (5 pages, 1631340 bytes).
 PDF statistics:
- 326 PDF objects out of 1000 (max. 8388607)
- 251 compressed objects within 3 object streams
- 55 named destinations out of 1000 (max. 500000)
- 153 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 112 PDF objects out of 1000 (max. 8388607)
+ 67 compressed objects within 1 object stream
+ 18 named destinations out of 1000 (max. 500000)
+ 56 words of extra memory for PDF output out of 10000 (max. 10000000)
 
