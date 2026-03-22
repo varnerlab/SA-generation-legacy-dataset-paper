@@ -85,6 +85,66 @@ measures (correlation MAE).}
 \label{sfig:metrics-bar}
 \end{figure}
 
+% ══════════════════════════════════════════════════════════════════════════════
+\section*{Supplementary Tables}
+
+% ── Table S1: Beta sweep ─────────────────────────────────────────────────
+\begin{table}[ht]
+\centering
+\caption{\textbf{Inverse temperature sensitivity analysis.} SA generation
+quality as a function of $\beta / \beta^*$, where $\beta^* \approx 5.27$ was
+identified via entropy inflection in the 18-dimensional PCA space ($K{=}23$
+stored patterns). The theoretical prediction $\beta^* = \sqrt{d} = \sqrt{18}
+\approx 4.24$ is close to the empirical value. Operating at $\beta = \beta^*$
+(bold row) balances generation novelty against fidelity: lower $\beta$ produces
+more diverse but less faithful samples; higher $\beta$ produces more faithful
+but less novel samples (approaching memorization). MRE = median relative error
+of per-feature means; Corr MAE = mean absolute error of the correlation matrix;
+Novelty = $1 - \max_k \cos(\hat{\xi}, \hat{m}_k)$.}
+\label{stab:beta-sweep}
+\begin{tabular}{rrccccc}
+\toprule
+$\beta/\beta^*$ & $\beta$ & Noise scale & PC1 std ratio & Novelty & MRE (\%) & Corr MAE \\
+\midrule
+0.1 & 0.53 & 0.436 & 0.455 & 0.501 & 3.6 & 0.242 \\
+0.2 & 1.05 & 0.308 & 0.343 & 0.495 & 2.8 & 0.236 \\
+0.3 & 1.58 & 0.252 & 0.297 & 0.488 & 2.4 & 0.230 \\
+0.5 & 2.63 & 0.195 & 0.252 & 0.476 & 2.1 & 0.220 \\
+0.7 & 3.69 & 0.165 & 0.230 & 0.463 & 1.9 & 0.212 \\
+\textbf{1.0} & \textbf{5.27} & \textbf{0.138} & \textbf{0.212} & \textbf{0.444} & \textbf{1.8} & \textbf{0.200} \\
+1.5 & 7.90 & 0.113 & 0.197 & 0.415 & 1.5 & 0.183 \\
+2.0 & 10.53 & 0.097 & 0.184 & 0.389 & 1.6 & 0.173 \\
+3.0 & 15.80 & 0.080 & 0.174 & 0.336 & 1.4 & 0.154 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ── Table S2: Multiplicity weighting parameters ─────────────────────────
+\begin{table}[ht]
+\centering
+\caption{\textbf{Multiplicity weighting parameters for conditional generation.}
+For each clinical subgroup, the multiplicity ratio $\rho$ was computed to
+achieve a target effective fraction $f_{\text{target}} = 0.80$ of softmax
+attention on the designated patterns. $K_{\text{eff}}$ is the participation
+ratio, quantifying the effective number of patterns contributing to generation.
+PCOS required the highest $\rho$ (26.7) due to having only 3 stored patterns,
+reducing $K_{\text{eff}}$ to 4.6 and explaining the larger MREs observed for
+this subgroup at Level~3.}
+\label{stab:multiplicity}
+\begin{tabular}{lcccccc}
+\toprule
+Condition & $K_{\text{sub}}$ & $K_{\text{bg}}$ & $\rho$ & $f_{\text{eff}}$ & $K_{\text{eff}}$ \\
+\midrule
+Healthy & 14 & 9 & 2.57 & 0.80 & 19.9 \\
+PCOS    & 3  & 20 & 26.67 & 0.80 & 4.6 \\
+PE      & 5  & 18 & 14.40 & 0.80 & 7.7 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\section*{Supplementary Figures}
+
 % ── S5: Conditioned generation PCA (pooled) ──────────────────────────────
 \begin{figure}[ht]
 \centering

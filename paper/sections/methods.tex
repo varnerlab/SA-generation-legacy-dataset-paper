@@ -61,10 +61,16 @@ The inverse temperature $\beta$ controlled the trade-off between retrieval (larg
 $\beta$, converging to nearest memory) and generation (small $\beta$, uniform mixing).
 We identified the critical $\beta^*$ at the phase transition by computing the
 normalized attention entropy and finding the inflection point (maximum negative
-second derivative of $\bar{H}(\beta)$ in log-$\beta$ space) over a logarithmic sweep.
-For weighted sampling, the entropy calculation incorporated the multiplicity bias,
-yielding a $\rho$-dependent $\beta^*(\rho)$. We operated near $\beta^*$ to produce
-samples that were novel yet statistically consistent with the stored patterns.
+second derivative of $\bar{H}(\beta)$ in log-$\beta$ space) over a logarithmic sweep
+of 80 values from $\beta = 0.1$ to $1000$. This procedure is domain-agnostic: the
+phase transition is a geometric property of $K$ patterns in $d$ dimensions, not a
+property of the features they represent. For our dataset ($K{=}23$, $d_{\text{PCA}}{=}18$),
+the empirical inflection yielded $\beta^* \approx 5.27$, close to the theoretical
+prediction $\beta^* = \sqrt{d} \approx 4.24$. A sensitivity analysis across
+$\beta/\beta^* \in [0.1, 3.0]$ confirmed that the operating point balanced generation
+novelty against fidelity (Supplementary Table~S1). For weighted sampling, the entropy
+calculation incorporated the multiplicity bias, yielding a $\rho$-dependent
+$\beta^*(\rho)$.
 
 The effective number of patterns contributing to the dynamics was quantified by the
 participation ratio $K_{\text{eff}} = (\sum_k r_k)^2 / \sum_k r_k^2$, which
@@ -104,10 +110,13 @@ into three 72-dimensional visit records.
 To generate condition-specific cohorts (e.g., PCOS-only), we set the multiplicity
 $r_k = \rho$ for the designated patterns and $r_k = 1$ for all others, and sampled
 using the weighted Langevin update (Eq.~\ref{eq:ula}). The multiplicity $\rho$ was
-chosen to achieve a target effective fraction of probability mass on the designated
-subset. Magnitudes for the direction-magnitude decomposition were drawn from the
-condition-specific subset of norms, ensuring that the scale of variation matched the
-target subpopulation.
+computed to achieve a target effective fraction $f_{\text{target}} = 0.80$ of softmax
+attention on the designated subset, via $\rho = f_{\text{target}} \cdot K_{\text{bg}}
+/ (K_{\text{des}} \cdot (1 - f_{\text{target}}))$. For the PCOS subgroup ($K_{\text{des}}{=}3$),
+this required $\rho \approx 26.7$, reducing the effective pattern count to
+$K_{\text{eff}} \approx 4.6$ (Supplementary Table~S2). Magnitudes for the
+direction-magnitude decomposition were drawn from the condition-specific subset of
+norms, ensuring that the scale of variation matched the target subpopulation.
 
 
 \subsection{Multivariate Normal Baseline}
