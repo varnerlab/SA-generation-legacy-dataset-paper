@@ -120,14 +120,14 @@ for v in 1:3
     rm = real_visits .== v
     sm = sa_visits .== v
     p = scatter(P_real[1, rm], P_real[2, rm];
-        label="Real", color=real_colors[v], alpha=0.8, markersize=5,
+        label="Real", color=real_colors[v], alpha=0.85, markersize=7,
         markerstrokecolor=:white, markerstrokewidth=0.5,
         xlabel="PC1 ($var1%)", ylabel="PC2 ($var2%)",
         title="SA — $(visit_labels[v])", titlefontsize=9,
         background_color_inside=bg_color,
         grid=false, framestyle=:box, legendfontsize=7, margin=3Plots.mm)
     scatter!(p, P_sa[1, sm], P_sa[2, sm];
-        label="SA synth", color=synth_colors[v], alpha=0.7, markersize=4.5,
+        label="SA synth", color=synth_colors[v], alpha=0.7, markersize=6,
         markerstrokecolor=:white, markerstrokewidth=0.5)
     push!(panels, p)
 end
@@ -136,14 +136,14 @@ for v in 1:3
     rm = real_visits .== v
     mm = mvn_visits_vec .== v
     p = scatter(P_real[1, rm], P_real[2, rm];
-        label="Real", color=real_colors[v], alpha=0.8, markersize=5,
+        label="Real", color=real_colors[v], alpha=0.85, markersize=7,
         markerstrokecolor=:white, markerstrokewidth=0.5,
         xlabel="PC1 ($var1%)", ylabel="PC2 ($var2%)",
         title="MVN — $(visit_labels[v])", titlefontsize=9,
         background_color_inside=bg_color,
         grid=false, framestyle=:box, legendfontsize=7, margin=3Plots.mm)
     scatter!(p, P_mvn[1, mm], P_mvn[2, mm];
-        label="MVN synth", color=synth_colors[v], alpha=0.7, markersize=4.5,
+        label="MVN synth", color=synth_colors[v], alpha=0.7, markersize=6,
         markerstrokecolor=:white, markerstrokewidth=0.5, markershape=:diamond)
     push!(panels, p)
 end

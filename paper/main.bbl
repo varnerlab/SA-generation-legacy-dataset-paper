@@ -1,4 +1,4 @@
-\begin{thebibliography}{24}
+\begin{thebibliography}{26}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -76,8 +76,10 @@ Ricardo Azziz, Keslie~S Woods, Rosario Reyna, Thomas~J Key, Eric~S
   (6):\penalty0 2745--2749, 2004.
 \newblock \doi{10.1210/jc.2003-032046}.
 
-\bibitem[Abalos et~al.(2014)Abalos, Cuesta, Grosso, Chou, and Say]{Abalos2013}
-Edgardo Abalos, Cristina Cuesta, Ana~L Grosso, Doris Chou, and Lale Say.
+\bibitem[Abalos et~al.(2014)Abalos, Cuesta, Carroli, Qureshi, Widmer, Vogel,
+  and Souza]{Abalos2014}
+Edgardo Abalos, Cristina Cuesta, Guillermo Carroli, Zahida Qureshi, Mariana
+  Widmer, Joshua~P Vogel, and Jo{\~a}o~Paulo Souza.
 \newblock Pre-eclampsia, eclampsia and adverse maternal and perinatal outcomes:
   a secondary analysis of the {World Health Organization} multicountry survey
   on maternal and newborn health.
@@ -121,9 +123,8 @@ Deyan Luan, Fania Szlam, Kenichi~A Tanaka, Philip~S Barie, and Jeffrey~D
 Adarsh Gonzales, Guruprabha Guruswamy, and Sandesh~R Smith.
 \newblock Synthetic data generation methods in healthcare: A review on
   open-source tools and methods.
-\newblock \emph{Computational and Structural Biotechnology Journal},
-  23:\penalty0 2892--2903, 2023.
-\newblock \doi{10.1016/j.csbj.2024.07.005}.
+\newblock \emph{PLOS Digital Health}, 2\penalty0 (1):\penalty0 e0000082, 2023.
+\newblock \doi{10.1371/journal.pdig.0000082}.
 
 \bibitem[Murtaza et~al.(2024)Murtaza, Schreck, Gao, Meid, Gredner, Haefeli,
   Brenner, and Schottker]{Murtaza2024}
@@ -187,5 +188,23 @@ Maria Bravo, Thomas Orfeo, Ira Bernstein, Sandra Vadhin, Divya Lakshmi, and
 \newblock {BSTModelKit.jl}: Building biochemical systems theory models of
   individualized coagulation dynamics during pregnancy, 2023.
 \newblock JuliaCon 2023.
+
+\bibitem[McLean et~al.(2012)McLean, Bernstein, and
+  Brummel-Ziedins]{McLean2012TGA}
+Kelley~C McLean, Ira~M Bernstein, and Kathleen Brummel-Ziedins.
+\newblock Tissue factor dependent thrombin generation across pregnancy.
+\newblock \emph{American Journal of Obstetrics and Gynecology}, 207\penalty0
+  (2):\penalty0 135.e1--135.e6, 2012.
+\newblock \doi{10.1016/j.ajog.2012.05.027}.
+
+\bibitem[Hale et~al.(2012)Hale, Sobel, Benvenuto, Schonberg, Badger, and
+  Bernstein]{Hale2012}
+Sarah~A Hale, Burton Sobel, Anna Benvenuto, Adrienne Schonberg, Gary~J Badger,
+  and Ira~M Bernstein.
+\newblock Coagulation and fibrinolytic system protein profiles in women with
+  normal pregnancies and pregnancies complicated by hypertension.
+\newblock \emph{Pregnancy Hypertension}, 2\penalty0 (2):\penalty0 152--157,
+  2012.
+\newblock \doi{10.1016/j.preghy.2012.01.004}.
 
 \end{thebibliography}

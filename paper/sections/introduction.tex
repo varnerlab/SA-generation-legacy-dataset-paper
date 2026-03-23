@@ -23,11 +23,11 @@ women~\citep{Azziz2004} that has been associated with secondary hemostatic chang
 including elevated Factor~VIII and impaired fibrinolysis, and preeclampsia (PE), a
 hypertensive disorder characterized by endothelial dysfunction, platelet activation,
 and altered thrombin generation that complicates 2--8\% of pregnancies
-worldwide~\citep{Abalos2013}, further perturb this balance in ways that remain
+worldwide~\citep{Abalos2014}, further perturb this balance in ways that remain
 incompletely characterized. Mathematical models of the coagulation cascade, from the
 original Hockin--Mann stoichiometric framework~\citep{Hockin2002} through extensions
 incorporating the thrombomodulin--protein~C pathway~\citep{Bravo2012} to the
-Brummel-Ziedins 2012 (BZ2012) model with detailed APC-mediated Factor~Va inactivation
+Brummel-Ziedins 2012 (BZ2012) model with detailed activated protein~C (APC)-mediated Factor~Va inactivation
 kinetics~\citep{BrummelZiedins2012}, have provided mechanistic insight into
 patient-specific thrombin generation~\citep{Luan2007,Luan2010}, but applying these
 models to pregnancy cohorts requires longitudinal datasets capturing the full
@@ -70,32 +70,30 @@ mechanism. We recently introduced a multiplicity-weighted extension of the Hopfi
 energy that adds per-pattern weights to the log-sum-exp term, enabling continuous
 interpolation between unconditioned generation and targeted subpopulation
 amplification at inference time without retraining~\citep{Varner2026SA}. SA operates
-in a PCA-reduced linear subspace of the data rather than fitting a parametric
+in a principal component analysis (PCA)-reduced linear subspace of the data rather
+than fitting a parametric
 distribution, making it well-suited to the $n < p$ regime. In prior work, we
 generated synthetic patient populations using MVN distributions fitted independently
 to each clinical visit~\citep{Varner2023JuliaCon}; while this captured per-visit
 statistics, it assumed Gaussian marginals and generated each visit independently
-rather than as part of a coherent longitudinal trajectory. Here, we extend this
-approach to generate complete longitudinal profiles and rigorously validate the
-results.
+rather than as part of a coherent longitudinal trajectory.
 
-Specifically, we asked three questions. First, can SA generate synthetic longitudinal
-patients from a very small cohort ($K{=}23$ pregnant patients, 72 coagulation features
-per visit, 3 visits) that reproduce not only individual feature distributions but also
-the joint cross-visit covariance structure and the signatures of rare clinical
-subgroups (PCOS, $n{=}3$; PE, $n{=}5$)? Second, are these synthetic patients
-consistent with known coagulation biochemistry, as assessed by an independent ODE
-model of the coagulation cascade~\citep{BrummelZiedins2012}? Third, can synthetic
-data substitute for real data in a downstream computational task? To address these
-questions, we developed a pipeline that concatenates each patient's multi-visit
-profile into a single vector, applies PCA for dimensionality reduction, and uses
-multiplicity-weighted Langevin dynamics on the Hopfield energy landscape to generate
-new patients, with a direction-magnitude decomposition that preserves the natural
-variance structure of continuous clinical measurements. We found that SA-generated
-patients reproduced per-feature means with median error of 1.4\%, preserved
-cross-visit correlations that MVN's rank-deficient covariance could not represent,
-and maintained condition-specific signatures when amplifying rare subgroups. An
-independent 58-species ODE model of the coagulation cascade could not distinguish
-real from synthetic patients, and a mechanistic model calibrated entirely on
-synthetic patients predicted held-out real patient outcomes as well as one calibrated
-on real data.
+In this study, we extended multiplicity-weighted SA to generate complete longitudinal
+patient profiles from a very small pregnancy coagulation cohort ($K{=}23$ patients,
+72 features per visit, 3 visits) and validated the resulting synthetic patients at
+four progressively stringent levels: marginal plausibility, cross-visit covariance
+preservation, conditional amplification of rare subgroups (PCOS, $n{=}3$; PE,
+$n{=}5$), and mechanistic consistency with an independent ordinary differential equation (ODE)
+model of the
+coagulation cascade~\citep{BrummelZiedins2012}. We developed a pipeline that
+concatenates each patient's multi-visit profile into a single vector, applies PCA for
+dimensionality reduction, and uses multiplicity-weighted Langevin dynamics on the
+Hopfield energy landscape to generate new patients, with a direction-magnitude
+decomposition that preserves the natural variance structure of continuous clinical
+measurements. SA-generated patients reproduced per-feature means with median error of
+1.4\%, preserved cross-visit correlations that MVN's rank-deficient covariance could
+not represent, and maintained condition-specific signatures when amplifying rare
+subgroups. An independent 58-species ODE model of the coagulation cascade could not
+distinguish real from synthetic patients, and a mechanistic model calibrated entirely
+on synthetic patients predicted held-out real patient outcomes as well as one
+calibrated on real data.
