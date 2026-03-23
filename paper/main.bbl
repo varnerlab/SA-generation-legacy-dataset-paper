@@ -174,12 +174,11 @@ Hubert Ramsauer, Bernhard Sch{\"a}fl, Johannes Lehner, Philipp Seidl, Michael
 \newblock In \emph{International Conference on Learning Representations
   (ICLR)}, 2021.
 
-\bibitem[Varner(2024)]{Varner2024SA}
+\bibitem[Varner(2026)]{Varner2026SA}
 Jeffrey~D Varner.
-\newblock Multiplicity-weighted stochastic attention for conditional sequence
-  generation, 2024.
-\newblock Available at
-  \url{https://github.com/varnerlab/SA-Binding-Generation-Study}.
+\newblock Conditioning protein generation via {Hopfield} pattern multiplicity.
+\newblock \emph{arXiv preprint arXiv:2603.20115}, 2026.
+\newblock \doi{10.48550/arXiv.2603.20115}.
 
 \bibitem[Bravo et~al.(2023)Bravo, Orfeo, Bernstein, Vadhin, Lakshmi, and
   Varner]{Varner2023JuliaCon}

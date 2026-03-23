@@ -6,44 +6,44 @@ could produce synthetic patients from a very small longitudinal cohort that were
 merely statistically similar to real patients but consistent with the underlying
 coagulation biology. Our results provided evidence at multiple levels of resolution
 that SA-generated patients met this standard. Individual feature distributions were
-faithfully reproduced, which MVN also achieved by construction; but SA additionally
-preserved the joint cross-visit covariance structure that MVN's rank-deficient
-estimate could not represent---a difference made visible in the eigenvalue spectrum,
-where MVN introduced spurious variance in 194 null dimensions while SA respected the
-low-rank geometry of the data. SA could amplify clinically meaningful rare
-subgroups---generating 100 synthetic PCOS patients from only 3 real ones---while
-preserving subgroup-specific signatures, a capability that MVN fundamentally lacks.
-And an independent ODE model encoding decades of coagulation biochemistry, calibrated
+reproduced with median MRE of 1.4\%, which MVN also achieved by construction. SA
+additionally preserved the joint cross-visit covariance structure that MVN's
+rank-deficient estimate could not represent, a difference made visible in the
+eigenvalue spectrum where MVN introduced spurious variance in 194 null dimensions
+while SA respected the low-rank geometry of the data. SA could amplify clinically
+meaningful rare subgroups, generating 100 synthetic PCOS patients from only 3 real
+ones, while preserving subgroup-specific signatures that MVN cannot capture. And an
+independent ODE model encoding decades of coagulation biochemistry, calibrated
 exclusively on real patients, confirmed that the factor-to-thrombin-generation mapping
 in synthetic patients was biologically plausible, with 83--92\% cloud overlap and
 Kolmogorov--Smirnov tests unable to distinguish the two populations ($p > 0.35$ for
 all five TGA features).
 
 The ability to generate validated synthetic cohorts from very small longitudinal
-datasets has immediate practical implications for maternal health research. Rare
-pregnancy complications such as PCOS, preeclampsia, and gestational thrombophilia are
-difficult to study because assembling large, well-characterized longitudinal cohorts
-requires years of recruitment across multiple clinical sites. Our results suggested
-that SA can enable hypothesis generation, power analyses, and computational modeling
-studies for these understudied populations by generating synthetic cohorts that
-preserve both the statistical and mechanistic properties of the real data. The
-conditional generation capability is particularly relevant: rather than requiring
-researchers to collect additional rare patients, SA can amplify existing small
-subgroups into cohorts large enough for meaningful analysis.
+datasets has practical implications for maternal health research. Rare pregnancy
+complications such as PCOS, preeclampsia, and gestational thrombophilia are difficult
+to study because assembling large, well-characterized longitudinal cohorts requires
+years of recruitment across multiple clinical sites. Our results suggest that SA can
+enable hypothesis generation, power analyses, and computational modeling studies for
+these understudied populations by generating synthetic cohorts that preserve both the
+statistical and mechanistic properties of the real data. The conditional generation
+capability is particularly relevant: rather than requiring researchers to collect
+additional rare patients, SA can amplify existing small subgroups into cohorts large
+enough for meaningful analysis.
 
-The key insight underlying SA's advantage over parametric alternatives is geometric.
-SA generates samples by interpolating between stored patient profiles via the
-Hopfield energy landscape operating in a PCA-reduced linear subspace, rather than
-fitting a parametric distribution that must regularize or truncate high-dimensional
-structure. In the
-$n < p$ regime that characterizes most small clinical studies, any parametric
-distribution faces a fundamental identifiability problem: there are more parameters
-to estimate than observations to estimate them from. SA sidesteps this by operating
-in a PCA-reduced space where the memory-to-dimension ratio is favorable
+Understanding why SA succeeds where parametric methods fail requires examining the
+geometric structure of the problem. SA generates samples by interpolating between
+stored patient profiles via the Hopfield
+energy landscape operating in a PCA-reduced linear subspace, rather than fitting a
+parametric distribution that must regularize or truncate high-dimensional structure. In
+the $n < p$ regime that characterizes most small clinical studies, any parametric
+distribution faces a fundamental identifiability problem: there are more parameters to
+estimate than observations to estimate them from. SA sidesteps this by operating in a
+PCA-reduced space where the memory-to-dimension ratio is favorable
 ($K/d_{\text{PCA}} \approx 1.28$) and by preserving the full directional structure of
 the data through the attention mechanism. A natural concern is whether the $\beta^*$
-selection procedure---originally developed for protein sequence
-generation~\citep{Varner2024SA}---transfers to clinical coagulation data. The entropy
+selection procedure, originally developed for protein sequence
+generation~\citep{Varner2026SA}, transfers to clinical coagulation data. The entropy
 inflection method identifies the phase transition in the Hopfield energy landscape,
 which is a geometric property of $K$ patterns in $d$ dimensions, not a property of
 what the features represent; for our dataset the empirical inflection
@@ -53,21 +53,28 @@ quality degraded gracefully across $\beta/\beta^* \in [0.1, 3.0]$ (Supplementary
 Table~S1). Similarly, varying the PCA variance retention threshold from 85\% to 99\%
 ($d_{\text{PCA}} = 13$ to 21) had minimal impact on generation quality: median MRE
 remained between 1.2\% and 1.8\% across all thresholds (Supplementary Table~S7),
-confirming that the 95\% threshold was not a critical design choice. The multiplicity weighting for conditional generation introduced an
-additional consideration: achieving 80\% attention on the PCOS subgroup required
-$\rho \approx 26.7$, reducing the effective pattern count to $K_{\text{eff}} \approx
-4.6$ (Supplementary Table~S2), which explains the larger MREs observed for PCOS
-features---the energy landscape was effectively shaped by fewer than 5 independent
-patterns, pulling means toward the population average.
+confirming that the 95\% threshold was not a critical design choice. The multiplicity
+weighting for conditional generation introduced an additional consideration: achieving
+80\% attention on the PCOS subgroup required $\rho \approx 26.7$, reducing the
+effective pattern count to $K_{\text{eff}} \approx 4.6$ (Supplementary Table~S2),
+which explains the larger MREs observed for PCOS features because the energy landscape
+was effectively shaped by fewer than 5 independent patterns, pulling means toward the
+population average. The direction-magnitude decomposition compounds this limitation:
+for PCOS, magnitudes are drawn from only 3 empirical norms, providing minimal
+diversity in the scale of generated samples.
 
-The mechanistic validation introduced a paradigm that we believe is broadly applicable
+Beyond these statistical and geometric considerations, the mechanistic validation
+introduced a paradigm that we believe is broadly applicable
 beyond coagulation: rather than relying solely on statistical comparisons between real
 and synthetic distributions, we tested whether synthetic patients produced biologically
-consistent outputs when processed by an independent computational model. This approach
-is available whenever a validated mechanistic model exists for the domain of
-interest---pharmacokinetic models in drug development, physiological models in
-critical care, or metabolic models in oncology---and the requirement is not that the
-model be a perfect predictor, but that synthetic patients fall within the same
+consistent outputs when processed by an independent computational model, and went
+further to show that a mechanistic model calibrated entirely on synthetic data
+predicted real patient outcomes as well as one calibrated on real data (overall ratio
+0.94$\times$ on held-out V2+V3 patients, with 11 random restarts per calibration).
+This approach is available whenever a validated mechanistic model exists for the domain
+of interest (pharmacokinetic models in drug development, physiological models in
+critical care, or metabolic models in oncology), and the requirement is not that the
+model be a perfect predictor but that synthetic patients fall within the same
 model-predicted envelope as real patients. The bootstrap Mann--Whitney analysis of
 condition-specific features revealed that 5 of 24 (21\%) feature--condition pairs
 were statistically distinguishable at equal sample sizes, but the mean relative errors
@@ -83,26 +90,40 @@ parametric methods cannot capture in the $n < p$ regime.
 To assess whether more expressive generative models could match SA at this sample
 size, we compared against CTGAN and TVAE~\citep{Xu2019CTGAN}, two widely used deep
 generative methods for tabular data (Supplementary Table~S6). CTGAN failed
-catastrophically, producing median MREs of $\approx$19\%---an order of magnitude
-worse than SA---across all epoch counts tested (300--3,000), consistent with known
-GAN mode collapse behavior on small datasets. TVAE achieved comparable marginal
-fidelity to SA at high epoch counts (median MRE 1.8\% at 3,000 epochs), but
-operated on per-visit rows ($n{=}90$) rather than concatenated longitudinal profiles
-($n{=}23$), meaning it could not capture cross-visit covariance structure and had
-no mechanism for conditional subgroup generation. These results confirmed that SA's
-advantage at small $n$ is not merely theoretical: standard deep generative methods
-either fail outright (CTGAN) or achieve marginal-level fidelity without the
-longitudinal and conditional capabilities that SA provides.
+completely, producing median MREs of $\approx$19\%, an order of magnitude worse than
+SA, across all epoch counts tested (300--3,000), consistent with known GAN mode
+collapse behavior on small datasets. TVAE achieved comparable marginal fidelity to SA
+at high epoch counts (median MRE 1.8\% at 3,000 epochs), but operated on per-visit
+rows ($n{=}90$) rather than concatenated longitudinal profiles ($n{=}23$), meaning it
+could not capture cross-visit covariance structure and had no mechanism for conditional
+subgroup generation. These results confirmed that SA's advantage at small $n$ is not
+merely theoretical: standard deep generative methods either fail outright (CTGAN) or
+achieve marginal-level fidelity without the longitudinal and conditional capabilities
+that SA provides.
 
-Several additional limitations warrant discussion. Our study used a single
-longitudinal dataset of $K{=}23$ patients, and further evaluation on independent
-datasets and across different clinical domains is needed to establish
-generalizability. The PCA dimensionality reduction assumed linear structure in the
-feature space; nonlinear manifold learning methods may better capture complex clinical
-relationships, though at the cost of reduced interpretability. The mechanistic
-validation under TF+TM conditions revealed systematic ODE model bias, though the
-observation that real and synthetic patients shared the same bias pattern was itself
-informative. Finally, we did not validate synthetic patients against clinical
-outcomes---our validation was restricted to statistical and mechanistic plausibility,
+Several additional limitations warrant discussion. Our study used a single longitudinal
+dataset of $K{=}23$ patients, and further evaluation on independent datasets and
+across different clinical domains is needed to establish generalizability. The PCA
+dimensionality reduction assumed linear structure in the feature space; nonlinear
+manifold learning methods may better capture complex clinical relationships, though at
+the cost of reduced interpretability. The mechanistic validation under TF+TM
+conditions revealed systematic ODE model bias, though the observation that real and
+synthetic patients shared the same bias pattern was itself informative. The BZ2012
+calibration required substantial departures from published rate constants, notably a
+50-fold reduction in intrinsic tenase $k_{\text{cat}}$ and a 15-fold increase in
+extrinsic tenase $k_{\text{cat}}$ (Supplementary Table~S4). These deviations likely
+reflect differences between the \textit{in vitro} conditions under which the
+literature rate constants were measured (purified component systems) and the
+plasma-based TGA used in this study, where phospholipid surfaces, factor
+concentrations, and inhibitor profiles differ from the model
+assumptions~\citep{Hockin2002,BrummelZiedins2012}. The purpose of the mechanistic
+validation was not to obtain biochemically accurate rate constants but to test whether
+the ODE model processed real and synthetic patients equivalently, a comparison that is
+invariant to the absolute parameter values. The mechanistic validation was limited to
+thrombin generation (BZ2012) and did not cover the fibrinolytic or viscoelastic
+features included in the dataset; extending this validation to a mechanistic model of
+fibrinolysis, currently under development, would provide additional evidence for these
+feature categories. Finally, we did not validate synthetic patients against clinical
+outcomes; our validation was restricted to statistical and mechanistic plausibility,
 and prospective validation against real clinical decision-making remains an important
 future direction.

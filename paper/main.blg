@@ -6,30 +6,30 @@ Database file #1: references.bib
 Warning--empty journal in Xu2019CTGAN
 You've used 24 entries,
             2481 wiz_defined-function locations,
-            738 strings with 10306 characters,
-and the built_in function-call counts, 10354 in all, are:
-= -- 802
+            740 strings with 10280 characters,
+and the built_in function-call counts, 10374 in all, are:
+= -- 806
 > -- 698
 < -- 9
 + -- 260
 - -- 212
-* -- 901
-:= -- 1728
-add.period$ -- 89
+* -- 905
+:= -- 1736
+add.period$ -- 90
 call.type$ -- 24
 change.case$ -- 48
 chr.to.int$ -- 24
 cite$ -- 25
-duplicate$ -- 454
-empty$ -- 870
+duplicate$ -- 458
+empty$ -- 868
 format.name$ -- 240
-if$ -- 2134
+if$ -- 2136
 int.to.chr$ -- 1
 int.to.str$ -- 25
-missing$ -- 20
-newline$ -- 145
+missing$ -- 21
+newline$ -- 146
 num.names$ -- 72
-pop$ -- 193
+pop$ -- 188
 preamble$ -- 1
 purify$ -- 24
 quote$ -- 0
@@ -44,5 +44,5 @@ type$ -- 168
 warning$ -- 1
 while$ -- 76
 width$ -- 0
-write$ -- 347
+write$ -- 349
 (There was 1 warning)
