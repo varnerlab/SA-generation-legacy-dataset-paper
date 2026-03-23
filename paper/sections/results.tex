@@ -110,7 +110,7 @@ correlations, used in the mechanistic validation, would additionally capture
 monotonic nonlinear dependencies.
 
 We examined the eigenvalue spectrum of the sample covariance matrix to understand the
-structural origin of this difference (Supplementary Fig.~S3). The real data had
+structural origin of this difference (Supplementary Fig.~S2). The real data had
 rank~22, reflecting the $K{=}23$ patient constraint. SA and MVN make different
 trade-offs in handling this rank deficiency: SA truncates via PCA (zeroing variance
 beyond component~18), while MVN regularizes via Ledoit--Wolf shrinkage (providing a
@@ -158,7 +158,7 @@ MVN-generated patients (diamonds) show greater dispersion, particularly at
 Visits~2 (first trimester) and~3 (third trimester), where MVN patients extend
 beyond the convex hull of the real data. This excess scatter reflects the
 spurious variance introduced by Ledoit--Wolf regularization of the
-rank-deficient covariance (Supplementary Fig.~S3). Colors encode visit: blue
+rank-deficient covariance (Supplementary Fig.~S2). Colors encode visit: blue
 (V1, not pregnant), green (V2, first trimester), orange (V3, third trimester).}
 \label{fig:pca-by-visit}
 \end{figure}
@@ -195,7 +195,7 @@ inter-patient variability. No multiple-testing correction was applied to the 24
 simultaneous comparisons; the failing features had consistently low non-significance
 fractions (68--88\%) rather than borderline values, so correction would not change
 the classification. PCA projections of the conditioned cohorts are provided in
-Supplementary Figs.~S5--S6. These results showed that SA's multiplicity-weighted
+Supplementary Figs.~S3--S4. These results showed that SA's multiplicity-weighted
 interpolation can amplify rare subgroups in a way that preserves their distinguishing
 clinical features, a capability with direct relevance to hypothesis generation and
 power analysis in understudied patient populations. MVN has no mechanism for this:
@@ -266,7 +266,7 @@ synthetic ratios to $n_{\text{real}}$ and repeated the KS test 1,000 times: all 
 features achieved $p > 0.05$ in $\geq$96\% of replicates. Under TF+TM conditions,
 the model systematically overcorrected the protein~C anticoagulant pathway, producing
 peak and maximum rate predictions approximately 0.5$\times$ measured values for both
-real and synthetic patients (Supplementary Fig.~S7), yet this shared systematic bias
+real and synthetic patients (Supplementary Fig.~S5), yet this shared systematic bias
 was itself informative: cloud overlap remained high at 88--92\%, confirming that the
 model processed real and synthetic patients identically even under conditions where
 the calibration was imperfect.
@@ -274,11 +274,11 @@ the calibration was imperfect.
 The calibration also generalized across pregnancy timepoints: although fitted only
 on Visit~1 real patients, the predicted-to-measured ratios at Visits~2 and~3 under
 TF-only conditions were 0.96$\times$ and 1.07$\times$, respectively (Supplementary
-Fig.~S9), confirming that the calibrated rate constants captured a stable
+Fig.~S6), confirming that the calibrated rate constants captured a stable
 population-level property of the coagulation system rather than overfitting to the
 training visit. Spearman rank correlations between predicted and measured values were
 moderate for ETP ($\rho \approx 0.6$--$0.8$ for real, $\rho \approx 0.6$--$0.65$
-for synthetic; Supplementary Fig.~S10) and weak for other features, consistent with
+for synthetic; Supplementary Fig.~S7) and weak for other features, consistent with
 a 5-parameter population-level calibration that was not designed to resolve
 inter-patient variability. The key finding was not patient-level prediction but
 population-level plausibility: an independent mechanistic model encoding decades of
