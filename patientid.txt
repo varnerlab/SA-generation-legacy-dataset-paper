@@ -1,0 +1,19 @@
+Original spreadsheet: 20200604_R61_Legacy_Biochemical_Measurements.xlsx
+
+All 23 Patients (complete longitudinal data, all 3 visits)
+5, 7, 24, 42, 46, 56, 58, 59, 60, 61, 65, 74, 78, 79, 88, 100, 109, 118, 120, 132, 138, 147, 151
+
+By Enrollment Group
+-------------------
+Healthy (n=14): 5, 24, 56, 59, 61, 74, 79, 88, 100, 109, 120, 132, 147, 151
+PCOS (n=3): 42, 65, 138
+Prior PE (n=6): 7, 46, 58, 60, 78, 118
+
+By Clinical Outcome (developed PE during the study)
+----------------------------------------------------
+PE outcome (n=5): 7, 118, 138, 147, 151
+
+Notable overlaps:
+- Patients 147 and 151 enrolled as Healthy but developed PE
+- Patient 138 is PCOS and developed PE
+- Patients 7 and 118 had prior PE history and developed PE again
