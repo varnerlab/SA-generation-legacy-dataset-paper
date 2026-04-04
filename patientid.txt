@@ -5,13 +5,28 @@ All 23 Patients (complete longitudinal data, all 3 visits)
 
 By Enrollment Group
 -------------------
-Healthy (n=14): 5, 24, 56, 59, 61, 74, 79, 88, 100, 109, 120, 132, 147, 151
+Healthy Nulliparous (n=14): 5, 24, 56, 59, 61, 74, 79, 88, 100, 109, 120, 132, 147, 151
 PCOS (n=3): 42, 65, 138
 Prior PE (n=6): 7, 46, 58, 60, 78, 118
 
-By Clinical Outcome (developed PE during the study)
-----------------------------------------------------
-PE outcome (n=5): 7, 118, 138, 147, 151
+By Pregnancy Outcome (study pregnancy)
+--------------------------------------
+Uncomplicated (n=18): 5, 24, 42, 46, 56, 58, 59, 60, 61, 65, 74, 78, 79, 88, 100, 109, 120, 132
+Developed PE (n=5): 7, 118, 138, 147, 151
+
+Enrollment x Outcome Cross-Tabulation
+--------------------------------------
+                        Uncomplicated   Developed PE    Total
+Healthy Nulliparous     12              2               14
+Prior PE                4               2               6
+PCOS                    2               1               3
+Total                   18              5               23
+
+Conditional Generation Groups (overlapping, used in paper)
+----------------------------------------------------------
+Uncomplicated (n=18): all patients without PE outcome
+PCOS (n=3): cross-cutting comorbidity (patient 138 also in Developed PE group)
+Developed PE (n=5): patients who developed PE during study pregnancy
 
 Notable overlaps:
 - Patients 147 and 151 enrolled as Healthy but developed PE
