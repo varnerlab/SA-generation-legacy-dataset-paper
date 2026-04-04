@@ -43,7 +43,7 @@ PCA-reduced space where the memory-to-dimension ratio is favorable
 ($K/d_{\text{PCA}} \approx 1.28$) and by preserving the full directional structure of
 the data through the attention mechanism. A natural concern is whether the $\beta^*$
 selection procedure, originally developed for protein sequence
-generation~\citep{Varner2026SA}, transfers to clinical coagulation data. The entropy
+generation~\citep{Varner2026SAProtein}, transfers to clinical coagulation data. The entropy
 inflection method identifies the phase transition in the Hopfield energy landscape,
 which is a geometric property of $K$ patterns in $d$ dimensions, not a property of
 what the features represent; for our dataset the empirical inflection
@@ -61,7 +61,18 @@ which explains the larger MREs observed for PCOS features because the energy lan
 was effectively shaped by fewer than 5 independent patterns, pulling means toward the
 population average. The direction-magnitude decomposition compounds this limitation:
 for PCOS, magnitudes are drawn from only 3 empirical norms, providing minimal
-diversity in the scale of generated samples.
+diversity in the scale of generated samples. More broadly, the SA framework and its
+multiplicity-weighted conditioning have been independently validated on discrete
+protein sequence generation from small family
+alignments~\citep{Varner2026SAProtein}, on steering generation toward functional
+subsets such as binding peptides~\citep{Varner2026Multiplicity}, and on the
+theoretical foundations connecting modern Hopfield networks to
+attention-based generation~\citep{Alswaidan2026SA}. Across these domains, the
+critical temperature prediction ($\beta^* \approx \sqrt{d}$) and the
+multiplicity-weighted conditioning mechanism transfer without modification,
+suggesting that the geometric properties exploited here are not specific to
+clinical coagulation data but are general features of the Hopfield energy
+landscape operating on small pattern sets.
 
 Beyond these statistical and geometric considerations, the mechanistic validation
 introduced a paradigm that we believe is broadly applicable

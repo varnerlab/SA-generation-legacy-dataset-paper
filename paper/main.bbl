@@ -1,4 +1,4 @@
-\begin{thebibliography}{28}
+\begin{thebibliography}{30}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -175,10 +175,10 @@ Hubert Ramsauer, Bernhard Sch{\"a}fl, Johannes Lehner, Philipp Seidl, Michael
 \newblock In \emph{International Conference on Learning Representations
   (ICLR)}, 2021.
 
-\bibitem[Varner(2026)]{Varner2026SA}
+\bibitem[Varner(2026{\natexlab{a}})]{Varner2026Multiplicity}
 Jeffrey~D Varner.
 \newblock Conditioning protein generation via {Hopfield} pattern multiplicity.
-\newblock \emph{arXiv preprint arXiv:2603.20115}, 2026.
+\newblock \emph{arXiv preprint arXiv:2603.20115}, 2026{\natexlab{a}}.
 \newblock \doi{10.48550/arXiv.2603.20115}.
 
 \bibitem[Bravo et~al.(2023)Bravo, Orfeo, Bernstein, Vadhin, Lakshmi, and
@@ -188,6 +188,20 @@ Maria Bravo, Thomas Orfeo, Ira Bernstein, Sandra Vadhin, Divya Lakshmi, and
 \newblock {BSTModelKit.jl}: Building biochemical systems theory models of
   individualized coagulation dynamics during pregnancy, 2023.
 \newblock JuliaCon 2023.
+
+\bibitem[Varner(2026{\natexlab{b}})]{Varner2026SAProtein}
+Jeffrey~D Varner.
+\newblock Training-free generation of protein sequences from small family
+  alignments via stochastic attention.
+\newblock \emph{arXiv preprint arXiv:2603.14717}, 2026{\natexlab{b}}.
+\newblock \doi{10.48550/arXiv.2603.14717}.
+
+\bibitem[Alswaidan and Varner(2026)]{Alswaidan2026SA}
+Abdulrahman Alswaidan and Jeffrey~D Varner.
+\newblock Stochastic attention via {Langevin} dynamics on the modern {Hopfield}
+  energy.
+\newblock \emph{arXiv preprint arXiv:2603.06875}, 2026.
+\newblock \doi{10.48550/arXiv.2603.06875}.
 
 \bibitem[McLean et~al.(2012)McLean, Bernstein, and
   Brummel-Ziedins]{McLean2012TGA}
