@@ -1,36 +1,21 @@
-\documentclass[11pt]{article}
+% ══════════════════════════════════════════════════════════════════════════════
+% Supplementary Information
+% ══════════════════════════════════════════════════════════════════════════════
 
-\usepackage[margin=1in]{geometry}
-\usepackage{amsmath,amssymb,amsfonts}
-\usepackage{graphicx}
-\usepackage{booktabs}
-\usepackage{hyperref}
-\usepackage{xcolor}
-\usepackage{caption}
-\usepackage{subcaption}
-
-\graphicspath{{../code/figs/}}
-
-\newcommand{\vxi}{\boldsymbol{\xi}}
-\newcommand{\mhat}[1]{\hat{\mathbf{#1}}}
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
-
-\title{Supplementary Information:\\
-Validated Synthetic Patient Generation for Small Longitudinal Cohorts}
-\author{}
-\date{}
-
-\begin{document}
-\maketitle
-
-\renewcommand{\thefigure}{S\arabic{figure}}
-\renewcommand{\thetable}{S\arabic{table}}
+% Reset counters for supplementary numbering
+\setcounter{section}{0}
 \setcounter{figure}{0}
 \setcounter{table}{0}
+\setcounter{equation}{0}
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\theequation}{S\arabic{equation}}
+
+\section*{Supplementary Information}
 
 % ══════════════════════════════════════════════════════════════════════════════
-\section*{Supplementary Tables}
+\subsection*{Supplementary Tables}
 
 % ── Table S1: Beta sweep ─────────────────────────────────────────────────
 \begin{table}[ht]
@@ -194,7 +179,7 @@ Threshold & $d_{\text{PCA}}$ & $K/d$ & $\beta^*$ & Novelty & Med MRE & Corr MAE 
 \end{table}
 
 % ══════════════════════════════════════════════════════════════════════════════
-\section*{Supplementary Figures}
+\subsection*{Supplementary Figures}
 
 % ── Fig S1: Cross-visit corr amplified ───────────────────────────────────
 \begin{figure}[ht]
@@ -286,5 +271,3 @@ correlations for other features are expected given the 5-parameter
 population-level calibration.}
 \label{sfig:rankcorr}
 \end{figure}
-
-\end{document}
