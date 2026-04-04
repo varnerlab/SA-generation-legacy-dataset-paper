@@ -1,4 +1,4 @@
-\begin{thebibliography}{26}
+\begin{thebibliography}{28}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -206,5 +206,20 @@ Sarah~A Hale, Burton Sobel, Anna Benvenuto, Adrienne Schonberg, Gary~J Badger,
 \newblock \emph{Pregnancy Hypertension}, 2\penalty0 (2):\penalty0 152--157,
   2012.
 \newblock \doi{10.1016/j.preghy.2012.01.004}.
+
+\bibitem[Psoinos et~al.(2021)Psoinos, Morris, McBride, and
+  Bernstein]{Psoinos2021}
+Rachel B~C Psoinos, Erin~A Morris, Carole~A McBride, and Ira~M Bernstein.
+\newblock Association of pre-pregnancy subclinical insulin resistance with
+  cardiac dysfunction in healthy nulliparous women.
+\newblock \emph{Pregnancy Hypertension}, 26:\penalty0 11--16, 2021.
+\newblock \doi{10.1016/j.preghy.2021.07.246}.
+
+\bibitem[Bernstein et~al.(2016)Bernstein, Hale, and Badger]{Bernstein2016}
+Ira~M Bernstein, Sarah~A Hale, and Gary~J Badger.
+\newblock Differences in cardiovascular function comparing prior preeclamptics
+  with nulliparous controls.
+\newblock \emph{Pregnancy Hypertension}, 2016.
+\newblock \doi{10.1016/j.preghy.2016.11.001}.
 
 \end{thebibliography}

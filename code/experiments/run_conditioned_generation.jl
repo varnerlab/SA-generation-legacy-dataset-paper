@@ -2,9 +2,9 @@
 # run_conditioned_generation.jl
 #
 # Generate three conditioned synthetic cohorts using multiplicity-weighted SA:
-#   1. Healthy  (14 real patients → 100 synthetic)
-#   2. PCOS     (3 real patients  → 100 synthetic)
-#   3. PE       (5 real patients  → 100 synthetic)
+#   1. Uncomplicated  (18 real patients → 100 synthetic)  [no PE outcome]
+#   2. PCOS           (3 real patients  → 100 synthetic)  [cross-cutting comorbidity]
+#   3. Developed PE   (5 real patients  → 100 synthetic)  [developed PE during study]
 #
 # Each synthetic patient is a full longitudinal trajectory (V1|V2|V3).
 # MVN cannot do this — you can't fit a covariance matrix from 3 patients.
@@ -35,12 +35,7 @@ d_concat = n_assays * n_visits
 # ══════════════════════════════════════════════════════════════════════════════
 @info "\nStep 2: Identifying subpopulations …"
 
-# map conditions to memory column indices (1:K)
-healthy_indices = findall(c -> c == "Healthy", subject_conditions)
-pcos_indices = findall(c -> c == "PCOS", subject_conditions)
-
-# PE cohort: patients who developed preeclampsia (from any condition group)
-# check the DevelopedPE column for each complete subject
+# PE cohort: patients who developed preeclampsia during study pregnancy
 pe_indices = Int[]
 for (i, s) in enumerate(complete_subjects)
     row = findfirst((df_clean.SubjectID .== s))
@@ -49,23 +44,29 @@ for (i, s) in enumerate(complete_subjects)
     end
 end
 
-@info "  Healthy:  $(length(healthy_indices)) patients (indices: $healthy_indices)"
-@info "  PCOS:     $(length(pcos_indices)) patients (indices: $pcos_indices)"
-@info "  PE:       $(length(pe_indices)) patients (indices: $pe_indices)"
+# Uncomplicated cohort: all patients who did NOT develop PE (n=18)
+uncomplicated_indices = findall(i -> !(i in pe_indices), 1:K)
+
+# PCOS cohort: cross-cutting comorbidity (n=3, 1 overlaps with PE)
+pcos_indices = findall(c -> c == "PCOS", subject_conditions)
+
+@info "  Uncomplicated: $(length(uncomplicated_indices)) patients (indices: $uncomplicated_indices)"
+@info "  PCOS:          $(length(pcos_indices)) patients (indices: $pcos_indices)"
+@info "  Developed PE:  $(length(pe_indices)) patients (indices: $pe_indices)"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Step 3: Fisher separation index — predict conditioning success
 # ══════════════════════════════════════════════════════════════════════════════
 @info "\nStep 3: Fisher separation analysis …"
 
+S_uncomplicated = fisher_separation_index(X̂, uncomplicated_indices)
 S_pcos = fisher_separation_index(X̂, pcos_indices)
 S_pe = fisher_separation_index(X̂, pe_indices)
-S_healthy = fisher_separation_index(X̂, healthy_indices)
 
 @info "  Fisher separation index:"
-@info "    Healthy vs rest:  S = $(round(S_healthy, digits=4))"
-@info "    PCOS vs rest:     S = $(round(S_pcos, digits=4))"
-@info "    PE vs rest:       S = $(round(S_pe, digits=4))"
+@info "    Uncomplicated vs rest:  S = $(round(S_uncomplicated, digits=4))"
+@info "    PCOS vs rest:           S = $(round(S_pcos, digits=4))"
+@info "    Developed PE vs rest:   S = $(round(S_pe, digits=4))"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Step 4: Configure multiplicity weights and find β*(ρ) for each cohort
@@ -76,9 +77,9 @@ S_healthy = fisher_separation_index(X̂, healthy_indices)
 f_target = 0.80
 
 cohorts = [
-    (name="Healthy", indices=healthy_indices),
-    (name="PCOS",    indices=pcos_indices),
-    (name="PE",      indices=pe_indices),
+    (name="Uncomplicated", indices=uncomplicated_indices),
+    (name="PCOS",          indices=pcos_indices),
+    (name="Developed PE",  indices=pe_indices),
 ]
 
 cohort_configs = []
@@ -178,7 +179,7 @@ CSV.write(joinpath(_PATH_TO_DATA, "conditioned_synthetic_cohorts.csv"), df_all_c
 
 # also save individual cohort files
 for (name, df) in all_cohort_results
-    fname = "synthetic_$(lowercase(name))_cohort.csv"
+    fname = "synthetic_$(replace(lowercase(name), " " => "_"))_cohort.csv"
     CSV.write(joinpath(_PATH_TO_DATA, fname), df)
     @info "  Saved $fname"
 end
@@ -293,14 +294,9 @@ var2 = round(100 * MultivariateStats.principalvars(pca_rec)[2] / MultivariateSta
 
 # colors
 cohort_colors = Dict(
-    "Healthy" => RGB(0.20, 0.60, 0.40),
-    "PCOS"    => RGB(0.80, 0.30, 0.30),
-    "PE"      => RGB(0.30, 0.30, 0.80),
-)
-real_marker_colors = Dict(
-    "Healthy"  => RGB(0.10, 0.45, 0.25),
-    "PCOS"     => RGB(0.60, 0.15, 0.15),
-    "Prior PE" => RGB(0.15, 0.15, 0.60),
+    "Uncomplicated" => RGB(0.20, 0.60, 0.40),
+    "PCOS"          => RGB(0.80, 0.30, 0.30),
+    "Developed PE"  => RGB(0.30, 0.30, 0.80),
 )
 
 # one panel per cohort
@@ -421,6 +417,6 @@ savefig(p_traj, joinpath(_PATH_TO_FIG, "conditioned_cohorts_trajectories.png"))
 JLD2.@save joinpath(_PATH_TO_DATA, "conditioned_generation_state.jld2") cohort_configs all_cohort_results df_eval
 
 @info "\n✓ Conditioned generation complete!"
-@info "  Cohorts: Healthy ($(length(healthy_indices)) → $n_synth), PCOS ($(length(pcos_indices)) → $n_synth), PE ($(length(pe_indices)) → $n_synth)"
+@info "  Cohorts: Uncomplicated ($(length(uncomplicated_indices)) → $n_synth), PCOS ($(length(pcos_indices)) → $n_synth), Developed PE ($(length(pe_indices)) → $n_synth)"
 @info "  Output: data/conditioned_synthetic_cohorts.csv"
 @info "  Figures: figs/conditioned_cohorts_pca.pdf, figs/conditioned_cohorts_trajectories.pdf"

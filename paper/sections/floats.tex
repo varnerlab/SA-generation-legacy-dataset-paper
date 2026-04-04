@@ -4,6 +4,51 @@
 
 \begin{table}[p]
 \centering
+\caption{\textbf{Demographics and clinical characteristics of the 23 patients
+with complete longitudinal data across all three visits.} Values are reported as
+mean~$\pm$~SD, median (range), or $n$~(\%) as appropriate.}
+\label{tab:demographics}
+\begin{tabular}{lccc}
+\toprule
+Characteristic & Mean $\pm$ SD & Median (Range) & $n$ (\%) \\
+\midrule
+Age at enrollment (yrs) & 30.2 $\pm$ 5.1 & 29 (20--41) & \\
+\addlinespace
+Race & & & \\
+\quad White & & & 22 (96) \\
+\quad Not disclosed & & & 1 (4) \\
+\addlinespace
+Prepregnancy BMI & 26.6 $\pm$ 5.3 & 25 (19.0--37.8) & \\
+\addlinespace
+Parity & & 0 (0--2) & \\
+\quad Nulliparous & & & 16 (70) \\
+\quad Parous & & & 7 (30) \\
+\addlinespace
+Enrollment condition & & & \\
+\quad Healthy nulliparous & & & 14 (61) \\
+\quad PCOS & & & 3 (13) \\
+\quad Prior PE & & & 6 (26) \\
+\addlinespace
+Cycle day at V1 & 9.2 $\pm$ 3.6 & 10 (3--14) & \\
+\addlinespace
+Gestational age at V2 (days) & 89.0 $\pm$ 5.5 & & \\
+Gestational age at V3 (days) & 217.0 $\pm$ 4.0 & & \\
+\midrule
+\multicolumn{4}{l}{\textit{Enrollment cohort $\times$ pregnancy outcome}} \\
+\midrule
+ & Uncomplicated & Developed PE & Total \\
+\midrule
+Healthy nulliparous & 12 & 2 & 14 \\
+Prior PE & 4 & 2 & 6 \\
+PCOS & 2 & 1 & 3 \\
+\midrule
+Total & 18 & 5 & 23 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[p]
+\centering
 \caption{Per-visit mean relative error (MRE) between real and SA-generated synthetic
 patients for representative coagulation features, computed as
 $|\bar{x}_{\text{synth}} - \bar{x}_{\text{real}}| / |\bar{x}_{\text{real}}|$.}
@@ -114,17 +159,17 @@ rank-deficient covariance (Supplementary Fig.~S2). Colors encode visit: blue
 \caption{\textbf{Condition-specific feature preservation.} Grouped bar charts
 comparing real (dark bars) and SA-generated synthetic (light bars) patient
 means ($\pm$ SD error bars) for eight coagulation features, shown separately
-for each clinical subgroup: Healthy ($n{=}14$, left, blue), PCOS ($n{=}3$,
-center, orange), and PE ($n{=}5$, right, red). Values are pooled across all
+for each clinical subgroup: Uncomplicated ($n{=}18$, left, blue), PCOS ($n{=}3$,
+center, orange), and Developed~PE ($n{=}5$, right, red). Values are pooled across all
 three visits. Gray percentages indicate the mean relative error (MRE). Green
 annotations show the bootstrap Mann--Whitney equivalence result: the fraction
 of 1,000 bootstrap replicates (synthetic subsampled to $n_{\text{real}}$) in
 which $p > 0.05$, i.e., real and synthetic could not be distinguished.
 Features achieving $\geq$90\% are shown in green; $<$90\% in red. Across all
 24 feature--condition pairs, 19 (79\%) were statistically indistinguishable in
-$\geq$90\% of replicates (median: 96.2\%). The five features below this
-threshold were concentrated in high-variance features (FIX, FVII, fibrinogen)
-where large inter-patient variability reduced test power.}
+$\geq$90\% of replicates (median: 98.4\%). The five features below this
+threshold were distributed across high-variance features (FIX, FVII, FVIII,
+plasminogen) where large inter-patient variability reduced test power.}
 \label{fig:conditioned-features}
 \end{figure}
 

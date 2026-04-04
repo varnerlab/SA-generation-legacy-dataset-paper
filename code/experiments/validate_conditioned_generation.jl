@@ -2,9 +2,9 @@
 # validate_conditioned_generation.jl — Level 3: Conditional Structure
 #
 # Generate condition-specific synthetic cohorts using multiplicity-weighted SA:
-#   Healthy (14 real → 100 synthetic)
-#   PCOS    (3 real  → 100 synthetic)
-#   PE      (5 real  → 100 synthetic)
+#   Uncomplicated (18 real → 100 synthetic)  [no PE outcome]
+#   PCOS          (3 real  → 100 synthetic)  [cross-cutting comorbidity]
+#   Developed PE  (5 real  → 100 synthetic)  [developed PE during study]
 #
 # Validation checks:
 #   1. Condition-specific means match real condition-specific means
@@ -31,9 +31,6 @@ d_concat = n_assays * n_visits
 # ── Identify subpopulations ───────────────────────────────────────────────────
 @info "\nStep 2: Identifying subpopulations …"
 
-healthy_indices = findall(c -> c == "Healthy", subject_conditions)
-pcos_indices = findall(c -> c == "PCOS", subject_conditions)
-
 pe_indices = Int[]
 for (i, s) in enumerate(complete_subjects)
     row = findfirst((df_clean.SubjectID .== s))
@@ -42,15 +39,21 @@ for (i, s) in enumerate(complete_subjects)
     end
 end
 
-@info "  Healthy: $(length(healthy_indices)), PCOS: $(length(pcos_indices)), PE: $(length(pe_indices))"
+# Uncomplicated: all patients who did NOT develop PE (n=18)
+uncomplicated_indices = findall(i -> !(i in pe_indices), 1:K)
+
+# PCOS: cross-cutting comorbidity (n=3, 1 overlaps with PE)
+pcos_indices = findall(c -> c == "PCOS", subject_conditions)
+
+@info "  Uncomplicated: $(length(uncomplicated_indices)), PCOS: $(length(pcos_indices)), Developed PE: $(length(pe_indices))"
 
 # ── Fisher separation index ──────────────────────────────────────────────────
 @info "\nStep 3: Fisher separation analysis …"
-S_healthy = fisher_separation_index(X̂, healthy_indices)
+S_uncomplicated = fisher_separation_index(X̂, uncomplicated_indices)
 S_pcos = fisher_separation_index(X̂, pcos_indices)
 S_pe = fisher_separation_index(X̂, pe_indices)
 
-@info "  Fisher separation: Healthy=$(round(S_healthy, digits=4)), PCOS=$(round(S_pcos, digits=4)), PE=$(round(S_pe, digits=4))"
+@info "  Fisher separation: Uncomplicated=$(round(S_uncomplicated, digits=4)), PCOS=$(round(S_pcos, digits=4)), Developed PE=$(round(S_pe, digits=4))"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Step 4: Generate conditioned cohorts
@@ -62,9 +65,9 @@ f_target = 0.80
 T_langevin = 5000
 
 cohorts = [
-    (name="Healthy", indices=healthy_indices),
-    (name="PCOS",    indices=pcos_indices),
-    (name="PE",      indices=pe_indices),
+    (name="Uncomplicated", indices=uncomplicated_indices),
+    (name="PCOS",          indices=pcos_indices),
+    (name="Developed PE",  indices=pe_indices),
 ]
 
 # store results
@@ -159,7 +162,19 @@ function get_real_condition(df_clean, complete_subjects, subject_conditions, con
     return isempty(rows) ? DataFrame() : vcat(rows...)
 end
 
-df_real_healthy = get_real_condition(df_clean, complete_subjects, subject_conditions, "Healthy")
+# Uncomplicated: all patients who did NOT develop PE
+function get_real_uncomplicated(df_clean, complete_subjects)
+    rows = DataFrame[]
+    for s in complete_subjects
+        row_idx = findfirst(df_clean.SubjectID .== s)
+        if df_clean[row_idx, :DevelopedPE] != "Yes"
+            push!(rows, df_clean[df_clean.SubjectID .== s, :])
+        end
+    end
+    return isempty(rows) ? DataFrame() : vcat(rows...)
+end
+
+df_real_uncomplicated = get_real_uncomplicated(df_clean, complete_subjects)
 df_real_pcos    = get_real_condition(df_clean, complete_subjects, subject_conditions, "PCOS")
 df_real_pe      = get_real_condition(df_clean, complete_subjects, subject_conditions, "", true)
 
@@ -174,9 +189,9 @@ key_features = [:II, :VIII, :AT, :Fbgn, :X, :PC,
     Symbol("TF Initiator Lagtime (min)")]
 
 for (cond_name, df_real_cond, synth_name) in [
-    ("Healthy", df_real_healthy, "Healthy"),
+    ("Uncomplicated", df_real_uncomplicated, "Uncomplicated"),
     ("PCOS", df_real_pcos, "PCOS"),
-    ("PE", df_real_pe, "PE"),
+    ("Developed PE", df_real_pe, "Developed PE"),
 ]
     @info "\n  ── $cond_name ──"
     df_synth_cond = filter(r -> r.Cohort == synth_name, df_cohorts)
@@ -213,19 +228,19 @@ compare_features = [:VIII, :AT, :II, :Fbgn,
 
 for (cond_name, df_real_cond, synth_name) in [
     ("PCOS", df_real_pcos, "PCOS"),
-    ("PE", df_real_pe, "PE"),
+    ("Developed PE", df_real_pe, "Developed PE"),
 ]
-    @info "\n  ── $cond_name vs Healthy ──"
+    @info "\n  ── $cond_name vs Uncomplicated ──"
     df_synth_cond = filter(r -> r.Cohort == synth_name, df_cohorts)
-    df_synth_healthy = filter(r -> r.Cohort == "Healthy", df_cohorts)
+    df_synth_healthy = filter(r -> r.Cohort == "Uncomplicated", df_cohorts)
 
     for col in compare_features
-        if !(col in propertynames(df_real_cond)) || !(col in propertynames(df_real_healthy))
+        if !(col in propertynames(df_real_cond)) || !(col in propertynames(df_real_uncomplicated))
             continue
         end
 
         r_cond = collect(skipmissing(df_real_cond[:, col]))
-        r_healthy = collect(skipmissing(df_real_healthy[:, col]))
+        r_healthy = collect(skipmissing(df_real_uncomplicated[:, col]))
         s_cond = collect(skipmissing(df_synth_cond[:, col]))
         s_healthy = collect(skipmissing(df_synth_healthy[:, col]))
 
@@ -272,10 +287,12 @@ p_pca = plot(; xlabel="PC1", ylabel="PC2",
              legend=:topright, size=(700, 600))
 
 # Real patients by condition
-colors_real = Dict("Healthy" => :steelblue, "PCOS" => :orange, "PE" => :red)
+colors_real = Dict("Uncomplicated" => :steelblue, "PCOS" => :orange, "Developed PE" => :red)
 for (cond, color) in colors_real
-    if cond == "PE"
+    if cond == "Developed PE"
         idxs = pe_indices
+    elseif cond == "Uncomplicated"
+        idxs = uncomplicated_indices
     else
         idxs = findall(c -> c == cond, subject_conditions)
     end
@@ -287,8 +304,8 @@ for (cond, color) in colors_real
 end
 
 # Synthetic cohorts
-colors_synth = Dict("Healthy" => :lightblue, "PCOS" => :lightsalmon, "PE" => :pink)
-shapes_synth = Dict("Healthy" => :diamond, "PCOS" => :utriangle, "PE" => :star5)
+colors_synth = Dict("Uncomplicated" => :lightblue, "PCOS" => :lightsalmon, "Developed PE" => :pink)
+shapes_synth = Dict("Uncomplicated" => :diamond, "PCOS" => :utriangle, "Developed PE" => :star5)
 for cohort in cohorts
     name = cohort.name
     pca_s = cohort_pca[name]
@@ -317,8 +334,10 @@ for v in 1:3
 
     # real by condition
     for (cond, color) in colors_real
-        if cond == "PE"
+        if cond == "Developed PE"
             idxs = pe_indices
+        elseif cond == "Uncomplicated"
+            idxs = uncomplicated_indices
         else
             idxs = findall(c -> c == cond, subject_conditions)
         end
@@ -358,7 +377,7 @@ savefig(p_pca_visits, joinpath(_PATH_TO_FIG, "validate_conditioned_pca_by_visit.
 CSV.write(joinpath(_PATH_TO_DATA, "conditioned_cohorts_all.csv"), df_cohorts)
 for cohort in cohorts
     df_c = filter(r -> r.Cohort == cohort.name, df_cohorts)
-    CSV.write(joinpath(_PATH_TO_DATA, "conditioned_$(lowercase(cohort.name)).csv"), df_c)
+    CSV.write(joinpath(_PATH_TO_DATA, "conditioned_$(replace(lowercase(cohort.name), " " => "_")).csv"), df_c)
 end
 @info "\nSaved cohort data to CSV"
 

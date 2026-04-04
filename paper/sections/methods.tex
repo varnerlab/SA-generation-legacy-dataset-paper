@@ -1,37 +1,53 @@
 \section{Methods}
 \label{sec:methods}
 
-\subsection{Clinical Dataset}
+\subsection{Population Dataset}
 \label{sec:dataset}
 We analyzed a longitudinal dataset of coagulation, fibrinolysis, thrombin generation
-assay (TGA), and rotational thromboelastometry (ROTEM) measurements collected from
-pregnant patients enrolled in a prospective study at the University of Vermont Medical
-Center (ClinicalTrials.gov NCT00456547, approved by the University of Vermont Human
-Investigational Committees). Blood collection, plasma processing, and assay protocols
-have been described previously~\citep{McLean2012TGA,Hale2012}. Briefly, citrated
-platelet-poor plasma was collected without tourniquet use after supine rest at three
-clinical visits: Visit~1 (pre-pregnancy baseline in the follicular phase), Visit~2
-(end of first trimester), and Visit~3 (mid-third trimester). TGA was performed using
-5~pM relipidated tissue factor with fluorogenic substrate on a Synergy4 plate reader;
-coagulation factor levels, fibrinolytic markers, and viscoelastic parameters were
-measured using standard clinical assays as described in the original
-publications~\citep{McLean2012TGA,Hale2012}. The dataset contained 153 total records
-across approximately 50 subjects. After removing columns with $>30\%$ missing values
-and retaining only subjects with complete data across all three visits, we obtained
-$K=23$ complete longitudinal profiles across $n=72$ assay measurements per visit.
+assay (TGA), and rotational thromboelastometry (ROTEM) as secondary analysis
+measurements from samples collected longitudinally from women desiring a pregnancy
+in a study that was approved by the Institutional Review Board at the University of
+Vermont. Written consent was obtained from all participants prior to enrollment.
+Blood collection, plasma processing, and assay protocols have been described
+previously~\citep{McLean2012TGA,Hale2012,Psoinos2021,Bernstein2016}. Briefly, citrated platelet-poor plasma
+was collected without tourniquet use after supine rest at three clinical visits:
+Visit~1 (pre-pregnancy baseline in the follicular phase), Visit~2 (end of first
+trimester), and Visit~3 (mid-third trimester). Plasma aliquots were stored at
+$-80^{\circ}$C for subsequent analysis. Measurements of secondary analytes were
+conducted as follows: activity levels of coagulation factors were determined by Stago
+clotting assays, fibrinolysis proteome levels were measured by ELISA, and hormone
+levels were determined by the CLIA-certified laboratory at the University of Vermont
+Medical Center. TGA was performed using 5~pM relipidated tissue factor with
+fluorogenic substrate on a Synergy4 plate reader as described
+in~\citet{McLean2012TGA}. Clot formation and fibrinolysis dynamics were assessed via
+viscoelastometry using the ROTEM Delta Instrument (Werfen). Thawed plasma was mixed
+with or without 4~nM tPA (with respect to plasma volume), recalcified with 15~mM
+calcium chloride, and incubated for 3~minutes at 37$^{\circ}$C. The reaction was
+initiated by adding the plasma mixture to ROTEM cups containing tissue factor at a
+17:1 ratio; the final concentration of TF in the reaction was 5~pM.
 
+The dataset contained 153 total records across approximately 50 subjects. After
+removing columns with $>30\%$ missing values and retaining only subjects with
+complete data across all three visits, we obtained $K=23$ complete longitudinal
+profiles across $n=72$ assay measurements per visit (Table~\ref{tab:demographics}).
 The 72 assay measurements spanned five categories: (i)~hormones (estradiol,
 progesterone), (ii)~coagulation factors and inhibitors (Factors~II, V, VII, VIII,
 IX, X, XI, XII; AT, PC, TFPI, vWF, fibrinogen, etc.), (iii)~fibrinolytic markers
 (plasminogen, PAI-1, PAI-2, $\alpha_2$-AP, TAFI, tPA, D-dimer equivalents),
 (iv)~thrombin generation parameters under four initiator conditions (TF at 5~pM,
-TF+TM, No~TF, No~TF+anti-FXIa), and (v)~ROTEM/viscoelastic parameters (CT, MCF, alpha
-angle, LOT, ML, LT, AUC under TF~Only and TF+tPA conditions). The dataset included three enrollment conditions: Healthy ($n{=}14$), prior
-preeclampsia (Prior~PE, $n{=}6$), and polycystic ovary syndrome (PCOS, $n{=}3$).
-For conditional generation, we defined subgroups by clinical outcome rather than
-enrollment condition: Healthy ($n{=}14$), PCOS ($n{=}3$), and patients who
-developed PE during the study ($n{=}5$, partially overlapping with the Prior~PE
-and PCOS enrollment groups).
+TF+TM, No~TF, No~TF+anti-FXIa), and (v)~ROTEM/viscoelastic parameters (CT, MCF,
+alpha angle, LOT, ML, LT, AUC under TF~Only and TF+tPA conditions).
+
+The dataset included three enrollment conditions: Healthy nulliparous women
+($n{=}14$), women with a personal history of preeclampsia from a previous pregnancy
+(Prior~PE, $n{=}6$), and women with polycystic ovarian syndrome (PCOS, $n{=}3$;
+2~individuals were nulliparous). For conditional generation, we defined three
+overlapping subgroups based on pregnancy outcome and comorbidity rather than
+enrollment condition: Uncomplicated ($n{=}18$, all patients whose study pregnancy
+did not result in preeclampsia), PCOS ($n{=}3$, a cross-cutting comorbidity;
+1~patient also developed PE), and Developed~PE ($n{=}5$, patients who developed
+preeclampsia during the study pregnancy, drawn from 2~healthy-enrolled,
+2~prior-PE-enrolled, and 1~PCOS-enrolled participants).
 
 
 \subsection{Multiplicity-Weighted Stochastic Attention}
@@ -196,8 +212,8 @@ cross-visit covariance was preserved, by comparing full $216 \times 216$ correla
 matrices, eigenvalue spectra, and PCA projections between real, SA, and MVN
 populations. \textbf{Level~3 (Conditional Structure)} tested whether rare subgroups
 could be amplified while preserving condition-specific signatures, by generating
-cohorts of 100 patients each from the Healthy ($n{=}14$), PCOS ($n{=}3$), and PE
-($n{=}5$) subgroups using multiplicity-weighted sampling. \textbf{Level~4 (Mechanistic
+cohorts of 100 patients each from the Uncomplicated ($n{=}18$), PCOS ($n{=}3$), and
+Developed~PE ($n{=}5$) subgroups using multiplicity-weighted sampling. \textbf{Level~4 (Mechanistic
 Consistency)} tested whether synthetic patients produced biologically plausible
 outputs under an independent mechanistic model. We used the Hockin--Mann BZ2012
 coagulation model~\citep{Hockin2002,BrummelZiedins2012}, a system of 58 ODEs with 64 rate

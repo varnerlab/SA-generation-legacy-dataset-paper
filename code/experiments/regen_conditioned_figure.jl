@@ -40,24 +40,24 @@ end
 # ── Load data ────────────────────────────────────────────────────────────────
 @info "Loading data …"
 df_real = CSV.read(joinpath(_PATH_TO_DATA, "cleaned_full_data.csv"), DataFrame)
-df_synth_h  = CSV.read(joinpath(_PATH_TO_DATA, "conditioned_healthy.csv"), DataFrame)
+df_synth_u  = CSV.read(joinpath(_PATH_TO_DATA, "conditioned_uncomplicated.csv"), DataFrame)
 df_synth_p  = CSV.read(joinpath(_PATH_TO_DATA, "conditioned_pcos.csv"), DataFrame)
-df_synth_pe = CSV.read(joinpath(_PATH_TO_DATA, "conditioned_pe.csv"), DataFrame)
+df_synth_pe = CSV.read(joinpath(_PATH_TO_DATA, "conditioned_developed_pe.csv"), DataFrame)
 
-df_real_h  = filter(r -> r.Condition == "Healthy", df_real)
+df_real_u  = filter(r -> r.DevelopedPE != "Yes", df_real)
 df_real_p  = filter(r -> r.PCOS == "Yes", df_real)
 df_real_pe = filter(r -> r.DevelopedPE == "Yes", df_real)
 
-@info "Real: Healthy=$(nrow(df_real_h)), PCOS=$(nrow(df_real_p)), PE=$(nrow(df_real_pe))"
+@info "Real: Uncomplicated=$(nrow(df_real_u)), PCOS=$(nrow(df_real_p)), Developed PE=$(nrow(df_real_pe))"
 
 # ── Features ─────────────────────────────────────────────────────────────────
 features = [:VIII, :vWF, :IX, :V, Symbol("α2-AP"), :VII, :Fbgn, :Plgn]
 feat_short = ["FVIII", "vWF", "FIX", "FV", "α₂-AP", "FVII", "Fbgn", "Plgn"]
 nf = length(features)
 
-cond_labels = ["Healthy (n=14)", "PCOS (n=3)", "PE (n=5)"]
-real_dfs = [df_real_h, df_real_p, df_real_pe]
-synth_dfs = [df_synth_h, df_synth_p, df_synth_pe]
+cond_labels = ["Uncomplicated (n=18)", "PCOS (n=3)", "Developed PE (n=5)"]
+real_dfs = [df_real_u, df_real_p, df_real_pe]
+synth_dfs = [df_synth_u, df_synth_p, df_synth_pe]
 cond_real_colors = [RGB(0.20, 0.40, 0.65), RGB(0.85, 0.55, 0.10), RGB(0.75, 0.20, 0.20)]
 cond_synth_colors = [RGB(0.50, 0.70, 0.90), RGB(1.0, 0.80, 0.50), RGB(1.0, 0.55, 0.55)]
 

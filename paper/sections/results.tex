@@ -98,11 +98,12 @@ The previous analyses used unconditioned SA, generating from the full cohort. A 
 clinical application, however, is generating patients from specific subpopulations
 that are too small to study independently. We therefore tested whether SA could
 amplify rare clinical subpopulations while preserving their
-condition-specific signatures. Our dataset contained three clinical subgroups (Healthy,
-$n{=}14$; PCOS, $n{=}3$; and PE, $n{=}5$), of which the PCOS and PE groups were
-too small for any independent statistical analysis. We used SA's multiplicity-weighted
-sampling to generate condition-specific cohorts of 100 patients each by upweighting
-attention on the relevant stored patterns.
+condition-specific signatures. We defined three overlapping subgroups by pregnancy
+outcome and comorbidity: Uncomplicated ($n{=}18$), PCOS ($n{=}3$, cross-cutting;
+1~patient also in the PE group), and Developed~PE ($n{=}5$). The PCOS and
+Developed~PE groups were too small for any independent statistical analysis. We used
+SA's multiplicity-weighted sampling to generate condition-specific cohorts of 100
+patients each by upweighting attention on the relevant stored patterns.
 
 We compared condition-specific feature means between real and SA-generated patients
 across eight coagulation features that exhibited between-condition variation
@@ -117,8 +118,9 @@ Mann--Whitney U test, and repeated 1,000 times. We reported the fraction of
 replicates where $p > 0.05$ (i.e., real and synthetic were statistically
 indistinguishable). Across all 24 feature--condition pairs, 19 (79\%) achieved
 $p > 0.05$ in $\geq$90\% of replicates, with a median non-significance fraction
-of 96.2\%. The five features that fell below 90\% were concentrated in
-high-variance features (FIX, FVII, fibrinogen) where the real data exhibited large
+of 98.4\%. The five features that fell below 90\% were distributed across
+high-variance features (FIX, FVII in the Uncomplicated group; plasminogen in
+PCOS; FVIII and plasminogen in Developed~PE) where the real data exhibited large
 inter-patient variability. No multiple-testing correction was applied to the 24
 simultaneous comparisons; the failing features had consistently low non-significance
 fractions (68--88\%) rather than borderline values, so correction would not change
