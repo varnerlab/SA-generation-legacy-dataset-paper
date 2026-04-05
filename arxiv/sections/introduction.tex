@@ -17,22 +17,22 @@ alters this hemostatic balance, shifting toward a hypercoagulable state
 that prepares for delivery~\citep{Hellgren2003,Grouzi2022,Bremme2003}:
 procoagulant factors including fibrinogen, Factor~VIII, and von Willebrand factor
 increase substantially across gestation, while natural anticoagulants such as
-antithrombin and protein~S decline. Conditions such as polycystic ovary syndrome
-(PCOS), a hormonal and metabolic disorder affecting 6--12\% of reproductive-age
-women~\citep{Azziz2004} that has been associated with secondary hemostatic changes
-including elevated Factor~VIII and impaired fibrinolysis, and preeclampsia (PE), a
-hypertensive disorder characterized by endothelial dysfunction, platelet activation,
-and altered thrombin generation that complicates 2--8\% of pregnancies
-worldwide~\citep{Abalos2014}, further shift this balance in ways that are not fully understood. Mathematical models of the coagulation cascade, from the
-original Hockin--Mann stoichiometric framework~\citep{Hockin2002} through extensions
-incorporating the thrombomodulin--protein~C pathway~\citep{Bravo2012} to the
-Brummel-Ziedins 2012 (BZ2012) model with detailed activated protein~C (APC)-mediated Factor~Va inactivation
-kinetics~\citep{BrummelZiedins2012}, have provided mechanistic insight into
-patient-specific thrombin generation~\citep{Luan2007,Luan2010}, but applying these
-models to pregnancy cohorts requires longitudinal datasets capturing the full
-complement of coagulation factors, inhibitors, and thrombin generation assay (TGA)
-measurements across gestation, the type of data that is rare and expensive
-to collect.
+antithrombin and protein~S decline. Two conditions further shift this balance in ways that are not fully understood.
+Polycystic ovary syndrome (PCOS), a hormonal and metabolic disorder affecting
+6--12\% of reproductive-age women~\citep{Azziz2004}, has been associated with
+elevated Factor~VIII and impaired fibrinolysis. Preeclampsia (PE), a hypertensive
+disorder that complicates 2--8\% of pregnancies worldwide~\citep{Abalos2014}, is
+characterized by endothelial dysfunction, platelet activation, and altered thrombin
+generation. Mathematical models of the coagulation cascade have provided mechanistic insight
+into patient-specific thrombin generation~\citep{Luan2007,Luan2010}. These range
+from the original Hockin--Mann stoichiometric framework~\citep{Hockin2002} through
+extensions incorporating the thrombomodulin--protein~C pathway~\citep{Bravo2012}
+to the Brummel-Ziedins 2012 (BZ2012) model with detailed activated protein~C
+(APC)-mediated Factor~Va inactivation
+kinetics~\citep{BrummelZiedins2012}. However, applying these models to pregnancy
+cohorts requires longitudinal datasets capturing coagulation factors, inhibitors,
+and thrombin generation assay (TGA) measurements across gestation --- data that is
+rare and expensive to collect.
 
 The core barrier is sample size. Longitudinal pregnancy coagulation studies
 typically enroll tens of patients with complete follow-up across multiple trimesters,
@@ -75,19 +75,17 @@ to each clinical visit~\citep{Varner2023JuliaCon}; while this captured per-visit
 statistics, it assumed Gaussian marginals and generated each visit independently
 rather than as part of a coherent longitudinal trajectory.
 
-In this study, we extended multiplicity-weighted SA to generate complete longitudinal
-patient profiles from a very small pregnancy coagulation cohort ($K{=}23$ patients,
-72 features per visit, 3 visits) and validated the resulting synthetic patients at
-four levels: marginal plausibility, cross-visit covariance
-preservation, conditional amplification of rare subgroups (PCOS, $n{=}3$;
-Developed~PE, $n{=}5$), and mechanistic consistency with an independent ordinary differential equation (ODE)
-model of the
-coagulation cascade~\citep{BrummelZiedins2012}. We developed a pipeline that
-concatenates each patient's multi-visit profile into a single vector, applies PCA for
-dimensionality reduction, and uses multiplicity-weighted Langevin dynamics on the
-Hopfield energy landscape to generate new patients, with a direction-magnitude
-decomposition that preserves the natural variance structure of continuous clinical
-measurements. SA-generated patients reproduced per-feature means with median error of
+In this study, we used multiplicity-weighted SA to generate complete longitudinal
+patient profiles from a small pregnancy coagulation cohort ($K{=}23$ patients,
+72 features per visit, 3 visits). We validated the synthetic patients at four levels:
+marginal plausibility, cross-visit covariance preservation, conditional amplification
+of rare subgroups (PCOS, $n{=}3$; Developed~PE, $n{=}5$), and mechanistic consistency
+with an independent ordinary differential equation (ODE) model of the coagulation
+cascade~\citep{BrummelZiedins2012}. Our pipeline concatenates each patient's multi-visit profile into a single vector,
+applies PCA for dimensionality reduction, and generates new patients via
+multiplicity-weighted Langevin dynamics on the Hopfield energy landscape. A
+direction-magnitude decomposition preserves the natural variance structure of
+continuous clinical measurements. SA-generated patients reproduced per-feature means with median error of
 1.4\%, preserved cross-visit correlations that MVN's rank-deficient covariance could
 not represent, and maintained condition-specific signatures when amplifying rare
 subgroups. An independent 58-species ODE model of the coagulation cascade could not

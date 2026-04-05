@@ -4,10 +4,9 @@
 \subsection{Population Dataset}
 \label{sec:dataset}
 We analyzed a longitudinal dataset of coagulation, fibrinolysis, thrombin generation
-assay (TGA), and rotational thromboelastometry (ROTEM) as secondary analysis
-measurements from samples collected longitudinally from women desiring a pregnancy
-in a study that was approved by the Institutional Review Board at the University of
-Vermont. Written consent was obtained from all participants prior to enrollment.
+assay (TGA), and rotational thromboelastometry (ROTEM) measurements from women
+desiring a pregnancy. The study was approved by the Institutional Review Board at
+the University of Vermont. Written consent was obtained from all participants prior to enrollment.
 Blood collection, plasma processing, and assay protocols have been described
 previously~\citep{McLean2012TGA,Hale2012,Psoinos2021,Bernstein2016}. Briefly, citrated platelet-poor plasma
 was collected without tourniquet use after supine rest at three clinical visits:
@@ -100,7 +99,7 @@ property of the features they represent. For our dataset ($K{=}23$, $d_{\text{PC
 the empirical inflection yielded $\beta^* \approx 2.94$, close to the theoretical
 prediction $\beta^* = \sqrt{d} \approx 4.24$. A sensitivity analysis across
 $\beta/\beta^* \in [0.1, 3.0]$ confirmed that the operating point balanced generation
-novelty against fidelity (Supplementary Table~S1). For weighted sampling, the entropy
+novelty against fidelity (Table~\ref{stab:beta-sweep}). For weighted sampling, the entropy
 calculation incorporated the multiplicity bias, yielding a $\rho$-dependent
 $\beta^*(\rho)$.
 
@@ -153,7 +152,7 @@ background influence for interpolation diversity, via
 $\rho = f_{\text{target}} \cdot K_{\text{bg}} / (K_{\text{des}} \cdot (1 -
 f_{\text{target}}))$. For the PCOS subgroup ($K_{\text{des}}{=}3$), this required
 $\rho \approx 26.7$, reducing the effective pattern count to $K_{\text{eff}}
-\approx 4.6$ (Supplementary Table~S2). Magnitudes for the direction-magnitude
+\approx 4.6$ (Table~\ref{stab:multiplicity}). Magnitudes for the direction-magnitude
 decomposition were drawn from the condition-specific subset of norms, ensuring that
 the scale of variation matched the target subpopulation rather than the full cohort.
 
@@ -225,6 +224,6 @@ coagulation model~\citep{Hockin2002,BrummelZiedins2012}, a system of 58 ODEs wit
 constants, in which 5 rate constants were calibrated on Visit~1 real patients at the
 population level and the remaining 59 were held at literature values. We ran the model
 on all real and synthetic patients under two conditions (TF-only and TF+TM) and
-compared predicted-versus-measured thrombin generation features, using cloud
-overlap, defined as the fraction of synthetic predicted/measured ratios falling
-within the 5th--95th percentile range of real ratios, as the primary metric.
+compared predicted-versus-measured thrombin generation features. The primary metric
+was cloud overlap: the fraction of synthetic predicted/measured ratios falling
+within the 5th--95th percentile range of real ratios.

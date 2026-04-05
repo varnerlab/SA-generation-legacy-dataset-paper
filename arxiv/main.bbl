@@ -87,21 +87,6 @@ Edgardo Abalos, Cristina Cuesta, Guillermo Carroli, Zahida Qureshi, Mariana
   121:\penalty0 14--24, 2014.
 \newblock \doi{10.1111/1471-0528.12629}.
 
-\bibitem[Bravo et~al.(2012)Bravo, Orfeo, Mann, and Everse]{Bravo2012}
-Maria~C Bravo, Thomas Orfeo, Kenneth~G Mann, and Stephen~J Everse.
-\newblock Modeling of human factor {Va} inactivation by activated protein {C}.
-\newblock \emph{BMC Systems Biology}, 6:\penalty0 45, 2012.
-\newblock \doi{10.1186/1752-0509-6-45}.
-
-\bibitem[Brummel-Ziedins et~al.(2012)Brummel-Ziedins, Orfeo, Callas, Gissel,
-  Mann, and Bovill]{BrummelZiedins2012}
-Kathleen~E Brummel-Ziedins, Thomas Orfeo, Peter~W Callas, Matthew Gissel,
-  Kenneth~G Mann, and Edwin~G Bovill.
-\newblock The prothrombotic phenotypes in familial protein c deficiency are
-  differentiated by computational modeling of thrombin generation.
-\newblock \emph{PLoS ONE}, 7\penalty0 (9):\penalty0 e44378, 2012.
-\newblock \doi{10.1371/journal.pone.0044378}.
-
 \bibitem[Luan et~al.(2007)Luan, Zai, and Varner]{Luan2007}
 Deyan Luan, Michael Zai, and Jeffrey~D Varner.
 \newblock Computationally derived points of fragility of a human cascade are
@@ -118,6 +103,21 @@ Deyan Luan, Fania Szlam, Kenichi~A Tanaka, Philip~S Barie, and Jeffrey~D
 \newblock \emph{Molecular BioSystems}, 6\penalty0 (11):\penalty0 2272--2286,
   2010.
 \newblock \doi{10.1039/b920693k}.
+
+\bibitem[Bravo et~al.(2012)Bravo, Orfeo, Mann, and Everse]{Bravo2012}
+Maria~C Bravo, Thomas Orfeo, Kenneth~G Mann, and Stephen~J Everse.
+\newblock Modeling of human factor {Va} inactivation by activated protein {C}.
+\newblock \emph{BMC Systems Biology}, 6:\penalty0 45, 2012.
+\newblock \doi{10.1186/1752-0509-6-45}.
+
+\bibitem[Brummel-Ziedins et~al.(2012)Brummel-Ziedins, Orfeo, Callas, Gissel,
+  Mann, and Bovill]{BrummelZiedins2012}
+Kathleen~E Brummel-Ziedins, Thomas Orfeo, Peter~W Callas, Matthew Gissel,
+  Kenneth~G Mann, and Edwin~G Bovill.
+\newblock The prothrombotic phenotypes in familial protein c deficiency are
+  differentiated by computational modeling of thrombin generation.
+\newblock \emph{PLoS ONE}, 7\penalty0 (9):\penalty0 e44378, 2012.
+\newblock \doi{10.1371/journal.pone.0044378}.
 
 \bibitem[Gonzales et~al.(2023)Gonzales, Guruswamy, and Smith]{Gonzales2023}
 Adarsh Gonzales, Guruprabha Guruswamy, and Sandesh~R Smith.
