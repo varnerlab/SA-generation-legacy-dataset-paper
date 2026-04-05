@@ -49,7 +49,8 @@ which is a geometric property of $K$ patterns in $d$ dimensions, not a property 
 what the features represent; for our dataset the empirical inflection
 ($\beta^* \approx 2.94$) was close to the theoretical prediction
 ($\sqrt{d} \approx 4.24$), and a sensitivity analysis confirmed that generation
-quality degraded gracefully across $\beta/\beta^* \in [0.1, 3.0]$ (Table~\ref{stab:beta-sweep}). Similarly, varying the PCA variance retention threshold from 85\% to 99\%
+quality degraded gracefully across $\beta/\beta^* \in [0.1, 3.0]$ (Table~\ref{stab:beta-sweep}). 
+Similarly, varying the PCA variance retention threshold from 85\% to 99\%
 ($d_{\text{PCA}} = 13$ to 21) had minimal impact on generation quality: median MRE
 remained between 1.2\% and 1.8\% across all thresholds (Table~\ref{stab:pca-sensitivity}),
 confirming that the 95\% threshold was not a critical design choice. The multiplicity
@@ -74,8 +75,7 @@ clinical coagulation data but are general features of the Hopfield energy
 landscape operating on small pattern sets.
 
 Beyond these statistical and geometric considerations, the mechanistic validation
-introduced an approach that applies
-beyond coagulation: rather than relying solely on statistical comparisons between real
+introduced an approach that applies beyond coagulation: rather than relying solely on statistical comparisons between real
 and synthetic distributions, we tested whether synthetic patients produced biologically
 consistent outputs when processed by an independent computational model, and went
 further to show that a mechanistic model calibrated entirely on synthetic data
@@ -84,8 +84,7 @@ predicted real patient outcomes as well as one calibrated on real data (overall 
 This approach is available whenever a validated mechanistic model exists for the domain
 of interest (pharmacokinetic models in drug development~\citep{MouldUpton2013},
 physiological models in critical care~\citep{Chase2011}, tumor growth
-models~\citep{Ribba2012}, or metabolic
-models~\citep{Yizhak2015,Shan2018}), and the requirement is not that the
+models~\citep{Ribba2012}, or metabolic models~\citep{Yizhak2015,Shan2018}), and the requirement is not that the
 model be a perfect predictor but that synthetic patients fall within the same
 model-predicted envelope as real patients. The bootstrap Mann--Whitney analysis of
 condition-specific features revealed that 5 of 24 (21\%) feature--condition pairs
@@ -99,7 +98,7 @@ distribution of $K{=}23$ norms. This is a trade-off: SA
 sacrifices some tail fidelity in exchange for preserving the manifold geometry that
 parametric methods cannot capture in the $n < p$ regime.
 
-This study has several limitations. Our study used a single longitudinal
+This study had several limitations. Our study used a single longitudinal
 dataset of $K{=}23$ patients; further evaluation on independent datasets and
 across different clinical domains is needed to establish generalizability. The PCA
 dimensionality reduction assumed linear structure in the feature space; nonlinear
