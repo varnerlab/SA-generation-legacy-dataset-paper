@@ -1,0 +1,225 @@
+\begin{thebibliography}{28}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Toy(2023)]{Toy2023WSJ}
+Sarah Toy.
+\newblock {U.S.} maternal mortality hits highest level since 1965.
+\newblock The Wall Street Journal, 2023.
+\newblock March 16, 2023.
+
+\bibitem[Harris(2023)]{Harris2023}
+Emily Harris.
+\newblock {US} maternal mortality continues to worsen.
+\newblock \emph{JAMA}, 329\penalty0 (15):\penalty0 1248, 2023.
+\newblock \doi{10.1001/jama.2023.5254}.
+
+\bibitem[Trost et~al.(2022)Trost, Beauregard, Njie, Berry, Harvey, Goodman,
+  Petersen, and Cox]{Trost2022}
+Susanna~L Trost, Jennifer Beauregard, Fanta Njie, Joyita Berry, Allison Harvey,
+  David~A Goodman, Emily~E Petersen, and Shanna Cox.
+\newblock Pregnancy-related deaths: Data from maternal mortality review
+  committees in 36 {US} states, 2017--2019, 2022.
+\newblock \url{https://www.cdc.gov/maternal-mortality/php/data-research/}.
+
+\bibitem[Mann et~al.(2011)Mann, Brummel-Ziedins, Orfeo, and Butenas]{Mann2011}
+Kenneth~G Mann, Kathleen Brummel-Ziedins, Thomas Orfeo, and Saulius Butenas.
+\newblock Thrombin generation in hemorrhage control and vascular occlusion.
+\newblock \emph{Circulation}, 124\penalty0 (2):\penalty0 225--235, 2011.
+\newblock \doi{10.1161/CIRCULATIONAHA.110.952648}.
+
+\bibitem[Butenas et~al.(2009)Butenas, Orfeo, and Mann]{Butenas2002}
+Saulius Butenas, Thomas Orfeo, and Kenneth~G Mann.
+\newblock Tissue factor in coagulation: Which? where? when?
+\newblock \emph{Arteriosclerosis, Thrombosis, and Vascular Biology},
+  29\penalty0 (12):\penalty0 1989--1996, 2009.
+\newblock \doi{10.1161/ATVBAHA.108.177402}.
+
+\bibitem[Hockin et~al.(2002)Hockin, Jones, Everse, and Mann]{Hockin2002}
+Mark~F Hockin, Kenneth~C Jones, Stephen~J Everse, and Kenneth~G Mann.
+\newblock A model for the stoichiometric regulation of blood coagulation.
+\newblock \emph{Journal of Biological Chemistry}, 277\penalty0 (21):\penalty0
+  18322--18333, 2002.
+\newblock \doi{10.1074/jbc.M201173200}.
+
+\bibitem[Hellgren(2003)]{Hellgren2003}
+Margareta Hellgren.
+\newblock Hemostasis during normal pregnancy and puerperium.
+\newblock \emph{Seminars in Thrombosis and Hemostasis}, 29\penalty0
+  (2):\penalty0 125--130, 2003.
+\newblock \doi{10.1055/s-2003-38897}.
+
+\bibitem[Grouzi et~al.(2022)Grouzi, Pouliakis, Aktypi, et~al.]{Grouzi2022}
+E~Grouzi, A~Pouliakis, A~Aktypi, et~al.
+\newblock Pregnancy and thrombosis risk for women without a history of
+  thrombotic events: a retrospective study of the real risks.
+\newblock \emph{Thrombosis Journal}, 20\penalty0 (60), 2022.
+\newblock \doi{10.1186/s12959-022-00419-6}.
+
+\bibitem[Bremme(2003)]{Bremme2003}
+Katarina~A Bremme.
+\newblock Haemostatic changes in pregnancy.
+\newblock \emph{Best Practice \& Research Clinical Haematology}, 16\penalty0
+  (2):\penalty0 153--168, 2003.
+\newblock \doi{10.1016/S1521-6926(03)00021-5}.
+
+\bibitem[Azziz et~al.(2004)Azziz, Woods, Reyna, Key, Knochenhauer, and
+  Yildiz]{Azziz2004}
+Ricardo Azziz, Keslie~S Woods, Rosario Reyna, Thomas~J Key, Eric~S
+  Knochenhauer, and Bulent~O Yildiz.
+\newblock The prevalence and features of the polycystic ovary syndrome in an
+  unselected population.
+\newblock \emph{Journal of Clinical Endocrinology \& Metabolism}, 89\penalty0
+  (6):\penalty0 2745--2749, 2004.
+\newblock \doi{10.1210/jc.2003-032046}.
+
+\bibitem[Abalos et~al.(2014)Abalos, Cuesta, Carroli, Qureshi, Widmer, Vogel,
+  and Souza]{Abalos2014}
+Edgardo Abalos, Cristina Cuesta, Guillermo Carroli, Zahida Qureshi, Mariana
+  Widmer, Joshua~P Vogel, and Jo{\~a}o~Paulo Souza.
+\newblock Pre-eclampsia, eclampsia and adverse maternal and perinatal outcomes:
+  a secondary analysis of the {World Health Organization} multicountry survey
+  on maternal and newborn health.
+\newblock \emph{BJOG: An International Journal of Obstetrics \& Gynaecology},
+  121:\penalty0 14--24, 2014.
+\newblock \doi{10.1111/1471-0528.12629}.
+
+\bibitem[Bravo et~al.(2012)Bravo, Orfeo, Mann, and Everse]{Bravo2012}
+Maria~C Bravo, Thomas Orfeo, Kenneth~G Mann, and Stephen~J Everse.
+\newblock Modeling of human factor {Va} inactivation by activated protein {C}.
+\newblock \emph{BMC Systems Biology}, 6:\penalty0 45, 2012.
+\newblock \doi{10.1186/1752-0509-6-45}.
+
+\bibitem[Brummel-Ziedins et~al.(2012)Brummel-Ziedins, Orfeo, Callas, Gissel,
+  Mann, and Bovill]{BrummelZiedins2012}
+Kathleen~E Brummel-Ziedins, Thomas Orfeo, Peter~W Callas, Matthew Gissel,
+  Kenneth~G Mann, and Edwin~G Bovill.
+\newblock The prothrombotic phenotypes in familial protein c deficiency are
+  differentiated by computational modeling of thrombin generation.
+\newblock \emph{PLoS ONE}, 7\penalty0 (9):\penalty0 e44378, 2012.
+\newblock \doi{10.1371/journal.pone.0044378}.
+
+\bibitem[Luan et~al.(2007)Luan, Zai, and Varner]{Luan2007}
+Deyan Luan, Michael Zai, and Jeffrey~D Varner.
+\newblock Computationally derived points of fragility of a human cascade are
+  consistent with current therapeutic strategies.
+\newblock \emph{PLoS Computational Biology}, 3\penalty0 (7):\penalty0 e142,
+  2007.
+\newblock \doi{10.1371/journal.pcbi.0030142}.
+
+\bibitem[Luan et~al.(2010)Luan, Szlam, Tanaka, Barie, and Varner]{Luan2010}
+Deyan Luan, Fania Szlam, Kenichi~A Tanaka, Philip~S Barie, and Jeffrey~D
+  Varner.
+\newblock Ensembles of uncertain mathematical models can identify network
+  response to therapeutic interventions.
+\newblock \emph{Molecular BioSystems}, 6\penalty0 (11):\penalty0 2272--2286,
+  2010.
+\newblock \doi{10.1039/b920693k}.
+
+\bibitem[Gonzales et~al.(2023)Gonzales, Guruswamy, and Smith]{Gonzales2023}
+Adarsh Gonzales, Guruprabha Guruswamy, and Sandesh~R Smith.
+\newblock Synthetic data generation methods in healthcare: A review on
+  open-source tools and methods.
+\newblock \emph{PLOS Digital Health}, 2\penalty0 (1):\penalty0 e0000082, 2023.
+\newblock \doi{10.1371/journal.pdig.0000082}.
+
+\bibitem[Murtaza et~al.(2024)Murtaza, Schreck, Gao, Meid, Gredner, Haefeli,
+  Brenner, and Schottker]{Murtaza2024}
+Hasan Murtaza, Nicholas Schreck, Jil Gao, Andreas~D Meid, Thomas Gredner,
+  Walter~E Haefeli, Hermann Brenner, and Ben Schottker.
+\newblock Synthetic data generation for a longitudinal cohort study --
+  evaluation, method extension and reproduction of published data analysis
+  results.
+\newblock \emph{Scientific Reports}, 14:\penalty0 12785, 2024.
+\newblock \doi{10.1038/s41598-024-62102-2}.
+
+\bibitem[Ledoit and Wolf(2004)]{Ledoit2004}
+Olivier Ledoit and Michael Wolf.
+\newblock A well-conditioned estimator for large-dimensional covariance
+  matrices.
+\newblock \emph{Journal of Multivariate Analysis}, 88\penalty0 (2):\penalty0
+  365--411, 2004.
+\newblock \doi{10.1016/S0047-259X(03)00096-4}.
+
+\bibitem[Goodfellow et~al.(2014)Goodfellow, Pouget-Abadie, Mirza, Xu,
+  Warde-Farley, Ozair, Courville, and Bengio]{Goodfellow2014}
+Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley,
+  Sherjil Ozair, Aaron Courville, and Yoshua Bengio.
+\newblock Generative adversarial nets.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~27, pages 2672--2680, 2014.
+
+\bibitem[Kingma and Welling(2014)]{Kingma2014}
+Diederik~P Kingma and Max Welling.
+\newblock Auto-encoding variational {B}ayes.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2014.
+
+\bibitem[Xu et~al.(2019)Xu, Skoularidou, Cuesta-Infante, and
+  Veeramachaneni]{Xu2019CTGAN}
+Lei Xu, Maria Skoularidou, Alfredo Cuesta-Infante, and Kalyan Veeramachaneni.
+\newblock Modeling tabular data using conditional {GAN}.
+\newblock 32, 2019.
+
+\bibitem[Ramsauer et~al.(2021)Ramsauer, Sch{\"a}fl, Lehner, Seidl, Widrich,
+  Adler, Gruber, Holzleitner, Pavlovi{\'c}, Sandve, Greiff, Kreil, Kopp,
+  Klambauer, Brandstetter, and Hochreiter]{Ramsauer2021}
+Hubert Ramsauer, Bernhard Sch{\"a}fl, Johannes Lehner, Philipp Seidl, Michael
+  Widrich, Thomas Adler, Lukas Gruber, Markus Holzleitner, Milena Pavlovi{\'c},
+  Geir~Kjetil Sandve, Victor Greiff, David Kreil, Michael Kopp, Gunter
+  Klambauer, Johannes Brandstetter, and Sepp Hochreiter.
+\newblock Hopfield networks is all you need.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2021.
+
+\bibitem[Varner(2026)]{Varner2026SA}
+Jeffrey~D Varner.
+\newblock Conditioning protein generation via {Hopfield} pattern multiplicity.
+\newblock \emph{arXiv preprint arXiv:2603.20115}, 2026.
+\newblock \doi{10.48550/arXiv.2603.20115}.
+
+\bibitem[Bravo et~al.(2023)Bravo, Orfeo, Bernstein, Vadhin, Lakshmi, and
+  Varner]{Varner2023JuliaCon}
+Maria Bravo, Thomas Orfeo, Ira Bernstein, Sandra Vadhin, Divya Lakshmi, and
+  Jeffrey~D Varner.
+\newblock {BSTModelKit.jl}: Building biochemical systems theory models of
+  individualized coagulation dynamics during pregnancy, 2023.
+\newblock JuliaCon 2023.
+
+\bibitem[McLean et~al.(2012)McLean, Bernstein, and
+  Brummel-Ziedins]{McLean2012TGA}
+Kelley~C McLean, Ira~M Bernstein, and Kathleen Brummel-Ziedins.
+\newblock Tissue factor dependent thrombin generation across pregnancy.
+\newblock \emph{American Journal of Obstetrics and Gynecology}, 207\penalty0
+  (2):\penalty0 135.e1--135.e6, 2012.
+\newblock \doi{10.1016/j.ajog.2012.05.027}.
+
+\bibitem[Hale et~al.(2012)Hale, Sobel, Benvenuto, Schonberg, Badger, and
+  Bernstein]{Hale2012}
+Sarah~A Hale, Burton Sobel, Anna Benvenuto, Adrienne Schonberg, Gary~J Badger,
+  and Ira~M Bernstein.
+\newblock Coagulation and fibrinolytic system protein profiles in women with
+  normal pregnancies and pregnancies complicated by hypertension.
+\newblock \emph{Pregnancy Hypertension}, 2\penalty0 (2):\penalty0 152--157,
+  2012.
+\newblock \doi{10.1016/j.preghy.2012.01.004}.
+
+\bibitem[Psoinos et~al.(2021)Psoinos, Morris, McBride, and
+  Bernstein]{Psoinos2021}
+Rachel B~C Psoinos, Erin~A Morris, Carole~A McBride, and Ira~M Bernstein.
+\newblock Association of pre-pregnancy subclinical insulin resistance with
+  cardiac dysfunction in healthy nulliparous women.
+\newblock \emph{Pregnancy Hypertension}, 26:\penalty0 11--16, 2021.
+\newblock \doi{10.1016/j.preghy.2021.07.246}.
+
+\bibitem[Bernstein et~al.(2016)Bernstein, Hale, and Badger]{Bernstein2016}
+Ira~M Bernstein, Sarah~A Hale, and Gary~J Badger.
+\newblock Differences in cardiovascular function comparing prior preeclamptics
+  with nulliparous controls.
+\newblock \emph{Pregnancy Hypertension}, 2016.
+\newblock \doi{10.1016/j.preghy.2016.11.001}.
+
+\end{thebibliography}

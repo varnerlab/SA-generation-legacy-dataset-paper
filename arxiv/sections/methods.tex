@@ -1,0 +1,225 @@
+\section{Methods}
+\label{sec:methods}
+
+\subsection{Population Dataset}
+\label{sec:dataset}
+We analyzed a longitudinal dataset of coagulation, fibrinolysis, thrombin generation
+assay (TGA), and rotational thromboelastometry (ROTEM) as secondary analysis
+measurements from samples collected longitudinally from women desiring a pregnancy
+in a study that was approved by the Institutional Review Board at the University of
+Vermont. Written consent was obtained from all participants prior to enrollment.
+Blood collection, plasma processing, and assay protocols have been described
+previously~\citep{McLean2012TGA,Hale2012,Psoinos2021,Bernstein2016}. Briefly, citrated platelet-poor plasma
+was collected without tourniquet use after supine rest at three clinical visits:
+Visit~1 (pre-pregnancy baseline in the follicular phase), Visit~2 (end of first
+trimester), and Visit~3 (mid-third trimester). Plasma aliquots were stored at
+$-80^{\circ}$C for subsequent analysis. Measurements of secondary analytes were
+conducted as follows: activity levels of coagulation factors were determined by Stago
+clotting assays, fibrinolysis proteome levels were measured by ELISA, and hormone
+levels were determined by the CLIA-certified laboratory at the University of Vermont
+Medical Center. TGA was performed using 5~pM relipidated tissue factor with
+fluorogenic substrate on a Synergy4 plate reader as described
+in~\citet{McLean2012TGA}. Clot formation and fibrinolysis dynamics were assessed via
+viscoelastometry using the ROTEM Delta Instrument (Werfen). Thawed plasma was mixed
+with or without 4~nM tPA (with respect to plasma volume), recalcified with 15~mM
+calcium chloride, and incubated for 3~minutes at 37$^{\circ}$C. The reaction was
+initiated by adding the plasma mixture to ROTEM cups containing tissue factor at a
+17:1 ratio; the final concentration of TF in the reaction was 5~pM.
+
+The dataset contained 153 total records across approximately 50 subjects. After
+removing columns with $>30\%$ missing values and retaining only subjects with
+complete data across all three visits, we obtained $K=23$ complete longitudinal
+profiles across $n=72$ assay measurements per visit (Table~\ref{tab:demographics}).
+The 72 assay measurements spanned five categories: (i)~hormones (estradiol,
+progesterone), (ii)~coagulation factors and inhibitors (Factors~II, V, VII, VIII,
+IX, X, XI, XII; AT, PC, TFPI, vWF, fibrinogen, etc.), (iii)~fibrinolytic markers
+(plasminogen, PAI-1, PAI-2, $\alpha_2$-AP, TAFI, tPA, D-dimer equivalents),
+(iv)~thrombin generation parameters under four initiator conditions (TF at 5~pM,
+TF+TM, No~TF, No~TF+anti-FXIa), and (v)~ROTEM/viscoelastic parameters (CT, MCF,
+alpha angle, LOT, ML, LT, AUC under TF~Only and TF+tPA conditions).
+
+The dataset included three enrollment conditions: Healthy nulliparous women
+($n{=}14$), women with a personal history of preeclampsia from a previous pregnancy
+(Prior~PE, $n{=}6$), and women with polycystic ovarian syndrome (PCOS, $n{=}3$;
+2~individuals were nulliparous). For conditional generation, we defined three
+overlapping subgroups based on pregnancy outcome and comorbidity rather than
+enrollment condition: Uncomplicated ($n{=}18$, all patients whose study pregnancy
+did not result in preeclampsia), PCOS ($n{=}3$, a cross-cutting comorbidity;
+1~patient also developed PE), and Developed~PE ($n{=}5$, patients who developed
+preeclampsia during the study pregnancy, drawn from 2~healthy-enrolled,
+2~prior-PE-enrolled, and 1~PCOS-enrolled participants).
+
+
+\subsection{Multiplicity-Weighted Stochastic Attention}
+\label{sec:sa}
+
+We generated synthetic patients using a multiplicity-weighted variant of Stochastic
+Attention (SA) rooted in modern Hopfield network theory~\citep{Ramsauer2021}. We
+stored $K$ memory patterns as columns of a matrix $\mhat{X}\in\R^{d\times K}$ and
+defined a weighted Hopfield energy landscape:
+\begin{equation}
+    E_r(\vxi) = \frac{1}{2}\norm{\vxi}^2
+    - \frac{1}{\beta}\log\sum_{k=1}^{K} r_k \exp\left(\beta\,\mathbf{m}_k^\top\vxi\right)
+    \label{eq:hopfield_energy}
+\end{equation}
+where $\{\mathbf{m}_k\}_{k=1}^K$ are stored memory patterns, $\beta$ is an inverse
+temperature parameter controlling the sharpness of retrieval, and $\{r_k\}_{k=1}^K$
+are per-pattern multiplicity weights. When all $r_k = 1$, this reduces to the standard
+modern Hopfield energy; when $r_k = \rho > 1$ for a designated subset of patterns, the
+energy landscape is continuously deformed to favor that subset. We sampled from this
+landscape using an Unadjusted Langevin Algorithm (ULA):
+\begin{equation}
+    \vxi_{t+1} = (1-\alpha)\,\vxi_t
+    + \alpha\,\mhat{X}\,\text{softmax}\!\left(\beta\,\mhat{X}^\top\vxi_t + \log\mathbf{r}\right)
+    + \sqrt{\frac{2\alpha}{\beta}}\,\boldsymbol{\varepsilon}_t
+    \label{eq:ula}
+\end{equation}
+where $\alpha$ is a step size, $\boldsymbol{\varepsilon}_t\sim\mathcal{N}(\mathbf{0},\mathbf{I})$,
+and $\log\mathbf{r}$ is the element-wise log of the multiplicity vector. The
+deterministic component drove $\vxi_t$ toward a multiplicity-weighted combination of
+stored patterns, while the stochastic component enabled exploration and novelty. The
+$\log r_k$ bias in the softmax logits provided a minimal, theoretically grounded
+mechanism for continuously interpolating between unconditioned generation ($\rho = 1$,
+all patterns equally weighted) and hard subset curation ($\rho \to \infty$, only
+designated patterns contribute). This is an inference-time operation that requires
+no retraining of the energy landscape.
+
+The inverse temperature $\beta$ controlled the trade-off between retrieval (large
+$\beta$, converging to nearest memory) and generation (small $\beta$, uniform mixing).
+We identified the critical $\beta^*$ at the phase transition by computing the
+normalized attention entropy and finding the inflection point (maximum negative
+second derivative of $\bar{H}(\beta)$ in log-$\beta$ space) over a logarithmic sweep
+of 80 values from $\beta = 0.1$ to $1000$. This procedure is domain-agnostic: the
+phase transition is a geometric property of $K$ patterns in $d$ dimensions, not a
+property of the features they represent. For our dataset ($K{=}23$, $d_{\text{PCA}}{=}18$),
+the empirical inflection yielded $\beta^* \approx 2.94$, close to the theoretical
+prediction $\beta^* = \sqrt{d} \approx 4.24$. A sensitivity analysis across
+$\beta/\beta^* \in [0.1, 3.0]$ confirmed that the operating point balanced generation
+novelty against fidelity (Supplementary Table~S1). For weighted sampling, the entropy
+calculation incorporated the multiplicity bias, yielding a $\rho$-dependent
+$\beta^*(\rho)$.
+
+The effective number of patterns contributing to the dynamics was quantified by the
+participation ratio $K_{\text{eff}} = (\sum_k r_k)^2 / \sum_k r_k^2$, which
+interpolated smoothly between the total pattern count (unconditioned) and the
+designated subset size (strongly conditioned). For a target effective fraction
+$f_{\text{target}}$ of probability mass on the designated subset, the required
+multiplicity was $\rho = f_{\text{target}} \cdot K_{\text{bg}} / (K_{\text{des}} \cdot
+(1 - f_{\text{target}}))$, where $K_{\text{des}}$ and $K_{\text{bg}}$ are the
+designated and background pattern counts, respectively.
+
+
+\subsection{Pipeline for Continuous Longitudinal Data}
+\label{sec:pipeline}
+
+Applying SA to continuous longitudinal clinical data required several adaptations
+beyond the standard Hopfield sampling framework. We first concatenated each patient's
+$n{=}72$ assay measurements across all three visits into a single vector of dimension
+$d_{\text{concat}} = 3n = 216$, so that each stored memory pattern encoded a
+complete longitudinal profile and generated synthetic patients would have internally
+consistent multi-visit trajectories. We then standardized each feature to zero mean
+and unit variance and applied PCA retaining 95\% of the variance, reducing
+dimensionality from 216 to $d_{\text{PCA}}{=}18$. This compression served two
+purposes: it removed collinearity among the 216 features and yielded a
+memory-to-dimension ratio of $K/d_{\text{PCA}} \approx 1.28$, placing SA in a
+favorable operating regime where the number of stored patterns exceeded the
+dimensionality of the representation.
+
+Standard SA operates on unit-norm patterns, which is appropriate for discrete data
+(e.g., one-hot protein sequences) but destroys the anisotropic variance structure
+of continuous clinical measurements, collapsing dispersion across all principal
+components to a unit sphere. We addressed this with a direction-magnitude
+decomposition: before normalization, we recorded each pattern's PCA-space norm
+$r_k = \|\mathbf{m}_k\|$; we then ran SA on unit-norm patterns to obtain a
+directional sample $\hat{\vxi}$, drew a magnitude $r$ from the empirical
+distribution of $\{r_k\}$, and reconstructed the rescaled sample as
+$\vxi_{\text{rescaled}} = r \cdot \hat{\vxi}$. This preserved the directional
+structure learned by the Hopfield energy while restoring the natural scale of
+variation. The rescaled PCA vector was mapped back to the original feature space via
+inverse PCA and destandardization, then split into three 72-dimensional visit records.
+
+To generate condition-specific cohorts (e.g., PCOS-only), we set the multiplicity
+$r_k = \rho$ for patterns belonging to the target subgroup and $r_k = 1$ for all
+others, and sampled using the weighted Langevin update (Eq.~\ref{eq:ula}). The
+multiplicity $\rho$ was computed to achieve a target effective fraction
+$f_{\text{target}} = 0.80$ of softmax attention on the designated subset, chosen
+to strongly bias generation toward the target subgroup while retaining 20\%
+background influence for interpolation diversity, via
+$\rho = f_{\text{target}} \cdot K_{\text{bg}} / (K_{\text{des}} \cdot (1 -
+f_{\text{target}}))$. For the PCOS subgroup ($K_{\text{des}}{=}3$), this required
+$\rho \approx 26.7$, reducing the effective pattern count to $K_{\text{eff}}
+\approx 4.6$ (Supplementary Table~S2). Magnitudes for the direction-magnitude
+decomposition were drawn from the condition-specific subset of norms, ensuring that
+the scale of variation matched the target subpopulation rather than the full cohort.
+
+
+The complete generation pipeline is summarized in Algorithm~\ref{alg:sa-pipeline}.
+All experiments used step size $\alpha = 0.01$, $T = 2{,}000$ Langevin iterations
+per sample, and random seed 42 for reproducibility. At this step size, the
+Unadjusted Langevin Algorithm is valid without a Metropolis--Hastings acceptance
+correction. The pipeline was implemented in Julia (v1.12) using the packages listed in the code
+repository. Generating 100 synthetic patients required approximately 0.1~seconds on
+a standard laptop (Apple M-series), comparable to MVN sampling ($\approx$0.15~s),
+because SA operates in the 18-dimensional PCA space rather than the full
+216-dimensional feature space. Each synthetic patient was generated by an independent
+Langevin chain (no shared state between patients); generation quality was stable
+across $T \in [500, 4000]$ iterations (median MRE 1.0--1.6\%), confirming that
+$T{=}2{,}000$ was sufficient for convergence.
+
+\begin{algorithm}[ht]
+\caption{Multiplicity-Weighted SA for Longitudinal Patient Generation}
+\label{alg:sa-pipeline}
+\begin{algorithmic}[1]
+\Require Patient data $\{\mathbf{x}_k^{(v)}\}$ for $k=1,\ldots,K$ patients, $v=1,2,3$ visits
+\Require Multiplicity vector $\mathbf{r}$ (all ones for unconditioned; $r_k = \rho$ for designated subset)
+\Ensure $N$ synthetic longitudinal patient profiles
+\State Concatenate: $\mathbf{x}_k \gets [\mathbf{x}_k^{(1)}; \mathbf{x}_k^{(2)}; \mathbf{x}_k^{(3)}] \in \mathbb{R}^{216}$
+\State Standardize: $\mathbf{z}_k \gets (\mathbf{x}_k - \boldsymbol{\mu}) \oslash \boldsymbol{\sigma}$
+\State PCA: $\mathbf{m}_k \gets \mathbf{W}^\top \mathbf{z}_k \in \mathbb{R}^{18}$ \Comment{95\% variance retained}
+\State Record norms: $r_k^{\text{mag}} \gets \|\mathbf{m}_k\|$; normalize $\hat{\mathbf{m}}_k \gets \mathbf{m}_k / r_k^{\text{mag}}$
+\State Find $\beta^*$ via entropy inflection on $\hat{\mathbf{M}} = [\hat{\mathbf{m}}_1, \ldots, \hat{\mathbf{m}}_K]$
+\For{$i = 1, \ldots, N$}
+    \State Initialize $\hat{\vxi}_0 \sim \mathrm{Uniform}(\mathcal{S}^{17})$ \Comment{random point on unit sphere}
+    \For{$t = 0, \ldots, T-1$} \Comment{Langevin dynamics}
+        \State $\hat{\vxi}_{t+1} \gets (1-\alpha)\hat{\vxi}_t + \alpha\hat{\mathbf{M}}\,\mathrm{softmax}(\beta^*\hat{\mathbf{M}}^\top\hat{\vxi}_t + \log\mathbf{r}) + \sqrt{2\alpha/\beta^*}\,\boldsymbol{\varepsilon}_t$
+    \EndFor
+    \State Draw magnitude: $r \sim \{r_k^{\text{mag}}\}$ \Comment{condition-specific if weighted}
+    \State Rescale: $\mathbf{m}_{\text{synth}} \gets r \cdot \hat{\vxi}_T / \|\hat{\vxi}_T\|$
+    \State Inverse PCA + destandardize: $\mathbf{x}_{\text{synth}} \gets \boldsymbol{\sigma} \odot (\mathbf{W}\,\mathbf{m}_{\text{synth}} + \bar{\mathbf{z}}) + \boldsymbol{\mu}$
+    \State Split into visit records: $\mathbf{x}_{\text{synth}}^{(1)}, \mathbf{x}_{\text{synth}}^{(2)}, \mathbf{x}_{\text{synth}}^{(3)}$
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Baseline and Validation Framework}
+\label{sec:validation}
+
+As a baseline, we generated synthetic patients by fitting a single multivariate
+normal (MVN) distribution to the same $K{=}23$ concatenated 216-dimensional patient
+profiles. Critically, both SA and MVN operated on the same concatenated
+representation: each patient's three visits were joined into one vector before
+generation, so that both methods had the opportunity to capture cross-visit
+dependencies. For SA, this structure was preserved through the Hopfield energy
+landscape operating on 18-dimensional PCA projections of the concatenated vectors.
+For MVN, the $216 \times 216$ sample covariance matrix had rank at most~22 and was
+regularized using Ledoit--Wolf shrinkage~\citep{Ledoit2004}, which inflated
+eigenvalues in the 194 null dimensions. We then evaluated both SA and MVN synthetic
+patients through four progressively stringent validation levels.
+\textbf{Level~1 (Marginal Plausibility)} tested whether individual feature
+distributions matched, using per-feature means, standard deviations, and known
+physiological relationships. \textbf{Level~2 (Joint Structure)} tested whether the
+cross-visit covariance was preserved, by comparing full $216 \times 216$ correlation
+matrices, eigenvalue spectra, and PCA projections between real, SA, and MVN
+populations. \textbf{Level~3 (Conditional Structure)} tested whether rare subgroups
+could be amplified while preserving condition-specific signatures, by generating
+cohorts of 100 patients each from the Uncomplicated ($n{=}18$), PCOS ($n{=}3$), and
+Developed~PE ($n{=}5$) subgroups using multiplicity-weighted sampling. \textbf{Level~4 (Mechanistic
+Consistency)} tested whether synthetic patients produced biologically plausible
+outputs under an independent mechanistic model. We used the Hockin--Mann BZ2012
+coagulation model~\citep{Hockin2002,BrummelZiedins2012}, a system of 58 ODEs with 64 rate
+constants, in which 5 rate constants were calibrated on Visit~1 real patients at the
+population level and the remaining 59 were held at literature values. We ran the model
+on all real and synthetic patients under two conditions (TF-only and TF+TM) and
+compared predicted-versus-measured thrombin generation features, using cloud
+overlap, defined as the fraction of synthetic predicted/measured ratios falling
+within the 5th--95th percentile range of real ratios, as the primary metric.

@@ -1,0 +1,27 @@
+Small longitudinal clinical cohorts, common in maternal health, rare diseases, and
+early-phase trials, are often too small for robust computational modeling or machine
+learning. We present a method for generating synthetic patients from such cohorts
+using multiplicity-weighted Stochastic Attention (SA), a sampling framework based on
+modern Hopfield network theory. SA stores real patient profiles as memory patterns in
+a continuous energy landscape, then generates novel patients via Langevin dynamics
+that interpolates between stored patterns. Per-pattern multiplicity weights enable
+targeted amplification of rare clinical subgroups at inference time without
+retraining. We applied SA to a longitudinal coagulation dataset from 23 pregnant
+patients (72 features across 3 visits: pre-pregnancy baseline, first trimester, and
+third trimester) and asked whether the resulting synthetic patients were
+statistically, structurally, and mechanistically consistent with the real cohort. We
+found that SA-generated patients reproduced per-feature means with a median error of
+1.4\%, preserved the cross-visit covariance structure that a multivariate normal
+baseline could not represent due to rank deficiency, and maintained
+condition-specific signatures when amplifying rare subgroups (polycystic ovary
+syndrome, 3 real patients amplified to 100; preeclampsia, 5 to 100). An independent 58-species ordinary differential equation model of the coagulation
+cascade could not distinguish real from synthetic patients across any of the five
+thrombin generation features tested. A downstream utility test showed that a
+mechanistic model calibrated entirely on synthetic patients predicted held-out real
+patient outcomes as well as one calibrated on real data.
+These results demonstrate that geometry-preserving generative methods can produce
+clinically useful synthetic cohorts from very small longitudinal datasets.
+
+\medskip
+\noindent\textbf{Keywords:} synthetic data generation, stochastic attention, modern Hopfield networks,
+multiplicity weighting, coagulation, pregnancy, longitudinal data, mechanistic validation

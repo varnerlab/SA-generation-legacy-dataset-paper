@@ -1,0 +1,221 @@
+% ══════════════════════════════════════════════════════════════════════════════
+% Tables
+% ══════════════════════════════════════════════════════════════════════════════
+
+\begin{table}[p]
+\centering
+\caption{\textbf{Demographics and clinical characteristics of the 23 patients
+with complete longitudinal data across all three visits.} Values are reported as
+mean~$\pm$~SD, median (range), or $n$~(\%) as appropriate.}
+\label{tab:demographics}
+\begin{tabular}{lccc}
+\toprule
+Characteristic & Mean $\pm$ SD & Median (Range) & $n$ (\%) \\
+\midrule
+Age at enrollment (yrs) & 30.2 $\pm$ 5.1 & 29 (20--41) & \\
+\addlinespace
+Race & & & \\
+\quad White & & & 22 (96) \\
+\quad Not disclosed & & & 1 (4) \\
+\addlinespace
+Prepregnancy BMI & 26.6 $\pm$ 5.3 & 25 (19.0--37.8) & \\
+\addlinespace
+Parity & & 0 (0--2) & \\
+\quad Nulliparous & & & 16 (70) \\
+\quad Parous & & & 7 (30) \\
+\addlinespace
+Enrollment condition & & & \\
+\quad Healthy nulliparous & & & 14 (61) \\
+\quad PCOS & & & 3 (13) \\
+\quad Prior PE & & & 6 (26) \\
+\addlinespace
+Cycle day at V1 & 9.2 $\pm$ 3.6 & 10 (3--14) & \\
+\addlinespace
+Gestational age at V2 (days) & 89.0 $\pm$ 5.5 & & \\
+Gestational age at V3 (days) & 217.0 $\pm$ 4.0 & & \\
+\midrule
+\multicolumn{4}{l}{\textit{Enrollment cohort $\times$ pregnancy outcome}} \\
+\midrule
+ & Uncomplicated & Developed PE & Total \\
+\midrule
+Healthy nulliparous & 12 & 2 & 14 \\
+Prior PE & 4 & 2 & 6 \\
+PCOS & 2 & 1 & 3 \\
+\midrule
+Total & 18 & 5 & 23 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[p]
+\centering
+\caption{Per-visit mean relative error (MRE) between real and SA-generated synthetic
+patients for representative coagulation features, computed as
+$|\bar{x}_{\text{synth}} - \bar{x}_{\text{real}}| / |\bar{x}_{\text{real}}|$.}
+\label{tab:summary}
+\begin{tabular}{lccc}
+\toprule
+Feature & Visit 1 & Visit 2 & Visit 3 \\
+\midrule
+Factor II (\%) & 0.018 & 0.017 & 0.007 \\
+Factor VIII (\%) & 0.018 & 0.008 & 0.005 \\
+AT (\%) & 0.025 & 0.001 & 0.008 \\
+Fibrinogen (mg/dL) & 0.005 & 0.009 & $<$0.001 \\
+TF Peak (nM) & 0.025 & 0.002 & 0.017 \\
+TF ETP (nM$\cdot$min) & 0.013 & 0.008 & 0.023 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\clearpage
+
+% ══════════════════════════════════════════════════════════════════════════════
+% Figures
+% ══════════════════════════════════════════════════════════════════════════════
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=\textwidth]{validate_bio_correlations.pdf}
+\caption{\textbf{Physiological correlations are preserved in synthetic patients.}
+Scatter plots of coagulation factor levels versus thrombin generation parameters
+across all three visits. Filled markers are real patients; open markers are
+SA-generated synthetic patients. Colors encode visit: blue (V1/baseline),
+green (V2/first trimester), orange (V3/third trimester). Real and synthetic
+patients occupy the same joint regions across all four pairwise relationships,
+confirming that biologically meaningful dependencies are preserved: AT
+inversely correlates with TF-initiated peak thrombin (top left), FVIII
+positively correlates with peak (top right), and both FII (bottom left) and AT
+(bottom right) show the expected relationships with ETP. The visit-dependent
+shift in these relationships, reflecting the pregnancy-driven increase in
+procoagulant factors, is also preserved in the synthetic cohort.}
+\label{fig:bio-correlations}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=\textwidth]{validate_pregnancy_progression.pdf}
+\caption{\textbf{Pregnancy-driven longitudinal trajectories are reproduced.}
+Mean $\pm$ standard deviation bands for six key coagulation features across
+visits (BL = baseline, 1st = first trimester, 3rd = third trimester) for real
+(blue) and SA-generated synthetic (orange) patients. The characteristic
+pregnancy-driven increases in fibrinogen, Factor~VIII, and vWF are captured, as
+are the stable-to-declining patterns in Factor~II and AT.}
+\label{fig:pregnancy-progression}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=\textwidth]{validate_cross_visit_corr.pdf}
+\caption{\textbf{Cross-visit correlation structure.} Top row: full $216 \times 216$
+Pearson correlation matrices for Real ($K{=}23$, left), SA ($N{=}100$, center),
+and MVN ($N{=}100$, right) populations. Each matrix is organized as a
+$3 \times 3$ grid of $72 \times 72$ blocks (delineated by black lines), where
+the diagonal blocks capture within-visit feature correlations (V1--V1, V2--V2,
+V3--V3) and the off-diagonal blocks capture cross-visit dependencies (e.g.,
+V1--V3: does a patient's baseline Factor~VIII predict their third-trimester
+Factor~VIII?). SA preserves both the within-visit and cross-visit block
+structure. Bottom row: pairwise residual matrices (element-wise subtraction),
+all plotted on the same $\pm 1$ color scale as the top row. The SA$-$Real
+residual shows small, unstructured deviations. The MVN$-$Real residual is
+smoother, particularly in the off-diagonal blocks, reflecting the Ledoit--Wolf
+regularization that systematically shrinks cross-visit correlations toward zero.
+The SA$-$MVN residual confirms that the two methods differ most in these
+off-diagonal blocks, where SA retains longitudinal dependencies that MVN's
+rank-deficient covariance estimate cannot represent. A version with amplified
+residual color scale ($\pm 0.5$) and Frobenius norms is provided in
+Supplementary Fig.~S1.}
+\label{fig:cross-visit-corr}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=\textwidth]{sa_vs_mvn_pca_by_visit.pdf}
+\caption{\textbf{PCA projections by visit: SA vs.\ MVN.} Each panel shows the
+first two principal components (PC1: 27.7\% variance, PC2: 15.4\%) computed
+from standardized per-visit real patient data ($K{=}23$ patients per visit,
+72 features). Dark markers indicate real patients; lighter markers indicate
+synthetic patients ($N{=}100$). Top row: SA-generated patients (circles)
+cluster tightly around the real data cloud at all three visits. Bottom row:
+MVN-generated patients (diamonds) show greater dispersion, particularly at
+Visits~2 (first trimester) and~3 (third trimester), where MVN patients extend
+beyond the convex hull of the real data. This excess scatter reflects the
+spurious variance introduced by Ledoit--Wolf regularization of the
+rank-deficient covariance (Supplementary Fig.~S2). Colors encode visit: blue
+(V1, not pregnant), green (V2, first trimester), orange (V3, third trimester).}
+\label{fig:pca-by-visit}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=\textwidth]{validate_conditioned_features.pdf}
+\caption{\textbf{Condition-specific feature preservation.} Grouped bar charts
+comparing real (dark bars) and SA-generated synthetic (light bars) patient
+means ($\pm$ SD error bars) for eight coagulation features, shown separately
+for each clinical subgroup: Uncomplicated ($n{=}18$, left, blue), PCOS ($n{=}3$,
+center, orange), and Developed~PE ($n{=}5$, right, red). Values are pooled across all
+three visits. Gray percentages indicate the mean relative error (MRE). Green
+annotations show the bootstrap Mann--Whitney equivalence result: the fraction
+of 1,000 bootstrap replicates (synthetic subsampled to $n_{\text{real}}$) in
+which $p > 0.05$, i.e., real and synthetic could not be distinguished.
+Features achieving $\geq$90\% are shown in green; $<$90\% in red. Across all
+24 feature--condition pairs, 19 (79\%) were statistically indistinguishable in
+$\geq$90\% of replicates (median: 98.4\%). The five features below this
+threshold were distributed across high-variance features (FIX, FVII, FVIII,
+plasminogen) where large inter-patient variability reduced test power.}
+\label{fig:conditioned-features}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=\textwidth]{validate_mechanistic_combined_tf_only.pdf}
+\caption{\textbf{Mechanistic validation (TF-only).} Top row: BZ2012
+ODE-predicted TGA values (vertical axis) versus dataset TGA values (horizontal
+axis) for five thrombin generation parameters. The dataset values are the TGA
+measurements from each patient's record, present for both real and synthetic
+patients. The ODE-predicted values are computed by running each patient's
+coagulation factor levels through the 58-species BZ2012 model. The dashed line
+indicates where the ODE model would perfectly reproduce the dataset value
+($y{=}x$); systematic deviations from this line (e.g., lagtime underprediction)
+reflect ODE model bias, not synthetic data failure. Filled markers are real
+patients, open markers are SA-generated synthetic patients, colored by visit:
+blue (V1/baseline, training set), green (V2/first trimester), orange (V3/third
+trimester). Real and synthetic patients occupy the same cloud with the same
+pattern of ODE model bias. Bottom row: ODE-predicted/dataset ratio
+distributions for real (blue) and synthetic (orange) patients. If SA had
+generated biologically implausible factor combinations, the ODE model would
+process them differently, producing divergent ratio distributions. Instead, the
+distributions overlap substantially. Each panel is annotated with cloud overlap
+(OL), the two-sample Kolmogorov--Smirnov statistic ($D$), and $p$-value. All
+five features show $p > 0.35$, confirming that the ODE model cannot
+distinguish real from synthetic patients.}
+\label{fig:mechanistic-combined}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=\textwidth]{downstream_utility_scatter.pdf}
+\caption{\textbf{Downstream utility: synth-calibrated vs.\ real-calibrated
+mechanistic model predictions on held-out real patients.} Each panel compares
+the BZ2012 ODE predictions for one TGA feature when the model is calibrated on
+real V1 patients (horizontal axis) versus synthetic V1 patients (vertical
+axis), evaluated on the same held-out real V2 and V3 patients. Points near the
+$y{=}x$ line indicate that the two calibrations produce equivalent predictions.
+Green: V2 (first trimester); orange: V3 (third trimester). The synth-calibrated
+model matched or outperformed the real-calibrated model on all five features
+(overall ratio 0.94$\times$), demonstrating that a mechanistic model trained
+entirely on synthetic data generalizes to real patients as well as one trained
+on real data. Both calibrations used 11 random restarts; all starts converged.}
+\label{fig:downstream-utility}
+\end{figure}
