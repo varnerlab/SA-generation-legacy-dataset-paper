@@ -51,10 +51,10 @@ multivariate normal (MVN) distribution is singular when $n < p$ and must be
 regularized~\citep{Ledoit2004}, introducing bias that distorts the joint distribution.
 MVN also assumes Gaussian marginals and linear correlations, and provides no mechanism
 for conditional generation: it cannot amplify a specific subpopulation while preserving
-its signatures. More expressive models such as GANs and
-VAEs~\citep{Goodfellow2014,Kingma2014,Xu2019CTGAN}, including recent longitudinal
+its signatures. More expressive models such as generative adversarial networks (GANs) and
+variational autoencoders (VAEs)~\citep{Goodfellow2014,Kingma2014,Xu2019CTGAN}, including recent longitudinal
 extensions~\citep{Murtaza2024}, require substantially larger training sets and are
-prone to mode collapse at small $n$ (we confirm this empirically for CTGAN at
+prone to mode collapse at small $n$ (we confirm this empirically for Conditional Tabular GAN (CTGAN) at
 $n{=}23$ in this work). A generative method is needed that can operate
 directly on the geometry of a small dataset without estimating a full parametric
 distribution.

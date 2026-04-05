@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.4.15)  4 APR 2026 21:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.4.15)  4 APR 2026 21:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -535,7 +535,7 @@ Overfull \hbox (21.71855pt too wide) in paragraph at lines 58--58
 [3] [4] [5] [6]) (./sections/discussion.tex [7]) (./sections/conclusion.tex
 [8]) (./sections/methods.tex [9] [10] [11]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 170.
+put line 175.
 ) [12]
 Overfull \hbox (11.97287pt too wide) in paragraph at lines 73--79
 \OT1/cmr/m/n/10.95 datasets are avail-able at []$\OT1/cmtt/m/n/10.95 https : / 
@@ -543,7 +543,7 @@ Overfull \hbox (11.97287pt too wide) in paragraph at lines 73--79
 cmr/m/n/10.95 .
  []
 
-(./sections/acknowledgments.tex) (./main.bbl [13] [14] [15]) [16]
+(./sections/acknowledgments.tex [13]) (./main.bbl [14] [15]) [16]
 (./sections/floats.tex [17]
 <../code/figs/validate_bio_correlations.pdf, id=312, 1003.75pt x 853.1875pt>
 File: ../code/figs/validate_bio_correlations.pdf Graphic file (type pdf)
@@ -699,7 +699,7 @@ Here is how much of TeX's memory you used:
  35923 multiletter control sequences out of 15000+600000
  571982 words of font info for 88 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,13n,79p,1622b,624s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,13n,79p,1622b,622s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
@@ -719,7 +719,7 @@ ive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive
 exmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2024/te
 xmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2024/tex
 mf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (32 pages, 2469554 bytes).
+Output written on main.pdf (32 pages, 2469952 bytes).
 PDF statistics:
  557 PDF objects out of 1000 (max. 8388607)
  439 compressed objects within 5 object streams
