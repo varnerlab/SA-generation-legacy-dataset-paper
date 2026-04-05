@@ -4,7 +4,7 @@
 This study tested whether a geometry-preserving generative method could produce
 synthetic patients from a very small longitudinal cohort that were not merely
 statistically similar to real patients but consistent with the underlying coagulation
-biology. Our results provided evidence at multiple levels of resolution that
+biology. Our results provided evidence at each validation level that
 SA-generated patients met this standard. Individual feature distributions were
 reproduced with median MRE of 1.4\%, which MVN also achieved by construction. SA
 additionally preserved the joint cross-visit covariance structure that MVN's
@@ -13,7 +13,7 @@ eigenvalue spectrum where MVN introduced spurious variance in 194 null dimension
 while SA respected the low-rank geometry of the data. SA could amplify clinically
 meaningful rare subgroups, generating 100 synthetic PCOS patients from only 3 real
 ones, while preserving subgroup-specific signatures that MVN cannot capture. And an
-independent ODE model encoding decades of coagulation biochemistry, calibrated
+independent ODE model of the coagulation cascade, calibrated
 exclusively on real patients, confirmed that the factor-to-thrombin-generation mapping
 in synthetic patients was biologically plausible, with 83--92\% cloud overlap and
 Kolmogorov--Smirnov tests unable to distinguish the two populations ($p > 0.35$ for
@@ -43,7 +43,7 @@ PCA-reduced space where the memory-to-dimension ratio is favorable
 ($K/d_{\text{PCA}} \approx 1.28$) and by preserving the full directional structure of
 the data through the attention mechanism. A natural concern is whether the $\beta^*$
 selection procedure, originally developed for protein sequence
-generation~\citep{Varner2026SA}, transfers to clinical coagulation data. The entropy
+generation~\citep{Varner2026SAProtein}, transfers to clinical coagulation data. The entropy
 inflection method identifies the phase transition in the Hopfield energy landscape,
 which is a geometric property of $K$ patterns in $d$ dimensions, not a property of
 what the features represent; for our dataset the empirical inflection
@@ -61,10 +61,21 @@ which explains the larger MREs observed for PCOS features because the energy lan
 was effectively shaped by fewer than 5 independent patterns, pulling means toward the
 population average. The direction-magnitude decomposition compounds this limitation:
 for PCOS, magnitudes are drawn from only 3 empirical norms, providing minimal
-diversity in the scale of generated samples.
+diversity in the scale of generated samples. More broadly, the SA framework and its
+multiplicity-weighted conditioning have been independently validated on discrete
+protein sequence generation from small family
+alignments~\citep{Varner2026SAProtein}, on steering generation toward functional
+subsets such as binding peptides~\citep{Varner2026Multiplicity}, and on the
+theoretical foundations connecting modern Hopfield networks to
+attention-based generation~\citep{Alswaidan2026SA}. Across these domains, the
+critical temperature prediction ($\beta^* \approx \sqrt{d}$) and the
+multiplicity-weighted conditioning mechanism transfer without modification,
+suggesting that the geometric properties exploited here are not specific to
+clinical coagulation data but are general features of the Hopfield energy
+landscape operating on small pattern sets.
 
 Beyond these statistical and geometric considerations, the mechanistic validation
-introduced a paradigm that we believe is broadly applicable
+introduced an approach that applies
 beyond coagulation: rather than relying solely on statistical comparisons between real
 and synthetic distributions, we tested whether synthetic patients produced biologically
 consistent outputs when processed by an independent computational model, and went
@@ -83,7 +94,7 @@ reflected SA's tendency to compress distributional tails rather than shift means
 tail compression arises from two sources: the PCA dimensionality reduction, which
 cannot fully represent higher-order moments of every feature, and the
 direction-magnitude decomposition, which draws magnitudes from a finite empirical
-distribution of $K{=}23$ norms. These results represent an honest trade-off: SA
+distribution of $K{=}23$ norms. This is a trade-off: SA
 sacrifices some tail fidelity in exchange for preserving the manifold geometry that
 parametric methods cannot capture in the $n < p$ regime.
 
@@ -96,8 +107,7 @@ collapse behavior on small datasets. TVAE achieved comparable marginal fidelity 
 at high epoch counts (median MRE 1.8\% at 3,000 epochs), but operated on per-visit
 rows ($n{=}90$) rather than concatenated longitudinal profiles ($n{=}23$), meaning it
 could not capture cross-visit covariance structure and had no mechanism for conditional
-subgroup generation. These results confirmed that SA's advantage at small $n$ is not
-merely theoretical: standard deep generative methods either fail outright (CTGAN) or
+subgroup generation. These results confirmed that SA's advantage at small $n$ is practical: standard deep generative methods either fail outright (CTGAN) or
 achieve marginal-level fidelity without the longitudinal and conditional capabilities
 that SA provides.
 
