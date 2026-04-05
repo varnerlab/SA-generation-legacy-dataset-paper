@@ -5,7 +5,7 @@ In 2021, the United States maternal mortality rate reached 32.9 deaths per 100,0
 live births, the highest level since 1965, with Black mothers dying at nearly three
 times the rate of White mothers~\citep{Toy2023WSJ,Harris2023}. Thrombotic embolisms
 and hemorrhage together accounted for more than 22\% of these
-deaths~\citep{Trost2022}, underscoring the central role of the coagulation system in
+deaths~\citep{Trost2022}, highlighting the role of the coagulation system in
 maternal outcomes. Blood coagulation is a complex enzymatic cascade in which a small
 tissue factor (TF) stimulus triggers a series of serine protease activation reactions
 that ultimately produce thrombin, the central effector of
@@ -13,7 +13,7 @@ hemostasis~\citep{Mann2011,Butenas2002}. Thrombin cleaves fibrinogen into fibrin
 activates platelets, and amplifies its own production through positive feedback via
 Factors~V, VIII, and XI, while simultaneously initiating its own shutdown through the
 thrombomodulin--protein~C anticoagulant pathway~\citep{Hockin2002}. Pregnancy
-profoundly alters this hemostatic balance, shifting toward a hypercoagulable state
+alters this hemostatic balance, shifting toward a hypercoagulable state
 that prepares for delivery~\citep{Hellgren2003,Grouzi2022,Bremme2003}:
 procoagulant factors including fibrinogen, Factor~VIII, and von Willebrand factor
 increase substantially across gestation, while natural anticoagulants such as
@@ -23,8 +23,7 @@ women~\citep{Azziz2004} that has been associated with secondary hemostatic chang
 including elevated Factor~VIII and impaired fibrinolysis, and preeclampsia (PE), a
 hypertensive disorder characterized by endothelial dysfunction, platelet activation,
 and altered thrombin generation that complicates 2--8\% of pregnancies
-worldwide~\citep{Abalos2014}, further perturb this balance in ways that remain
-incompletely characterized. Mathematical models of the coagulation cascade, from the
+worldwide~\citep{Abalos2014}, further shift this balance in ways that are not fully understood. Mathematical models of the coagulation cascade, from the
 original Hockin--Mann stoichiometric framework~\citep{Hockin2002} through extensions
 incorporating the thrombomodulin--protein~C pathway~\citep{Bravo2012} to the
 Brummel-Ziedins 2012 (BZ2012) model with detailed activated protein~C (APC)-mediated Factor~Va inactivation
@@ -32,10 +31,10 @@ kinetics~\citep{BrummelZiedins2012}, have provided mechanistic insight into
 patient-specific thrombin generation~\citep{Luan2007,Luan2010}, but applying these
 models to pregnancy cohorts requires longitudinal datasets capturing the full
 complement of coagulation factors, inhibitors, and thrombin generation assay (TGA)
-measurements across gestation, precisely the type of data that is rare and expensive
+measurements across gestation, the type of data that is rare and expensive
 to collect.
 
-The fundamental barrier is sample size. Longitudinal pregnancy coagulation studies
+The core barrier is sample size. Longitudinal pregnancy coagulation studies
 typically enroll tens of patients with complete follow-up across multiple trimesters,
 yielding datasets where the number of features~$p$ (coagulation factors, TGA
 parameters, viscoelastic measurements) exceeds the number of patients~$n$. Rare
@@ -43,8 +42,7 @@ complications compound this problem: small longitudinal cohorts inevitably conta
 only a handful of patients with any given condition, far too few for
 condition-specific statistical analysis. This $n < p$ regime limits conventional
 approaches because covariance matrices are rank-deficient, cross-validation is
-unreliable, and overfitting is nearly inevitable. Synthetic data generation offers a
-path forward by augmenting small real datasets with statistically faithful synthetic
+unreliable, and overfitting is nearly inevitable. Synthetic data generation addresses this by augmenting small real datasets with statistically faithful synthetic
 records, enabling downstream analyses (mechanistic modeling, clinical comparisons,
 hypothesis generation for rare complications) that would otherwise be
 infeasible~\citep{Gonzales2023,Murtaza2024}. However, existing methods face
@@ -57,13 +55,12 @@ its signatures. More expressive models such as GANs and
 VAEs~\citep{Goodfellow2014,Kingma2014,Xu2019CTGAN}, including recent longitudinal
 extensions~\citep{Murtaza2024}, require substantially larger training sets and are
 prone to mode collapse at small $n$ (we confirm this empirically for CTGAN at
-$n{=}23$ in this work). What is needed is a generative method that can operate
+$n{=}23$ in this work). A generative method is needed that can operate
 directly on the geometry of a small dataset without estimating a full parametric
 distribution.
 
-Stochastic Attention (SA) provides such a framework rooted in modern Hopfield
-network theory~\citep{Ramsauer2021}, a continuous generalization of the associative
-memory model recognized by the 2024 Nobel Prize in Physics, in which stored patient
+Stochastic Attention (SA) is such a framework, based on modern Hopfield
+network theory~\citep{Ramsauer2021}, in which stored patient
 profiles serve as memory patterns in a continuous energy landscape and Langevin
 dynamics generates novel samples that interpolate between them via the attention
 mechanism. We recently introduced a multiplicity-weighted extension of the Hopfield
@@ -81,7 +78,7 @@ rather than as part of a coherent longitudinal trajectory.
 In this study, we extended multiplicity-weighted SA to generate complete longitudinal
 patient profiles from a very small pregnancy coagulation cohort ($K{=}23$ patients,
 72 features per visit, 3 visits) and validated the resulting synthetic patients at
-four progressively stringent levels: marginal plausibility, cross-visit covariance
+four levels: marginal plausibility, cross-visit covariance
 preservation, conditional amplification of rare subgroups (PCOS, $n{=}3$;
 Developed~PE, $n{=}5$), and mechanistic consistency with an independent ordinary differential equation (ODE)
 model of the

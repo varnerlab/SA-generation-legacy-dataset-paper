@@ -4,8 +4,7 @@
 We generated $N{=}100$ synthetic longitudinal patient profiles using SA, chosen to
 provide approximately 4$\times$ amplification over the real cohort while remaining
 within the regime where SA's attention mechanism produces diverse, non-degenerate
-samples, and compared them against the $K{=}23$ real patients across four
-progressively stringent validation levels. As a baseline, we also generated $N{=}100$
+samples, and compared them against the $K{=}23$ real patients across four validation levels. As a baseline, we also generated $N{=}100$
 patients from a regularized multivariate normal (MVN) distribution fitted to the
 same data.
 
@@ -40,8 +39,7 @@ SA-generated patients occupied the same joint regions as real patients
 antithrombin and TF-initiated peak thrombin was preserved, as were the positive
 associations between Factor~VIII and peak, prothrombin and endogenous thrombin
 potential (ETP), and the inverse relationship between antithrombin and ETP. These results indicated that SA captured
-not only univariate distributions but also the biologically meaningful pairwise
-dependencies that underlie coagulation physiology.
+not only univariate distributions but also the pairwise dependencies in the data.
 
 We also evaluated whether the characteristic pregnancy-driven longitudinal
 trajectories were reproduced. We computed per-visit means and standard deviations
@@ -127,8 +125,8 @@ fractions (68--88\%) rather than borderline values, so correction would not chan
 the classification. PCA projections of the conditioned cohorts are provided in
 Supplementary Figs.~S3--S4. These results showed that SA's multiplicity-weighted
 interpolation can amplify rare subgroups in a way that preserves their distinguishing
-clinical features, a capability with direct relevance to hypothesis generation and
-power analysis in understudied patient populations. MVN has no mechanism for this:
+clinical features, useful for hypothesis generation and
+power analysis in small patient populations. MVN has no mechanism for this:
 fitting a separate MVN to three PCOS patients across 216 features is mathematically
 impossible (rank~2 covariance), and post-hoc subsetting of unconditional MVN samples
 does not preserve subgroup-specific structure.
@@ -191,8 +189,7 @@ moderate for ETP ($\rho \approx 0.6$--$0.8$ for real, $\rho \approx 0.6$--$0.65$
 for synthetic; Supplementary Fig.~S7) and weak for other features, consistent with
 a 5-parameter population-level calibration that was not designed to resolve
 inter-patient variability. The key finding was not patient-level prediction but
-population-level plausibility: an independent mechanistic model encoding decades of
-coagulation biochemistry confirmed that SA-generated patients fell within the same
+population-level plausibility: an independent mechanistic model of the coagulation cascade confirmed that SA-generated patients fell within the same
 biologically plausible envelope as real patients, and could not be distinguished from
 them by the ODE model under either experimental condition.
 
