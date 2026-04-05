@@ -4,45 +4,45 @@ The top-level auxiliary file: main.aux
 The style file: unsrtnat.bst
 Database file #1: references.bib
 Warning--empty journal in Xu2019CTGAN
-You've used 40 entries,
+You've used 39 entries,
             2481 wiz_defined-function locations,
-            854 strings with 14365 characters,
-and the built_in function-call counts, 17238 in all, are:
-= -- 1354
-> -- 1156
-< -- 14
-+ -- 431
-- -- 350
-* -- 1531
-:= -- 2898
-add.period$ -- 154
-call.type$ -- 40
-change.case$ -- 80
-chr.to.int$ -- 39
-cite$ -- 41
-duplicate$ -- 759
-empty$ -- 1429
-format.name$ -- 400
-if$ -- 3541
+            848 strings with 13999 characters,
+and the built_in function-call counts, 16888 in all, are:
+= -- 1324
+> -- 1135
+< -- 13
++ -- 423
+- -- 344
+* -- 1509
+:= -- 2845
+add.period$ -- 151
+call.type$ -- 39
+change.case$ -- 78
+chr.to.int$ -- 38
+cite$ -- 40
+duplicate$ -- 745
+empty$ -- 1397
+format.name$ -- 391
+if$ -- 3466
 int.to.chr$ -- 2
-int.to.str$ -- 41
+int.to.str$ -- 40
 missing$ -- 38
-newline$ -- 242
-num.names$ -- 120
-pop$ -- 294
+newline$ -- 237
+num.names$ -- 117
+pop$ -- 281
 preamble$ -- 1
-purify$ -- 40
+purify$ -- 39
 quote$ -- 0
-skip$ -- 432
+skip$ -- 420
 stack$ -- 0
-substring$ -- 722
-swap$ -- 96
+substring$ -- 710
+swap$ -- 94
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 277
+type$ -- 270
 warning$ -- 1
-while$ -- 127
+while$ -- 124
 width$ -- 0
-write$ -- 586
+write$ -- 574
 (There was 1 warning)
