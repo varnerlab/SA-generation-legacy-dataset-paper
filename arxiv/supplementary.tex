@@ -87,7 +87,7 @@ unconditioned and conditioned generation except where noted.}
 \toprule
 Parameter & Value & Description \\
 \midrule
-$\alpha$ & 0.01 & Langevin step size (ULA valid without MH correction) \\
+$\alpha$ & 0.01 & Langevin step size (see Table~\ref{tab:ula-vs-mala}) \\
 $T$ & 2,000 & Langevin iterations per sample \\
 $\beta^*$ & 2.94 & Inverse temperature (entropy inflection) \\
 PCA threshold & 95\% & Variance retained \\
@@ -190,6 +190,33 @@ Threshold & $d_{\text{PCA}}$ & $K/d$ & $\beta^*$ & Novelty & Med MRE & Corr MAE 
 98\% & 20 & 1.15 & 2.94 & 0.538 & 0.013 & 0.127 \\
 99\% & 21 & 1.10 & 2.94 & 0.540 & 0.013 & 0.133 \\
 \bottomrule
+\end{tabular}
+\end{table}
+
+% ── Table S8: ULA vs MALA diagnostics ──────────────────────────────────
+\begin{table}[ht]
+\centering
+\caption{\textbf{ULA vs MALA sampling diagnostics.} Ten chains of 5{,}000
+iterations each were run with both the Unadjusted Langevin Algorithm (ULA)
+and the Metropolis-Adjusted Langevin Algorithm (MALA) at step size
+$\alpha = 0.01$ and $\beta^* = 2.94$ on the 18-dimensional PCA memory
+($K{=}23$ patterns). The MALA acceptance rate of $99.9\%$ confirms that
+virtually every ULA proposal satisfies detailed balance, and the
+indistinguishable energy and effective sample size statistics confirm
+negligible discretization bias.}
+\label{tab:ula-vs-mala}
+\begin{tabular}{lcc}
+\toprule
+Metric & ULA & MALA \\
+\midrule
+Acceptance rate (\%)         & -- (no rejection) & $99.9 \pm 0.03$ \\
+Mean energy (post-burn-in)   & $1.932 \pm 0.141$ & $1.886 \pm 0.231$ \\
+$\tau_{\text{int}}$          & $109.5 \pm 49.5$  & $106.7 \pm 30.4$ \\
+Effective sample size        & $41.8 \pm 14.2$   & $40.0 \pm 10.2$ \\
+\bottomrule
+\multicolumn{3}{p{0.85\textwidth}}{\small Burn-in: 1{,}000 iterations discarded. $\tau_{\text{int}}$: integrated
+autocorrelation time estimated with a windowed estimator (threshold 0.05).
+ESS = $(T - T_{\text{burn}}) / \tau_{\text{int}}$.}
 \end{tabular}
 \end{table}
 

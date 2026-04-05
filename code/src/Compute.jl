@@ -78,6 +78,92 @@ end
 
 
 """
+    mala_sample(X, ξ₀, T; β=1.0, α=0.1, seed=nothing) -> (t, Ξ, accept_rate)
+
+Run the Metropolis-Adjusted Langevin Algorithm (MALA) on the modern Hopfield energy.
+
+Uses the same Langevin proposal as `sample` but adds a Metropolis–Hastings
+acceptance correction to eliminate discretization bias.
+
+# Returns
+A named tuple `(t, Ξ, accept_rate)` where `accept_rate` is the fraction of
+accepted proposals.
+"""
+function mala_sample(X::Matrix{Float64}, ξ₀::Vector{Float64}, T::Int;
+    β::Float64 = 1.0, α::Float64 = 0.1,
+    seed::Union{Int, Nothing} = nothing)
+
+    d, K = size(X)
+    length(ξ₀) == d || throw(DimensionMismatch(
+        "Initial state has length $(length(ξ₀)) but X has $d rows"))
+    T > 0   || throw(ArgumentError("T must be positive, got T = $T"))
+    β > 0   || throw(ArgumentError("β must be positive, got β = $β"))
+    0 < α < 1 || throw(ArgumentError("α must be in (0,1), got α = $α"))
+
+    if seed !== nothing
+        Random.seed!(seed)
+    end
+
+    Ξ = Matrix{Float64}(undef, T + 1, d)
+    Ξ[1, :] .= ξ₀
+
+    noise_scale = sqrt(2.0 * α / β)
+    noise_var   = 2.0 * α / β
+    log_norm_const = -0.5 * d * log(2π * noise_var)
+    inv_2var = 1.0 / (2.0 * noise_var)
+
+    n_accept = 0
+
+    function langevin_mean(ξ::Vector{Float64})
+        logits = β .* (X' * ξ)
+        w = softmax(logits)
+        return (1.0 - α) .* ξ .+ α .* (X * w)
+    end
+
+    function neg_log_target(ξ::Vector{Float64})
+        logits = β .* (X' * ξ)
+        logits_max = maximum(logits)
+        lse = logits_max + log(sum(exp.(logits .- logits_max)))
+        return 0.5 * β * dot(ξ, ξ) - lse
+    end
+
+    function log_proposal(y::Vector{Float64}, μx::Vector{Float64})
+        diff = y .- μx
+        return log_norm_const - inv_2var * dot(diff, diff)
+    end
+
+    ξ = copy(ξ₀)
+    μ_curr = langevin_mean(ξ)
+    nlt_curr = neg_log_target(ξ)
+
+    for t in 1:T
+        ε = randn(d)
+        ξ_prop = μ_curr .+ noise_scale .* ε
+
+        nlt_prop = neg_log_target(ξ_prop)
+        μ_prop   = langevin_mean(ξ_prop)
+
+        log_accept = (-nlt_prop + log_proposal(ξ, μ_prop)) -
+                     (-nlt_curr + log_proposal(ξ_prop, μ_curr))
+
+        if log(rand()) < log_accept
+            ξ .= ξ_prop
+            μ_curr  = μ_prop
+            nlt_curr = nlt_prop
+            n_accept += 1
+        end
+
+        Ξ[t + 1, :] .= ξ
+    end
+
+    t_vec = collect(0:T)
+    accept_rate = n_accept / T
+
+    return (t = t_vec, Ξ = Ξ, accept_rate = accept_rate)
+end
+
+
+"""
     weighted_sample(X, ξ₀, T, ρ; β=1.0, α=0.1, seed=nothing) -> (t, Ξ)
 
 Run the multiplicity-weighted SA sampler. Adds a log-multiplicity bias `ρ` to the
