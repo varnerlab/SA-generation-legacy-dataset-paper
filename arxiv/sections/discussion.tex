@@ -21,7 +21,7 @@ all five TGA features).
 
 The ability to generate validated synthetic cohorts from very small longitudinal
 datasets has practical implications for maternal health research. Rare pregnancy
-complications such as PCOS, preeclampsia, and gestational thrombophilia are difficult
+complications such as PCOS and preeclampsia are difficult
 to study because assembling large, well-characterized longitudinal cohorts requires
 years of recruitment across multiple clinical sites. Our results suggest that SA can
 enable hypothesis generation, power analyses, and computational modeling studies for
@@ -49,8 +49,7 @@ which is a geometric property of $K$ patterns in $d$ dimensions, not a property 
 what the features represent; for our dataset the empirical inflection
 ($\beta^* \approx 2.94$) was close to the theoretical prediction
 ($\sqrt{d} \approx 4.24$), and a sensitivity analysis confirmed that generation
-quality degraded gracefully across $\beta/\beta^* \in [0.1, 3.0]$ (Supplementary
-Table~S1). Similarly, varying the PCA variance retention threshold from 85\% to 99\%
+quality degraded gracefully across $\beta/\beta^* \in [0.1, 3.0]$ (Table~\ref{stab:beta-sweep}). Similarly, varying the PCA variance retention threshold from 85\% to 99\%
 ($d_{\text{PCA}} = 13$ to 21) had minimal impact on generation quality: median MRE
 remained between 1.2\% and 1.8\% across all thresholds (Table~\ref{stab:pca-sensitivity}),
 confirming that the 95\% threshold was not a critical design choice. The multiplicity
@@ -83,8 +82,10 @@ further to show that a mechanistic model calibrated entirely on synthetic data
 predicted real patient outcomes as well as one calibrated on real data (overall ratio
 0.94$\times$ on held-out V2+V3 patients, with 11 random restarts per calibration).
 This approach is available whenever a validated mechanistic model exists for the domain
-of interest (pharmacokinetic models in drug development, physiological models in
-critical care, or metabolic models in oncology), and the requirement is not that the
+of interest (pharmacokinetic models in drug development~\citep{MouldUpton2013},
+physiological models in critical care~\citep{Chase2011}, tumor growth
+models~\citep{Ribba2012}, or metabolic
+models~\citep{Yizhak2015,Shan2018}), and the requirement is not that the
 model be a perfect predictor but that synthetic patients fall within the same
 model-predicted envelope as real patients. The bootstrap Mann--Whitney analysis of
 condition-specific features revealed that 5 of 24 (21\%) feature--condition pairs

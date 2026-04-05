@@ -1,4 +1,4 @@
-\begin{thebibliography}{30}
+\begin{thebibliography}{40}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -25,13 +25,13 @@ Susanna~L Trost, Jennifer Beauregard, Fanta Njie, Joyita Berry, Allison Harvey,
   committees in 36 {US} states, 2017--2019, 2022.
 \newblock \url{https://www.cdc.gov/maternal-mortality/php/data-research/}.
 
-\bibitem[Mann et~al.(2011)Mann, Brummel-Ziedins, Orfeo, and Butenas]{Mann2011}
-Kenneth~G Mann, Kathleen Brummel-Ziedins, Thomas Orfeo, and Saulius Butenas.
+\bibitem[Mann(2011)]{Mann2011}
+Kenneth~G Mann.
 \newblock Thrombin generation in hemorrhage control and vascular occlusion.
 \newblock \emph{Circulation}, 124\penalty0 (2):\penalty0 225--235, 2011.
 \newblock \doi{10.1161/CIRCULATIONAHA.110.952648}.
 
-\bibitem[Butenas et~al.(2009)Butenas, Orfeo, and Mann]{Butenas2002}
+\bibitem[Butenas et~al.(2009)Butenas, Orfeo, and Mann]{Butenas2009}
 Saulius Butenas, Thomas Orfeo, and Kenneth~G Mann.
 \newblock Tissue factor in coagulation: Which? where? when?
 \newblock \emph{Arteriosclerosis, Thrombosis, and Vascular Biology},
@@ -76,6 +76,15 @@ Ricardo Azziz, Keslie~S Woods, Rosario Reyna, Thomas~J Key, Eric~S
   (6):\penalty0 2745--2749, 2004.
 \newblock \doi{10.1210/jc.2003-032046}.
 
+\bibitem[Palomba et~al.(2015)Palomba, Santagni, Falbo, and
+  La~Sala]{Palomba2015}
+Stefano Palomba, Susanna Santagni, Angela Falbo, and Giovanni~Battista La~Sala.
+\newblock Complications and challenges associated with polycystic ovary
+  syndrome: current perspectives.
+\newblock \emph{International Journal of Women's Health}, 7:\penalty0 745--763,
+  2015.
+\newblock \doi{10.2147/IJWH.S70314}.
+
 \bibitem[Abalos et~al.(2014)Abalos, Cuesta, Carroli, Qureshi, Widmer, Vogel,
   and Souza]{Abalos2014}
 Edgardo Abalos, Cristina Cuesta, Guillermo Carroli, Zahida Qureshi, Mariana
@@ -86,6 +95,16 @@ Edgardo Abalos, Cristina Cuesta, Guillermo Carroli, Zahida Qureshi, Mariana
 \newblock \emph{BJOG: An International Journal of Obstetrics \& Gynaecology},
   121:\penalty0 14--24, 2014.
 \newblock \doi{10.1111/1471-0528.12629}.
+
+\bibitem[Dusse et~al.(2011)Dusse, Rios, Pinheiro, Cooper, and
+  Lwaleed]{Dusse2011}
+Luci~M Dusse, Danyelle R~A Rios, Melina~B Pinheiro, Alan~J Cooper, and Bashir~A
+  Lwaleed.
+\newblock Pre-eclampsia: relationship between coagulation, fibrinolysis and
+  inflammation.
+\newblock \emph{Clinica Chimica Acta}, 412\penalty0 (1--2):\penalty0 17--21,
+  2011.
+\newblock \doi{10.1016/j.cca.2010.09.030}.
 
 \bibitem[Luan et~al.(2007)Luan, Zai, and Varner]{Luan2007}
 Deyan Luan, Michael Zai, and Jeffrey~D Varner.
@@ -119,21 +138,27 @@ Kathleen~E Brummel-Ziedins, Thomas Orfeo, Peter~W Callas, Matthew Gissel,
 \newblock \emph{PLoS ONE}, 7\penalty0 (9):\penalty0 e44378, 2012.
 \newblock \doi{10.1371/journal.pone.0044378}.
 
+\bibitem[Hastie et~al.(2009)Hastie, Tibshirani, and Friedman]{Hastie2009}
+Trevor Hastie, Robert Tibshirani, and Jerome Friedman.
+\newblock \emph{The Elements of Statistical Learning: Data Mining, Inference,
+  and Prediction}.
+\newblock Springer, 2nd edition, 2009.
+\newblock \doi{10.1007/978-0-387-84858-7}.
+
 \bibitem[Gonzales et~al.(2023)Gonzales, Guruswamy, and Smith]{Gonzales2023}
-Adarsh Gonzales, Guruprabha Guruswamy, and Sandesh~R Smith.
-\newblock Synthetic data generation methods in healthcare: A review on
-  open-source tools and methods.
+Aldren Gonzales, Guruprabha Guruswamy, and Scott~R Smith.
+\newblock Synthetic data in health care: A narrative review.
 \newblock \emph{PLOS Digital Health}, 2\penalty0 (1):\penalty0 e0000082, 2023.
 \newblock \doi{10.1371/journal.pdig.0000082}.
 
-\bibitem[Murtaza et~al.(2024)Murtaza, Schreck, Gao, Meid, Gredner, Haefeli,
-  Brenner, and Schottker]{Murtaza2024}
-Hasan Murtaza, Nicholas Schreck, Jil Gao, Andreas~D Meid, Thomas Gredner,
-  Walter~E Haefeli, Hermann Brenner, and Ben Schottker.
+\bibitem[K{\"u}hnel et~al.(2024)K{\"u}hnel, Schneider, Perrar, Adams, Moazemi,
+  Prasser, N{\"o}thlings, Fr{\"o}hlich, and Fluck]{Kuhnel2024}
+Lisa K{\"u}hnel, Julian Schneider, Ines Perrar, Tim Adams, Sobhan Moazemi,
+  Fabian Prasser, Ute N{\"o}thlings, Holger Fr{\"o}hlich, and Juliane Fluck.
 \newblock Synthetic data generation for a longitudinal cohort study --
   evaluation, method extension and reproduction of published data analysis
   results.
-\newblock \emph{Scientific Reports}, 14:\penalty0 12785, 2024.
+\newblock \emph{Scientific Reports}, 14:\penalty0 14412, 2024.
 \newblock \doi{10.1038/s41598-024-62102-2}.
 
 \bibitem[Ledoit and Wolf(2004)]{Ledoit2004}
@@ -163,6 +188,13 @@ Diederik~P Kingma and Max Welling.
 Lei Xu, Maria Skoularidou, Alfredo Cuesta-Infante, and Kalyan Veeramachaneni.
 \newblock Modeling tabular data using conditional {GAN}.
 \newblock 32, 2019.
+
+\bibitem[De~Mitri et~al.(2025)De~Mitri, Wang, and Huber]{DeMitri2025}
+Omar De~Mitri, Ruyu Wang, and Marco~F Huber.
+\newblock Generative adversarial networks with limited data: A survey and
+  benchmarking.
+\newblock \emph{arXiv preprint arXiv:2504.05456}, 2025.
+\newblock \doi{10.48550/arXiv.2504.05456}.
 
 \bibitem[Ramsauer et~al.(2021)Ramsauer, Sch{\"a}fl, Lehner, Seidl, Widrich,
   Adler, Gruber, Holzleitner, Pavlovi{\'c}, Sandve, Greiff, Kreil, Kopp,
@@ -203,6 +235,52 @@ Abdulrahman Alswaidan and Jeffrey~D Varner.
 \newblock \emph{arXiv preprint arXiv:2603.06875}, 2026.
 \newblock \doi{10.48550/arXiv.2603.06875}.
 
+\bibitem[Mould and Upton(2013)]{MouldUpton2013}
+Diane~R Mould and Richard~N Upton.
+\newblock Basic concepts in population modeling, simulation, and model-based
+  drug development---part 2: introduction to pharmacokinetic modeling methods.
+\newblock \emph{CPT: Pharmacometrics \& Systems Pharmacology}, 2\penalty0
+  (4):\penalty0 e38, 2013.
+\newblock \doi{10.1038/psp.2013.14}.
+
+\bibitem[Chase et~al.(2011)Chase, Le~Compte, Preiser, Shaw, Penning, and
+  Desaive]{Chase2011}
+J~Geoffrey Chase, Aaron~J Le~Compte, Jean-Charles Preiser, Geoffrey~M Shaw,
+  Sophie Penning, and Thomas Desaive.
+\newblock Physiological modeling, tight glycemic control, and the {ICU}
+  clinician: what are models and how can they affect practice?
+\newblock \emph{Annals of Intensive Care}, 1:\penalty0 11, 2011.
+\newblock \doi{10.1186/2110-5820-1-11}.
+
+\bibitem[Ribba et~al.(2012)Ribba, Kaloshi, Peyre, Ricard, Calvez, Tod,
+  Cajavec-Bernard, Idbaih, Psimaras, Dainese, Pallud, Cartalat-Carel, Delattre,
+  Honnorat, Grenier, and Ducray]{Ribba2012}
+Benjamin Ribba, Gentian Kaloshi, Mathieu Peyre, Damien Ricard, Vincent Calvez,
+  Michel Tod, Branka Cajavec-Bernard, Ahmed Idbaih, Dimitri Psimaras, Luca
+  Dainese, Johan Pallud, St{\'e}phanie Cartalat-Carel, Jean-Yves Delattre,
+  J{\'e}r{\^o}me Honnorat, Emmanuel Grenier, and Fran{\c{c}}ois Ducray.
+\newblock A tumor growth inhibition model for low-grade glioma treated with
+  chemotherapy or radiotherapy.
+\newblock \emph{Clinical Cancer Research}, 18\penalty0 (18):\penalty0
+  5071--5080, 2012.
+\newblock \doi{10.1158/1078-0432.CCR-12-0084}.
+
+\bibitem[Yizhak et~al.(2015)Yizhak, Chaneton, Gottlieb, and Ruppin]{Yizhak2015}
+Keren Yizhak, Barbara Chaneton, Eyal Gottlieb, and Eytan Ruppin.
+\newblock Modeling cancer metabolism on a genome scale.
+\newblock \emph{Molecular Systems Biology}, 11\penalty0 (6):\penalty0 817,
+  2015.
+\newblock \doi{10.15252/msb.20145307}.
+
+\bibitem[Shan et~al.(2018)Shan, Dai, Vudem, Varner, and Stroock]{Shan2018}
+Mengrou Shan, David Dai, Arunodai Vudem, Jeffrey~D Varner, and Abraham~D
+  Stroock.
+\newblock Multi-scale computational study of the {W}arburg effect, reverse
+  {W}arburg effect and glutamine addiction in solid tumors.
+\newblock \emph{PLoS Computational Biology}, 14\penalty0 (12):\penalty0
+  e1006584, 2018.
+\newblock \doi{10.1371/journal.pcbi.1006584}.
+
 \bibitem[McLean et~al.(2012)McLean, Bernstein, and
   Brummel-Ziedins]{McLean2012TGA}
 Kelley~C McLean, Ira~M Bernstein, and Kathleen Brummel-Ziedins.
@@ -233,7 +311,16 @@ Rachel B~C Psoinos, Erin~A Morris, Carole~A McBride, and Ira~M Bernstein.
 Ira~M Bernstein, Sarah~A Hale, and Gary~J Badger.
 \newblock Differences in cardiovascular function comparing prior preeclamptics
   with nulliparous controls.
-\newblock \emph{Pregnancy Hypertension}, 2016.
-\newblock \doi{10.1016/j.preghy.2016.11.001}.
+\newblock \emph{Pregnancy Hypertension}, 6\penalty0 (4):\penalty0 320--326,
+  2016.
+\newblock \doi{10.1016/j.preghy.2016.07.001}.
+
+\bibitem[Durmus and Moulines(2017)]{DurmusMoulines2017}
+Alain Durmus and {\'E}ric Moulines.
+\newblock Nonasymptotic convergence analysis for the unadjusted {L}angevin
+  algorithm.
+\newblock \emph{The Annals of Applied Probability}, 27\penalty0 (3):\penalty0
+  1551--1587, 2017.
+\newblock \doi{10.1214/16-AAP1238}.
 
 \end{thebibliography}
