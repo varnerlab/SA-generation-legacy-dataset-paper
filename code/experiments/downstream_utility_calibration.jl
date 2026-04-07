@@ -274,7 +274,8 @@ for feat in FEATURE_LABELS
     lo -= margin; hi += margin
 
     p = plot(; xlabel="Real-calibrated", ylabel="Synth-calibrated",
-             title=feat, titlefontsize=10, guidefontsize=9, tickfontsize=7,
+             title=feat, titlefontsize=18, guidefontsize=16, tickfontsize=13,
+             legendfontsize=13,
              xlim=(lo, hi), ylim=(lo, hi), aspect_ratio=1,
              background_color_inside=bg_color, grid=false, framestyle=:box,
              legend= feat == FEATURE_LABELS[end] ? :topleft : false,

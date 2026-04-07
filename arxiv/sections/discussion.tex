@@ -59,8 +59,8 @@ weighting for conditional generation introduced an additional consideration. Ach
 effective pattern count to $K_{\text{eff}} \approx 4.6$ (Table~\ref{stab:multiplicity}),
 which explains the larger MREs observed for PCOS features because the energy landscape
 was effectively shaped by fewer than 5 independent patterns, pulling means toward the
-population average. The direction-magnitude decomposition compounds this limitation:
-for PCOS, magnitudes are drawn from only 3 empirical norms, providing minimal
+population average. The direction-magnitude decomposition compounds this limitation.
+For PCOS, magnitudes are drawn from only 3 empirical norms, providing minimal
 diversity in the scale of generated samples. More broadly, the SA framework and its
 multiplicity-weighted conditioning have been independently validated on discrete
 protein sequence generation from small family
@@ -73,6 +73,38 @@ multiplicity-weighted conditioning mechanism transfer without modification,
 suggesting that the geometric properties exploited here are not specific to
 clinical coagulation data but are general features of the Hopfield energy
 landscape operating on small pattern sets.
+
+The closest published precedent for validated longitudinal synthetic generation
+is the VAMBN-MT framework of K\"uhnel et al.~\citep{Kuhnel2024}, which extended
+a Variational Autoencoder Modular Bayesian Network with an LSTM time-encoder to
+better capture cross-visit dependencies on the DONALD nutritional cohort and on
+ADNI. Their study is instructive because it makes the regime contrast precise.
+With $N{=}1{,}312$ DONALD participants and 33 longitudinal variables, their
+setting sits in the data-rich regime where deep parametric models can be
+trained at all, and even there the approach required expert-curated module
+assignments, manually specified Bayesian-network edge constraints,
+hyperparameter tuning of an LSTM-augmented HI-VAE per module, and 10{,}000
+synthetic resamples drawn from the trained model to recover a published
+age-trend regression. Even with all of this scaffolding the best variant left
+the full cross-visit correlation matrix at roughly 70\% relative Frobenius
+error, and downstream time trends weaker than the strongest signals in the real
+data could not be recovered at any synthetic sample size. Our setting inverts
+both axes of theirs. With $K{=}23$ patients across 216 features we operate two
+orders of magnitude smaller and squarely in the $n < p$ regime where the
+VAMBN-MT architecture cannot be fit at all, and the non-parametric,
+geometry-preserving design of SA replaces hyperparameter-tuned modular
+structure with PCA-derived linear geometry, replaces dataset-specific
+dependency rules (graduation-status monotonicity, age-time arithmetic
+identities, macronutrient summation) with a generic mechanistic-model
+validation pattern that transfers to any domain with a calibrated ODE model,
+and adds an inference-time conditional-generation lever in the form of
+multiplicity weighting that VAMBN-MT does not provide. These are complementary
+positions in the design space rather than a head-to-head comparison. VAMBN-MT
+addresses the moderate-cohort regime where deep generative models are feasible
+but expert-specified modular structure is needed to learn cross-visit
+dependencies, while SA addresses the small-cohort regime where parametric
+models cannot be fit and the geometry of the few real patients must itself
+carry the generative signal.
 
 Beyond these statistical and geometric considerations, the mechanistic validation
 introduced an approach that applies beyond coagulation. Rather than relying solely on statistical comparisons between real
