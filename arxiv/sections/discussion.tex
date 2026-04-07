@@ -27,7 +27,7 @@ years of recruitment across multiple clinical sites. Our results suggest that SA
 enable hypothesis generation, power analyses, and computational modeling studies for
 these understudied populations by generating synthetic cohorts that preserve both the
 statistical and mechanistic properties of the real data. The conditional generation
-capability is particularly relevant: rather than requiring researchers to collect
+capability is particularly relevant. Rather than requiring researchers to collect
 additional rare patients, SA can amplify existing small subgroups into cohorts large
 enough for meaningful analysis.
 
@@ -37,7 +37,7 @@ stored patient profiles via the Hopfield
 energy landscape operating in a PCA-reduced linear subspace, rather than fitting a
 parametric distribution that must regularize or truncate high-dimensional structure. In
 the $n < p$ regime that characterizes most small clinical studies, any parametric
-distribution faces a fundamental identifiability problem: there are more parameters to
+distribution faces a fundamental identifiability problem. There are more parameters to
 estimate than observations to estimate them from. SA sidesteps this by operating in a
 PCA-reduced space where the memory-to-dimension ratio is favorable
 ($K/d_{\text{PCA}} \approx 1.28$) and by preserving the full directional structure of
@@ -51,10 +51,10 @@ what the features represent; for our dataset the empirical inflection
 ($\sqrt{d} \approx 4.24$), and a sensitivity analysis confirmed that generation
 quality degraded gracefully across $\beta/\beta^* \in [0.1, 3.0]$ (Table~\ref{stab:beta-sweep}). 
 Similarly, varying the PCA variance retention threshold from 85\% to 99\%
-($d_{\text{PCA}} = 13$ to 21) had minimal impact on generation quality: median MRE
+($d_{\text{PCA}} = 13$ to 21) had minimal impact on generation quality. Median MRE
 remained between 1.2\% and 1.8\% across all thresholds (Table~\ref{stab:pca-sensitivity}),
 confirming that the 95\% threshold was not a critical design choice. The multiplicity
-weighting for conditional generation introduced an additional consideration: achieving
+weighting for conditional generation introduced an additional consideration. Achieving
 80\% attention on the PCOS subgroup required $\rho \approx 26.7$, reducing the
 effective pattern count to $K_{\text{eff}} \approx 4.6$ (Table~\ref{stab:multiplicity}),
 which explains the larger MREs observed for PCOS features because the energy landscape
@@ -75,7 +75,7 @@ clinical coagulation data but are general features of the Hopfield energy
 landscape operating on small pattern sets.
 
 Beyond these statistical and geometric considerations, the mechanistic validation
-introduced an approach that applies beyond coagulation: rather than relying solely on statistical comparisons between real
+introduced an approach that applies beyond coagulation. Rather than relying solely on statistical comparisons between real
 and synthetic distributions, we tested whether synthetic patients produced biologically
 consistent outputs when processed by an independent computational model, and went
 further to show that a mechanistic model calibrated entirely on synthetic data
@@ -94,7 +94,7 @@ reflected SA's tendency to compress distributional tails rather than shift means
 tail compression arises from two sources: the PCA dimensionality reduction, which
 cannot fully represent higher-order moments of every feature, and the
 direction-magnitude decomposition, which draws magnitudes from a finite empirical
-distribution of $K{=}23$ norms. This is a trade-off: SA
+distribution of $K{=}23$ norms. This is a trade-off. SA
 sacrifices some tail fidelity in exchange for preserving the manifold geometry that
 parametric methods cannot capture in the $n < p$ regime.
 

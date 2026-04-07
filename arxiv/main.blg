@@ -1,4 +1,4 @@
-This is BibTeX, Version 0.99d (TeX Live 2024)
+This is BibTeX, Version 0.99d (TeX Live 2025)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: unsrtnat.bst
@@ -6,16 +6,16 @@ Database file #1: references.bib
 Warning--empty journal in Xu2019CTGAN
 You've used 39 entries,
             2481 wiz_defined-function locations,
-            848 strings with 13999 characters,
-and the built_in function-call counts, 16888 in all, are:
-= -- 1324
+            849 strings with 14077 characters,
+and the built_in function-call counts, 16899 in all, are:
+= -- 1327
 > -- 1135
 < -- 13
 + -- 423
 - -- 344
 * -- 1509
-:= -- 2845
-add.period$ -- 151
+:= -- 2848
+add.period$ -- 152
 call.type$ -- 39
 change.case$ -- 78
 chr.to.int$ -- 38
@@ -23,17 +23,17 @@ cite$ -- 40
 duplicate$ -- 745
 empty$ -- 1397
 format.name$ -- 391
-if$ -- 3466
+if$ -- 3469
 int.to.chr$ -- 2
 int.to.str$ -- 40
 missing$ -- 38
-newline$ -- 237
+newline$ -- 238
 num.names$ -- 117
-pop$ -- 281
+pop$ -- 280
 preamble$ -- 1
 purify$ -- 39
 quote$ -- 0
-skip$ -- 420
+skip$ -- 419
 stack$ -- 0
 substring$ -- 710
 swap$ -- 94
@@ -44,5 +44,5 @@ type$ -- 270
 warning$ -- 1
 while$ -- 124
 width$ -- 0
-write$ -- 574
+write$ -- 576
 (There was 1 warning)

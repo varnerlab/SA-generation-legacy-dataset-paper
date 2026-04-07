@@ -89,7 +89,7 @@ $\beta$, converging to nearest memory) and generation (small $\beta$, uniform mi
 We identified the critical $\beta^*$ at the phase transition by computing the
 normalized attention entropy and finding the inflection point (maximum negative
 second derivative of $\bar{H}(\beta)$ in log-$\beta$ space) over a logarithmic sweep
-of 80 values from $\beta = 0.1$ to $1000$. This procedure is domain-agnostic: the
+of 80 values from $\beta = 0.1$ to $1000$. This procedure is domain-agnostic. The
 phase transition is a geometric property of $K$ patterns in $d$ dimensions, not a
 property of the features they represent. For our dataset ($K{=}23$, $d_{\text{PCA}}{=}18$),
 the empirical inflection yielded $\beta^* \approx 2.94$, close to the theoretical
@@ -129,7 +129,7 @@ Standard SA operates on unit-norm patterns, which is appropriate for discrete da
 (e.g., one-hot protein sequences) but destroys the anisotropic variance structure
 of continuous clinical measurements, collapsing dispersion across all principal
 components to a unit sphere. We addressed this with a direction-magnitude
-decomposition: before normalization, we recorded each pattern's PCA-space norm
+decomposition. Before normalization, we recorded each pattern's PCA-space norm
 $r_k = \|\mathbf{m}_k\|$; we then ran SA on unit-norm patterns to obtain a
 directional sample $\hat{\vxi}$, drew a magnitude $r$ from the empirical
 distribution of $\{r_k\}$, and reconstructed the rescaled sample as
@@ -197,7 +197,7 @@ $T{=}2{,}000$ was sufficient for convergence.
 As a baseline, we generated synthetic patients by fitting a single multivariate
 normal (MVN) distribution to the same $K{=}23$ concatenated 216-dimensional patient
 profiles. Critically, both SA and MVN operated on the same concatenated
-representation: each patient's three visits were joined into one vector before
+representation. Each patient's three visits were joined into one vector before
 generation, so that both methods had the opportunity to capture cross-visit
 dependencies. For SA, this structure was preserved through the Hopfield energy
 landscape operating on 18-dimensional PCA projections of the concatenated vectors.

@@ -218,8 +218,10 @@ Jeffrey~D Varner.
 Maria Bravo, Thomas Orfeo, Ira Bernstein, Sandra Vadhin, Divya Lakshmi, and
   Jeffrey~D Varner.
 \newblock {BSTModelKit.jl}: Building biochemical systems theory models of
-  individualized coagulation dynamics during pregnancy, 2023.
-\newblock JuliaCon 2023.
+  individualized coagulation dynamics during pregnancy.
+\newblock JuliaCon 2023, \url{https://www.youtube.com/watch?v=IGtUqMLHBvQ},
+  2023.
+\newblock Conference proceedings talk.
 
 \bibitem[Varner(2026{\natexlab{b}})]{Varner2026SAProtein}
 Jeffrey~D Varner.

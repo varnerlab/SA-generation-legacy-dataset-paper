@@ -25,7 +25,7 @@ First, the mean novelty score (defined as
 $1 - \max_k \cos(\hat{\vxi}, \hat{\mathbf{m}}_k)$) was 0.50 at $\beta = \beta^*$,
 indicating that generated samples were on average 50\% away from their nearest
 stored pattern in angular distance (Supplementary Table~S1). Second, we computed
-nearest-neighbor distances in standardized feature space: the median distance from
+nearest-neighbor distances in standardized feature space. The median distance from
 each synthetic patient to their closest real patient was 6.14 (standardized units),
 compared with 6.70 for the median real-to-real nearest-neighbor distance, a ratio
 of 0.92 indicating that synthetic patients were approximately as far from real
@@ -84,7 +84,7 @@ trade-offs in handling this rank deficiency: SA truncates via PCA (zeroing varia
 beyond component~18), while MVN regularizes via Ledoit--Wolf shrinkage (providing a
 full-rank estimate by inflating eigenvalues in the 194 null dimensions). The
 consequence of MVN's approach is that it introduces variance in dimensions where the
-data contain no signal, which manifested as increased dispersion in PCA projections:
+data contain no signal, which manifested as increased dispersion in PCA projections.
 SA-generated patients occupied the same region of PCA space as real patients across
 all three visits, while MVN-generated patients showed substantially greater scatter,
 particularly at Visits~2 and~3 (Fig.~\ref{fig:pca-by-visit}).
@@ -106,11 +106,11 @@ patients each by upweighting attention on the relevant stored patterns.
 We compared condition-specific feature means between real and SA-generated patients
 across eight coagulation features that exhibited between-condition variation
 (Fig.~\ref{fig:conditioned-features}). SA-generated cohorts preserved the
-condition-specific patterns: PCOS patients showed elevated Factor~VIII and vWF
+condition-specific patterns. PCOS patients showed elevated Factor~VIII and vWF
 relative to Healthy patients in both real and synthetic data, PE patients showed
 elevated $\alpha_2$-AP and Factor~IX, and the between-condition rank ordering was
 maintained across all eight features. To quantify equivalence, we performed a
-bootstrap Mann--Whitney test: for each feature and condition, we subsampled the
+bootstrap Mann--Whitney test. For each feature and condition, we subsampled the
 synthetic cohort to match the real sample size ($n_{\text{real}}$), applied a
 Mann--Whitney U test, and repeated 1,000 times. We reported the fraction of
 replicates where $p > 0.05$ (i.e., real and synthetic were statistically
@@ -161,7 +161,7 @@ same cloud with the same systematic offset.
 We formalized this observation by computing the ODE-predicted/dataset ratio for each
 patient and comparing the resulting distributions between real and synthetic
 populations (Fig.~\ref{fig:mechanistic-combined}, bottom row). These ratio
-distributions capture how the ODE model processes each patient's factor levels: if
+distributions capture how the ODE model processes each patient's factor levels. If
 SA had generated patients with biologically implausible factor combinations, the
 model would process them differently, producing a shifted or broadened ratio
 distribution. Instead, the distributions overlapped substantially, with cloud overlap
@@ -170,16 +170,16 @@ from 83\% for ETP to 92\% for lagtime, and two-sample Kolmogorov--Smirnov (KS) t
 confirmed that the ratio distributions were statistically indistinguishable across
 all five TGA features ($D = 0.081$--$0.123$, all $p > 0.35$). For consistency
 with the bootstrap approach used at the previous level, we also subsampled the
-synthetic ratios to $n_{\text{real}}$ and repeated the KS test 1,000 times: all five
+synthetic ratios to $n_{\text{real}}$ and repeated the KS test 1,000 times. All five
 features achieved $p > 0.05$ in $\geq$96\% of replicates. Under TF+TM conditions,
 the model systematically overcorrected the protein~C anticoagulant pathway, producing
 peak and maximum rate predictions approximately 0.5$\times$ measured values for both
 real and synthetic patients (Supplementary Fig.~S5), yet this shared systematic bias
-was itself informative: cloud overlap remained high at 88--92\%, confirming that the
+was itself informative. Cloud overlap remained high at 88--92\%, confirming that the
 model processed real and synthetic patients identically even under conditions where
 the calibration was imperfect.
 
-The calibration also generalized across pregnancy timepoints: although fitted only
+The calibration also generalized across pregnancy timepoints. Although fitted only
 on Visit~1 real patients, the predicted-to-measured ratios at Visits~2 and~3 under
 TF-only conditions were 0.96$\times$ and 1.07$\times$, respectively (Supplementary
 Fig.~S6), confirming that the calibrated rate constants captured a stable
@@ -189,7 +189,7 @@ moderate for ETP ($\rho \approx 0.6$--$0.8$ for real, $\rho \approx 0.6$--$0.65$
 for synthetic; Supplementary Fig.~S7) and weak for other features, consistent with
 a 5-parameter population-level calibration that was not designed to resolve
 inter-patient variability. The key finding was not patient-level prediction but
-population-level plausibility: an independent mechanistic model of the coagulation cascade confirmed that SA-generated patients fell within the same
+population-level plausibility. An independent mechanistic model of the coagulation cascade confirmed that SA-generated patients fell within the same
 biologically plausible envelope as real patients, and could not be distinguished from
 them by the ODE model under either experimental condition.
 

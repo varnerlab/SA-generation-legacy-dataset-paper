@@ -15,8 +15,8 @@ activates platelets, and amplifies its own production through positive feedback 
 Factors~V, VIII, and XI, while simultaneously initiating its own shutdown through the
 thrombomodulin--protein~C anticoagulant pathway~\citep{Hockin2002}. Pregnancy
 alters this hemostatic balance, shifting toward a hypercoagulable state
-that prepares for delivery~\citep{Hellgren2003,Grouzi2022,Bremme2003}:
-procoagulant factors including fibrinogen, Factor~VIII, and von Willebrand factor
+that prepares for delivery~\citep{Hellgren2003,Grouzi2022,Bremme2003}.
+Procoagulant factors including fibrinogen, Factor~VIII, and von Willebrand factor
 increase substantially across gestation, while natural anticoagulants such as
 antithrombin and protein~S decline. Two conditions further shift this balance in ways that are not fully understood.
 Polycystic ovary syndrome (PCOS), a hormonal and metabolic disorder affecting
@@ -39,7 +39,7 @@ The core barrier is sample size. Longitudinal pregnancy coagulation studies
 typically enroll tens of patients with complete follow-up across multiple trimesters,
 yielding datasets where the number of features~$p$ (coagulation factors, TGA
 parameters, viscoelastic measurements) exceeds the number of patients~$n$. Rare
-complications compound this problem: small longitudinal cohorts inevitably contain
+complications compound this problem. Small longitudinal cohorts inevitably contain
 only a handful of patients with any given condition, far too few for
 condition-specific statistical analysis. This $n < p$ regime limits conventional
 approaches because covariance matrices are rank-deficient, cross-validation is
@@ -60,21 +60,28 @@ $n{=}23$ in this work). A generative method is needed that can operate
 directly on the geometry of a small dataset without estimating a full parametric
 distribution.
 
-Stochastic Attention (SA) is such a framework, based on modern Hopfield
-network theory~\citep{Ramsauer2021}, in which stored patient
-profiles serve as memory patterns in a continuous energy landscape and Langevin
-dynamics generates novel samples that interpolate between them via the attention
-mechanism. We recently introduced a multiplicity-weighted extension of the Hopfield
-energy that adds per-pattern weights to the log-sum-exp term, enabling continuous
-interpolation between unconditioned generation and targeted subpopulation
-amplification at inference time without retraining~\citep{Varner2026Multiplicity}. SA operates
-in a principal component analysis (PCA)-reduced linear subspace of the data rather
-than fitting a parametric
-distribution, making it well-suited to the $n < p$ regime. In prior work, we
-generated synthetic patient populations using MVN distributions fitted independently
-to each clinical visit~\citep{Varner2023JuliaCon}; while this captured per-visit
-statistics, it assumed Gaussian marginals and generated each visit independently
-rather than as part of a coherent longitudinal trajectory.
+Stochastic Attention (SA) is such a framework. Rather than estimating a
+parametric distribution, SA treats the stored patient profiles themselves as the
+model. Building on modern Hopfield network theory~\citep{Ramsauer2021}, each
+profile becomes a memory pattern in a continuous energy landscape, and Langevin
+dynamics generates novel samples that interpolate between patterns through the
+attention mechanism. Because sampling occurs in a principal component analysis
+(PCA)-reduced linear subspace anchored on the observed cohort, SA never forms a
+full $p \times p$ covariance matrix and so avoids both the rank deficiency that
+limits MVN and the mode collapse that limits GAN/VAE approaches when $n < p$.
+We recently introduced a multiplicity-weighted extension of the Hopfield energy
+that attaches a per-pattern weight to each stored profile~\citep{Varner2026Multiplicity},
+which provides exactly the lever that MVN lacks: continuous interpolation
+between unconditioned generation and targeted amplification of a rare
+subpopulation at inference time, without retraining. What remains open, and what
+this study addresses, is whether SA can faithfully generate \emph{longitudinal}
+trajectories from a small cohort. In earlier proceedings work, we paired our
+mechanistic coagulation pipeline with per-visit MVN sampling to produce
+synthetic populations~\citep{Varner2023JuliaCon}; that approach captured
+single-visit marginals but, by fitting each visit independently, generated
+patients whose trajectories across gestation were statistically incoherent. A
+generator that respects the joint structure across visits is what a small
+longitudinal pregnancy cohort actually demands.
 
 In this study, we used multiplicity-weighted SA to generate complete longitudinal
 patient profiles from a small pregnancy coagulation cohort ($K{=}23$ patients,
@@ -92,4 +99,9 @@ not represent, and maintained condition-specific signatures when amplifying rare
 subgroups. An independent 58-species ODE model of the coagulation cascade could not
 distinguish real from synthetic patients, and a mechanistic model calibrated entirely
 on synthetic patients predicted held-out real patient outcomes as well as one
-calibrated on real data.
+calibrated on real data. If this generalizes, the implication is that the
+bottleneck for studying rare obstetric and pediatric conditions may be shifting
+from cohort size toward cohort fidelity: a few dozen carefully phenotyped
+longitudinal patients, augmented through SA, may be enough to support
+mechanistic and statistical analyses that have traditionally relied on much
+larger cohorts.
