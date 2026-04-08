@@ -179,29 +179,27 @@ and two-sample Kolmogorov--Smirnov (KS) tests confirmed that the ratio
 distributions were statistically indistinguishable across all five TGA features
 ($D = 0.081$--$0.123$, all $p > 0.30$; full diagnostics in
 Table~\ref{stab:mechanistic-validation}).
-Figure~\ref{sfig:mechanistic-tm-combined} shows the same scatter and ratio
-analysis as the main-text comparison but under TF+TM conditions. There the
-model systematically overcorrected the protein~C anticoagulant pathway,
-producing peak and maximum rate predictions approximately 0.5$\times$ measured
-values for both real and synthetic patients, yet this shared systematic bias
-was itself informative. Cloud overlap remained high (0.89--0.93 across the
+Under TF+TM conditions, the model systematically overcorrected the protein~C
+anticoagulant pathway, producing peak and maximum rate predictions
+approximately 0.5$\times$ measured values for both real and synthetic patients
+(Fig.~\ref{sfig:mechanistic-tm-combined}, same layout as the main-text
+comparison), yet this shared systematic bias was itself informative. Cloud overlap remained high (0.89--0.93 across the
 five features), confirming that the model processed real and synthetic
 patients identically even under conditions where the calibration was
 imperfect.
 
-The calibration also generalized across pregnancy timepoints.
-Figure~\ref{sfig:generalization} shows the predicted-to-measured ratios by visit.
-Although fitted only on Visit~1 real patients, the per-visit median ratios under
-TF-only conditions remained close to 1.0 at Visits~2 and~3, confirming that
-the calibrated rate constants captured a stable
+The calibration also generalized across pregnancy timepoints. Although fitted
+only on Visit~1 real patients, the per-visit median predicted-to-measured
+ratios under TF-only conditions remained close to 1.0 at Visits~2 and~3
+(Fig.~\ref{sfig:generalization}), confirming that the calibrated rate
+constants captured a stable
 population-level property of the coagulation system rather than overfitting to the
 training visit. Spearman rank correlations between predicted and measured values were
 moderate for ETP ($\rho \approx 0.6$--$0.8$ for real, $\rho \approx 0.6$--$0.65$
 for synthetic; Fig.~\ref{sfig:rankcorr}) and weak for other features, consistent with
 a 5-parameter population-level calibration that was not designed to resolve
 inter-patient variability. The key finding was not patient-level prediction but
-population-level plausibility. An independent mechanistic model of the coagulation cascade confirmed that SA-generated patients fell within the same
-biologically plausible envelope as real patients, and could not be distinguished from
+population-level plausibility. An independent mechanistic model of the coagulation cascade confirmed that SA-generated patients fell within the same biologically plausible envelope as real patients, and could not be distinguished from
 them by the ODE model under either experimental condition.
 
 \subsection{Downstream Utility: Mechanistic Model Calibration}
@@ -215,13 +213,12 @@ evaluated whether it could predict real patient outcomes. We calibrated the BZ20
 the same bounded Nelder--Mead optimization applied to the real V1 calibration
 ($K{=}23$), with 11 random restarts to mitigate local-minimum sensitivity
 (Table~\ref{stab:ode-calibration} for parameter details). We then evaluated both calibrations
-on held-out real V2 and V3 patients that neither model had seen during training.
-Figure~\ref{fig:downstream-utility} compares synth-calibrated and real-calibrated
-mechanistic model predictions on these held-out patients. The synth-calibrated
-model achieved comparable or slightly better performance across all five TGA
-features, with per-feature median relative errors 2--10\% lower than the
-real-calibrated model (overall ratio 0.94$\times$;
-per-feature breakdown in Table~\ref{stab:downstream-utility}). This improvement likely
+on held-out real V2 and V3 patients that neither model had seen during
+training. The synth-calibrated model achieved comparable or slightly better
+performance across all five TGA features, with per-feature median relative
+errors 2--10\% lower than the real-calibrated model (overall ratio
+0.94$\times$; Fig.~\ref{fig:downstream-utility}; per-feature breakdown in
+Table~\ref{stab:downstream-utility}). This improvement likely
 reflects the smoother
 loss landscape afforded by $N{=}100$ synthetic training patients compared with
 $K{=}23$ real ones, reducing overfitting during optimization. The two calibrations
