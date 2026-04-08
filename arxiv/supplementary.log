@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  7 APR 2026 17:29
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  8 APR 2026 09:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**supplementary
+**supplementary.tex
 (./supplementary.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -359,24 +359,24 @@ File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 (./supplementary.aux)
 \openout1 = `supplementary.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -434,7 +434,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring OFF on input line 25.
+Package hyperref Info: Link coloring OFF on input line 28.
 
 (./supplementary.out) (./supplementary.out)
 \@outlinefile=\write3
@@ -442,13 +442,14 @@ Package hyperref Info: Link coloring OFF on input line 25.
 
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 27.
+ (./sections/supplementary.tex
+LaTeX Font Info:    Trying to load font information for U+msa on input line 28.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 27.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 28.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -467,20 +468,20 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: ../code/figs/validate_cross_visit_corr_supp.pdf Graphic file (type pdf)
 <use ../code/figs/validate_cross_visit_corr_supp.pdf>
 Package pdftex.def Info: ../code/figs/validate_cross_visit_corr_supp.pdf  used 
-on input line 232.
+on input line 216.
 (pdftex.def)             Requested size: 469.75502pt x 301.98808pt.
 <../code/figs/validate_eigenvalue_spectrum.pdf, id=40, 652.4375pt x 451.6875pt>
 
 File: ../code/figs/validate_eigenvalue_spectrum.pdf Graphic file (type pdf)
 <use ../code/figs/validate_eigenvalue_spectrum.pdf>
 Package pdftex.def Info: ../code/figs/validate_eigenvalue_spectrum.pdf  used on
- input line 244.
+ input line 228.
 (pdftex.def)             Requested size: 352.31625pt x 243.92139pt.
 <../code/figs/validate_conditioned_pca.pdf, id=41, 702.625pt x 602.25pt>
 File: ../code/figs/validate_conditioned_pca.pdf Graphic file (type pdf)
 <use ../code/figs/validate_conditioned_pca.pdf>
 Package pdftex.def Info: ../code/figs/validate_conditioned_pca.pdf  used on inp
-ut line 258.
+ut line 242.
 (pdftex.def)             Requested size: 305.33789pt x 261.72852pt.
 <../code/figs/validate_conditioned_pca_by_visit.pdf, id=42, 1204.5pt x 401.5pt>
 
@@ -488,7 +489,7 @@ File: ../code/figs/validate_conditioned_pca_by_visit.pdf Graphic file (type pdf
 )
 <use ../code/figs/validate_conditioned_pca_by_visit.pdf>
 Package pdftex.def Info: ../code/figs/validate_conditioned_pca_by_visit.pdf  us
-ed on input line 271.
+ed on input line 255.
 (pdftex.def)             Requested size: 469.75502pt x 156.58437pt.
 <../code/figs/validate_mechanistic_combined_tf_tm.pdf, id=45, 2208.25pt x 903.3
 75pt>
@@ -496,7 +497,7 @@ File: ../code/figs/validate_mechanistic_combined_tf_tm.pdf Graphic file (type p
 df)
 <use ../code/figs/validate_mechanistic_combined_tf_tm.pdf>
 Package pdftex.def Info: ../code/figs/validate_mechanistic_combined_tf_tm.pdf  
-used on input line 281.
+used on input line 265.
 (pdftex.def)             Requested size: 469.75502pt x 192.16797pt.
 <../code/figs/validate_mechanistic_generalization_tf_only.pdf, id=46, 1606.0pt 
 x 401.5pt>
@@ -504,7 +505,7 @@ File: ../code/figs/validate_mechanistic_generalization_tf_only.pdf Graphic file
  (type pdf)
 <use ../code/figs/validate_mechanistic_generalization_tf_only.pdf>
 Package pdftex.def Info: ../code/figs/validate_mechanistic_generalization_tf_on
-ly.pdf  used on input line 295.
+ly.pdf  used on input line 279.
 (pdftex.def)             Requested size: 469.75502pt x 117.43674pt.
 <../code/figs/validate_mechanistic_generalization_tf_tm.pdf, id=47, 1606.0pt x 
 401.5pt>
@@ -512,7 +513,7 @@ File: ../code/figs/validate_mechanistic_generalization_tf_tm.pdf Graphic file (
 type pdf)
 <use ../code/figs/validate_mechanistic_generalization_tf_tm.pdf>
 Package pdftex.def Info: ../code/figs/validate_mechanistic_generalization_tf_tm
-.pdf  used on input line 296.
+.pdf  used on input line 280.
 (pdftex.def)             Requested size: 469.75502pt x 117.43674pt.
 <../code/figs/validate_mechanistic_rankcorr_tf_only.pdf, id=48, 602.25pt x 401.
 5pt>
@@ -520,7 +521,7 @@ File: ../code/figs/validate_mechanistic_rankcorr_tf_only.pdf Graphic file (type
  pdf)
 <use ../code/figs/validate_mechanistic_rankcorr_tf_only.pdf>
 Package pdftex.def Info: ../code/figs/validate_mechanistic_rankcorr_tf_only.pdf
-  used on input line 309.
+  used on input line 293.
 (pdftex.def)             Requested size: 225.4804pt x 150.3232pt.
 <../code/figs/validate_mechanistic_rankcorr_tf_tm.pdf, id=49, 602.25pt x 401.5p
 t>
@@ -528,9 +529,9 @@ File: ../code/figs/validate_mechanistic_rankcorr_tf_tm.pdf Graphic file (type p
 df)
 <use ../code/figs/validate_mechanistic_rankcorr_tf_tm.pdf>
 Package pdftex.def Info: ../code/figs/validate_mechanistic_rankcorr_tf_tm.pdf  
-used on input line 311.
+used on input line 295.
 (pdftex.def)             Requested size: 225.4804pt x 150.3232pt.
-
+)
 
 [4
 
@@ -556,28 +557,27 @@ Package rerunfilecheck Info: File `supplementary.out' has not changed.
  ) 
 Here is how much of TeX's memory you used:
  12260 strings out of 473190
- 195420 string characters out of 5715801
- 629010 words of memory out of 5000000
- 35351 multiletter control sequences out of 15000+600000
- 568109 words of font info for 73 fonts, out of 8000000 for 9000
+ 195528 string characters out of 5715801
+ 627928 words of memory out of 5000000
+ 35349 multiletter control sequences out of 15000+600000
+ 566870 words of font info for 68 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,15n,79p,673b,455s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,15n,79p,678b,455s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
 /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></u
 sr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr
-/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/l
-ocal/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/loca
-l/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/t
-exlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/te
-xlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texl
-ive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texliv
-e/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on supplementary.pdf (8 pages, 1142536 bytes).
+/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/lo
+cal/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local
+/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/
+texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/te
+xlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texl
+ive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on supplementary.pdf (8 pages, 1130017 bytes).
 PDF statistics:
- 159 PDF objects out of 1000 (max. 8388607)
- 101 compressed objects within 2 object streams
- 26 named destinations out of 1000 (max. 500000)
+ 154 PDF objects out of 1000 (max. 8388607)
+ 99 compressed objects within 1 object stream
+ 27 named destinations out of 1000 (max. 500000)
  46 words of extra memory for PDF output out of 10000 (max. 10000000)
 

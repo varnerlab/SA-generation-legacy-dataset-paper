@@ -1,48 +1,48 @@
-This is BibTeX, Version 0.99d (TeX Live 2024)
+This is BibTeX, Version 0.99d (TeX Live 2025)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: unsrtnat.bst
 Database file #1: references.bib
 Warning--empty journal in Xu2019CTGAN
-You've used 30 entries,
+You've used 31 entries,
             2481 wiz_defined-function locations,
-            778 strings with 11743 characters,
-and the built_in function-call counts, 12744 in all, are:
-= -- 1002
-> -- 840
+            783 strings with 12023 characters,
+and the built_in function-call counts, 13301 in all, are:
+= -- 1038
+> -- 897
 < -- 11
-+ -- 315
-- -- 254
-* -- 1109
-:= -- 2134
-add.period$ -- 114
-call.type$ -- 30
-change.case$ -- 60
-chr.to.int$ -- 29
-cite$ -- 31
-duplicate$ -- 569
-empty$ -- 1069
-format.name$ -- 290
-if$ -- 2625
++ -- 335
+- -- 272
+* -- 1166
+:= -- 2238
+add.period$ -- 119
+call.type$ -- 31
+change.case$ -- 62
+chr.to.int$ -- 30
+cite$ -- 32
+duplicate$ -- 588
+empty$ -- 1104
+format.name$ -- 309
+if$ -- 2734
 int.to.chr$ -- 2
-int.to.str$ -- 31
-missing$ -- 27
-newline$ -- 182
-num.names$ -- 90
-pop$ -- 230
+int.to.str$ -- 32
+missing$ -- 28
+newline$ -- 189
+num.names$ -- 93
+pop$ -- 235
 preamble$ -- 1
-purify$ -- 30
+purify$ -- 31
 quote$ -- 0
-skip$ -- 328
+skip$ -- 337
 stack$ -- 0
-substring$ -- 523
-swap$ -- 76
+substring$ -- 540
+swap$ -- 78
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 210
+type$ -- 217
 warning$ -- 1
-while$ -- 93
+while$ -- 96
 width$ -- 0
-write$ -- 436
+write$ -- 453
 (There was 1 warning)

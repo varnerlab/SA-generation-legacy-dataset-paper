@@ -1,4 +1,4 @@
-\begin{thebibliography}{30}
+\begin{thebibliography}{31}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -186,8 +186,10 @@ Jeffrey~D Varner.
 Maria Bravo, Thomas Orfeo, Ira Bernstein, Sandra Vadhin, Divya Lakshmi, and
   Jeffrey~D Varner.
 \newblock {BSTModelKit.jl}: Building biochemical systems theory models of
-  individualized coagulation dynamics during pregnancy, 2023.
-\newblock JuliaCon 2023.
+  individualized coagulation dynamics during pregnancy.
+\newblock JuliaCon 2023, \url{https://www.youtube.com/watch?v=IGtUqMLHBvQ},
+  2023.
+\newblock Conference proceedings talk.
 
 \bibitem[Varner(2026{\natexlab{b}})]{Varner2026SAProtein}
 Jeffrey~D Varner.
@@ -202,6 +204,16 @@ Abdulrahman Alswaidan and Jeffrey~D Varner.
   energy.
 \newblock \emph{arXiv preprint arXiv:2603.06875}, 2026.
 \newblock \doi{10.48550/arXiv.2603.06875}.
+
+\bibitem[K{\"u}hnel et~al.(2024)K{\"u}hnel, Schneider, Perrar, Adams, Moazemi,
+  Prasser, N{\"o}thlings, Fr{\"o}hlich, and Fluck]{Kuhnel2024}
+Lisa K{\"u}hnel, Julian Schneider, Ines Perrar, Tim Adams, Sobhan Moazemi,
+  Fabian Prasser, Ute N{\"o}thlings, Holger Fr{\"o}hlich, and Juliane Fluck.
+\newblock Synthetic data generation for a longitudinal cohort study --
+  evaluation, method extension and reproduction of published data analysis
+  results.
+\newblock \emph{Scientific Reports}, 14:\penalty0 14412, 2024.
+\newblock \doi{10.1038/s41598-024-62102-2}.
 
 \bibitem[McLean et~al.(2012)McLean, Bernstein, and
   Brummel-Ziedins]{McLean2012TGA}

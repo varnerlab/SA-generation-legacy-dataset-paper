@@ -159,7 +159,8 @@ the scale of variation matched the target subpopulation rather than the full coh
 
 The complete generation pipeline is summarized in Algorithm~\ref{alg:sa-pipeline}.
 All experiments used step size $\alpha = 0.01$, $T = 2{,}000$ Langevin iterations
-per sample, and random seed 42 for reproducibility. A control experiment
+per sample, and random seed 42 for reproducibility
+(Table~\ref{stab:hyperparams}). A control experiment
 comparing ULA with the Metropolis-Adjusted Langevin Algorithm (MALA)
 confirmed that the discretization bias is negligible at this step size:
 across 10 chains of 5{,}000 iterations, the MALA acceptance rate was
