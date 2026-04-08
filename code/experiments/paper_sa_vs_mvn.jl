@@ -1,4 +1,10 @@
 # ──────────────────────────────────────────────────────────────────────────────
+# LEGACY / EXPLORATORY — DO NOT USE FOR PAPER ARTIFACTS.
+# This script regenerates synthetic data with non-canonical hyperparameters
+# (different α, seed, or N from run_full_longitudinal.jl). Its CSV outputs are
+# only consumed by itself and are not used by the paper or supplement.
+# Canonical generation: code/experiments/run_full_longitudinal.jl
+# ──────────────────────────────────────────────────────────────────────────────
 # paper_sa_vs_mvn.jl
 #
 # Head-to-head comparison of Stochastic Attention (SA) synthetic patient

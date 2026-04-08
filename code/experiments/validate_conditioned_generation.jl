@@ -97,7 +97,7 @@ for cohort in cohorts
     for i in 1:n_synth_per_cohort
         ξ₀ = randn(d_pca)
         ξ₀ ./= norm(ξ₀)
-        result = weighted_sample(X̂, ξ₀, T_langevin, r; β=β_star, α=0.1, seed=1000*i)
+        result = weighted_sample(X̂, ξ₀, T_langevin, r; β=β_star, α=0.01, seed=1000*i)
         pca_samples[i, :] = result.Ξ[end, :]
     end
     cohort_pca[name] = pca_samples

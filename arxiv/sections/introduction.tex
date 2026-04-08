@@ -83,25 +83,27 @@ patients whose trajectories across gestation were statistically incoherent. A
 generator that respects the joint structure across visits is what a small
 longitudinal pregnancy cohort actually demands.
 
-In this study, we used multiplicity-weighted SA to generate complete longitudinal
-patient profiles from a small pregnancy coagulation cohort ($K{=}23$ patients,
-72 features per visit, 3 visits). We validated the synthetic patients at four levels:
-marginal plausibility, cross-visit covariance preservation, conditional amplification
-of rare subgroups (PCOS, $n{=}3$; Developed~PE, $n{=}5$), and mechanistic consistency
-with an independent ordinary differential equation (ODE) model of the coagulation
-cascade~\citep{BrummelZiedins2012}. Our pipeline concatenates each patient's multi-visit profile into a single vector,
-applies PCA for dimensionality reduction, and generates new patients via
-multiplicity-weighted Langevin dynamics on the Hopfield energy landscape. A
-direction-magnitude decomposition preserves the natural variance structure of
-continuous clinical measurements. SA-generated patients reproduced per-feature means with median error of
-1.4\%, preserved cross-visit correlations that MVN's rank-deficient covariance could
-not represent, and maintained condition-specific signatures when amplifying rare
-subgroups. An independent 58-species ODE model of the coagulation cascade could not
-distinguish real from synthetic patients, and a mechanistic model calibrated entirely
-on synthetic patients predicted held-out real patient outcomes as well as one
-calibrated on real data. If this generalizes, the implication is that the
-bottleneck for studying rare obstetric and pediatric conditions may be shifting
-from cohort size toward cohort fidelity: a few dozen carefully phenotyped
+In this study, we used multiplicity-weighted SA to generate complete
+longitudinal patient profiles from a small pregnancy coagulation cohort
+($K{=}23$ patients, 72 features per visit, 3 visits) that includes rare
+clinical subgroups (PCOS, $n{=}3$; Developed~PE, $n{=}5$). Our pipeline
+concatenates each patient's multi-visit profile into a single vector, applies
+PCA for dimensionality reduction, and generates new patients via
+multiplicity-weighted Langevin dynamics on the Hopfield energy landscape, with
+a direction-magnitude decomposition that preserves the natural variance
+structure of continuous clinical measurements. We then asked whether the
+synthetic patients reproduced marginal feature distributions, the cross-visit
+covariance structure, condition-specific signatures of rare clinical
+subgroups, and the biological plausibility expected by an independent ordinary
+differential equation (ODE) model of the coagulation
+cascade~\citep{BrummelZiedins2012}. As a downstream-utility test, we further
+asked whether a mechanistic model calibrated entirely on synthetic patients
+could predict held-out real patient outcomes. The results, presented in the
+next section, show that geometry-preserving generation can recover both the
+statistical structure and the mechanistic plausibility of the real cohort at
+this sample size. If this generalizes, the implication is that the bottleneck
+for studying rare obstetric and pediatric conditions may be shifting from
+cohort size toward cohort fidelity: a few dozen carefully phenotyped
 longitudinal patients, augmented through SA, may be enough to support
 mechanistic and statistical analyses that have traditionally relied on much
 larger cohorts.

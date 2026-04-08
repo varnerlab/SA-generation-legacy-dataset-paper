@@ -1,4 +1,10 @@
 # ──────────────────────────────────────────────────────────────────────────────
+# LEGACY / EXPLORATORY — DO NOT USE FOR PAPER ARTIFACTS.
+# This script regenerates synthetic data with non-canonical hyperparameters
+# (different α, seed, or N from run_full_longitudinal.jl). Its CSV outputs are
+# only consumed by itself and are not used by the paper or supplement.
+# Canonical generation: code/experiments/run_full_longitudinal.jl
+# ──────────────────────────────────────────────────────────────────────────────
 # run_patient_generation.jl
 #
 # Main experiment: generate synthetic patient records from the R61 Legacy

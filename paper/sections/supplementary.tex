@@ -117,14 +117,17 @@ means. The full feature-by-feature table (72 features $\times$ 3 visits = 216
 entries) is provided in the code repository as
 \texttt{paper\_summary\_statistics.csv}.}
 \label{stab:mre-summary}
-\begin{tabular}{lccccc}
+\begin{tabular}{lcccccc}
 \toprule
-Visit & Median MRE & Mean MRE & 25th pctl & 75th pctl & Max MRE \\
+Visit & Median MRE & Mean MRE & 25th pctl & 75th pctl & Max MRE & Below 5\% \\
 \midrule
-V1 (baseline) & 0.019 & 0.027 & 0.010 & 0.033 & 0.157 \\
-V2 (1st tri)  & 0.019 & 0.027 & 0.009 & 0.034 & 0.124 \\
-V3 (3rd tri)  & 0.016 & 0.025 & 0.006 & 0.040 & 0.110 \\
+V1 (baseline)   & 0.022 & 0.029 & 0.008 & 0.039 & 0.158 & 59/72 (81.9\%) \\
+V2 (1st tri)    & 0.009 & 0.021 & 0.004 & 0.022 & 0.224 & 65/72 (90.3\%) \\
+V3 (3rd tri)    & 0.011 & 0.016 & 0.005 & 0.024 & 0.062 & 69/72 (95.8\%) \\
+\midrule
+\textbf{Pooled (all 3 visits)} & \textbf{0.012} & \textbf{0.022} & \textbf{0.005} & \textbf{0.028} & \textbf{0.224} & \textbf{193/216 (89.4\%)} \\
 \bottomrule
+\multicolumn{7}{p{0.95\textwidth}}{\small Pooled median MRE 95\% bootstrap CI: (0.98\%, 1.60\%) over 10{,}000 resamples (seed~42).}
 \end{tabular}
 \end{table}
 
@@ -161,19 +164,19 @@ TVAE            & 3,000 & 0.018 & 0.224 & 0.092 \\
 \begin{table}[ht]
 \centering
 \caption{\textbf{PCA variance threshold sensitivity analysis.} SA generation
-quality is stable across thresholds from 85\% to 99\%: median MRE remains
-between 1.2\% and 1.8\%. The 95\% threshold used in the main text (bold) is
-not a critical design choice.}
+quality is stable across thresholds from 85\% to 99\%. Median MRE remains
+between 1.0\% and 1.7\% across all thresholds. The 95\% threshold used in the
+main text (bold) is not a critical design choice.}
 \label{stab:pca-sensitivity}
 \begin{tabular}{rrccccc}
 \toprule
 Threshold & $d_{\text{PCA}}$ & $K/d$ & $\beta^*$ & Novelty & Med MRE & Corr MAE \\
 \midrule
-85\% & 13 & 1.77 & 2.94 & 0.413 & 0.012 & 0.116 \\
-90\% & 15 & 1.53 & 2.94 & 0.462 & 0.018 & 0.131 \\
-\textbf{95\%} & \textbf{18} & \textbf{1.28} & \textbf{2.94} & \textbf{0.516} & \textbf{0.012} & \textbf{0.148} \\
-98\% & 20 & 1.15 & 2.94 & 0.538 & 0.013 & 0.127 \\
-99\% & 21 & 1.10 & 2.94 & 0.540 & 0.013 & 0.133 \\
+85\% & 13 & 1.77 & 2.94 & 0.420 & 0.0098 & 0.124 \\
+90\% & 15 & 1.53 & 2.94 & 0.477 & 0.0160 & 0.126 \\
+\textbf{95\%} & \textbf{18} & \textbf{1.28} & \textbf{2.94} & \textbf{0.500} & \textbf{0.0124} & \textbf{0.143} \\
+97.5\% & 20 & 1.15 & 2.94 & 0.543 & 0.0120 & 0.135 \\
+99\% & 21 & 1.10 & 2.94 & 0.541 & 0.0172 & 0.138 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -202,6 +205,131 @@ Effective sample size        & $41.8 \pm 14.2$   & $40.0 \pm 10.2$ \\
 \multicolumn{3}{p{0.85\textwidth}}{\small Burn-in: 1{,}000 iterations discarded. $\tau_{\text{int}}$: integrated
 autocorrelation time estimated with a windowed estimator (threshold 0.05).
 ESS = $(T - T_{\text{burn}}) / \tau_{\text{int}}$.}
+\end{tabular}
+\end{table}
+
+% ── Table S9: Memorization diagnostics ─────────────────────────────────
+\begin{table}[ht]
+\centering
+\caption{\textbf{Memorization diagnostics.} Two complementary checks that
+SA-generated patients are not memorized copies of the $K{=}23$ stored profiles.
+Novelty score is the angular distance between a synthetic sample and its
+nearest stored pattern at $\beta = \beta^*$. Nearest-neighbor distances are
+computed in the per-visit standardized 72-dimensional feature space.}
+\label{stab:memorization}
+\begin{tabular}{lc}
+\toprule
+Metric & Value \\
+\midrule
+Mean novelty score, $1 - \max_k \cos(\hat{\xi}, \hat{m}_k)$ & 0.50 \\
+Median synth--real nearest-neighbor distance (std.\ units) & 6.14 \\
+Median real--real nearest-neighbor distance (std.\ units)  & 6.87 \\
+Distance ratio (synth--real / real--real)                  & 0.89 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ── Table S10: Bootstrap MW per feature × condition ───────────────────
+\begin{table}[ht]
+\centering
+\caption{\textbf{Bootstrap Mann--Whitney equivalence per feature and
+condition.} For each of 24 feature--condition pairs, we subsampled the
+synthetic cohort to match the real sample size, applied a Mann--Whitney U test,
+and repeated 1{,}000 times. Frac.\ $p > 0.05$ is the fraction of replicates in
+which the test could not distinguish the synthetic from the real distribution.
+20 of 24 pairs achieve $p > 0.05$ in $\geq 90\%$ of replicates; the four
+failing pairs (italicized) all involve high-variance features in the smallest
+subgroups.}
+\label{stab:bootstrap-mw}
+\begin{tabular}{llcc}
+\toprule
+Condition & Feature & MRE & Frac.\ $p > 0.05$ \\
+\midrule
+Uncomplicated ($n{=}18$) & FVIII   & 0.057 & 0.952 \\
+Uncomplicated ($n{=}18$) & vWF     & 0.022 & 0.999 \\
+Uncomplicated ($n{=}18$) & FIX     & 0.018 & 0.998 \\
+Uncomplicated ($n{=}18$) & FV      & 0.006 & 0.996 \\
+Uncomplicated ($n{=}18$) & $\alpha_2$-AP & 0.019 & 1.000 \\
+Uncomplicated ($n{=}18$) & FVII    & 0.057 & 0.941 \\
+Uncomplicated ($n{=}18$) & Fbgn    & 0.017 & 0.987 \\
+Uncomplicated ($n{=}18$) & Plgn    & 0.020 & 0.988 \\
+\midrule
+PCOS ($n{=}3$)  & FVIII   & 0.109 & 0.985 \\
+PCOS ($n{=}3$)  & vWF     & 0.150 & 0.959 \\
+PCOS ($n{=}3$)  & \textit{FIX}     & \textit{0.121} & \textit{0.873} \\
+PCOS ($n{=}3$)  & FV      & 0.057 & 0.944 \\
+PCOS ($n{=}3$)  & $\alpha_2$-AP & 0.051 & 0.987 \\
+PCOS ($n{=}3$)  & FVII    & 0.029 & 0.999 \\
+PCOS ($n{=}3$)  & Fbgn    & 0.043 & 0.992 \\
+PCOS ($n{=}3$)  & \textit{Plgn}    & \textit{0.153} & \textit{0.615} \\
+\midrule
+Developed PE ($n{=}5$) & FVIII   & 0.097 & 0.932 \\
+Developed PE ($n{=}5$) & vWF     & 0.010 & 0.986 \\
+Developed PE ($n{=}5$) & \textit{FIX}     & \textit{0.108} & \textit{0.780} \\
+Developed PE ($n{=}5$) & FV      & 0.006 & 0.987 \\
+Developed PE ($n{=}5$) & $\alpha_2$-AP & 0.062 & 0.950 \\
+Developed PE ($n{=}5$) & FVII    & 0.045 & 0.993 \\
+Developed PE ($n{=}5$) & Fbgn    & 0.048 & 0.996 \\
+Developed PE ($n{=}5$) & \textit{Plgn}    & \textit{0.093} & \textit{0.814} \\
+\bottomrule
+\multicolumn{4}{p{0.95\textwidth}}{\small Median Frac.\ $p > 0.05$ across all 24 pairs: 0.986. Failing
+pairs ($< 0.90$, italicized): PCOS--FIX, PCOS--Plgn, DPE--FIX, DPE--Plgn.}
+\end{tabular}
+\end{table}
+
+% ── Table S11: Mechanistic validation diagnostics ─────────────────────
+\begin{table}[ht]
+\centering
+\caption{\textbf{Mechanistic validation diagnostics per feature and
+condition.} Cloud overlap is the fraction of synthetic ODE-predicted/measured
+ratios falling within the 5th--95th percentile of the corresponding real
+distribution. KS $D$ and KS $p$ are from a two-sample Kolmogorov--Smirnov test
+on the same ratio distributions. Real $n{=}69$ (23 patients $\times$ 3 visits);
+synthetic $n{=}300$ (100 patients $\times$ 3 visits).}
+\label{stab:mechanistic-validation}
+\begin{tabular}{llccc}
+\toprule
+Condition & TGA Feature & Cloud overlap & KS $D$ & KS $p$ \\
+\midrule
+TF-only & Lagtime          & 0.92 & 0.112 & 0.46 \\
+TF-only & Peak             & 0.91 & 0.081 & 0.84 \\
+TF-only & T.Peak           & 0.93 & 0.102 & 0.58 \\
+TF-only & Max Rate         & 0.92 & 0.083 & 0.82 \\
+TF-only & ETP              & 0.86 & 0.123 & 0.34 \\
+\midrule
+TF+TM   & Lagtime          & 0.93 & 0.127 & 0.30 \\
+TF+TM   & Peak             & 0.91 & 0.079 & 0.87 \\
+TF+TM   & T.Peak           & 0.93 & 0.110 & 0.49 \\
+TF+TM   & Max Rate         & 0.89 & 0.096 & 0.65 \\
+TF+TM   & ETP              & 0.93 & 0.112 & 0.46 \\
+\bottomrule
+\multicolumn{5}{p{0.95\textwidth}}{\small TF-only cloud overlap range: 0.86--0.93. TF+TM cloud overlap range: 0.89--0.93.
+KS $D$ range across both conditions: 0.079--0.127, all $p > 0.30$.}
+\end{tabular}
+\end{table}
+
+% ── Table S12: Downstream utility per feature ─────────────────────────
+\begin{table}[ht]
+\centering
+\caption{\textbf{Downstream utility — per-feature held-out V2/V3 performance.}
+Median relative error of the BZ2012 ODE-predicted TGA values against the held-out
+real V2 and V3 measurements, for the model calibrated on real V1 patients
+($K{=}23$) and the model calibrated on synthetic V1 patients ($N{=}100$). The
+synth-calibrated model achieves slightly lower error on every feature. Synth/Real
+ratio $< 1$ favors the synth-calibrated model.}
+\label{stab:downstream-utility}
+\begin{tabular}{lccc}
+\toprule
+TGA Feature & Real-cal MRE & Synth-cal MRE & Synth/Real \\
+\midrule
+Lagtime           & 0.165 & 0.162 & 0.98$\times$ \\
+Peak              & 0.097 & 0.087 & 0.90$\times$ \\
+T.Peak            & 0.330 & 0.306 & 0.93$\times$ \\
+Max Rate          & 0.286 & 0.259 & 0.91$\times$ \\
+ETP               & 0.197 & 0.183 & 0.93$\times$ \\
+\midrule
+\textbf{Overall median} & \textbf{0.201} & \textbf{0.189} & \textbf{0.94$\times$} \\
+\bottomrule
 \end{tabular}
 \end{table}
 
