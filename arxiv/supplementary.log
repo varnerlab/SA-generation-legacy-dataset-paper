@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  8 APR 2026 15:31
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  8 APR 2026 15:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -472,91 +472,93 @@ Overfull \hbox (70.86206pt too wide) in paragraph at lines 120--132
 [4]
 
 [5]
-<../code/figs/validate_cross_visit_corr_supp.pdf, id=52, 1405.25pt x 903.375pt>
-
-File: ../code/figs/validate_cross_visit_corr_supp.pdf Graphic file (type pdf)
-<use ../code/figs/validate_cross_visit_corr_supp.pdf>
-Package pdftex.def Info: ../code/figs/validate_cross_visit_corr_supp.pdf  used 
-on input line 344.
-(pdftex.def)             Requested size: 469.75502pt x 301.98808pt.
-<../code/figs/validate_eigenvalue_spectrum.pdf, id=53, 652.4375pt x 451.6875pt>
-
-File: ../code/figs/validate_eigenvalue_spectrum.pdf Graphic file (type pdf)
-<use ../code/figs/validate_eigenvalue_spectrum.pdf>
-Package pdftex.def Info: ../code/figs/validate_eigenvalue_spectrum.pdf  used on
- input line 356.
-(pdftex.def)             Requested size: 352.31625pt x 243.92139pt.
-<../code/figs/validate_conditioned_pca.pdf, id=54, 702.625pt x 602.25pt>
-File: ../code/figs/validate_conditioned_pca.pdf Graphic file (type pdf)
-<use ../code/figs/validate_conditioned_pca.pdf>
-Package pdftex.def Info: ../code/figs/validate_conditioned_pca.pdf  used on inp
-ut line 370.
-(pdftex.def)             Requested size: 305.33789pt x 261.72852pt.
-<../code/figs/validate_conditioned_pca_by_visit.pdf, id=55, 1204.5pt x 401.5pt>
-
-File: ../code/figs/validate_conditioned_pca_by_visit.pdf Graphic file (type pdf
-)
-<use ../code/figs/validate_conditioned_pca_by_visit.pdf>
-Package pdftex.def Info: ../code/figs/validate_conditioned_pca_by_visit.pdf  us
-ed on input line 383.
-(pdftex.def)             Requested size: 469.75502pt x 156.58437pt.
-<../code/figs/validate_mechanistic_combined_tf_tm.pdf, id=58, 2208.25pt x 903.3
-75pt>
-File: ../code/figs/validate_mechanistic_combined_tf_tm.pdf Graphic file (type p
-df)
-<use ../code/figs/validate_mechanistic_combined_tf_tm.pdf>
-Package pdftex.def Info: ../code/figs/validate_mechanistic_combined_tf_tm.pdf  
-used on input line 393.
-(pdftex.def)             Requested size: 469.75502pt x 192.16797pt.
-<../code/figs/validate_mechanistic_generalization_tf_only.pdf, id=59, 1606.0pt 
-x 401.5pt>
-File: ../code/figs/validate_mechanistic_generalization_tf_only.pdf Graphic file
- (type pdf)
-<use ../code/figs/validate_mechanistic_generalization_tf_only.pdf>
-Package pdftex.def Info: ../code/figs/validate_mechanistic_generalization_tf_on
-ly.pdf  used on input line 407.
-(pdftex.def)             Requested size: 469.75502pt x 117.43674pt.
-<../code/figs/validate_mechanistic_generalization_tf_tm.pdf, id=60, 1606.0pt x 
-401.5pt>
-File: ../code/figs/validate_mechanistic_generalization_tf_tm.pdf Graphic file (
-type pdf)
-<use ../code/figs/validate_mechanistic_generalization_tf_tm.pdf>
-Package pdftex.def Info: ../code/figs/validate_mechanistic_generalization_tf_tm
-.pdf  used on input line 408.
-(pdftex.def)             Requested size: 469.75502pt x 117.43674pt.
-<../code/figs/validate_mechanistic_rankcorr_tf_only.pdf, id=61, 602.25pt x 401.
+<sections/figures/validate_cross_visit_corr_supp.pdf, id=52, 1405.25pt x 903.37
 5pt>
-File: ../code/figs/validate_mechanistic_rankcorr_tf_only.pdf Graphic file (type
+File: sections/figures/validate_cross_visit_corr_supp.pdf Graphic file (type pd
+f)
+<use sections/figures/validate_cross_visit_corr_supp.pdf>
+Package pdftex.def Info: sections/figures/validate_cross_visit_corr_supp.pdf  u
+sed on input line 344.
+(pdftex.def)             Requested size: 469.75502pt x 301.98808pt.
+<sections/figures/validate_eigenvalue_spectrum.pdf, id=53, 652.4375pt x 451.687
+5pt>
+File: sections/figures/validate_eigenvalue_spectrum.pdf Graphic file (type pdf)
+
+<use sections/figures/validate_eigenvalue_spectrum.pdf>
+Package pdftex.def Info: sections/figures/validate_eigenvalue_spectrum.pdf  use
+d on input line 356.
+(pdftex.def)             Requested size: 352.31625pt x 243.92139pt.
+<sections/figures/validate_conditioned_pca.pdf, id=54, 702.625pt x 602.25pt>
+File: sections/figures/validate_conditioned_pca.pdf Graphic file (type pdf)
+<use sections/figures/validate_conditioned_pca.pdf>
+Package pdftex.def Info: sections/figures/validate_conditioned_pca.pdf  used on
+ input line 370.
+(pdftex.def)             Requested size: 305.33789pt x 261.72852pt.
+<sections/figures/validate_conditioned_pca_by_visit.pdf, id=55, 1204.5pt x 401.
+5pt>
+File: sections/figures/validate_conditioned_pca_by_visit.pdf Graphic file (type
  pdf)
-<use ../code/figs/validate_mechanistic_rankcorr_tf_only.pdf>
-Package pdftex.def Info: ../code/figs/validate_mechanistic_rankcorr_tf_only.pdf
-  used on input line 421.
+<use sections/figures/validate_conditioned_pca_by_visit.pdf>
+Package pdftex.def Info: sections/figures/validate_conditioned_pca_by_visit.pdf
+  used on input line 383.
+(pdftex.def)             Requested size: 469.75502pt x 156.58437pt.
+<sections/figures/validate_mechanistic_combined_tf_tm.pdf, id=58, 2208.25pt x 9
+03.375pt>
+File: sections/figures/validate_mechanistic_combined_tf_tm.pdf Graphic file (ty
+pe pdf)
+<use sections/figures/validate_mechanistic_combined_tf_tm.pdf>
+Package pdftex.def Info: sections/figures/validate_mechanistic_combined_tf_tm.p
+df  used on input line 393.
+(pdftex.def)             Requested size: 469.75502pt x 192.16797pt.
+<sections/figures/validate_mechanistic_generalization_tf_only.pdf, id=59, 1606.
+0pt x 401.5pt>
+File: sections/figures/validate_mechanistic_generalization_tf_only.pdf Graphic 
+file (type pdf)
+<use sections/figures/validate_mechanistic_generalization_tf_only.pdf>
+Package pdftex.def Info: sections/figures/validate_mechanistic_generalization_t
+f_only.pdf  used on input line 407.
+(pdftex.def)             Requested size: 469.75502pt x 117.43674pt.
+<sections/figures/validate_mechanistic_generalization_tf_tm.pdf, id=60, 1606.0p
+t x 401.5pt>
+File: sections/figures/validate_mechanistic_generalization_tf_tm.pdf Graphic fi
+le (type pdf)
+<use sections/figures/validate_mechanistic_generalization_tf_tm.pdf>
+Package pdftex.def Info: sections/figures/validate_mechanistic_generalization_t
+f_tm.pdf  used on input line 408.
+(pdftex.def)             Requested size: 469.75502pt x 117.43674pt.
+<sections/figures/validate_mechanistic_rankcorr_tf_only.pdf, id=61, 602.25pt x 
+401.5pt>
+File: sections/figures/validate_mechanistic_rankcorr_tf_only.pdf Graphic file (
+type pdf)
+<use sections/figures/validate_mechanistic_rankcorr_tf_only.pdf>
+Package pdftex.def Info: sections/figures/validate_mechanistic_rankcorr_tf_only
+.pdf  used on input line 421.
 (pdftex.def)             Requested size: 225.4804pt x 150.3232pt.
-<../code/figs/validate_mechanistic_rankcorr_tf_tm.pdf, id=62, 602.25pt x 401.5p
-t>
-File: ../code/figs/validate_mechanistic_rankcorr_tf_tm.pdf Graphic file (type p
-df)
-<use ../code/figs/validate_mechanistic_rankcorr_tf_tm.pdf>
-Package pdftex.def Info: ../code/figs/validate_mechanistic_rankcorr_tf_tm.pdf  
-used on input line 423.
+<sections/figures/validate_mechanistic_rankcorr_tf_tm.pdf, id=62, 602.25pt x 40
+1.5pt>
+File: sections/figures/validate_mechanistic_rankcorr_tf_tm.pdf Graphic file (ty
+pe pdf)
+<use sections/figures/validate_mechanistic_rankcorr_tf_tm.pdf>
+Package pdftex.def Info: sections/figures/validate_mechanistic_rankcorr_tf_tm.p
+df  used on input line 423.
 (pdftex.def)             Requested size: 225.4804pt x 150.3232pt.
 )
 
 [6
 
- <../code/figs/validate_cross_visit_corr_supp.pdf>]
+ <./sections/figures/validate_cross_visit_corr_supp.pdf>]
 
-[7 <../code/figs/validate_eigenvalue_spectrum.pdf>]
+[7 <./sections/figures/validate_eigenvalue_spectrum.pdf>]
 
-[8 <../code/figs/validate_conditioned_pca.pdf> <../code/figs/validate_condition
-ed_pca_by_visit.pdf>]
+[8 <./sections/figures/validate_conditioned_pca.pdf> <./sections/figures/valida
+te_conditioned_pca_by_visit.pdf>]
 
-[9 <../code/figs/validate_mechanistic_combined_tf_tm.pdf> <../code/figs/validat
-e_mechanistic_generalization_tf_only.pdf> <../code/figs/validate_mechanistic_ge
-neralization_tf_tm.pdf>]
+[9 <./sections/figures/validate_mechanistic_combined_tf_tm.pdf> <./sections/fig
+ures/validate_mechanistic_generalization_tf_only.pdf> <./sections/figures/valid
+ate_mechanistic_generalization_tf_tm.pdf>]
 
-[10 <../code/figs/validate_mechanistic_rankcorr_tf_only.pdf> <../code/figs/vali
-date_mechanistic_rankcorr_tf_tm.pdf>] (./supplementary.aux)
+[10 <./sections/figures/validate_mechanistic_rankcorr_tf_only.pdf> <./sections/
+figures/validate_mechanistic_rankcorr_tf_tm.pdf>] (./supplementary.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -566,8 +568,8 @@ Package rerunfilecheck Info: File `supplementary.out' has not changed.
  ) 
 Here is how much of TeX's memory you used:
  12272 strings out of 473190
- 195721 string characters out of 5715801
- 645775 words of memory out of 5000000
+ 195973 string characters out of 5715801
+ 645779 words of memory out of 5000000
  35354 multiletter control sequences out of 15000+600000
  567216 words of font info for 69 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -584,7 +586,7 @@ texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/te
 xlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texl
 ive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texli
 ve/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on supplementary.pdf (10 pages, 1177027 bytes).
+Output written on supplementary.pdf (10 pages, 1177084 bytes).
 PDF statistics:
  173 PDF objects out of 1000 (max. 8388607)
  113 compressed objects within 2 object streams
