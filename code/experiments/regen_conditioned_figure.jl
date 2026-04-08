@@ -38,11 +38,15 @@ function bootstrap_mw(x_real, x_synth; B=1000, α=0.05, seed=42)
 end
 
 # ── Load data ────────────────────────────────────────────────────────────────
+# Consume the canonical conditional cohorts produced by run_conditioned_generation.jl
+# (α=0.01, seed 42, N=100). The legacy `conditioned_*.csv` files written by
+# validate_conditioned_generation.jl use α=0.1 and should not be used for the
+# paper figures.
 @info "Loading data …"
 df_real = CSV.read(joinpath(_PATH_TO_DATA, "cleaned_full_data.csv"), DataFrame)
-df_synth_u  = CSV.read(joinpath(_PATH_TO_DATA, "conditioned_uncomplicated.csv"), DataFrame)
-df_synth_p  = CSV.read(joinpath(_PATH_TO_DATA, "conditioned_pcos.csv"), DataFrame)
-df_synth_pe = CSV.read(joinpath(_PATH_TO_DATA, "conditioned_developed_pe.csv"), DataFrame)
+df_synth_u  = CSV.read(joinpath(_PATH_TO_DATA, "synthetic_uncomplicated_cohort.csv"), DataFrame)
+df_synth_p  = CSV.read(joinpath(_PATH_TO_DATA, "synthetic_pcos_cohort.csv"), DataFrame)
+df_synth_pe = CSV.read(joinpath(_PATH_TO_DATA, "synthetic_developed_pe_cohort.csv"), DataFrame)
 
 df_real_u  = filter(r -> r.DevelopedPE != "Yes", df_real)
 df_real_p  = filter(r -> r.PCOS == "Yes", df_real)

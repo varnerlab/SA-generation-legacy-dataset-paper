@@ -14,17 +14,17 @@ to the same data.
 We first assessed whether SA-generated patients reproduced per-feature summary
 statistics across all three visits. The median mean relative error (MRE) across all
 72 features was 1.4\% (95\% bootstrap CI: 1.2--1.8\%), with the majority of features
-below 5\% (Table~\ref{tab:summary}), indicating that SA captured the central
-tendencies of the real population. Representative coagulation factors, including
-Factor~II (MRE $<$ 2\%), Factor~VIII (MRE $<$ 2\%), antithrombin (MRE $<$ 3\%),
-and fibrinogen (MRE $<$ 1\%), showed strong agreement across all visits. MVN also
+below 5\%, indicating that SA captured the central tendencies of the real
+population. Per-visit MREs for representative coagulation features are summarized
+in Table~\ref{tab:summary}, where Factor~II and Factor~VIII fell below 2\%,
+antithrombin below 3\%, and fibrinogen below 1\% across all three visits. MVN also
 performed well at this level (median MRE $\approx$ 2--3\%), which was expected
 since moment-matching is guaranteed by construction. We verified that synthetic
 patients were not memorized copies of real patients using two complementary metrics.
 First, the mean novelty score (defined as
 $1 - \max_k \cos(\hat{\vxi}, \hat{\mathbf{m}}_k)$) was 0.50 at $\beta = \beta^*$,
 indicating that generated samples were on average 50\% away from their nearest
-stored pattern in angular distance (Table~\ref{stab:beta-sweep}). Second, we computed
+stored pattern in angular distance (see novelty column of Table~\ref{stab:beta-sweep}). Second, we computed
 nearest-neighbor distances in standardized feature space. The median distance from
 each synthetic patient to their closest real patient was 6.14 (standardized units),
 compared with 6.70 for the median real-to-real nearest-neighbor distance, a ratio
@@ -92,9 +92,10 @@ beyond component~18), while MVN regularizes via Ledoit--Wolf shrinkage (providin
 full-rank estimate by inflating eigenvalues in the 194 null dimensions). The
 consequence of MVN's approach is that it introduces variance in dimensions where the
 data contain no signal, which manifested as increased dispersion in PCA projections.
+PCA projections by visit confirmed this dispersion gap (Fig.~\ref{fig:pca-by-visit}).
 SA-generated patients occupied the same region of PCA space as real patients across
 all three visits, while MVN-generated patients showed substantially greater scatter,
-particularly at Visits~2 and~3 (Fig.~\ref{fig:pca-by-visit}).
+particularly at Visits~2 and~3.
 
 \subsection{Conditional Generation of Rare Subgroups}
 \label{sec:results-l3}
@@ -177,18 +178,21 @@ confirmed that the ratio distributions were statistically indistinguishable acro
 all five TGA features ($D = 0.081$--$0.123$, all $p > 0.35$). For consistency
 with the bootstrap approach used at the previous level, we also subsampled the
 synthetic ratios to $n_{\text{real}}$ and repeated the KS test 1,000 times. All five
-features achieved $p > 0.05$ in $\geq$96\% of replicates. Under TF+TM conditions,
-the model systematically overcorrected the protein~C anticoagulant pathway, producing
-peak and maximum rate predictions approximately 0.5$\times$ measured values for both
-real and synthetic patients (Fig.~\ref{sfig:mechanistic-tm-combined}), yet this shared systematic bias
+features achieved $p > 0.05$ in $\geq$96\% of replicates.
+Figure~\ref{sfig:mechanistic-tm-combined} shows the same scatter and ratio
+analysis as the main-text comparison but under TF+TM conditions. There the
+model systematically overcorrected the protein~C anticoagulant pathway,
+producing peak and maximum rate predictions approximately 0.5$\times$ measured
+values for both real and synthetic patients, yet this shared systematic bias
 was itself informative. Cloud overlap remained high at 88--92\%, confirming that the
 model processed real and synthetic patients identically even under conditions where
 the calibration was imperfect.
 
-The calibration also generalized across pregnancy timepoints. Although fitted only
-on Visit~1 real patients, the predicted-to-measured ratios at Visits~2 and~3 under
-TF-only conditions were 0.96$\times$ and 1.07$\times$, respectively
-(Fig.~\ref{sfig:generalization}), confirming that the calibrated rate constants captured a stable
+The calibration also generalized across pregnancy timepoints.
+Figure~\ref{sfig:generalization} shows the predicted-to-measured ratios by visit.
+Although fitted only on Visit~1 real patients, the median ratios at Visits~2
+and~3 under TF-only conditions were 0.96$\times$ and 1.07$\times$, respectively,
+confirming that the calibrated rate constants captured a stable
 population-level property of the coagulation system rather than overfitting to the
 training visit. Spearman rank correlations between predicted and measured values were
 moderate for ETP ($\rho \approx 0.6$--$0.8$ for real, $\rho \approx 0.6$--$0.65$
@@ -210,11 +214,13 @@ evaluated whether it could predict real patient outcomes. We calibrated the BZ20
 the same bounded Nelder--Mead optimization applied to the real V1 calibration
 ($K{=}23$), with 11 random restarts to mitigate local-minimum sensitivity
 (Table~\ref{stab:ode-calibration} for parameter details). We then evaluated both calibrations
-on held-out real V2 and V3 patients that neither model had seen during training. The
-synth-calibrated model achieved comparable or slightly better performance across all
-five TGA features on the held-out real patients, with per-feature median relative
-errors 2--10\% lower than the real-calibrated model (overall ratio 0.94$\times$;
-Fig.~\ref{fig:downstream-utility}). This improvement likely reflects the smoother
+on held-out real V2 and V3 patients that neither model had seen during training.
+Figure~\ref{fig:downstream-utility} compares synth-calibrated and real-calibrated
+mechanistic model predictions on these held-out patients. The synth-calibrated
+model achieved comparable or slightly better performance across all five TGA
+features, with per-feature median relative errors 2--10\% lower than the
+real-calibrated model (overall ratio 0.94$\times$). This improvement likely
+reflects the smoother
 loss landscape afforded by $N{=}100$ synthetic training patients compared with
 $K{=}23$ real ones, reducing overfitting during optimization. The two calibrations
 found different parameter values but produced highly correlated predictions across all

@@ -48,7 +48,7 @@ df_concat = DataFrame(concat_data, concat_cols)
 thresholds = [0.85, 0.90, 0.95, 0.975, 0.99]
 n_synth = 100
 T_steps = 2000
-α_step = 0.05
+α_step = 0.01  # canonical (matches run_full_longitudinal.jl)
 
 results_all = DataFrame(
     Threshold = Float64[],
@@ -133,7 +133,7 @@ end
 # ── Print summary ────────────────────────────────────────────────────────────
 @info "\n═══ PCA Sensitivity Summary ═══"
 for row in eachrow(results_all)
-    @info "  $(Int(row.Threshold*100))%: d=$(row.d_PCA), MRE=$(row.Median_MRE), Corr=$(row.Corr_MAE), Nov=$(row.Novelty)"
+    @info "  $(round(row.Threshold*100, digits=1))%: d=$(row.d_PCA), MRE=$(row.Median_MRE), Corr=$(row.Corr_MAE), Nov=$(row.Novelty)"
 end
 
 CSV.write(joinpath(_PATH_TO_DATA, "pca_sensitivity_results.csv"), results_all)

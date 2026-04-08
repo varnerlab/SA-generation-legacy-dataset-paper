@@ -28,7 +28,7 @@ initiated by adding the plasma mixture to ROTEM cups containing tissue factor at
 The dataset contained 153 total records across approximately 50 subjects. After
 removing columns with $>30\%$ missing values and retaining only subjects with
 complete data across all three visits, we obtained $K=23$ complete longitudinal
-profiles across $n=72$ assay measurements per visit (Table~\ref{tab:demographics}).
+profiles across $n=72$ assay measurements per visit.
 The 72 assay measurements spanned five categories: (i)~hormones (estradiol,
 progesterone), (ii)~coagulation factors and inhibitors (Factors~II, V, VII, VIII,
 IX, X, XI, XII; antithrombin (AT), protein~C (PC), tissue factor pathway inhibitor (TFPI),
@@ -42,9 +42,13 @@ TF+thrombomodulin (TM), No~TF, No~TF+anti-FXIa), and (v)~ROTEM/viscoelastic para
 alpha angle, lysis onset time (LOT), maximum lysis (ML), lysis time (LT),
 area under the curve (AUC) under TF~Only and TF+tPA conditions).
 
-The dataset included three enrollment conditions: Healthy nulliparous women
-($n{=}14$), women with a personal history of preeclampsia from a previous pregnancy
-(Prior~PE, $n{=}6$), and women with polycystic ovarian syndrome (PCOS, $n{=}3$;
+Demographics and clinical characteristics of the resulting cohort, including
+age at enrollment, prepregnancy BMI, parity, gestational ages at each visit,
+and the cross-tabulation of enrollment cohort against pregnancy outcome, are
+summarized in Table~\ref{tab:demographics}. The 23 patients were drawn from
+three enrollment conditions: Healthy nulliparous women ($n{=}14$), women with
+a personal history of preeclampsia from a previous pregnancy (Prior~PE,
+$n{=}6$), and women with polycystic ovarian syndrome (PCOS, $n{=}3$;
 2~individuals were nulliparous). For conditional generation, we defined three
 overlapping subgroups based on pregnancy outcome and comorbidity rather than
 enrollment condition: Uncomplicated ($n{=}18$, all patients whose study pregnancy
@@ -150,23 +154,25 @@ $f_{\text{target}} = 0.80$ of softmax attention on the designated subset, chosen
 to strongly bias generation toward the target subgroup while retaining 20\%
 background influence for interpolation diversity, via
 $\rho = f_{\text{target}} \cdot K_{\text{bg}} / (K_{\text{des}} \cdot (1 -
-f_{\text{target}}))$. For the PCOS subgroup ($K_{\text{des}}{=}3$), this required
-$\rho \approx 26.7$, reducing the effective pattern count to $K_{\text{eff}}
-\approx 4.6$ (Table~\ref{stab:multiplicity}). Magnitudes for the direction-magnitude
+f_{\text{target}}))$. Multiplicity parameters for all three subgroups are
+listed in Table~\ref{stab:multiplicity}. For the PCOS subgroup
+($K_{\text{des}}{=}3$), this required $\rho \approx 26.7$, reducing the
+effective pattern count to $K_{\text{eff}} \approx 4.6$. Magnitudes for the
+direction-magnitude
 decomposition were drawn from the condition-specific subset of norms, ensuring that
 the scale of variation matched the target subpopulation rather than the full cohort.
 
 
 The complete generation pipeline is summarized in Algorithm~\ref{alg:sa-pipeline}.
-All experiments used step size $\alpha = 0.01$, $T = 2{,}000$ Langevin iterations
-per sample, and random seed 42 for reproducibility
-(Table~\ref{stab:hyperparams}). A control experiment
-comparing ULA with the Metropolis-Adjusted Langevin Algorithm (MALA)
-confirmed that the discretization bias is negligible at this step size:
-across 10 chains of 5{,}000 iterations, the MALA acceptance rate was
-$99.9 \pm 0.03\%$, and mean post-burn-in energies and effective sample sizes
-were indistinguishable between the two samplers
-(Supplementary Table~\ref{tab:ula-vs-mala}). The pipeline was implemented in Julia (v1.12) using the packages listed in the code
+The full set of SA hyperparameters used for all experiments is listed in
+Table~\ref{stab:hyperparams}, with key operating values $\alpha = 0.01$,
+$T = 2{,}000$ Langevin iterations per sample, and random seed 42 for
+reproducibility. A control experiment comparing ULA with the
+Metropolis-Adjusted Langevin Algorithm (MALA) confirmed that the
+discretization bias is negligible at this step size. Across 10 chains of
+5{,}000 iterations the MALA acceptance rate was $99.9 \pm 0.03\%$, and mean
+post-burn-in energies and effective sample sizes were indistinguishable
+between the two samplers (Supplementary Table~\ref{tab:ula-vs-mala}). The pipeline was implemented in Julia (v1.12) using the packages listed in the code
 repository. Generating 100 synthetic patients required approximately 0.1~seconds on
 a standard laptop (Apple M-series), comparable to MVN sampling ($\approx$0.15~s),
 because SA operates in the 18-dimensional PCA space rather than the full
