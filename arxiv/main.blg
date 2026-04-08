@@ -3,46 +3,44 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: unsrtnat.bst
 Database file #1: references.bib
-Warning--empty journal in Xu2019CTGAN
 You've used 39 entries,
             2481 wiz_defined-function locations,
-            849 strings with 14077 characters,
-and the built_in function-call counts, 16899 in all, are:
-= -- 1327
+            850 strings with 14087 characters,
+and the built_in function-call counts, 17154 in all, are:
+= -- 1357
 > -- 1135
-< -- 13
+< -- 15
 + -- 423
 - -- 344
-* -- 1509
-:= -- 2848
+* -- 1525
+:= -- 2868
 add.period$ -- 152
 call.type$ -- 39
 change.case$ -- 78
 chr.to.int$ -- 38
-cite$ -- 40
-duplicate$ -- 745
-empty$ -- 1397
+cite$ -- 39
+duplicate$ -- 760
+empty$ -- 1423
 format.name$ -- 391
-if$ -- 3469
+if$ -- 3538
 int.to.chr$ -- 2
 int.to.str$ -- 40
 missing$ -- 38
 newline$ -- 238
 num.names$ -- 117
-pop$ -- 280
+pop$ -- 282
 preamble$ -- 1
 purify$ -- 39
 quote$ -- 0
-skip$ -- 419
+skip$ -- 435
 stack$ -- 0
-substring$ -- 710
-swap$ -- 94
-text.length$ -- 2
+substring$ -- 750
+swap$ -- 108
+text.length$ -- 4
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 270
-warning$ -- 1
-while$ -- 124
+warning$ -- 0
+while$ -- 127
 width$ -- 0
-write$ -- 576
-(There was 1 warning)
+write$ -- 578

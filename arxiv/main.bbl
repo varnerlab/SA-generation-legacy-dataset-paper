@@ -45,6 +45,12 @@ Mark~F Hockin, Kenneth~C Jones, Stephen~J Everse, and Kenneth~G Mann.
   18322--18333, 2002.
 \newblock \doi{10.1074/jbc.M201173200}.
 
+\bibitem[Bravo et~al.(2012)Bravo, Orfeo, Mann, and Everse]{Bravo2012}
+Maria~C Bravo, Thomas Orfeo, Kenneth~G Mann, and Stephen~J Everse.
+\newblock Modeling of human factor {Va} inactivation by activated protein {C}.
+\newblock \emph{BMC Systems Biology}, 6:\penalty0 45, 2012.
+\newblock \doi{10.1186/1752-0509-6-45}.
+
 \bibitem[Hellgren(2003)]{Hellgren2003}
 Margareta Hellgren.
 \newblock Hemostasis during normal pregnancy and puerperium.
@@ -123,12 +129,6 @@ Deyan Luan, Fania Szlam, Kenichi~A Tanaka, Philip~S Barie, and Jeffrey~D
   2010.
 \newblock \doi{10.1039/b920693k}.
 
-\bibitem[Bravo et~al.(2012)Bravo, Orfeo, Mann, and Everse]{Bravo2012}
-Maria~C Bravo, Thomas Orfeo, Kenneth~G Mann, and Stephen~J Everse.
-\newblock Modeling of human factor {Va} inactivation by activated protein {C}.
-\newblock \emph{BMC Systems Biology}, 6:\penalty0 45, 2012.
-\newblock \doi{10.1186/1752-0509-6-45}.
-
 \bibitem[Brummel-Ziedins et~al.(2012)Brummel-Ziedins, Orfeo, Callas, Gissel,
   Mann, and Bovill]{BrummelZiedins2012}
 Kathleen~E Brummel-Ziedins, Thomas Orfeo, Peter~W Callas, Matthew Gissel,
@@ -187,7 +187,8 @@ Diederik~P Kingma and Max Welling.
   Veeramachaneni]{Xu2019CTGAN}
 Lei Xu, Maria Skoularidou, Alfredo Cuesta-Infante, and Kalyan Veeramachaneni.
 \newblock Modeling tabular data using conditional {GAN}.
-\newblock 32, 2019.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~32, pages 7335--7345, 2019.
 
 \bibitem[De~Mitri et~al.(2025)De~Mitri, Wang, and Huber]{DeMitri2025}
 Omar De~Mitri, Ruyu Wang, and Marco~F Huber.

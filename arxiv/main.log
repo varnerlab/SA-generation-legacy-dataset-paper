@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  8 APR 2026 14:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  8 APR 2026 15:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -578,7 +578,7 @@ cmr/m/n/10.95 .
 [17] (./sections/floats.tex
 
 [18]
-<../code/figs/validate_bio_correlations.pdf, id=389, 1003.75pt x 853.1875pt>
+<../code/figs/validate_bio_correlations.pdf, id=393, 1003.75pt x 853.1875pt>
 File: ../code/figs/validate_bio_correlations.pdf Graphic file (type pdf)
 <use ../code/figs/validate_bio_correlations.pdf>
 Package pdftex.def Info: ../code/figs/validate_bio_correlations.pdf  used on in
@@ -587,7 +587,7 @@ put line 78.
 
 
 [19 <../code/figs/validate_bio_correlations.pdf>]
-<../code/figs/validate_pregnancy_progression.pdf, id=396, 1003.75pt x 602.25pt>
+<../code/figs/validate_pregnancy_progression.pdf, id=400, 1003.75pt x 602.25pt>
 
 File: ../code/figs/validate_pregnancy_progression.pdf Graphic file (type pdf)
 <use ../code/figs/validate_pregnancy_progression.pdf>
@@ -597,7 +597,7 @@ on input line 98.
 
 
 [20 <../code/figs/validate_pregnancy_progression.pdf>]
-<../code/figs/validate_cross_visit_corr.pdf, id=402, 1405.25pt x 903.375pt>
+<../code/figs/validate_cross_visit_corr.pdf, id=406, 1405.25pt x 903.375pt>
 File: ../code/figs/validate_cross_visit_corr.pdf Graphic file (type pdf)
 <use ../code/figs/validate_cross_visit_corr.pdf>
 Package pdftex.def Info: ../code/figs/validate_cross_visit_corr.pdf  used on in
@@ -606,7 +606,7 @@ put line 112.
 
 
 [21 <../code/figs/validate_cross_visit_corr.pdf>]
-<../code/figs/sa_vs_mvn_pca_by_visit.pdf, id=423, 1505.625pt x 903.375pt>
+<../code/figs/sa_vs_mvn_pca_by_visit.pdf, id=427, 1505.625pt x 903.375pt>
 File: ../code/figs/sa_vs_mvn_pca_by_visit.pdf Graphic file (type pdf)
 <use ../code/figs/sa_vs_mvn_pca_by_visit.pdf>
 Package pdftex.def Info: ../code/figs/sa_vs_mvn_pca_by_visit.pdf  used on input
@@ -615,7 +615,7 @@ Package pdftex.def Info: ../code/figs/sa_vs_mvn_pca_by_visit.pdf  used on input
 
 
 [22 <../code/figs/sa_vs_mvn_pca_by_visit.pdf>]
-<../code/figs/validate_conditioned_features.pdf, id=431, 1806.75pt x 602.25pt>
+<../code/figs/validate_conditioned_features.pdf, id=435, 1806.75pt x 602.25pt>
 File: ../code/figs/validate_conditioned_features.pdf Graphic file (type pdf)
 <use ../code/figs/validate_conditioned_features.pdf>
 Package pdftex.def Info: ../code/figs/validate_conditioned_features.pdf  used o
@@ -624,7 +624,7 @@ n input line 158.
 
 
 [23 <../code/figs/validate_conditioned_features.pdf>]
-<../code/figs/validate_mechanistic_combined_tf_only.pdf, id=437, 2208.25pt x 90
+<../code/figs/validate_mechanistic_combined_tf_only.pdf, id=441, 2208.25pt x 90
 3.375pt>
 File: ../code/figs/validate_mechanistic_combined_tf_only.pdf Graphic file (type
  pdf)
@@ -635,7 +635,7 @@ Package pdftex.def Info: ../code/figs/validate_mechanistic_combined_tf_only.pdf
 
 
 [24 <../code/figs/validate_mechanistic_combined_tf_only.pdf>]
-<../code/figs/downstream_utility_scatter.pdf, id=443, 2208.25pt x 501.875pt>
+<../code/figs/downstream_utility_scatter.pdf, id=447, 2208.25pt x 501.875pt>
 File: ../code/figs/downstream_utility_scatter.pdf Graphic file (type pdf)
 <use ../code/figs/downstream_utility_scatter.pdf>
 Package pdftex.def Info: ../code/figs/downstream_utility_scatter.pdf  used on i
@@ -670,27 +670,27 @@ Overfull \hbox (70.86206pt too wide) in paragraph at lines 120--132
 [29]
 
 [30]
-<../code/figs/validate_cross_visit_corr_supp.pdf, id=473, 1405.25pt x 903.375pt
+<../code/figs/validate_cross_visit_corr_supp.pdf, id=477, 1405.25pt x 903.375pt
 >
 File: ../code/figs/validate_cross_visit_corr_supp.pdf Graphic file (type pdf)
 <use ../code/figs/validate_cross_visit_corr_supp.pdf>
 Package pdftex.def Info: ../code/figs/validate_cross_visit_corr_supp.pdf  used 
 on input line 344.
 (pdftex.def)             Requested size: 469.75502pt x 301.98808pt.
-<../code/figs/validate_eigenvalue_spectrum.pdf, id=474, 652.4375pt x 451.6875pt
+<../code/figs/validate_eigenvalue_spectrum.pdf, id=478, 652.4375pt x 451.6875pt
 >
 File: ../code/figs/validate_eigenvalue_spectrum.pdf Graphic file (type pdf)
 <use ../code/figs/validate_eigenvalue_spectrum.pdf>
 Package pdftex.def Info: ../code/figs/validate_eigenvalue_spectrum.pdf  used on
  input line 356.
 (pdftex.def)             Requested size: 352.31625pt x 243.92139pt.
-<../code/figs/validate_conditioned_pca.pdf, id=475, 702.625pt x 602.25pt>
+<../code/figs/validate_conditioned_pca.pdf, id=479, 702.625pt x 602.25pt>
 File: ../code/figs/validate_conditioned_pca.pdf Graphic file (type pdf)
 <use ../code/figs/validate_conditioned_pca.pdf>
 Package pdftex.def Info: ../code/figs/validate_conditioned_pca.pdf  used on inp
 ut line 370.
 (pdftex.def)             Requested size: 305.33789pt x 261.72852pt.
-<../code/figs/validate_conditioned_pca_by_visit.pdf, id=476, 1204.5pt x 401.5pt
+<../code/figs/validate_conditioned_pca_by_visit.pdf, id=480, 1204.5pt x 401.5pt
 >
 File: ../code/figs/validate_conditioned_pca_by_visit.pdf Graphic file (type pdf
 )
@@ -698,7 +698,7 @@ File: ../code/figs/validate_conditioned_pca_by_visit.pdf Graphic file (type pdf
 Package pdftex.def Info: ../code/figs/validate_conditioned_pca_by_visit.pdf  us
 ed on input line 383.
 (pdftex.def)             Requested size: 469.75502pt x 156.58437pt.
-<../code/figs/validate_mechanistic_combined_tf_tm.pdf, id=479, 2208.25pt x 903.
+<../code/figs/validate_mechanistic_combined_tf_tm.pdf, id=483, 2208.25pt x 903.
 375pt>
 File: ../code/figs/validate_mechanistic_combined_tf_tm.pdf Graphic file (type p
 df)
@@ -706,7 +706,7 @@ df)
 Package pdftex.def Info: ../code/figs/validate_mechanistic_combined_tf_tm.pdf  
 used on input line 393.
 (pdftex.def)             Requested size: 469.75502pt x 192.16797pt.
-<../code/figs/validate_mechanistic_generalization_tf_only.pdf, id=480, 1606.0pt
+<../code/figs/validate_mechanistic_generalization_tf_only.pdf, id=484, 1606.0pt
  x 401.5pt>
 File: ../code/figs/validate_mechanistic_generalization_tf_only.pdf Graphic file
  (type pdf)
@@ -714,7 +714,7 @@ File: ../code/figs/validate_mechanistic_generalization_tf_only.pdf Graphic file
 Package pdftex.def Info: ../code/figs/validate_mechanistic_generalization_tf_on
 ly.pdf  used on input line 407.
 (pdftex.def)             Requested size: 469.75502pt x 117.43674pt.
-<../code/figs/validate_mechanistic_generalization_tf_tm.pdf, id=481, 1606.0pt x
+<../code/figs/validate_mechanistic_generalization_tf_tm.pdf, id=485, 1606.0pt x
  401.5pt>
 File: ../code/figs/validate_mechanistic_generalization_tf_tm.pdf Graphic file (
 type pdf)
@@ -722,7 +722,7 @@ type pdf)
 Package pdftex.def Info: ../code/figs/validate_mechanistic_generalization_tf_tm
 .pdf  used on input line 408.
 (pdftex.def)             Requested size: 469.75502pt x 117.43674pt.
-<../code/figs/validate_mechanistic_rankcorr_tf_only.pdf, id=482, 602.25pt x 401
+<../code/figs/validate_mechanistic_rankcorr_tf_only.pdf, id=486, 602.25pt x 401
 .5pt>
 File: ../code/figs/validate_mechanistic_rankcorr_tf_only.pdf Graphic file (type
  pdf)
@@ -730,7 +730,7 @@ File: ../code/figs/validate_mechanistic_rankcorr_tf_only.pdf Graphic file (type
 Package pdftex.def Info: ../code/figs/validate_mechanistic_rankcorr_tf_only.pdf
   used on input line 421.
 (pdftex.def)             Requested size: 225.4804pt x 150.3232pt.
-<../code/figs/validate_mechanistic_rankcorr_tf_tm.pdf, id=483, 602.25pt x 401.5
+<../code/figs/validate_mechanistic_rankcorr_tf_tm.pdf, id=487, 602.25pt x 401.5
 pt>
 File: ../code/figs/validate_mechanistic_rankcorr_tf_tm.pdf Graphic file (type p
 df)
@@ -793,10 +793,10 @@ ive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive
 exmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2025/te
 xmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025/tex
 mf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (35 pages, 2516816 bytes).
+Output written on main.pdf (35 pages, 2517034 bytes).
 PDF statistics:
- 637 PDF objects out of 1000 (max. 8388607)
- 513 compressed objects within 6 object streams
+ 641 PDF objects out of 1000 (max. 8388607)
+ 517 compressed objects within 6 object streams
  128 named destinations out of 1000 (max. 500000)
  193 words of extra memory for PDF output out of 10000 (max. 10000000)
 
