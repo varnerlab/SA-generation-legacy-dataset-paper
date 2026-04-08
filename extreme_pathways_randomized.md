@@ -311,6 +311,131 @@ return memory_bank
 
 ---
 
+## Refining Approach 5: certification, deduplication, and the two-loop structure
+
+A later pass on Approach 5 sharpened two questions that the original sketch
+glossed over: (1) how do we *certify* that an SA-proposed ray is extreme,
+and (2) what actually happens when we add it to the memory matrix?
+
+### Q1 — Certifying extremity
+
+**The textbook test (rank-on-support).** A ray $v \in C$ is extreme iff
+$$\mathrm{rank}\bigl(S_{:,\,\mathrm{supp}(v)}\bigr) = |\mathrm{supp}(v)| - 1$$
+where $\mathrm{supp}(v) = \{i : v_i > 0\}$. One submatrix rank computation.
+Standard, cheap.
+
+**Why this is fragile for SA outputs.** SA-Langevin produces a continuous
+vector. It will essentially never have exact zeros in coordinates that
+"should" be zero — every component will be some small positive number. So
+$\mathrm{supp}(v)$ is meaningless until you threshold, and the threshold
+determines whether the rank test reports "extreme." Certification of a raw
+SA sample is tolerance-hacking.
+
+**The trick that dissolves Q1: SA proposes directions, not rays.** Don't
+certify the SA output directly — use it as an LP objective:
+
+1. SA proposes a direction $w$ (raw Langevin sample, or its projection onto
+   the unit sphere).
+2. Solve $\max\ w^\top v$ s.t. $Sv = 0$, $v \geq 0$, $\mathbf{1}^\top v = 1$.
+3. The LP optimum $v^*$ is *guaranteed* to be a vertex of the normalized
+   cone, hence an extreme ray. By LP vertex theory, no certification needed.
+
+**This is the key architectural commitment.** SA's job is not to produce
+extreme rays — it's to produce *directions* that the LP turns into extreme
+rays. Certification becomes free; the only remaining question is "have I
+seen this vertex before?"
+
+**Deduplication via support sets.** Two extreme rays with the same
+support are the same ray (up to scaling); two with different supports are
+necessarily different. The dedup test is set equality on
+$\mathrm{supp}(v^*)$ after thresholding the LP output — discrete, robust,
+no tolerance hacking on coordinate values. Bonus: coverage against a DDM
+ground truth (E. coli core) is just set intersection over support patterns.
+
+### Q2 — Adding to the memory matrix: the exploration trap
+
+Adding $v^*$ to $M$ has both an upside and a real failure mode that the
+original Approach 5 sketch did not name.
+
+**Upside.** The new column creates a Hopfield attractor near $v^*$.
+Subsequent SA proposals explore the neighborhood of $v^*$, which is exactly
+what you want if other extreme rays lie geometrically close.
+
+**Downside (mode collapse).** SA proposals are convex-combination-flavored:
+they live in the conic hull of current memories plus Langevin noise.
+Extreme rays in *unexplored regions* of the cone are by definition not in
+that conic hull, so SA is structurally biased *against* proposing
+directions toward them. The more $M$ grows in one region, the more the
+proposal distribution concentrates there, and the harder it becomes to
+escape. You converge to a dense cluster of nearby rays and miss whole
+faces of the cone.
+
+**Architectural fix: two loops, not one.**
+
+1. **Exploitation loop (SA-driven).** SA proposes a direction → LP →
+   vertex → dedup → add to $M$. Refines coverage in the *current* region
+   of the cone.
+
+2. **Exploration injection (SA-independent).** Every $k$ iterations,
+   bypass SA and use a random Gaussian objective $w \sim \mathcal{N}(0, I)$
+   for the LP. This is Approach 1 from earlier in the note, repurposed as
+   a *subroutine* of Approach 5. Its job is to seed extreme rays in
+   regions SA would never reach, which then become new attractors that the
+   exploitation loop can refine around.
+
+3. **Stopping rule.** Track the discovery rate of *both* loops. Stop
+   when SA proposals plateau *and* random injection is also yielding
+   nothing new. The conjunction matters: SA plateauing alone just means
+   you've saturated a region.
+
+**Optional: novelty-weighted addition.** When adding $v^*$ to $M$, weight
+by $1 - \max_k \cos(v^*, m_k)$ so rays that expand the basis the most
+pull harder on the energy landscape. Encourages diversity without an
+explicit diversity loss.
+
+### The cleaner mental model
+
+SA-bootstrap is *not* "SA discovers extreme rays." It is:
+
+> **An exploitation/exploration loop where SA refines locally and random
+> probing escapes globally, with LP vertex theory providing free
+> certification and support sets providing discrete deduplication.**
+
+Without exploration injection, Q2's "yes, add it" creates exactly the mode
+collapse that kills the algorithm. With both loops in place, adding
+becomes an unambiguous win and the discovery rate has a chance of
+saturating against the true ExPa set rather than against an arbitrary
+local cluster.
+
+### Updated pseudocode
+
+```
+seed = compute_exact_expa(small_subnetwork)        # cheap, ~10-50 rays
+memory_bank = seed
+support_set = {supp(m) for m in seed}              # discrete fingerprint
+iter = 0
+loop:
+    iter += 1
+    if iter % k == 0:
+        w = random_gaussian(n)                     # exploration injection
+    else:
+        w = sa_langevin_direction(memory_bank)     # exploitation
+    v_star = lp_max(w, S, normalize=True)          # guaranteed vertex
+    s = supp_threshold(v_star)
+    if s not in support_set:
+        memory_bank = memory_bank ∪ {v_star}
+        support_set = support_set ∪ {s}
+    if discovery_rate_both_loops < threshold:
+        break
+return memory_bank
+```
+
+The change from the original pseudocode: no `is_extreme_ray` check (LP
+gives it for free), dedup is on supports not coordinates, and the
+proposer alternates between SA and random injection on a schedule.
+
+---
+
 ## The bigger reframing
 
 This brainstorm is no longer really about extreme pathways. It's about a
