@@ -2,37 +2,38 @@
 \label{sec:intro}
 
 In 2021, the United States maternal mortality rate reached 32.9 deaths per 100,000
-live births, the highest level since 1965, with Black mothers dying at nearly three
-times the rate of White mothers~\citep{Toy2023WSJ,Harris2023}. Thrombotic embolisms
-and hemorrhage together accounted for more than 22\% of these
-deaths~\citep{Trost2022}, highlighting the role of the coagulation system in
-maternal outcomes. Blood coagulation is a complex enzymatic cascade in which a small
+live births, the highest level since 1965~\citep{Toy2023WSJ,Harris2023}. Between 2018 and 2022,
+Non-Hispanic Black women died at 2.8 times the rate of White women, and
+disorders related to pregnancy, including hemorrhage and venous
+complications, were the leading underlying cause of death, accounting for
+17.4\% of 6{,}283 pregnancy-related deaths~\citep{Chen2025}. These figures
+highlight the role of the coagulation system in maternal outcomes. Blood coagulation is a complex enzymatic cascade in which a small
 tissue factor (TF) stimulus triggers a series of serine protease activation reactions
 that ultimately produce thrombin, the central effector of
-hemostasis~\citep{Mann2011,Butenas2002}. Thrombin cleaves fibrinogen into fibrin,
+hemostasis~\citep{Mann2011,Butenas2009}. Thrombin cleaves fibrinogen into fibrin,
 activates platelets, and amplifies its own production through positive feedback via
 Factors~V, VIII, and XI, while simultaneously initiating its own shutdown through the
-thrombomodulin--protein~C anticoagulant pathway~\citep{Hockin2002}. Pregnancy
+thrombomodulin--protein~C anticoagulant pathway~\citep{Hockin2002,Bravo2012}. Pregnancy
 alters this hemostatic balance, shifting toward a hypercoagulable state
 that prepares for delivery~\citep{Hellgren2003,Grouzi2022,Bremme2003}.
 Procoagulant factors including fibrinogen, Factor~VIII, and von Willebrand factor
 increase substantially across gestation, while natural anticoagulants such as
-antithrombin and protein~S decline. Conditions such as polycystic ovary syndrome
-(PCOS), a hormonal and metabolic disorder affecting 6--12\% of reproductive-age
-women~\citep{Azziz2004} that has been associated with secondary hemostatic changes
-including elevated Factor~VIII and impaired fibrinolysis, and preeclampsia (PE), a
-hypertensive disorder characterized by endothelial dysfunction, platelet activation,
-and altered thrombin generation that complicates 2--8\% of pregnancies
-worldwide~\citep{Abalos2014}, further shift this balance in ways that are not fully understood. Mathematical models of the coagulation cascade, from the
-original Hockin--Mann stoichiometric framework~\citep{Hockin2002} through extensions
-incorporating the thrombomodulin--protein~C pathway~\citep{Bravo2012} to the
-Brummel-Ziedins 2012 (BZ2012) model with detailed activated protein~C (APC)-mediated Factor~Va inactivation
-kinetics~\citep{BrummelZiedins2012}, have provided mechanistic insight into
-patient-specific thrombin generation~\citep{Luan2007,Luan2010}, but applying these
-models to pregnancy cohorts requires longitudinal datasets capturing the full
-complement of coagulation factors, inhibitors, and thrombin generation assay (TGA)
-measurements across gestation, the type of data that is rare and expensive
-to collect.
+antithrombin and protein~S decline. Two conditions further shift this balance in ways that are not fully understood.
+Polycystic ovary syndrome (PCOS), a hormonal and metabolic disorder affecting
+approximately 6.6\% of reproductive-age women~\citep{Azziz2004}, has been associated with
+impaired fibrinolysis and a prothrombotic tendency~\citep{Palomba2015}. Preeclampsia (PE), a hypertensive
+disorder that complicates 2--8\% of pregnancies worldwide~\citep{Abalos2014}, is
+characterized by endothelial dysfunction, platelet activation, and altered thrombin
+generation~\citep{Dusse2011}. Mathematical models of the coagulation cascade have provided mechanistic insight
+into patient-specific thrombin generation~\citep{Luan2007,Luan2010}. These range
+from the original Hockin--Mann stoichiometric framework~\citep{Hockin2002} through
+extensions incorporating the thrombomodulin--protein~C pathway~\citep{Bravo2012}
+to the Brummel-Ziedins 2012 (BZ2012) model with detailed activated protein~C
+(APC)-mediated Factor~Va inactivation
+kinetics~\citep{BrummelZiedins2012}. However, applying these models to pregnancy
+cohorts requires longitudinal datasets capturing coagulation factors, inhibitors,
+and thrombin generation assay (TGA) measurements across gestation, data that is
+rare and expensive to collect.
 
 The core barrier is sample size. Longitudinal pregnancy coagulation studies
 typically enroll tens of patients with complete follow-up across multiple trimesters,
@@ -42,19 +43,19 @@ complications compound this problem. Small longitudinal cohorts inevitably conta
 only a handful of patients with any given condition, far too few for
 condition-specific statistical analysis. This $n < p$ regime limits conventional
 approaches because covariance matrices are rank-deficient, cross-validation is
-unreliable, and overfitting is nearly inevitable. Synthetic data generation addresses this by augmenting small real datasets with statistically faithful synthetic
+unreliable, and overfitting is nearly inevitable~\citep{Hastie2009}. Synthetic data generation addresses this by augmenting small real datasets with statistically faithful synthetic
 records, enabling downstream analyses (mechanistic modeling, clinical comparisons,
 hypothesis generation for rare complications) that would otherwise be
-infeasible~\citep{Gonzales2023,Murtaza2024}. However, existing methods face
+infeasible~\citep{Gonzales2023,Kuhnel2024}. However, existing methods face
 limitations in the small-cohort longitudinal setting. Sampling from a fitted
 multivariate normal (MVN) distribution is singular when $n < p$ and must be
 regularized~\citep{Ledoit2004}, introducing bias that distorts the joint distribution.
 MVN also assumes Gaussian marginals and linear correlations, and provides no mechanism
 for conditional generation: it cannot amplify a specific subpopulation while preserving
-its signatures. More expressive models such as GANs and
-VAEs~\citep{Goodfellow2014,Kingma2014,Xu2019CTGAN}, including recent longitudinal
-extensions~\citep{Murtaza2024}, require substantially larger training sets and are
-prone to mode collapse at small $n$ (we confirm this empirically for CTGAN at
+its signatures. More expressive models such as generative adversarial networks (GANs) and
+variational autoencoders (VAEs)~\citep{Goodfellow2014,Kingma2014,Xu2019CTGAN}, including recent longitudinal
+extensions~\citep{Kuhnel2024}, require substantially larger training sets and are
+prone to mode collapse at small $n$~\citep{DeMitri2025} (we confirm this empirically for Conditional Tabular GAN (CTGAN) at
 $n{=}23$ in this work). A generative method is needed that can operate
 directly on the geometry of a small dataset without estimating a full parametric
 distribution.
@@ -98,7 +99,7 @@ differential equation (ODE) model of the coagulation
 cascade~\citep{BrummelZiedins2012}. As a downstream-utility test, we further
 asked whether a mechanistic model calibrated entirely on synthetic patients
 could predict held-out real patient outcomes. The results, presented in the
-next section, show that geometry-preserving generation can recover both the
+next section, show that SA can recover both the
 statistical structure and the mechanistic plausibility of the real cohort at
 this sample size. If this generalizes, the implication is that the bottleneck
 for studying rare obstetric and pediatric conditions may be shifting from

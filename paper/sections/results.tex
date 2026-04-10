@@ -1,12 +1,12 @@
 \section{Results}
 \label{sec:results}
 
-We generated $N{=}100$ synthetic longitudinal patient profiles using SA, chosen to
-provide approximately 4$\times$ amplification over the real cohort while remaining
-within the regime where SA's attention mechanism produces diverse, non-degenerate
-samples, and compared them against the $K{=}23$ real patients across four validation levels. As a baseline, we also generated $N{=}100$
-patients from a regularized multivariate normal (MVN) distribution fitted to the
-same data.
+We generated $N{=}100$ synthetic longitudinal patient profiles using SA and compared
+them against the $K{=}23$ real patients across four validation levels. This sample
+size provided approximately 4$\times$ amplification while remaining in the regime
+where SA produces diverse, non-degenerate samples. As a baseline, we also generated
+$N{=}100$ patients from a regularized multivariate normal (MVN) distribution fitted
+to the same data.
 
 \subsection{Marginal Plausibility}
 \label{sec:results-l1}
@@ -14,14 +14,14 @@ same data.
 We first assessed whether SA-generated patients reproduced per-feature summary
 statistics across all three visits. The pooled median mean relative error
 (MRE) across all 216 feature--visit entries was 1.2\% (95\% bootstrap CI:
-1.0--1.6\%), with 193 of 216 entries (89\%) below 5\% (Supplementary
-Table~S5), indicating that SA captured the central tendencies of the real
-population. Per-visit MREs for representative coagulation features are
-summarized in Table~\ref{tab:summary}, where Factor~II and Factor~VIII fell
-below 2\%, antithrombin below 3\%, and fibrinogen below 1\% across all three
-visits. We verified that synthetic patients were not memorized copies of real
-patients using two complementary metrics summarized in Supplementary
-Table~S9. The mean novelty score
+1.0--1.6\%), with 193 of 216 entries (89\%) below 5\%
+(Table~\ref{stab:mre-summary}), indicating that SA captured the central
+tendencies of the real population. Per-visit MREs for representative
+coagulation features are summarized in Table~\ref{tab:summary}, where
+Factor~II and Factor~VIII fell below 2\%, antithrombin below 3\%, and
+fibrinogen below 1\% across all three visits. We verified that synthetic
+patients were not memorized copies of real patients using two complementary
+metrics summarized in Table~\ref{stab:memorization}. The mean novelty score
 ($1 - \max_k \cos(\hat{\vxi}, \hat{\mathbf{m}}_k)$) was 0.50 at
 $\beta = \beta^*$, indicating that generated samples were on average 50\%
 away from their nearest stored pattern in angular distance. The median
@@ -31,31 +31,38 @@ real-to-real nearest-neighbor distance, a ratio of 0.89 indicating that
 synthetic patients were approximately as far from real patients as real
 patients were from each other.
 
-We next examined whether known physiological relationships were preserved in the
-synthetic cohort. We plotted pairwise scatter plots of coagulation factor levels
-against thrombin generation parameters across all visits and observed that
+We next examined whether known physiological relationships and longitudinal
+trajectories were preserved in the synthetic cohort. Pairwise scatter plots of
+coagulation factor levels against thrombin generation parameters showed that
 SA-generated patients occupied the same joint regions as real patients
 (Fig.~\ref{fig:bio-correlations}). The expected inverse relationship between
 antithrombin and TF-initiated peak thrombin was preserved, as were the positive
 associations between Factor~VIII and peak, prothrombin and endogenous thrombin
-potential (ETP), and the inverse relationship between antithrombin and ETP. These results indicated that SA captured
-not only univariate distributions but also the pairwise dependencies in the data.
-
-We also evaluated whether the characteristic pregnancy-driven longitudinal
-trajectories were reproduced. We computed per-visit means and standard deviations
-for six key coagulation features and found that synthetic patients tracked the
-real trajectories closely, with overlapping confidence bands at all three visits
+potential (ETP), and the inverse relationship between antithrombin and ETP.
+Per-visit means and standard deviations for six key coagulation features confirmed
+that synthetic patients tracked the real longitudinal trajectories closely, with
+overlapping confidence bands at all three visits
 (Fig.~\ref{fig:pregnancy-progression}). Fibrinogen, Factor~VIII, and von Willebrand
 factor showed the expected monotonic increases from baseline through the third
 trimester in both cohorts, while Factor~II increased modestly and antithrombin
 declined then partially recovered, consistent with the known hypercoagulable shift
-of pregnancy. These patterns confirmed that the concatenated-visit SA pipeline
-preserved the directionality and magnitude of longitudinal change. The 72 features
-also included viscoelastic (ROTEM) and fibrinolytic parameters, which were generated
-as part of the concatenated vector and showed comparable MREs to the coagulation
-factors (Supplementary Table~S5), but are not individually highlighted here because
-the mechanistic validation uses the BZ2012 thrombin generation model, which does not
-cover fibrinolysis or clot viscoelasticity.
+of pregnancy. Together, these results indicated that SA captured not only univariate
+distributions and pairwise dependencies but also the directionality and magnitude of
+longitudinal change. The 72 features also included viscoelastic (ROTEM) and
+fibrinolytic parameters, which were generated as part of the concatenated vector and
+showed comparable MREs to the coagulation factors (Table~\ref{stab:mre-summary}), but are
+not individually highlighted here because the mechanistic validation uses the BZ2012
+thrombin generation model, which does not cover fibrinolysis or clot viscoelasticity.
+
+We also compared SA against two widely used deep generative methods for tabular data,
+Conditional Tabular GAN (CTGAN) and Tabular Variational Autoencoder
+(TVAE)~\citep{Xu2019CTGAN} (Table~\ref{stab:ctgan}). CTGAN failed completely,
+producing median MREs of $\approx$19\%, an order of magnitude worse than SA, across
+all epoch counts tested (300--3,000), consistent with known GAN mode collapse on small
+datasets. TVAE achieved comparable marginal fidelity at high epoch counts (median MRE
+1.8\% at 3,000 epochs), but operated on per-visit rows ($n{=}90$) rather than
+concatenated longitudinal profiles ($n{=}23$), meaning it could not capture cross-visit
+covariance structure and had no mechanism for conditional subgroup generation.
 
 \subsection{Cross-Visit Covariance Structure}
 \label{sec:results-l2}
@@ -78,7 +85,7 @@ correlations, used in the mechanistic validation, would additionally capture
 monotonic nonlinear dependencies.
 
 We examined the eigenvalue spectrum of the sample covariance matrix to understand the
-structural origin of this difference (Supplementary Fig.~S2). The real data had
+structural origin of this difference (Fig.~\ref{sfig:eigenvalue-spectrum}). The real data had
 rank~22, reflecting the $K{=}23$ patient constraint. SA and MVN make different
 trade-offs in handling this rank deficiency: SA truncates via PCA (zeroing variance
 beyond component~18), while MVN regularizes via Ledoit--Wolf shrinkage (providing a
@@ -117,15 +124,15 @@ Mann--Whitney U test, and repeated 1,000 times. We reported the fraction of
 replicates where $p > 0.05$ (i.e., real and synthetic were statistically
 indistinguishable). Across all 24 feature--condition pairs, 20 (83\%) achieved
 $p > 0.05$ in $\geq$90\% of replicates, with a median non-significance
-fraction of 98.6\% (full per-pair results in Supplementary Table~S10).
-The four features that fell below 90\% were high-variance features in the
-smallest subgroups (FIX and plasminogen in PCOS; FIX and plasminogen in
-Developed~PE), where the real data exhibited large inter-patient variability.
-No multiple-testing correction was applied to the 24 simultaneous comparisons;
-the failing pairs had consistently low non-significance fractions (62--87\%)
-rather than borderline values, so correction would not change the
-classification. PCA projections of the conditioned cohorts are provided in
-Supplementary Figs.~S3--S4. These results showed that SA's multiplicity-weighted
+fraction of 98.6\% (full per-pair results in
+Table~\ref{stab:bootstrap-mw}). The four features that fell below 90\% were
+high-variance features in the smallest subgroups (FIX and plasminogen in PCOS;
+FIX and plasminogen in Developed~PE), where the real data exhibited large
+inter-patient variability. No multiple-testing correction was applied to the
+24 simultaneous comparisons; the failing pairs had consistently low
+non-significance fractions (62--87\%) rather than borderline values, so
+correction would not change the classification. PCA projections of the conditioned cohorts are provided in
+Figs.~\ref{sfig:conditioned-pca}--\ref{sfig:conditioned-by-visit}. These results showed that SA's multiplicity-weighted
 interpolation can amplify rare subgroups in a way that preserves their distinguishing
 clinical features, useful for hypothesis generation and
 power analysis in small patient populations. MVN has no mechanism for this:
@@ -144,11 +151,10 @@ We used the Hockin--Mann BZ2012 model~\citep{Hockin2002,BrummelZiedins2012}, a s
 of 58 ordinary differential equations with 64 rate constants that simulates thrombin
 generation from patient-specific coagulation factor inputs. We calibrated 5 of the
 64 rate constants (prothrombinase, intrinsic and extrinsic tenase, protein~C
-activation, and meizothrombin conversion; Supplementary Table~S4) on Visit~1 real
-patients at the population level (not per-patient), held the remaining 59 at published
-literature values, and ran the calibrated model on all 23 real patients (3 visits
-$\times$ 2 conditions = 138 simulations, 0 failures) and all 100 synthetic patients
-(3 visits $\times$ 2 conditions = 600 simulations, 0 failures). For each patient, we
+activation, and meizothrombin conversion; Table~\ref{stab:ode-calibration}) on Visit~1 real
+patients at the population level and held the remaining 59 at published literature
+values. We then ran the calibrated model on all 23 real patients and 100 synthetic
+patients under both TF-only and TF+TM conditions (738 total simulations, 0 failures). For each patient, we
 computed five ODE-predicted thrombin generation features (lagtime, peak, time-to-peak,
 maximum rate, and ETP) and compared them against the corresponding values from the
 patient record. In these comparisons (Fig.~\ref{fig:mechanistic-combined}, top row),
@@ -171,28 +177,29 @@ overlap (fraction of synthetic ratios within the 5th--95th percentile of real
 ratios) ranging from 0.86 for ETP to 0.93 for T.Peak under TF-only conditions,
 and two-sample Kolmogorov--Smirnov (KS) tests confirmed that the ratio
 distributions were statistically indistinguishable across all five TGA features
-($D = 0.081$--$0.123$, all $p > 0.30$; full diagnostics in Supplementary
-Table~S11). Under TF+TM conditions, the model systematically overcorrected
-the protein~C anticoagulant pathway, producing peak and maximum rate
-predictions approximately 0.5$\times$ measured values for both real and
-synthetic patients (Supplementary Fig.~S5, same layout as the main-text
-comparison), yet this shared systematic bias was itself informative. Cloud overlap remained high (0.89--0.93 across the five
-features), confirming that the model processed real and synthetic patients
-identically even under conditions where the calibration was imperfect.
+($D = 0.081$--$0.123$, all $p > 0.30$; full diagnostics in
+Table~\ref{stab:mechanistic-validation}).
+Under TF+TM conditions, the model systematically overcorrected the protein~C
+anticoagulant pathway, producing peak and maximum rate predictions
+approximately 0.5$\times$ measured values for both real and synthetic patients
+(Fig.~\ref{sfig:mechanistic-tm-combined}, same layout as the main-text
+comparison), yet this shared systematic bias was itself informative. Cloud overlap remained high (0.89--0.93 across the
+five features), confirming that the model processed real and synthetic
+patients identically even under conditions where the calibration was
+imperfect.
 
 The calibration also generalized across pregnancy timepoints. Although fitted
 only on Visit~1 real patients, the per-visit median predicted-to-measured
 ratios under TF-only conditions remained close to 1.0 at Visits~2 and~3
-(Supplementary Fig.~S6), confirming that the calibrated rate constants
-captured a stable
+(Fig.~\ref{sfig:generalization}), confirming that the calibrated rate
+constants captured a stable
 population-level property of the coagulation system rather than overfitting to the
 training visit. Spearman rank correlations between predicted and measured values were
 moderate for ETP ($\rho \approx 0.6$--$0.8$ for real, $\rho \approx 0.6$--$0.65$
-for synthetic; Supplementary Fig.~S7) and weak for other features, consistent with
+for synthetic; Fig.~\ref{sfig:rankcorr}) and weak for other features, consistent with
 a 5-parameter population-level calibration that was not designed to resolve
 inter-patient variability. The key finding was not patient-level prediction but
-population-level plausibility. An independent mechanistic model of the coagulation cascade confirmed that SA-generated patients fell within the same
-biologically plausible envelope as real patients, and could not be distinguished from
+population-level plausibility. An independent mechanistic model of the coagulation cascade confirmed that SA-generated patients fell within the same biologically plausible envelope as real patients, and could not be distinguished from
 them by the ODE model under either experimental condition.
 
 \subsection{Downstream Utility: Mechanistic Model Calibration}
@@ -205,15 +212,14 @@ evaluated whether it could predict real patient outcomes. We calibrated the BZ20
 (TF-only condition, 5 rate constants) on synthetic V1 patients ($N{=}100$) using
 the same bounded Nelder--Mead optimization applied to the real V1 calibration
 ($K{=}23$), with 11 random restarts to mitigate local-minimum sensitivity
-(Supplementary Table~S4 for parameter details). We then evaluated both calibrations
+(Table~\ref{stab:ode-calibration} for parameter details). We then evaluated both calibrations
 on held-out real V2 and V3 patients that neither model had seen during
 training. The synth-calibrated model achieved comparable or slightly better
 performance across all five TGA features, with per-feature median relative
 errors 2--10\% lower than the real-calibrated model (overall ratio
 0.94$\times$; Fig.~\ref{fig:downstream-utility}; per-feature breakdown in
-Supplementary Table~S12). This improvement likely
-reflects the smoother
-loss landscape afforded by $N{=}100$ synthetic training patients compared with
+Table~\ref{stab:downstream-utility}). This improvement likely
+reflects the smoother loss landscape afforded by $N{=}100$ synthetic training patients compared with
 $K{=}23$ real ones, reducing overfitting during optimization. The two calibrations
 found different parameter values but produced highly correlated predictions across all
 five TGA features, confirming that the synthetic data captured the same underlying

@@ -5,7 +5,7 @@
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
 \usepackage{booktabs}
-\usepackage{natbib}
+\usepackage[super,sort&compress,comma]{natbib}
 \usepackage{hyperref}
 \usepackage{xcolor}
 \usepackage{algorithm}
@@ -68,19 +68,34 @@ Ira Bernstein$^{3}$
 \input{sections/conclusion}
 \input{sections/methods}
 
+% ── Ethics ──────────────────────────────────────────────────────────────────
+\section*{Ethics Statement}
+This study used de-identified secondary analysis measurements from samples
+collected longitudinally from women desiring a pregnancy. The primary
+prospective research study was approved by the Institutional Review Board at
+the University of Vermont. Written informed consent was obtained from all
+participants prior to enrollment.
+
 % ── Data Availability ────────────────────────────────────────────────────────
 \section*{Data Availability}
-The code for synthetic patient generation, all validation scripts, and the
-generated synthetic datasets are available at
+The generated synthetic datasets and all intermediate validation outputs
+are available in the project repository at
 \url{https://github.com/varnerlab/SA-generation-legacy-dataset-paper}.
-The real patient data were collected under approval from the University of Vermont
-Institutional Review Board; de-identified
-data are available upon reasonable request to the corresponding author.
+The real patient data were collected under IRB approval at the University of Vermont;
+de-identified data are available upon reasonable request to the corresponding author.
+
+% ── Code Availability ───────────────────────────────────────────────────────
+\section*{Code Availability}
+All code for synthetic patient generation, validation, figure reproduction,
+and mechanistic model calibration is available at
+\url{https://github.com/varnerlab/SA-generation-legacy-dataset-paper}.
+The repository includes Julia source code, experiment scripts, and a Python
+baseline script for CTGAN/TVAE comparison.
 
 \input{sections/acknowledgments}
 
 % ── Bibliography ──────────────────────────────────────────────────────────────
-\bibliographystyle{unsrtnat}
+\bibliographystyle{naturemag}
 \bibliography{references}
 
 % ── Tables and Figures (after references, per Nature style) ──────────────────

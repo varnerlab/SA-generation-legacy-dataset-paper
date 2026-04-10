@@ -1,0 +1,77 @@
+\documentclass[11pt]{letter}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{url}
+
+\signature{Jeffrey D.\ Varner, Ph.D.\\
+Robert Frederick Smith School of Chemical and Biomolecular Engineering\\
+Cornell University\\
+Ithaca, NY 14853\\
+\texttt{jdv27@cornell.edu}}
+
+\date{\today}
+
+\begin{document}
+
+\begin{letter}{Editorial Board\\
+\textit{npj Systems Biology and Applications}}
+
+\opening{Dear Editors,}
+
+We are pleased to submit our manuscript entitled
+\textbf{``Validated Synthetic Patient Generation from Small Longitudinal
+Cohorts Using Stochastic Attention''}
+for consideration as an Article in \textit{npj Systems Biology and Applications}.
+
+Small longitudinal clinical cohorts, common in maternal health and rare disease
+research, present a fundamental challenge: too few patients to support
+computational modeling, yet too costly and slow to expand through additional
+enrollment. In this work, we address this gap with multiplicity-weighted
+Stochastic Attention (SA), a generative framework rooted in modern Hopfield
+network theory that produces synthetic patients by interpolating between
+stored patient profiles on a continuous energy landscape. Unlike parametric
+methods such as multivariate normal sampling or deep generative models (GANs,
+VAEs), SA operates directly on the geometry of the observed cohort and requires
+no parameter estimation, making it well suited to the $n < p$ regime that
+characterizes most small clinical studies.
+
+We applied SA to a longitudinal coagulation dataset from 23 pregnant patients
+spanning 72 biochemical features across three visits, including rare subgroups
+(polycystic ovary syndrome, $n{=}3$; preeclampsia, $n{=}5$). We validated the
+synthetic patients through four progressively stringent levels: marginal
+plausibility, cross-visit covariance preservation, conditional subgroup
+amplification, and mechanistic consistency with an independent 58-ODE model of
+the coagulation cascade. At every level, synthetic patients were statistically
+and mechanistically indistinguishable from their real counterparts. A downstream
+utility test further showed that a mechanistic model calibrated entirely on
+synthetic patients predicted held-out real patient outcomes as well as one
+calibrated on real data.
+
+We believe this work is well suited to \textit{npj Systems Biology and
+Applications} for several reasons. First, the methodology bridges systems
+biology (mechanistic ODE modeling of the coagulation cascade) with modern
+machine learning (Hopfield networks, Langevin dynamics), a combination that
+aligns with the journal's scope. Second, the multi-level validation framework,
+particularly the mechanistic validation using an independent ODE model, provides
+a template that transfers to any domain with a calibrated mechanistic model
+(pharmacokinetic, physiological, metabolic). Third, the multiplicity-weighted
+conditional generation capability addresses a practical need in rare disease and
+maternal health research, where generating condition-specific synthetic cohorts
+from very small subgroups enables hypothesis generation and power analyses that
+would otherwise be infeasible.
+
+A preprint of this work is available on arXiv (arXiv:2604.07557). The
+manuscript has not been submitted elsewhere.
+
+All code, validation scripts, and generated datasets are publicly available at
+\url{https://github.com/varnerlab/SA-generation-legacy-dataset-paper}.
+
+We confirm that all authors have approved the manuscript and that there are no
+competing interests to declare.
+
+Thank you for considering our submission. We look forward to your response.
+
+\closing{Sincerely,}
+
+\end{letter}
+\end{document}
