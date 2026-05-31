@@ -33,3 +33,6 @@ JuliaLocalPreferences.toml
 *.jld2
 __pycache__/
 *.pyc
+
+# macOS Finder metadata
+.DS_Store
