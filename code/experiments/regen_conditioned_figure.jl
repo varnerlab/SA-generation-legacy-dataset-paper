@@ -122,14 +122,14 @@ for (ci, (cond_label, df_r, df_s)) in enumerate(zip(cond_labels, real_dfs, synth
     p = bar(x .- w/2, real_vals;
         bar_width=w, color=cond_real_colors[ci], label="Real",
         linecolor=cond_real_colors[ci], linewidth=0.5,
-        title=cond_label, titlefontsize=11,
-        xticks=(x, feat_short), tickfontsize=8,
+        title=cond_label, titlefontsize=16,
+        xticks=(x, feat_short), tickfontsize=12,
         ylabel=ci == 1 ? "Mean (pooled)" : "",
-        guidefontsize=9,
+        guidefontsize=15,
         background_color_inside=bg_color,
         grid=false, framestyle=:box,
         legend=:topright,
-        legendfontsize=8, margin=5Plots.mm,
+        legendfontsize=11, margin=5Plots.mm,
         ylim=(ylo, yhi))
 
     bar!(p, x .+ w/2, synth_vals;
@@ -163,9 +163,9 @@ end
 
 p_cond = plot(panels...; layout=(1, 3), size=(1800, 600),
     left_margin=10Plots.mm, margin=6Plots.mm)
-savefig(p_cond, joinpath(_PATH_TO_FIG, "validate_conditioned_features.pdf"))
-savefig(p_cond, joinpath(_PATH_TO_FIG, "validate_conditioned_features.png"))
-@info "  Saved validate_conditioned_features.pdf"
+savefig(p_cond, joinpath(_PATH_TO_FIG, "validate_conditioned_features_v2.pdf"))
+savefig(p_cond, joinpath(_PATH_TO_FIG, "validate_conditioned_features_v2.png"))
+@info "  Saved validate_conditioned_features_v2.pdf"
 
 # Summary
 n_pass = sum(all_results.Frac_NonSig .>= 0.90)

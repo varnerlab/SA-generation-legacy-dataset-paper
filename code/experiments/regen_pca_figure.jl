@@ -107,6 +107,23 @@ P_mvn = MultivariateStats.transform(pca_rec, Z_mvn)
 
 @info "  Real rows: $(size(X_real, 2)), SA rows: $(nrow(df_synth)), MVN rows: $(length(mvn_visits_vec))"
 
+# ── Per-column (per-visit) shared axis limits ────────────────────────────────
+# Each visit's SA (top) and MVN (bottom) panel share xlims/ylims so the two
+# synthetic methods are compared on an identical frame, with the real cloud
+# anchored at the same scale in both. Limits span real+SA+MVN for that visit.
+function visit_limits(v)
+    rm = real_visits .== v
+    sm = sa_visits .== v
+    mm = mvn_visits_vec .== v
+    xs = vcat(P_real[1, rm], P_sa[1, sm], P_mvn[1, mm])
+    ys = vcat(P_real[2, rm], P_sa[2, sm], P_mvn[2, mm])
+    padx = 0.05 * (maximum(xs) - minimum(xs))
+    pady = 0.05 * (maximum(ys) - minimum(ys))
+    return ((minimum(xs) - padx, maximum(xs) + padx),
+            (minimum(ys) - pady, maximum(ys) + pady))
+end
+col_lims = [visit_limits(v) for v in 1:3]
+
 # ── Colors ───────────────────────────────────────────────────────────────────
 synth_colors = [RGB(0.45, 0.70, 0.88), RGB(0.55, 0.80, 0.55), RGB(0.92, 0.60, 0.40)]
 real_colors  = [RGB(0.10, 0.45, 0.70), RGB(0.25, 0.65, 0.25), RGB(0.85, 0.35, 0.10)]
@@ -123,9 +140,11 @@ for v in 1:3
         label="Real", color=real_colors[v], alpha=0.85, markersize=7,
         markerstrokecolor=:white, markerstrokewidth=0.5,
         xlabel="PC1 ($var1%)", ylabel="PC2 ($var2%)",
-        title="SA — $(visit_labels[v])", titlefontsize=9,
+        title="$(visit_labels[v])", titlefontsize=15,
+        xguidefontsize=13, yguidefontsize=13, tickfontsize=11,
+        xlims=col_lims[v][1], ylims=col_lims[v][2],
         background_color_inside=bg_color,
-        grid=false, framestyle=:box, legendfontsize=7, margin=3Plots.mm)
+        grid=false, framestyle=:box, legendfontsize=9, margin=3Plots.mm)
     scatter!(p, P_sa[1, sm], P_sa[2, sm];
         label="SA synth", color=synth_colors[v], alpha=0.7, markersize=6,
         markerstrokecolor=:white, markerstrokewidth=0.5)
@@ -139,9 +158,11 @@ for v in 1:3
         label="Real", color=real_colors[v], alpha=0.85, markersize=7,
         markerstrokecolor=:white, markerstrokewidth=0.5,
         xlabel="PC1 ($var1%)", ylabel="PC2 ($var2%)",
-        title="MVN — $(visit_labels[v])", titlefontsize=9,
+        title=" ", titlefontsize=15,  # blank title reserves height to match SA row
+        xguidefontsize=13, yguidefontsize=13, tickfontsize=11,
+        xlims=col_lims[v][1], ylims=col_lims[v][2],
         background_color_inside=bg_color,
-        grid=false, framestyle=:box, legendfontsize=7, margin=3Plots.mm)
+        grid=false, framestyle=:box, legendfontsize=9, margin=3Plots.mm)
     scatter!(p, P_mvn[1, mm], P_mvn[2, mm];
         label="MVN synth", color=synth_colors[v], alpha=0.7, markersize=6,
         markerstrokecolor=:white, markerstrokewidth=0.5, markershape=:diamond)
@@ -150,6 +171,6 @@ end
 
 p_pca = plot(panels...; layout=(2, 3), size=(1500, 900),
     margin=5Plots.mm)
-savefig(p_pca, joinpath(_PATH_TO_FIG, "sa_vs_mvn_pca_by_visit.pdf"))
-savefig(p_pca, joinpath(_PATH_TO_FIG, "sa_vs_mvn_pca_by_visit.png"))
-@info "  Saved sa_vs_mvn_pca_by_visit.pdf"
+savefig(p_pca, joinpath(_PATH_TO_FIG, "sa_vs_mvn_pca_by_visit_v2.pdf"))
+savefig(p_pca, joinpath(_PATH_TO_FIG, "sa_vs_mvn_pca_by_visit_v2.png"))
+@info "  Saved sa_vs_mvn_pca_by_visit_v2.pdf"

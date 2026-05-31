@@ -135,12 +135,15 @@ Fig.~\ref{sfig:cross-visit-corr-supp}.}
 
 \begin{figure}[p]
 \centering
-\includegraphics[width=\textwidth]{sa_vs_mvn_pca_by_visit.pdf}
+\includegraphics[width=\textwidth]{sa_vs_mvn_pca_by_visit_v2.pdf}
 \caption{\textbf{PCA projections by visit: SA vs.\ MVN.} Each panel shows the
 first two principal components (PC1: 27.7\% variance, PC2: 15.4\%) computed
 from standardized per-visit real patient data ($K{=}23$ patients per visit,
 72 features). Dark markers indicate real patients; lighter markers indicate
-synthetic patients ($N{=}100$). Top row: SA-generated patients (circles)
+synthetic patients ($N{=}100$). Within each visit (column), the SA panel (top)
+and MVN panel (bottom) share identical axis ranges, so the relative dispersion
+of the two methods can be read against the same real data cloud. Top row:
+SA-generated patients (circles)
 cluster tightly around the real data cloud at all three visits. Bottom row:
 MVN-generated patients (diamonds) show greater dispersion, particularly at
 Visits~2 (first trimester) and~3 (third trimester), where MVN patients extend
@@ -155,21 +158,24 @@ rank-deficient covariance (Fig.~\ref{sfig:eigenvalue-spectrum}). Colors encode v
 
 \begin{figure}[p]
 \centering
-\includegraphics[width=\textwidth]{validate_conditioned_features.pdf}
+\includegraphics[width=\textwidth]{validate_conditioned_features_v2.pdf}
 \caption{\textbf{Condition-specific feature preservation.} Grouped bar charts
 comparing real (dark bars) and SA-generated synthetic (light bars) patient
 means ($\pm$ SD error bars) for eight coagulation features, shown separately
 for each clinical subgroup: Uncomplicated ($n{=}18$, left, blue), PCOS ($n{=}3$,
-center, orange), and Developed~PE ($n{=}5$, right, red). Values are pooled across all
-three visits. Gray percentages indicate the mean relative error (MRE). Green
+center, orange), and Developed~PE ($n{=}5$, right, red). Each bar is the mean of
+that assay pooled across all three visits (V1--V3); factor activities (FVIII,
+vWF, FIX, FV, $\alpha_2$-AP, FVII, plasminogen) are expressed as \% of normal
+pooled reference plasma, and fibrinogen (Fbgn) in mg/dL. Gray percentages
+indicate the mean relative error (MRE). Green
 annotations show the bootstrap Mann--Whitney equivalence result: the fraction
 of 1,000 bootstrap replicates (synthetic subsampled to $n_{\text{real}}$) in
 which $p > 0.05$, i.e., real and synthetic could not be distinguished.
 Features achieving $\geq$90\% are shown in green; $<$90\% in red. Across all
-24 feature--condition pairs, 19 (79\%) were statistically indistinguishable in
-$\geq$90\% of replicates (median: 98.4\%). The five features below this
-threshold were distributed across high-variance features (FIX, FVII, FVIII,
-plasminogen) where large inter-patient variability reduced test power.}
+24 feature--condition pairs, 20 (83\%) were statistically indistinguishable in
+$\geq$90\% of replicates (median: 98.6\%). The four pairs below this
+threshold were FIX and plasminogen in the PCOS and Developed~PE subgroups,
+where small subgroup sizes and large inter-patient variability reduced test power.}
 \label{fig:conditioned-features}
 \end{figure}
 
