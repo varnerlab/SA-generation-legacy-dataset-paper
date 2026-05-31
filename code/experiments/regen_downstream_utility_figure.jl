@@ -11,6 +11,16 @@ const _PATH_TO_FIG  = joinpath(_ROOT, "figs")
 
 const FEATURE_LABELS = ["Lagtime (min)", "Peak (nM)", "T.Peak (min)", "Max Rate (nM/min)", "ETP (nM·min)"]
 
+# ── Pick ~n round tick values spanning [lo, hi] (avoids crowded 4-digit ticks) ─
+function nice_ticks(lo, hi; n=4)
+    raw = (hi - lo) / n
+    mag = 10.0^floor(log10(raw))
+    r = raw / mag
+    step = mag * (r <= 1.5 ? 1.0 : r <= 3.0 ? 2.0 : r <= 7.0 ? 5.0 : 10.0)
+    t0 = ceil(lo / step) * step
+    return collect(t0:step:hi)
+end
+
 # ── Load cached results ──────────────────────────────────────────────────────
 @info "Loading cached downstream utility results …"
 results = CSV.read(joinpath(_PATH_TO_DATA, "downstream_utility_results.csv"), DataFrame)
@@ -26,14 +36,17 @@ for feat in FEATURE_LABELS
     lo, hi = minimum(all_vals), maximum(all_vals)
     margin = 0.1 * (hi - lo)
     lo -= margin; hi += margin
+    tks = nice_ticks(lo, hi)
 
     p = plot(; xlabel="Real-calibrated", ylabel="Synth-calibrated",
              title=feat, titlefontsize=18, guidefontsize=16, tickfontsize=13,
              legendfontsize=13,
-             xlim=(lo, hi), ylim=(lo, hi), aspect_ratio=1,
+             xlim=(lo, hi), ylim=(lo, hi), xticks=tks, yticks=tks,
              background_color_inside=bg_color, grid=false, framestyle=:box,
              legend= feat == FEATURE_LABELS[end] ? :topleft : false,
-             margin=4Plots.mm)
+             top_margin=2Plots.mm, bottom_margin=15Plots.mm,
+             left_margin=(feat == FEATURE_LABELS[1] ? 16Plots.mm : 9Plots.mm),
+             right_margin=3Plots.mm)
     plot!(p, [lo, hi], [lo, hi]; ls=:dash, lc=:gray50, lw=1.5, label="y=x")
 
     v2 = filter(r -> r.Visit == 2, fsub)
@@ -49,8 +62,7 @@ for feat in FEATURE_LABELS
     push!(panels, p)
 end
 
-p_util = plot(panels...; layout=(1, 5), size=(2200, 500), margin=6Plots.mm,
-              left_margin=10Plots.mm)
-savefig(p_util, joinpath(_PATH_TO_FIG, "downstream_utility_scatter.pdf"))
-savefig(p_util, joinpath(_PATH_TO_FIG, "downstream_utility_scatter.png"))
-@info "  Saved downstream_utility_scatter.pdf"
+p_util = plot(panels...; layout=(1, 5), size=(2400, 600))
+savefig(p_util, joinpath(_PATH_TO_FIG, "downstream_utility_scatter_v2.pdf"))
+savefig(p_util, joinpath(_PATH_TO_FIG, "downstream_utility_scatter_v2.png"))
+@info "  Saved downstream_utility_scatter_v2.pdf"

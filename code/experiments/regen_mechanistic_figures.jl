@@ -38,7 +38,8 @@ for cond in ["TF-only", "TF+TM"]
                  title=feat,
                  legend= fi == 5 ? :topleft : false,
                  xlim=(lo, hi), ylim=(lo, hi),
-                 guidefontsize=9, titlefontsize=10, tickfontsize=7,
+                 guidefontsize=14, titlefontsize=17, tickfontsize=12,
+                 legendfontsize=9,
                  background_color_inside=bg_color,
                  grid=false, framestyle=:box,
                  margin=4Plots.mm, aspect_ratio=1)
@@ -110,11 +111,13 @@ for cond in ["TF-only", "TF+TM"]
 
         p = plot(; xlabel="ODE pred / Dataset", ylabel= fi == 1 ? "Density" : "",
                  title="",
-                 legend= fi == 5 ? :topright : false,
-                 guidefontsize=9, titlefontsize=10, tickfontsize=7,
+                 legend= fi == 5 ? :bottomright : false,
+                 guidefontsize=14, titlefontsize=17, tickfontsize=12,
+                 legendfontsize=10,
                  background_color_inside=bg_color,
                  grid=false, framestyle=:box,
-                 margin=4Plots.mm)
+                 top_margin=2Plots.mm, bottom_margin=12Plots.mm,
+                 left_margin=4Plots.mm, right_margin=3Plots.mm)
 
         if length(real_ratios) > 2
             histogram!(p, real_ratios; normalize=:pdf, bins=20,
@@ -140,11 +143,11 @@ for cond in ["TF-only", "TF+TM"]
             p_color = ks_p >= 0.05 ? :forestgreen : :red
 
             annotate!(p, x_right, y_top * 0.95,
-                      text("OL: $(round(Int, overlap*100))%", 8, :right, :forestgreen))
-            annotate!(p, x_right, y_top * 0.82,
-                      text("D=$(round(ks_D, digits=3))", 8, :right, :gray30))
-            annotate!(p, x_right, y_top * 0.69,
-                      text(ks_p_str, 8, :right, p_color))
+                      text("OL: $(round(Int, overlap*100))%", 10, :right, :forestgreen))
+            annotate!(p, x_right, y_top * 0.86,
+                      text("D=$(round(ks_D, digits=3))", 10, :right, :gray30))
+            annotate!(p, x_right, y_top * 0.77,
+                      text(ks_p_str, 10, :right, p_color))
 
             @info "    $feat: KS D=$(round(ks_D, digits=3)), $ks_p_str, overlap=$(round(Int, overlap*100))%"
         end
@@ -163,9 +166,9 @@ for cond in ["TF-only", "TF+TM"]
     all_panels = vcat(plots_list, ratio_panels)
     p_combined = plot(all_panels...; layout=(2, 5), size=(2200, 900),
                  margin=5Plots.mm, left_margin=10Plots.mm)
-    savefig(p_combined, joinpath(_PATH_TO_FIG, "validate_mechanistic_combined_$(cond_tag).pdf"))
-    savefig(p_combined, joinpath(_PATH_TO_FIG, "validate_mechanistic_combined_$(cond_tag).png"))
-    @info "  Saved validate_mechanistic_combined_$(cond_tag).pdf"
+    savefig(p_combined, joinpath(_PATH_TO_FIG, "validate_mechanistic_combined_$(cond_tag)_v2.pdf"))
+    savefig(p_combined, joinpath(_PATH_TO_FIG, "validate_mechanistic_combined_$(cond_tag)_v2.png"))
+    @info "  Saved validate_mechanistic_combined_$(cond_tag)_v2.pdf"
 end
 
 # ── Plot 3: Rank correlation bar charts ──────────────────────────────────────
