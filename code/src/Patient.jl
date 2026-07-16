@@ -529,6 +529,136 @@ end
 
 
 """
+    sa_generate_from_matrix(X_concat, kept_cols, n_assays, n_samples, T;
+                            β=nothing, α=0.01, pratio=0.95, seed=42)
+        -> (synth_df::DataFrame, mem::NamedTuple)
+
+Faithful extraction of the concatenated-visit SA-generation pipeline inlined
+in `run_full_longitudinal.jl` (lines ~53–135), parameterized over an arbitrary
+`K × (n_assays·n_visits)` real-data matrix so downstream experiments
+(holdout retraining, SIM subsets, …) can reuse it without duplicating the
+inline block. `run_full_longitudinal.jl` itself is left untouched as the
+frozen canonical reference; this function reproduces its seed-42 output
+exactly (see `experiments/test_sa_helper.jl`).
+
+Mirrors, in the same order (so the RNG call sequence matches):
+standardize → PCA (`pratio`) → unit-norm columns (+ retain `pca_norms`)
+→ β* via `find_entropy_inflection` (only if `β === nothing`)
+→ `Random.seed!(seed)` → per-sample ULA `sample(X̂, ξ₀, T; β=β_star, α=α)`
+→ rescale the unit direction by a magnitude drawn from `pca_norms`
+→ `reconstruct` → destandardize → long-format DataFrame.
+
+# Arguments
+- `X_concat::Matrix{Float64}`: `K × (n_assays·n_visits)` concatenated real
+  rows; visits are laid out contiguously (columns `1:n_assays` = visit 1,
+  `n_assays+1:2n_assays` = visit 2, …).
+- `kept_cols::Vector{Symbol}`: assay column names, length `n_assays`.
+- `n_assays::Int`
+- `n_samples::Int`
+- `T::Int`: ULA steps per sample.
+
+# Keyword Arguments
+- `β::Union{Float64,Nothing}=nothing`: fixed inverse temperature. If
+  `nothing`, computed once via
+  `find_entropy_inflection(X̂; α=0.01, n_betas=80, β_range=(0.1,1000.0))`
+  (this inner call always uses `α=0.01`, independent of the `α` below).
+- `α::Float64=0.01`: ULA step size used for the per-sample `sample(...)` calls.
+- `pratio::Float64=0.95`: PCA variance-retained ratio.
+- `seed::Union{Int,Nothing}=42`: seeds the RNG once before the generation
+  loop (matching the canonical script's `Random.seed!(42)`); pass `nothing`
+  to leave the RNG state as-is.
+
+# Returns
+- `synth_df::DataFrame`: long format, columns = `kept_cols` plus
+  `SyntheticID` and `Visit`, sorted by `(SyntheticID, Visit)`,
+  `n_samples * n_visits` rows.
+- `mem::NamedTuple`: `(X̂, pca_model, std_params, pca_norms, β_star, d_pca)`.
+"""
+function sa_generate_from_matrix(X_concat::Matrix{Float64}, kept_cols::Vector{Symbol},
+                                  n_assays::Int, n_samples::Int, T::Int;
+                                  β::Union{Float64,Nothing}=nothing,
+                                  α::Float64=0.01, pratio::Float64=0.95,
+                                  seed::Union{Int,Nothing}=42)
+
+    K, d_concat = size(X_concat)
+    n_visits = d_concat ÷ n_assays
+    n_visits * n_assays == d_concat || throw(DimensionMismatch(
+        "X_concat has $d_concat columns, not divisible by n_assays=$n_assays"))
+
+    # ── Step 3 (mirrors run_full_longitudinal.jl:79-107): standardize + PCA ──
+    concat_col_names = Symbol[]
+    for v in 1:n_visits
+        for col in kept_cols
+            push!(concat_col_names, Symbol("V$(v)_$(col)"))
+        end
+    end
+
+    μ_concat = vec(mean(X_concat, dims=1))
+    σ_concat = vec(std(X_concat, dims=1))
+    for i in eachindex(σ_concat)
+        σ_concat[i] < 1e-12 && (σ_concat[i] = 1.0)
+    end
+    Z_concat = (X_concat .- μ_concat') ./ σ_concat'
+    std_params_concat = StandardizationParams(μ_concat, σ_concat, concat_col_names)
+
+    Z_t = Z_concat'
+    pca_concat = MultivariateStats.fit(PCA, Z_t; pratio=pratio)
+    d_pca = MultivariateStats.outdim(pca_concat)
+    X_pca = MultivariateStats.transform(pca_concat, Z_t)
+
+    pca_norms = [norm(X_pca[:, k]) for k in 1:K]
+    X̂ = copy(X_pca)
+    for k in 1:K
+        X̂[:, k] ./= (norm(X̂[:, k]) + 1e-12)
+    end
+
+    # ── Step 4 (mirrors run_full_longitudinal.jl:112-135): β* and generate ──
+    β_star = β
+    if β_star === nothing
+        phase = find_entropy_inflection(X̂; α=0.01, n_betas=80, β_range=(0.1, 1000.0))
+        β_star = phase.β_star
+    end
+
+    if seed !== nothing
+        Random.seed!(seed)
+    end
+
+    synth_concat = Matrix{Float64}(undef, n_samples, d_concat)
+
+    for i in 1:n_samples
+        k0 = rand(1:K)
+        ξ₀ = X̂[:, k0] .+ 0.01 .* randn(d_pca)
+        ξ₀ ./= norm(ξ₀)
+        result = sample(X̂, ξ₀, T; β=β_star, α=α)
+        ξ_dir = result.Ξ[end, :]
+        ξ_dir ./= (norm(ξ_dir) + 1e-12)
+        r = rand(pca_norms)
+        ξ_rescaled = r .* ξ_dir
+        z_std = vec(MultivariateStats.reconstruct(pca_concat, ξ_rescaled))
+        synth_concat[i, :] = z_std .* σ_concat .+ μ_concat
+    end
+
+    # split into per-visit blocks, stack long-format
+    df_synth_visits = DataFrame[]
+    for v in 1:n_visits
+        offset = (v - 1) * n_assays
+        cols = synth_concat[:, (offset+1):(offset+n_assays)]
+        df_v = DataFrame(cols, kept_cols)
+        df_v.SyntheticID = 1:n_samples
+        df_v.Visit = fill(v, n_samples)
+        push!(df_synth_visits, df_v)
+    end
+    synth_df = vcat(df_synth_visits...)
+    sort!(synth_df, [:SyntheticID, :Visit])
+
+    mem = (X̂=X̂, pca_model=pca_concat, std_params=std_params_concat,
+           pca_norms=pca_norms, β_star=β_star, d_pca=d_pca)
+
+    return synth_df, mem
+end
+
+
+"""
     generate_conditioned_patients_rescaled(X̂_unit, pca_model, std_params,
         pca_norms, condition_mask, n_samples, T; β, α=0.1, ρ_ratio=10.0,
         seed=nothing) -> DataFrame
