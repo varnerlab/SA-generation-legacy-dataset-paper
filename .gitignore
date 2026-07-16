@@ -39,3 +39,13 @@ __pycache__/
 
 # Subagent-driven-development scratch ledger
 .superpowers/
+
+# LaTeX build transients (PDFs and .bbl stay tracked)
+paper/*.aux
+paper/*.log
+paper/*.blg
+paper/*.out
+arxiv/*.aux
+arxiv/*.log
+arxiv/*.blg
+arxiv/*.out
