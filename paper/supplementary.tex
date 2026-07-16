@@ -25,6 +25,19 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
 
+% --- Tracked-changes for revision (R1 blue, R2 red, both violet) ---
+\newif\ifreviewmode
+\reviewmodetrue   % set \reviewmodefalse for camera-ready (all edits render black)
+\ifreviewmode
+  \newcommand{\rone}[1]{\textcolor[rgb]{0.10,0.30,0.75}{#1}}   % Reviewer 1 — blue
+  \newcommand{\rtwo}[1]{\textcolor[rgb]{0.75,0.15,0.15}{#1}}   % Reviewer 2 — red
+  \newcommand{\rboth}[1]{\textcolor[rgb]{0.50,0.15,0.65}{#1}}  % both — violet
+\else
+  \newcommand{\rone}[1]{#1}
+  \newcommand{\rtwo}[1]{#1}
+  \newcommand{\rboth}[1]{#1}
+\fi
+
 \begin{document}
 
 \input{sections/supplementary}
