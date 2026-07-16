@@ -99,6 +99,49 @@ git commit -m "revision: add R1/R2 tracked-change color macros and reviewmode to
 
 ---
 
+### Task 1b: Extract `sa_generate_from_matrix` helper (DRY; freeze canonical script)
+
+**Decision (user, 2026-07-16):** the SA-from-a-raw-matrix pipeline is reused by E3 (holdout retrain) and both SIM subset arms, so extract ONE reusable helper rather than copy the `run_full_longitudinal.jl:53-135` block into each script. **`run_full_longitudinal.jl` stays untouched as the frozen canonical reference** — the helper must reproduce its seed-42 output, proven by test. New experiments call the helper; the canonical published numbers are not at risk.
+
+**Files:**
+- Modify: `code/src/Patient.jl` (add one function near the other `generate_*` functions, ~line 492)
+- Create: `code/experiments/test_sa_helper.jl` (a runnable equivalence check, not a package test — the repo has no test suite)
+- Reads (test only): `code/data/synthetic_full_longitudinal.csv`, `code/data/full_longitudinal_memory.jld2`
+
+**Interfaces:**
+- Produces: `sa_generate_from_matrix(X_concat, kept_cols, n_assays, n_samples, T; β=nothing, α=0.01, pratio=0.95, seed=42)` where `X_concat` is `K×(n_assays·3)` real concatenated rows, returning `(synth_df::DataFrame, mem::NamedTuple)`. `synth_df` is long-format (columns = `kept_cols` + `SyntheticID` + `Visit`, `3·n_samples` rows). `mem` has fields `X̂` (`d×K` unit-norm), `pca_model`, `std_params::StandardizationParams`, `pca_norms` (len K), `β_star`, `d_pca`. When `β` is `nothing`, β* is computed via `find_entropy_inflection(X̂; α=0.01, n_betas=80, β_range=(0.1,1000.0))`. Consumed by Task 2 (E1 SA-reference option), Task 4 (E3), Task 5 (`sim_common` `sa_recover`), Task 6 (SIM subsample).
+- Consumes: existing `standardize`, `build_memory_matrix_raw`/`build_memory_matrix`, `decode_sample`, `Compute.sample`, `find_entropy_inflection`. Mirror the operation order of `run_full_longitudinal.jl:53-135` EXACTLY (same standardize→PCA→unit-norm→pca_norms→β*→`Random.seed!(seed)`→per-sample ULA `sample(X̂, ξ₀, T; β, α)`→rescale by a magnitude drawn from `pca_norms`→`reconstruct`→destandardize) so the RNG stream matches.
+
+- [ ] **Step 1: Write the equivalence check (the failing test).** In `code/experiments/test_sa_helper.jl`: rebuild `X_concat` from `df_clean` (loaded from `full_longitudinal_memory.jld2`) exactly as `run_full_longitudinal.jl` does, call `sa_generate_from_matrix(X_concat, kept_cols, n_assays, 100, 2000; seed=42)`, and assert the returned `synth_df` matches the canonical `data/synthetic_full_longitudinal.csv`:
+
+```julia
+canon = CSV.read(joinpath(_PATH_TO_DATA, "synthetic_full_longitudinal.csv"), DataFrame)
+synth_df, mem = sa_generate_from_matrix(X_concat, kept_cols, n_assays, 100, 2000; seed=42)
+# align column order + row order (SyntheticID, Visit) then compare numeric block
+@assert isapprox(Matrix(synth_df[!, kept_cols]), Matrix(canon[!, kept_cols]); rtol=1e-6, atol=1e-8)
+@assert isapprox(mem.β_star, 2.94; atol=0.05)   # canonical β*
+println("helper reproduces canonical cohort ✓  (β* = ", round(mem.β_star, digits=3), ")")
+```
+
+Run: `cd code && julia experiments/test_sa_helper.jl`
+Expected before the helper exists: `UndefVarError: sa_generate_from_matrix`. After a faithful extraction: prints the ✓ line.
+
+- [ ] **Step 2: Implement `sa_generate_from_matrix` in `Patient.jl`** by lifting the `run_full_longitudinal.jl:53-135` logic into the function body, parameterized by `(X_concat, kept_cols, n_assays, n_samples, T; ...)`. Do NOT modify `run_full_longitudinal.jl`.
+
+- [ ] **Step 3: Run the equivalence check to confirm it passes.**
+
+Run: `cd code && julia experiments/test_sa_helper.jl`
+Expected: prints `helper reproduces canonical cohort ✓ (β* = 2.94…)`. If it does not reproduce, the extraction diverged from the frozen block — fix the operation/RNG order until it matches; do not loosen the tolerance to force a pass.
+
+- [ ] **Step 4: Commit.**
+
+```bash
+git add code/src/Patient.jl code/experiments/test_sa_helper.jl
+git commit -m "revision: extract sa_generate_from_matrix helper (reproduces canonical seed-42 cohort)"
+```
+
+---
+
 ## Phase 1 — Experiments E1 / E2 / E3 (reuse canonical harness; parallelizable)
 
 ### Task 2: E1 — PCA-space ablation suite
@@ -293,7 +336,7 @@ git commit -m "revision(E2): convex-hull membership + out-of-hull plausibility (
 - Writes: `code/data/privacy_results.csv`
 
 **Interfaces:**
-- Consumes: standardized real matrix `Zreal` (`23×216`, via `standardize(df_clean_concat, kept_cols)` or `std_params_concat`), standardized synthetic matrix `Zsyn` (`100×216`); the inline concatenation+PCA+generation steps from `run_full_longitudinal.jl:53-135` (for the holdout retrain).
+- Consumes: standardized real matrix `Zreal` (`23×216`, via `standardize(df_clean_concat, kept_cols)` or `std_params_concat`), standardized synthetic matrix `Zsyn` (`100×216`); **the `sa_generate_from_matrix` helper from Task 1b for the holdout retrain** (subset the 15 training subjects' concatenated rows → `X_train`, call `sa_generate_from_matrix(X_train, kept_cols, n_assays, 100, 2000; seed=42)`). Do NOT copy the inline block.
 - Produces: CSV with a DCR block (`Kind ∈ {synth_to_real, real_to_real, holdout_to_train}`, per-record min distance) and a scalar `MIA_AUC`.
 
 - [ ] **Step 1: DCR distributions (distance to closest record), Euclidean in standardized space.**
@@ -342,7 +385,7 @@ git commit -m "revision(E3): DCR distribution + nearest-neighbor membership-infe
 - Writes: `code/data/sim_lowrank_results.csv`
 
 **Interfaces:**
-- Produces (`sim_common.jl`): `make_lowrank_gt(p, r, rng; tail=:gaussian)` → `(sampler, Σpop)` where `sampler(n)` draws `n×p` observations from an `r`-dim latent factor model with a specified cross-visit block covariance and optional heavy-tailed (lognormal/t) marginal transforms; `sa_recover(Xtrain)` → generates `N=100` SA synthetics from `Xtrain` via the canonical inline pipeline (standardize → PCA 0.95 → unit-norm → `find_entropy_inflection` → rescaled ULA `T=2000, α=0.01, seed=42`); `mvn_recover(Xtrain)` → `MvNormal` fit + draw; `cov_frob(Ĉ, Σpop)` and `marginal_mre(Xsyn, Xtest)` recovery metrics against a large fresh GT test draw.
+- Produces (`sim_common.jl`): `make_lowrank_gt(p, r, rng; tail=:gaussian)` → `(sampler, Σpop)` where `sampler(n)` draws `n×p` observations from an `r`-dim latent factor model with a specified cross-visit block covariance and optional heavy-tailed (lognormal/t) marginal transforms; `sa_recover(Xtrain)` → generates `N=100` SA synthetics from `Xtrain` **by calling the Task 1b helper `sa_generate_from_matrix`** (for the SIM arms `Xtrain` is a generic `n×p` matrix, not visit-concatenated — pass `n_assays = p ÷ 3` when the GT has a 3-block structure, or use a `nvisits=1` path; the helper's standardize→PCA(0.95)→unit-norm→β*→rescaled-ULA body is identical); `mvn_recover(Xtrain)` → `MvNormal` fit + draw; `cov_frob(Ĉ, Σpop)` and `marginal_mre(Xsyn, Xtest)` recovery metrics against a large fresh GT test draw.
 - Consumes: `find_entropy_inflection`, `MultivariateStats.fit(PCA,...)`, `Distributions.MvNormal`.
 
 - [ ] **Step 1: Write `sim_common.jl` with a failing recovery self-check.** On a well-specified GT with large `n`, SA covariance-recovery error must be small:
@@ -384,7 +427,7 @@ git commit -m "revision(SIM arm1): low-rank Gaussian ground-truth recovery sweep
 - Consumes: `sim_common.jl` helpers; the full-23 real concatenated matrix and its `safe_cor` reference; mechanistic overlap reuse.
 - Produces: CSV `n, Rep, Cov_Frob_vs_full23, Marginal_MRE, Mech_Overlap`.
 
-- [ ] **Step 1: Subsample + regenerate.** For `n ∈ {20,15,10,8}` and several random subsets (`Rep ∈ 1:10`, seeds derived from index, not `rand`), subsample the 23 complete subjects to `n`, regenerate `N=100` SA synthetics via the canonical inline pipeline, and measure recovery of the **full-23** structure: cross-visit `Cov_Frob` vs `safe_cor` of all 23, pooled `Marginal_MRE` vs all 23, and mechanistic `frac_in_range`.
+- [ ] **Step 1: Subsample + regenerate.** For `n ∈ {20,15,10,8}` and several random subsets (`Rep ∈ 1:10`, seeds derived from index, not `rand`), subsample the 23 complete subjects to `n`, regenerate `N=100` SA synthetics via **`sa_generate_from_matrix` (Task 1b)** on the subset's concatenated rows, and measure recovery of the **full-23** structure: cross-visit `Cov_Frob` vs `safe_cor` of all 23, pooled `Marginal_MRE` vs all 23, and mechanistic `frac_in_range`.
 
 - [ ] **Step 2: Verify degradation curve is monotone-ish and finite.**
 
@@ -647,4 +690,4 @@ Expected: arxiv `main.pdf` builds clean with the mirrored edits.
 
 - **Scope guards (do NOT violate):** no second real clinical cohort (SIM substitutes); no alternative/independent mechanistic recalibration experiment (R1.2/R2.3 = prose only); no new nonlinear SA generator (nonlinearity is only a GT probe in SIM arm 3); E3 is empirical only (no differential-privacy mechanism).
 - **The `arxiv/` mirror is a separate copy** — every section edit must be duplicated there. This is the most likely source of drift; the final `cd arxiv && make` (Task 17.4) is the guard.
-- **No single reusable "build concatenated longitudinal memory" function exists** — the concatenation+PCA+unit-norm+pca_norms logic is currently inlined and duplicated across `run_full_longitudinal.jl`, `paper_sa_vs_mvn.jl`, `paper_pca_by_visit.jl`, `paper_correlation_heatmaps.jl`. E1/E3/SIM re-use it by loading `full_longitudinal_memory.jld2` where possible; the holdout-retrain (E3) and SIM arms that must rebuild from a subset should copy the `run_full_longitudinal.jl:53-135` block. Optional refactor (out of scope for the revision, note for later): extract this into a `Patient.build_longitudinal_memory(df_clean, kept_cols, n_assays; pratio=0.95)` helper.
+- **The SA-from-a-matrix pipeline is extracted into `sa_generate_from_matrix` (Task 1b)** — decided with the user 2026-07-16. E3 holdout-retrain and both SIM subset arms call the helper; they do NOT copy the `run_full_longitudinal.jl:53-135` block. The canonical `run_full_longitudinal.jl` is left untouched (frozen reference); Task 1b's equivalence test proves the helper reproduces its seed-42 output. The other historical copies (`paper_sa_vs_mvn.jl`, `paper_pca_by_visit.jl`, `paper_correlation_heatmaps.jl`) are out of scope for this revision and stay as-is.
