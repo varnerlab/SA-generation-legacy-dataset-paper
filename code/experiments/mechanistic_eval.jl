@@ -164,7 +164,8 @@ function bz2012_ratios(df::DataFrame, kept_cols; TM::Float64=0.0)
             for (j, fname) in enumerate(_FEATURE_NAMES)
                 m = getfield(meas, fname)
                 p = getfield(pred, fname)
-                push!(out, (pid, _FEATURE_LABELS[j], p, m, p / m))
+                m_safe = sign(m) >= 0 ? max(m, 1e-12) : min(m, -1e-12)
+                push!(out, (pid, _FEATURE_LABELS[j], p, m, p / m_safe))
             end
         catch e
             @warn "  bz2012_ratios: failed on $pid (TM=$TM): $(sprint(showerror, e))"
