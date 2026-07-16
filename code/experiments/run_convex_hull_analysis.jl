@@ -151,6 +151,24 @@ Ysyn = MultivariateStats.transform(pca_concat, Zsyn')   # d_pca × n_synth
 @info "  Ysyn (synthetic, raw PCA coords): $(size(Ysyn))"
 
 # ══════════════════════════════════════════════════════════════════════════════
+# Round-trip check (auditable version of a claim the report otherwise only
+# asserts in prose): rebuild the REAL cohort's concatenated matrix — same
+# `complete_subjects` patient order and `kept_cols`/`n_assays`/`n_visits`
+# block layout used to originally build X̂/Y in run_full_longitudinal.jl —
+# via `longdf_to_concat`, push it through the IDENTICAL
+# standardize(std_params_concat) → transform(pca_concat, ·) pipeline used
+# above for Ysyn, and confirm it reproduces Y = X̂ .* pca_norms'. If this
+# ever failed, Y and Ysyn would silently NOT be in the same coordinate
+# system and every hull-membership distance computed below would be
+# meaningless.
+# ══════════════════════════════════════════════════════════════════════════════
+concat_real_roundtrip = longdf_to_concat(df_clean, :SubjectID, complete_subjects, kept_cols, n_assays, n_visits)
+Z_real_roundtrip = (concat_real_roundtrip .- std_params_concat.μ') ./ std_params_concat.σ'
+Y_roundtrip = MultivariateStats.transform(pca_concat, Z_real_roundtrip')
+@assert isapprox(Y_roundtrip, Y; atol=1e-8) "round-trip check FAILED: rebuilding the real cohort through standardize(std_params_concat)+transform(pca_concat,·) does not reproduce Y = X̂ .* pca_norms' — Y and Ysyn are NOT in the same coordinate system"
+@info "  ✓ Round-trip check: real-cohort rebuild via standardize+transform(pca_concat) reproduces Y (atol=1e-8)"
+
+# ══════════════════════════════════════════════════════════════════════════════
 # Step 3a: Classify all 100 synthetic points for hull membership.
 # ══════════════════════════════════════════════════════════════════════════════
 @info "\nClassifying $n_synth synthetic points for hull membership …"
@@ -223,6 +241,22 @@ if !isempty(out_idx)
     real_ratios = bz2012_ratios(df_real_complete, TF_TGA_COLS; TM=0.0)
     @info "  real_ratios: $(nrow(real_ratios)) rows"
 
+    # NOTE — banding convention (deliberate, documented here; not a bug):
+    # `band` below is computed PER TGA FEATURE — one separate [5th,95th]
+    # percentile band each for lagtime, peak, tpeak, max_rate, and ETP,
+    # built only from that feature's own real-cohort Predicted/Measured
+    # ratios. This is a deliberate departure from the sibling E1 helper
+    # `overlap_ks` (mechanistic_eval.jl), which instead POOLS all features'
+    # ratios into a single vector before taking one 5th/95th band. Pooling
+    # here would mix heterogeneous quantities (a lagtime ratio, a peak
+    # ratio, an ETP ratio, …) into one distribution, which is less
+    # defensible than judging each feature against its own real-cohort
+    # spread — hence the per-feature choice. The consequence is that
+    # `mech_in_envelope_patient`'s "ALL features, at ALL 3 visits, must
+    # fall in-band" criterion (below) is a strict, per-feature-and-per-visit
+    # test — this per-feature banding is precisely what makes that
+    # all-features-and-all-visits criterion so demanding relative to E1's
+    # single pooled overlap_ks pass rate.
     feature_labels = unique(real_ratios.Feature)
     band = Dict(f => (quantile(filter(r -> r.Feature == f, real_ratios).Ratio, 0.05),
                        quantile(filter(r -> r.Feature == f, real_ratios).Ratio, 0.95))
@@ -237,13 +271,19 @@ if !isempty(out_idx)
 
     Runs `bz2012_ratios` (TF-only, calibrated) on one out-of-hull synthetic
     patient's decoded visit rows and checks every resulting feature ratio
-    against the real-cohort [5th,95th] band. A patient for which the ODE
-    integration fails on every visit (`nrow(r) == 0`) cannot be confirmed
-    in-envelope and is conservatively marked false.
+    against the real-cohort [5th,95th] band. Conservative on PARTIAL ODE
+    failure, not just total failure: the full expected ratio-row count is
+    `nrow(rows)` visits × `length(TF_TGA_COLS)` features (one row per
+    feature per visit); if the ODE integration/feature-extraction fails on
+    ANY visit — not only if it fails on every visit — the patient's ratio
+    set is incomplete and envelope membership cannot be confirmed on the
+    missing rows, so the patient is conservatively marked false rather than
+    evaluated on whatever partial subset of rows happened to succeed.
     """
     function mech_in_envelope_patient(rows::AbstractDataFrame)
         r = bz2012_ratios(rows, TF_TGA_COLS; TM=0.0)
-        nrow(r) == 0 && return false
+        expected_n = nrow(rows) * length(TF_TGA_COLS)
+        nrow(r) == expected_n || return false
         for row in eachrow(r)
             lo, hi = band[row.Feature]
             (row.Ratio < lo || row.Ratio > hi) && return false
@@ -318,6 +358,21 @@ else
           "range=[$(round(minimum(dists[out_idx]),digits=2)), $(round(maximum(dists[out_idx]),digits=2))]"
 end
 
+# ── Persist the LOO comparison as a committed artifact (this comparison is
+#    load-bearing for a manuscript claim — R2.4 — so it must not live only
+#    in console @info output). Rows: real_loo (K=23 leave-one-out real
+#    patients vs. the hull of the other 22) and synth_outhull (the SA
+#    synthetic points classified out-of-hull above vs. the full K=23 hull).
+loo_summary_df = DataFrame(Group=String[], Median=Float64[], Min=Float64[], Max=Float64[], N=Int[])
+push!(loo_summary_df, ("real_loo", median(loo_dists), minimum(loo_dists), maximum(loo_dists), length(loo_dists)))
+if isempty(out_idx)
+    push!(loo_summary_df, ("synth_outhull", NaN, NaN, NaN, 0))
+else
+    push!(loo_summary_df, ("synth_outhull", median(dists[out_idx]), minimum(dists[out_idx]), maximum(dists[out_idx]), length(out_idx)))
+end
+CSV.write(joinpath(_PATH_TO_DATA, "convex_hull_loo_summary.csv"), loo_summary_df)
+@info "  ✓ Wrote data/convex_hull_loo_summary.csv"
+
 # ══════════════════════════════════════════════════════════════════════════════
 # Step 4: headline numbers + invariant checks
 # ══════════════════════════════════════════════════════════════════════════════
@@ -338,8 +393,12 @@ println("  Outside-but-plausible (of the outside subset, Bio AND Mech): " *
         (isempty(out_idx) ? "n/a (no out-of-hull points)" :
          "$(round(100*frac_plausible, digits=1))%  ($(sum(plausible_mask))/$n_out)"))
 if !isempty(out_idx)
-    println("    (breakdown — BioPlausible only: $(round(100*frac_bio_only,digits=1))%; " *
-            "MechInEnvelope only: $(round(100*frac_mech_only,digits=1))%)")
+    # NOTE: these are MARGINAL pass rates (each computed independently over
+    # the out-of-hull subset), not mutually exclusive categories — they can
+    # (and do) overlap with the joint Bio-AND-Mech rate above and with each
+    # other, so they do not sum to 100% with the joint/fail-both rates.
+    println("    (breakdown — BioPlausible (marginal): $(round(100*frac_bio_only,digits=1))%; " *
+            "MechInEnvelope (considered alone): $(round(100*frac_mech_only,digits=1))%)")
 end
 println("="^90)
 
