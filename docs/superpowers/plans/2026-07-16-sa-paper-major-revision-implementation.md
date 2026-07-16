@@ -12,6 +12,7 @@
 
 - **Canonical SA hyperparameters (copy verbatim into every experiment):** `α = 0.01`, `β* = 2.94` (recomputed per cohort via `find_entropy_inflection(X̂; α=0.01, n_betas=80, β_range=(0.1,1000.0))`), `T = 2000`, PCA `pratio = 0.95` → `d = 18`, `N = 100`, `Random.seed!(42)`.
 - **Run all Julia from `code/`.** Every experiment script begins with `include(joinpath(@__DIR__, "..", "Include.jl"))`. Scripts that need the mechanistic model additionally `using HockinMannModel, HypothesisTests, Optim`.
+- **Two reusable helpers are built up front and then reused (do not copy their source blocks):** `sa_generate_from_matrix` (Task 1b, in `src/Patient.jl`) for SA-from-a-matrix generation (E3 holdout, SIM subset arms); and `mechanistic_eval.jl` (Task 1c, includable) exposing `CALIBRATED_OVERRIDES`, `bz2012_ratios`, `overlap_ks` for the BZ2012 cloud-overlap/KS evaluation (E1, E2, SIM arm 2). The frozen reference scripts (`run_full_longitudinal.jl`, `validate_mechanistic_plausibility.jl`, `regen_mechanistic_figures.jl`) are never modified.
 - **Reuse, do not reinvent, the harness.** Canonical artifact: `code/data/full_longitudinal_memory.jld2` with keys `X̂` (unit-norm PCA memory, `d×23`), `pca_concat` (fitted `PCA` model), `std_params_concat::StandardizationParams`, `pca_norms` (empirical magnitudes, len 23), `complete_subjects`, `subject_conditions`, `kept_cols`, `n_assays`, `df_clean`. Raw PCA coordinates of the 23 reals: `Y = X̂ .* pca_norms'` (`d×23`). Key reuse functions: `decode_sample` (`Patient.jl:364`), `feature_summary_comparison` (`Patient.jl:600`, gives `Mean_Rel_Error`), `sample_novelty` (`Utilities.jl:52`), `find_entropy_inflection` (`Utilities.jl:254`). Mechanistic envelope reuse: `CALIBRATED_OVERRIDES` + `run_patient` + `to_clinical` from `validate_mechanistic_plausibility.jl:79-126`; overlap/KS pattern from `regen_mechanistic_figures.jl:104-109` (`quantile(real_ratios,[0.05,0.95])` band → `frac_in_range`; `ApproximateTwoSampleKSTest`). Cross-visit Frobenius pattern from `validate_cross_visit_covariance.jl:108-109` with `safe_cor`. Pooled-median + bootstrap-CI pattern from `paper_summary_table.jl:100-112` (seed 42, 10 000 resamples, percentile indices 250/9750).
 - **Every prose edit is applied to BOTH copies:** `paper/sections/<file>.tex` AND `arxiv/sections/<file>.tex` (they are independent copies, not symlinks). Line numbers in tasks below refer to `paper/`; find the matching text in `arxiv/` by content.
 - **Tracked-changes convention:** `\rone{...}` = blue (R1), `\rtwo{...}` = red (R2), `\rboth{...}` = violet (both). A `\reviewmode` boolean toggles all three to black for camera-ready. Macros defined in `paper/main.tex`, `paper/supplementary.tex`, AND `arxiv/main.tex` (each has an independent preamble).
@@ -138,6 +139,53 @@ Expected: prints `helper reproduces canonical cohort ✓ (β* = 2.94…)`. If it
 ```bash
 git add code/src/Patient.jl code/experiments/test_sa_helper.jl
 git commit -m "revision: extract sa_generate_from_matrix helper (reproduces canonical seed-42 cohort)"
+```
+
+---
+
+### Task 1c: Extract mechanistic BZ2012 evaluation helper (DRY; freeze reference)
+
+**Decision (controller, 2026-07-16, applying the same principle the user chose for Task 1b):** the BZ2012 mechanistic evaluation (run calibrated ODE per patient → Predicted/Measured ratios → cloud overlap + KS) is reused by E1 (Task 2), E2 (Task 3 out-of-hull plausibility), and SIM arm 2 (Task 6). It currently lives as un-importable script-level code in `validate_mechanistic_plausibility.jl` / `regen_mechanistic_figures.jl`. Extract it ONCE into an includable helper so the three consumers do not each copy the ODE harness (which the review rubric flags as Important duplication). **`validate_mechanistic_plausibility.jl` and `regen_mechanistic_figures.jl` stay untouched** (frozen references); the helper must reproduce their published TF-only numbers.
+
+**Files:**
+- Create: `code/experiments/mechanistic_eval.jl` (an includable helper, NOT run standalone; scripts `include(joinpath(@__DIR__, "mechanistic_eval.jl"))` after `using HockinMannModel, HypothesisTests`)
+- Create: `code/experiments/test_mechanistic_eval.jl` (equivalence check)
+- Reads (test only): `code/data/cleaned_full_data.csv` (real) + `code/data/synthetic_full_longitudinal.csv` (synth), or the cached `code/data/validate_mechanistic_results.csv`
+
+**Interfaces:**
+- Produces:
+  - `const CALIBRATED_OVERRIDES` — the fitted rate constants, copied verbatim from `validate_mechanistic_plausibility.jl:79-85` (`prothrombinase_kcat=21.94, intrinsic_xase_kcat=0.1693, extrinsic_xase_kcat=93.21, PC_activation_kcat=0.8896, mIIa_conversion_k=1.153e9`).
+  - `bz2012_ratios(df, kept_cols; TM=0.0) -> DataFrame` with columns `PatientID, Feature, Predicted, Measured, Ratio` — runs the calibrated BZ2012 (`run_patient` logic from `validate_mechanistic_plausibility.jl:96-124`: `percent_nominal_to_molar` → `patient_initial_conditions(HockinMannBZ2012; TF=5e-12, TM, factors...)` → `simulate(...; tspan=(0,1200), saveat=1.0)` → `extract_tga_features` → `to_clinical`) over the 5 TGA features for every patient row.
+  - `overlap_ks(real_ratios::Vector, synth_ratios::Vector) -> (frac_in_range, ks_D, ks_p)` — band `quantile(real_ratios,[0.05,0.95])`, `frac_in_range = mean(real_lo .<= synth_ratios .<= real_hi)`, `ApproximateTwoSampleKSTest(real_ratios, synth_ratios)` (ratios clamped `[0,5]` as in `regen_mechanistic_figures.jl:96-109`).
+- Consumed by: Task 2 (E1), Task 3 (E2), Task 6 (SIM arm 2). These call the helper instead of copying the harness.
+
+- [ ] **Step 1: Write the equivalence check (failing test).** In `test_mechanistic_eval.jl`: run `bz2012_ratios` on the 23 real + 100 synthetic (TF-only, TM=0) cohorts, compute `overlap_ks`, and assert the published TF-only numbers reproduce:
+
+```julia
+# Published canonical (paper): TF-only cloud overlap 0.86–0.93, KS D 0.079–0.127, all p > 0.30
+real_r  = bz2012_ratios(df_real,  kept_cols; TM=0.0)
+synth_r = bz2012_ratios(df_synth, kept_cols; TM=0.0)
+frac, ksD, ksp = overlap_ks(real_r.Ratio, synth_r.Ratio)   # pooled across features, or per-feature loop
+@assert 0.80 <= frac <= 0.95   "overlap $frac outside published TF-only band"
+@assert ksD <= 0.20            "KS D $ksD larger than published"
+println("mechanistic helper reproduces published TF-only envelope ✓ (overlap=$(round(frac,digits=3)), KS D=$(round(ksD,digits=3)))")
+```
+
+Run: `cd code && julia experiments/test_mechanistic_eval.jl`
+Expected before helper exists: `LoadError` / `UndefVarError`. After faithful extraction: prints the ✓ line. (Cross-check the per-feature overlaps against the cached `validate_mechanistic_results.csv` if the pooled number is ambiguous.)
+
+- [ ] **Step 2: Implement `mechanistic_eval.jl`** by lifting the `run_patient`/`to_clinical`/ratio/overlap/KS logic from `validate_mechanistic_plausibility.jl` + `regen_mechanistic_figures.jl` into the three helper functions. Do NOT modify those two scripts.
+
+- [ ] **Step 3: Run the equivalence check to confirm it passes.**
+
+Run: `cd code && julia experiments/test_mechanistic_eval.jl`
+Expected: prints the ✓ line with overlap in the published band. If it does not reproduce, the extraction diverged — fix operation order / unit conversions until it matches; do not loosen the asserted band to force a pass.
+
+- [ ] **Step 4: Commit.**
+
+```bash
+git add code/experiments/mechanistic_eval.jl code/experiments/test_mechanistic_eval.jl
+git commit -m "revision: extract mechanistic_eval helper (reproduces published TF-only overlap/KS)"
 ```
 
 ---
