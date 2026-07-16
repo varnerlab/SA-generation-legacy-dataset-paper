@@ -36,3 +36,6 @@ __pycache__/
 
 # macOS Finder metadata
 .DS_Store
+
+# Subagent-driven-development scratch ledger
+.superpowers/
