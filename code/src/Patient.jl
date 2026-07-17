@@ -529,6 +529,57 @@ end
 
 
 """
+    build_concat_matrix(df, id_col, id_values, kept_cols, n_assays;
+                        visit_col=:Visit) -> Matrix{Float64}
+
+Rebuilds the canonical `length(id_values) × (n_assays·3)` concatenated-visit
+matrix used throughout this repo: row `i` is the `[V1|V2|V3]` concatenation of
+`id_values[i]`'s three visits, in `kept_cols` order within each block
+(`offset = (v-1)*n_assays`). This mirrors, exactly, the inline construction in
+`run_full_longitudinal.jl` (lines ~57–65); that script is left untouched as
+the frozen canonical reference (see `experiments/test_build_concat.jl`).
+
+General over `id_col`/`visit_col` so it works both for real long-format
+cohorts (`id_col=:SubjectID`) and synthetic ones (`id_col=:SyntheticID`).
+
+# Arguments
+- `df::DataFrame`: long-format data with one row per (id, visit).
+- `id_col::Symbol`: column identifying each patient (e.g. `:SubjectID`,
+  `:SyntheticID`).
+- `id_values::Vector`: the ids to build rows for, in order; row `i` of the
+  output corresponds to `id_values[i]`.
+- `kept_cols::Vector{Symbol}`: assay column names, length `n_assays`; sets
+  the within-block column order.
+- `n_assays::Int`
+
+# Keyword Arguments
+- `visit_col::Symbol=:Visit`: column identifying the visit number (assumed
+  `1:3`).
+
+# Returns
+- `Matrix{Float64}` of size `length(id_values) × (n_assays*3)`.
+"""
+function build_concat_matrix(df::DataFrame, id_col::Symbol, id_values::Vector,
+                              kept_cols::Vector{Symbol}, n_assays::Int;
+                              visit_col::Symbol=:Visit)
+    n_visits = 3
+    K = length(id_values)
+    X = Matrix{Float64}(undef, K, n_assays * n_visits)
+    for (i, s) in enumerate(id_values)
+        for v in 1:n_visits
+            mask = (df[!, id_col] .== s) .& (df[!, visit_col] .== v)
+            row = findfirst(mask)
+            offset = (v - 1) * n_assays
+            for (j, col) in enumerate(kept_cols)
+                X[i, offset + j] = df[row, col]
+            end
+        end
+    end
+    return X
+end
+
+
+"""
     sa_generate_from_matrix(X_concat, kept_cols, n_assays, n_samples, T;
                             β=nothing, α=0.01, pratio=0.95, seed=42)
         -> (synth_df::DataFrame, mem::NamedTuple)
