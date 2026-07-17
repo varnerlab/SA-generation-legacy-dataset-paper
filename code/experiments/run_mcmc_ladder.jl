@@ -177,6 +177,15 @@ at time `t`) after which the trailing `W`-window mean stays within
 energy (mean of its last `W` samples) for the remainder of the trace — the
 chain has entered and stabilized in its attractor basin. Returns
 `length(E)-1` (never settles by this criterion) if no such `t` exists.
+
+NOTE (documentation only, not a behavior change): the trailing-window width
+`W=500` mechanically FLOORS the earliest reportable settling time at
+`t=W-1=499` — no chain can ever be reported as settling before the window
+itself has filled once. That is why 18/20 chains here report exactly t=499
+(see task-S3-report.md). Consequently the derived B should not be trusted on
+the settling statistic alone; it is cross-validated downstream by the Geweke
+stationarity gate (`derive_tau_and_geweke`/`geweke_z`), which is the actual
+adequacy check for whether B is large enough.
 """
 function settling_step(E::Vector{Float64}; W::Int=500)
     T1 = length(E)
@@ -328,13 +337,21 @@ else
 end
 
 @info "  Running M=$M fresh sphere-init MALA chains (T=$needed_T, α=$α_STEP) for V3 …"
+# Rigor fix (Task S3 revision): V3's per-chain initial ξ₀ is drawn from the
+# SAME seed sequence V2 uses (SPHERE_SEED_BASE), not MALA_SEED_BASE, so chain
+# c starts at the IDENTICAL sphere point in both V2 and V3 (common random
+# numbers for initialization). MALA_SEED_BASE still seeds the propagation
+# noise inside `mala_sample` (its own RNG stream, independent of the ξ0 draw)
+# — the ONLY thing that differs between V2 and V3 is now the sampler itself
+# (`sample` [ULA] vs `mala_sample` [MALA]), not the 20 starting points.
 mala_traj = Vector{Matrix{Float64}}(undef, M)
 mala_accept = Vector{Float64}(undef, M)
 for c in 1:M
-    seed = MALA_SEED_BASE + c
-    Random.seed!(seed)
+    init_seed = SPHERE_SEED_BASE + c
+    Random.seed!(init_seed)
     ξ0 = randn(d)
     ξ0 ./= norm(ξ0)
+    seed = MALA_SEED_BASE + c
     res = mala_sample(X̂, ξ0, needed_T; β=β_star, α=α_STEP, seed=seed)
     mala_traj[c] = res.Ξ
     mala_accept[c] = res.accept_rate
