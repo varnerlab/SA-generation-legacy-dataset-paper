@@ -120,21 +120,23 @@ git commit -m "revision(sampling): MCMC mixing diagnostic (R-hat, ESS, anchor-di
 
 **Files:**
 - Create: `code/experiments/run_mcmc_ladder.jl`
-- Reads: `full_longitudinal_memory.jld2`, `mcmc_mixing_diagnostic.csv` (for `B`, `τ`), `cleaned_full_data.csv`/`df_clean` (real reference), `synthetic_full_longitudinal.csv` (for the V0 = published cohort option)
-- Writes: `code/data/mcmc_ladder_results.csv`
+- Reads: `full_longitudinal_memory.jld2`, `mcmc_mixing_diagnostic.csv` (for the starting τ estimate only), `cleaned_full_data.csv`/`df_clean` (real reference), `synthetic_full_longitudinal.csv` (V0 published-cohort cross-check)
+- Writes: `code/data/mcmc_ladder_results.csv`, `code/data/mcmc_ladder_burnin.csv`
 
 **Interfaces:**
-- Consumes: `build_concat_matrix` (S1); `B`,`τ` (S2); `Compute.sample`, `Compute.mala_sample`; `decode_sample`; `sample_novelty`; `feature_summary_comparison`; `safe_cor` (local, per `validate_cross_visit_covariance.jl:93`); `mechanistic_eval.jl` (`bz2012_ratios`,`overlap_ks`); the E3 DCR computation.
-- Produces: `mcmc_ladder_results.csv` with one row per rung `{Rung, Median_MRE, CrossVisit_Frob, Mech_Overlap_TFonly, Mech_KS_D, Median_Novelty, DCR_synth_to_real_median, DCR_real_to_real_median, best_rung::Bool}`.
+- Consumes: `build_concat_matrix` (S1); `Compute.sample`, `Compute.mala_sample`; `hopfield_energy`; `decode_sample`; `sample_novelty`; `feature_summary_comparison`; `safe_cor` (local, per `validate_cross_visit_covariance.jl:93`); `mechanistic_eval.jl` (`bz2012_ratios`,`overlap_ks`); the E3 DCR computation.
+- Produces: `mcmc_ladder_results.csv` with one row per rung `{Rung, Median_MRE, CrossVisit_Frob, Mech_Overlap_TFonly, Mech_KS_D, Median_Novelty, DCR_synth_to_real_median, DCR_real_to_real_median, best_rung::Bool}`; plus `mcmc_ladder_burnin.csv` with the derived `B`, settled-segment `τ`, per-chain settling times, and Geweke z-scores.
 
-- [ ] **Step 1: Four direction samplers (shared decode).** Implement a `draw_directions(rung; ...) -> d×100 matrix of unit directions`:
+- [ ] **Step 1: Derive and VALIDATE the burn-in B and thinning τ (do NOT hardcode 1000).** The S2 mechanical B=0 is a known artifact (rising-R̂, multimodal basin-locking). Instead derive B from settling times: run the 20 sphere-init ULA chains long (`T=6000`), record each chain's energy `hopfield_energy(ξ_t, X̂, β_star)` trace, and for each chain find its **settling step** = first `t` after which the trailing-window (width 500) mean energy stays within a small ε of the chain's final-basin mean energy (chain has entered and stabilized in its basin). Set **B = ceil(1.5 × the 90th-percentile settling step)** (starting expectation ≈1000; let the data move it). Then **recompute τ** as `ceil(mean integrated_acf of the POST-B energy segments)` (the settled-segment autocorrelation — may differ from S2's transient-inflated 107). **Validate** with a Geweke-style stationarity check on each chain's post-B energy: compare mean of the first 10% vs the last 50%, report the z-scores; assert the fraction of chains with `|z|<2` is high (e.g. ≥0.8) — if not, increase B and re-derive, logging it. Write `B`, τ, the settling-time distribution, and the Geweke z-scores to `mcmc_ladder_burnin.csv`. Print them.
+
+- [ ] **Step 2: Four direction samplers (shared decode).** Implement a `draw_directions(rung; ...) -> d×100 matrix of unit directions`:
   - **V0:** `k0=rand(1:K); ξ₀=X̂[:,k0]+0.01·randn; normalize; sample(...,T=2000); normalize endpoint` — 100 chains×1 (reproduces the published scheme).
   - **V1:** identical but `ξ₀` uniform-sphere.
-  - **V2:** 20 sphere-init chains, ULA, run `B+5τ` steps, take states at `B+τ,…,B+5τ`, normalize each → 100 directions.
+  - **V2:** 20 sphere-init chains, ULA, run `B+5τ` steps, take states at `B+τ,…,B+5τ`, normalize each → 100 directions (B, τ from Step 1).
   - **V3:** same pooling as V2 but `mala_sample`.
   Then decode uniformly for every rung: for each direction, draw a magnitude from `pca_norms` (seeded), `decode_sample(dir .* mag, pca_concat, std_params_concat)` → 216-vector; assemble the 100×3-visit long DataFrame (`kept_cols`+`SyntheticID`+`Visit`).
 
-- [ ] **Step 2: Self-check (the failing test).** Assert each rung yields a finite `100×216` decoded cohort, and that **V0's pooled median MRE ≈ the published ~1.2%** (V0 must reproduce the published fidelity — it is the same scheme; if not, the ladder harness is mis-wired).
+- [ ] **Step 3: Self-check (the failing test).** Assert each rung yields a finite `100×216` decoded cohort, and that **V0's pooled median MRE ≈ the published ~1.2%** (V0 must reproduce the published fidelity — it is the same scheme; if not, the ladder harness is mis-wired).
 
 ```julia
 @assert isapprox(v0_median_mre, 0.012; atol=0.004) "V0 does not reproduce published fidelity — harness mis-wired"
@@ -142,17 +144,17 @@ git commit -m "revision(sampling): MCMC mixing diagnostic (R-hat, ESS, anchor-di
 
 Run: `cd code && julia experiments/run_mcmc_ladder.jl` → fails here until the harness is correct.
 
-- [ ] **Step 3: Fidelity + DCR per rung.** For each rung compute: pooled median MRE (per-visit `feature_summary_comparison` → pool); cross-visit Frobenius (`safe_cor`); mechanistic overlap + KS (TF-only, via `bz2012_ratios`/`overlap_ks`); median novelty (`sample_novelty` on the unit directions); DCR synth→real + real→real medians (E3 computation, canonical standardized space). Mark `best_rung=true` for the rung with the largest `DCR_synth_to_real_median`.
+- [ ] **Step 4: Fidelity + DCR per rung.** For each rung compute: pooled median MRE (per-visit `feature_summary_comparison` → pool); cross-visit Frobenius (`safe_cor`); mechanistic overlap + KS (TF-only, via `bz2012_ratios`/`overlap_ks`); median novelty (`sample_novelty` on the unit directions); DCR synth→real + real→real medians (E3 computation, canonical standardized space). Mark `best_rung=true` for the rung with the largest `DCR_synth_to_real_median`.
 
-- [ ] **Step 4: Run + verify invariants.**
+- [ ] **Step 5: Run + verify invariants.**
 
 Run: `cd code && julia experiments/run_mcmc_ladder.jl`
-Expected: writes `mcmc_ladder_results.csv` (4 rows); every `Median_MRE>0`, `0≤overlap≤1`, `0≤novelty≤1`; V0 MRE ≈ 1.2%; exactly one `best_rung`. Print the rung × metric table. Report honestly whether/where DCR rises above the real→real baseline (privacy improving) and at what fidelity cost.
+Expected: writes `mcmc_ladder_burnin.csv` + `mcmc_ladder_results.csv` (4 rows); every `Median_MRE>0`, `0≤overlap≤1`, `0≤novelty≤1`; V0 MRE ≈ 1.2%; exactly one `best_rung`; the Geweke check passes (≥80% of chains stationary post-B). Print the burn-in derivation (B, τ, settling times, Geweke) and the rung × metric table. Report honestly whether/where DCR rises above the real→real baseline (privacy improving) and at what fidelity cost.
 
-- [ ] **Step 5: Commit.**
+- [ ] **Step 6: Commit.**
 ```bash
-git add code/experiments/run_mcmc_ladder.jl code/data/mcmc_ladder_results.csv
-git commit -m "revision(sampling): V0-V3 MCMC ladder — fidelity + DCR per rung"
+git add code/experiments/run_mcmc_ladder.jl code/data/mcmc_ladder_results.csv code/data/mcmc_ladder_burnin.csv
+git commit -m "revision(sampling): V0-V3 MCMC ladder — derived/validated burn-in, fidelity + DCR per rung"
 ```
 
 ---
