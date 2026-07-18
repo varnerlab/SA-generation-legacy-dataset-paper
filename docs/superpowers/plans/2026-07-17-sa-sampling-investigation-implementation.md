@@ -28,6 +28,7 @@
 - `run_mcmc_mixing_diagnostic.jl` → `code/data/mcmc_mixing_diagnostic.csv`, `code/figs/mcmc_mixing_diagnostic.pdf`
 - `run_mcmc_ladder.jl` → `code/data/mcmc_ladder_results.csv`
 - `run_mcmc_ladder_mia.jl` → `code/data/mcmc_ladder_mia.csv`
+- `run_beta_privacy_sweep.jl` → `code/data/beta_privacy_sweep.csv` (Task Sβ)
 - `fig_mcmc_ladder.jl` → `code/figs/mcmc_ladder.pdf`
 
 **Modified:**
@@ -190,6 +191,46 @@ Expected: writes `mcmc_ladder_mia.csv`; V0 mean AUC ≈ 0.975 (cross-check); bes
 git add code/experiments/run_mcmc_ladder_mia.jl code/data/mcmc_ladder_mia.csv
 git commit -m "revision(sampling): repeated-split MIA on V0 and best-DCR rung"
 ```
+
+---
+
+## Task Sβ: β–privacy diagnostic curve (DCR vs β)
+
+**Decision (user, 2026-07-18):** the ladder verdict is "leak intrinsic to π at β\*" — fixing the sampler (V1→V3) barely moved DCR. The design's R1.5 branch (design §6, line 73) says the honest answer is then "privacy requires lowering β (a real trade-off)." That trade-off must be **measured, not asserted**: `run_beta_sweep.jl` already gives novelty/MRE vs β but never touches DCR. This task adds the privacy side. **β\* = 2.94 stays the canonical operating point — this is a diagnostic sweep *around* it, NOT a change to the paper's operating β** (moving the operating point was explicitly rejected as cascading). Stays within the "diagnostic probes, not method replacement" scope guard, exactly like the ladder.
+
+**Files:**
+- Create: `code/experiments/run_beta_privacy_sweep.jl`
+- Reads: `code/data/full_longitudinal_memory.jld2` (`X̂`, `pca_concat`, `std_params_concat`, `pca_norms`, `df_clean`, `kept_cols`, `n_assays`, `complete_subjects`), `code/data/cleaned_full_data.csv` (real reference for DCR + fidelity)
+- Writes: `code/data/beta_privacy_sweep.csv`
+
+**Interfaces:**
+- Consumes: the **published V0 decode scheme** (anchor-init single-endpoint ULA, `T=2000`, magnitude drawn from `pca_norms`) — the SAME scheme as the ladder V0 rung / `run_full_longitudinal.jl`, but with β swept; `find_entropy_inflection` (for the β\* reference value); the **E3 DCR computation** (Euclidean in the canonical standardized space, `dcr(A,B)` from `run_privacy_analysis.jl`); `sample_novelty`; per-visit `feature_summary_comparison` → pooled median MRE. Reuse `build_concat_matrix` (S1) for the real reference matrix.
+- Produces: `beta_privacy_sweep.csv` with one row per β: `beta, beta_frac, DCR_synth_to_real_median, DCR_real_to_real_median, Median_Novelty, Median_MRE, Mech_Overlap_TFonly` (mechanistic overlap optional if cheap).
+
+- [ ] **Step 1: Mirror the existing sweep grid.** Read the β grid semantics from `run_beta_sweep.jl` (β_frac × β\*) so this privacy curve aligns on the same x-axis as the paper's existing novelty/fidelity curve. Grid: `β_frac ∈ {0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0}`, `β = β_frac · β_star`. `β_frac = 1.0` is the canonical operating point.
+
+- [ ] **Step 2: Generate + measure per β.** At each β: `Random.seed!(42)`, generate `N=100` synthetics with the V0 scheme at that β, decode, compute DCR synth→real median (+ the constant real→real baseline), median novelty, pooled median MRE. Optional: mechanistic overlap (TF-only) via `mechanistic_eval.jl` if runtime allows.
+
+- [ ] **Step 3: Self-check (cross-wiring anchor).** At `β_frac = 1.0` the row MUST reproduce the ladder V0 rung within tolerance (the same scheme at the same β):
+```julia
+@assert isapprox(row_betastar.DCR_synth_to_real_median, 13.97; atol=0.5) "β* row does not reproduce ladder V0 DCR — harness mis-wired"
+@assert isapprox(row_betastar.Median_MRE, 0.013; atol=0.004) "β* row does not reproduce V0 fidelity"
+```
+Run: `cd code && julia experiments/run_beta_privacy_sweep.jl` → fails until wired correctly.
+
+- [ ] **Step 4: Run + verify the trade-off is visible.**
+Run: `cd code && julia experiments/run_beta_privacy_sweep.jl`
+Expected: writes `beta_privacy_sweep.csv`; as β **decreases**, DCR synth→real **rises** (toward/past the real→real baseline = better privacy) while MRE and novelty rise (worse fidelity / more dispersion) — the frontier. β\* row matches V0. Print the β × {DCR, novelty, MRE} table and state where DCR first crosses the real→real baseline.
+
+- [ ] **Step 5: (OPTIONAL) MIA vs β at the extremes only.** Repeated-split MIA is expensive; if included, run it only at the two bracketing β (lowest and β\*) to bracket the AUC, not the full grid. Default: skip — DCR + novelty + MRE already draw the frontier. Log the decision either way.
+
+- [ ] **Step 6: Commit.**
+```bash
+git add code/experiments/run_beta_privacy_sweep.jl code/data/beta_privacy_sweep.csv
+git commit -m "revision(sampling): β–privacy diagnostic curve (DCR vs β; frontier around frozen β*)"
+```
+
+> **S5/S6 now incorporate Sβ:** S5's ladder figure gains a β-privacy panel (DCR + fidelity vs β, β\* marked); S6's R1.5 response quantifies "lowering β trades fidelity for privacy" with the crossing point from `beta_privacy_sweep.csv` instead of asserting it.
 
 ---
 
