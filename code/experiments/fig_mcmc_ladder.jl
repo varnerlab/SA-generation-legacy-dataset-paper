@@ -6,9 +6,14 @@
 #   Panel A — V0→V3 MCMC ladder: DCR(synth→real) per rung + MIA AUC (V0, V3)
 #             on a twin axis, against the real→real DCR baseline.
 #   Panel B — V0→V3 ladder fidelity cost: Median_MRE per rung.
-#   Panel C — β-privacy frontier: DCR(synth→real) vs β, against the same
-#             real→real baseline, with Median_MRE on a twin axis and the
-#             operating point β* marked.
+#   Panel C — β-privacy frontier + joint-fidelity cliff (Task Sβ-extend): DCR
+#             (synth→real, privacy, left axis, blue) vs β, against the real→real
+#             baseline, with Mech_Overlap_TFonly (joint mechanistic fidelity,
+#             right axis, orange) and CrossVisit_Frob (joint cross-visit
+#             fidelity, right axis, muted purple) overlaid, and the operating
+#             point β* marked. Shows privacy rising while joint fidelity falls
+#             as β drops — no β both crosses the privacy baseline and holds
+#             joint fidelity.
 #
 # Reads:  data/mcmc_ladder_results.csv, data/mcmc_ladder_mia.csv,
 #         data/beta_privacy_sweep.csv
@@ -58,7 +63,11 @@ v3_auc_mean, v3_auc_sd = get_stat("V3", "mean_auc"), get_stat("V3", "sd_auc")
 # β-sweep
 β_frac   = df_beta.beta_frac
 dcr_beta = df_beta.DCR_synth_to_real_median
-mre_beta = 100 .* df_beta.Median_MRE
+overlap_beta = df_beta.Mech_Overlap_TFonly
+frob_beta    = df_beta.CrossVisit_Frob
+
+@assert all(0 .<= overlap_beta .<= 1) "Mech_Overlap_TFonly must be in [0,1]"
+@assert all(isfinite, frob_beta) && all(frob_beta .>= 0) "CrossVisit_Frob must be finite and non-negative"
 
 # closest-approach gap (largest DCR in-sweep is the closest approach to baseline)
 gap_closest, idx_closest = findmin(baseline_dcr .- dcr_beta)
@@ -67,14 +76,18 @@ gap_closest, idx_closest = findmin(baseline_dcr .- dcr_beta)
 β_star_frac = 1.0
 @assert β_star_frac in β_frac "β_frac=1.0 (β*) must be one of the swept points"
 
+@info "  β-sweep Mech_Overlap_TFonly: $(round.(overlap_beta, digits=3))"
+@info "  β-sweep CrossVisit_Frob:     $(round.(frob_beta, digits=4))"
+
 # ══════════════════════════════════════════════════════════════════════════════
 # Step 2: Shared style (author convention — gray panel bg, no grid, boxed frame,
 # legends on every panel, no overall figure title)
 # ══════════════════════════════════════════════════════════════════════════════
 bg_color       = RGB(0.96, 0.96, 0.96)
 privacy_blue   = RGB(0.20, 0.50, 0.72)   # DCR / privacy series
-fidelity_orange = RGB(0.85, 0.45, 0.25)  # MRE / fidelity series
+fidelity_orange = RGB(0.85, 0.45, 0.25)  # MRE / mechanistic-overlap fidelity series
 auc_color      = RGB(0.55, 0.12, 0.15)   # MIA AUC markers (maroon — distinct from the black dashed baseline)
+joint_purple   = RGB(0.45, 0.30, 0.55)   # CrossVisit_Frob (joint cross-visit fidelity) series
 
 common_attrs = (background_color=bg_color, background_color_subplot=bg_color,
                 foreground_color=:black,
@@ -135,13 +148,15 @@ end
 annotate!(pB, [(2.5, 2.45, text("pooling (V2/V3) raises MRE\nvs V0/V1", 7, :black, :center))])
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Step 5: Panel C — β-privacy frontier: DCR vs β, MRE twin axis, β* marker
+# Step 5: Panel C — β-privacy frontier + joint-fidelity cliff (Task Sβ-extend):
+# DCR vs β (privacy, left axis) against Mech_Overlap_TFonly + CrossVisit_Frob
+# (joint fidelity, right axis), β* marker.
 # ══════════════════════════════════════════════════════════════════════════════
-@info "Step 5: Building Panel C (β-privacy frontier) …"
+@info "Step 5: Building Panel C (β-privacy frontier + joint-fidelity cliff) …"
 
 pC = plot(β_frac, dcr_beta;
     xlabel="β / β*  (β_frac)", ylabel="DCR (synthetic → real)", ylims=(13.0, 16.6),
-    label="DCR synth→real", color=privacy_blue, lw=2.5,
+    label="DCR synth→real (privacy)", color=privacy_blue, lw=2.5,
     marker=:circle, markersize=7, markerstrokecolor=:white, markerstrokewidth=0.8,
     legend=:bottomleft,
     title="C", titlelocation=:left, titlefontsize=12,
@@ -154,16 +169,38 @@ annotate!(pC, [(β_frac[idx_closest] + 0.05, (baseline_dcr + dcr_beta[idx_closes
 plot!(pC, [β_frac[idx_closest], β_frac[idx_closest]], [dcr_beta[idx_closest], baseline_dcr];
     color=:gray30, lw=1, ls=:dot, label=nothing, arrow=false)
 
+# Right axis spans both joint-fidelity series (both dimensionless, similar
+# range) — bounds computed from the data, not hardcoded.
+right_lo = round(max(0.0, 0.90 * minimum(vcat(overlap_beta, frob_beta))), digits=2)
+right_hi = round(1.10 * maximum(vcat(overlap_beta, frob_beta)), digits=2)
+
 pC2 = twinx(pC)
-plot!(pC2, β_frac, mre_beta;
-    ylabel="Median MRE (%)", ylims=(1.0, 1.6), right_margin=10Plots.mm,
+plot!(pC2, β_frac, overlap_beta;
+    ylabel="Joint fidelity  (mech. overlap / cross-visit Frob.)", ylims=(right_lo, right_hi),
+    right_margin=12Plots.mm,
     color=fidelity_orange, lw=2.5, marker=:utriangle, markersize=6,
     markerstrokecolor=:white, markerstrokewidth=0.5,
-    label="Median MRE", legend=:topright,
+    label="Mech_Overlap_TFonly (joint mechanistic)", legend=:topright,
     background_color_subplot=bg_color,
     guidefontsize=10, tickfontsize=8, legendfontsize=7)
-annotate!(pC2, [(β_star_frac + 0.06, mre_beta[findfirst(==(β_star_frac), β_frac)] + 0.03,
-    text("MRE min. near β*", 7.5, :black, :left))])
+plot!(pC2, β_frac, frob_beta;
+    color=joint_purple, lw=2.0, ls=:dash,
+    marker=:diamond, markersize=5, markerstrokecolor=:white, markerstrokewidth=0.5,
+    label="CrossVisit_Frob (joint cross-visit)")
+
+# Single open-space summary annotation, reporting the honest joint-fidelity
+# read (overlap stays flat while cross-visit Frobenius rises toward low β).
+# Placed on the PRIMARY axis `pC`, not the twin `pC2`: `annotate!` on this
+# twinx pairing renders visibly SHEARED text (confirmed against the S5
+# original's single short "MRE min. near β*" label on pC2, which showed the
+# same artifact at small scale) — the primary axis does not exhibit it (see
+# the horizontal "gap ≈ …" label above), so longer text goes there instead,
+# positioned in the open DCR-axis whitespace between the rising DCR curve and
+# the real→real baseline.
+annotate!(pC, [(0.45, 15.15,
+    text("Mech_Overlap_TFonly flat (≈$(round(mean(overlap_beta),digits=2))) across β\n" *
+         "CrossVisit_Frob: $(round(frob_beta[end],digits=3))→$(round(frob_beta[1],digits=3)) as β falls",
+         7, :black, :left))])
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Step 6: Compose and save (no overall title — author convention)
@@ -188,7 +225,9 @@ println("           MIA AUC:  V0 = $(round(v0_auc_mean,digits=4)) ± $(round(v0_
         "   V3 = $(round(v3_auc_mean,digits=4)) ± $(round(v3_auc_sd,digits=4))")
 println("  Panel B: Median MRE per rung (%) = $(round.(mre_ladder, digits=2))")
 println("  Panel C: β_frac sweep = $(β_frac)")
-println("           DCR(β)      = $(round.(dcr_beta, digits=3))")
+println("           DCR(β)              = $(round.(dcr_beta, digits=3))")
+println("           Mech_Overlap_TFonly = $(round.(overlap_beta, digits=3))")
+println("           CrossVisit_Frob     = $(round.(frob_beta, digits=4))")
 println("           closest-approach gap = $(round(gap_closest,digits=3)) at β_frac=$(β_frac[idx_closest])")
 println("           β* = $(β_star_frac) (β ≈ $(round(df_beta.beta[findfirst(==(β_star_frac), β_frac)], digits=2)))")
 println("="^78)

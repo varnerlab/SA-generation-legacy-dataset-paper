@@ -9,6 +9,15 @@
 # vs β, on the SAME β_frac grid, so the paper can show the fidelity/privacy
 # frontier with numbers instead of asserting it.
 #
+# Task Sβ-extend — the original marginal-MRE metric barely moves across β
+# (1.24%→1.45%), which a reviewer could read as "lower β buys privacy almost
+# for free." To make the claim airtight, this extends the grid downward
+# (adding β_frac=0.05, 0.1) and adds two JOINT-fidelity columns — CrossVisit_Frob
+# and Mech_Overlap_TFonly — mirroring the exact patterns `run_mcmc_ladder.jl`
+# already uses per rung (safe_cor Frobenius; BZ2012 TF-only mechanistic cloud
+# overlap via mechanistic_eval.jl), so the sweep can show privacy rising WHILE
+# joint structure degrades, not just a flat marginal-fidelity cost.
+#
 # Scope guard: β*=2.94 stays the paper's canonical operating point. This is a
 # DIAGNOSTIC sweep AROUND it — the published cohort, `run_full_longitudinal.jl`,
 # and every frozen reference are read-only here. Only β varies.
@@ -18,16 +27,23 @@
 # T=2000 ULA chain per sample, magnitude drawn from pca_norms, seed=42) — called
 # once per β. DCR uses the E3 `dcr(A,B)` computation from run_privacy_analysis.jl
 # verbatim, in the canonical standardized space (`std_params_concat`).
+# CrossVisit_Frob mirrors `run_mcmc_ladder.jl`'s per-rung `safe_cor` Frobenius
+# block (itself from `validate_cross_visit_covariance.jl`); Mech_Overlap_TFonly
+# mirrors `run_mcmc_ladder.jl`'s per-rung `bz2012_ratios`/`overlap_ks` block
+# (`mechanistic_eval.jl`, TF-only, TM=0.0). Both frozen scripts are read-only —
+# only their patterns are copied here.
 #
 # Reads:  data/full_longitudinal_memory.jld2 (df_clean, complete_subjects,
 #         kept_cols, n_assays, pca_concat, std_params_concat, pca_norms, X̂)
 #         data/cleaned_full_data.csv       (not re-read; df_clean from the JLD2
 #                                            is the same cleaned frame)
-#         data/mcmc_ladder_results.csv     (V0 row — self-check target)
+#         data/mcmc_ladder_results.csv     (V0 row — self-check + soft cross-check)
 # Writes: data/beta_privacy_sweep.csv
 # ──────────────────────────────────────────────────────────────────────────────
 
 include(joinpath(@__DIR__, "..", "Include.jl"))
+using HockinMannModel, HypothesisTests
+include(joinpath(@__DIR__, "mechanistic_eval.jl"))
 
 using Random, LinearAlgebra, Statistics
 
@@ -58,6 +74,21 @@ median_rr = median(rr)
 
 df_real_complete = df_clean[in.(df_clean.SubjectID, Ref(complete_subjects)), :]
 
+# ── Cross-visit Frobenius reference (held fixed across β): safe_cor pattern
+# copied verbatim from run_mcmc_ladder.jl:84-89 / validate_cross_visit_covariance.jl:93-97 ──
+function safe_cor(X)
+    C = cor(X)
+    C[isnan.(C)] .= 0.0
+    return C
+end
+C_real = safe_cor(X_real)
+
+# ── Mechanistic (TF-only) reference (held fixed across β): bz2012_ratios on the
+# K real complete-case patients, once — copied pattern from run_mcmc_ladder.jl:99-101 ──
+@info "  Running BZ2012 (TF-only, calibrated) on the $K real complete-case patients …"
+real_ratios = bz2012_ratios(df_real_complete, TF_TGA_COLS; TM=0.0)
+@info "  real_ratios: $(nrow(real_ratios)) rows"
+
 # ══════════════════════════════════════════════════════════════════════════════
 # Step 1: Mirror the existing sweep grid — β_frac × β*.
 # ══════════════════════════════════════════════════════════════════════════════
@@ -66,7 +97,8 @@ phase = find_entropy_inflection(X̂; α=0.01, n_betas=80, β_range=(0.1, 1000.0)
 β_star = phase.β_star
 @info "  β* = $(round(β_star, digits=6))"
 
-const β_FRACS = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0]
+# Task Sβ-extend: add β_frac=0.05, 0.1 at the low end (grid kept sorted ascending).
+const β_FRACS = [0.05, 0.1, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0]
 const N_SAMPLES = 100
 const T_STEPS = 2000
 
@@ -84,6 +116,8 @@ results = DataFrame(
     DCR_real_to_real_median = Float64[],
     Median_Novelty = Float64[],
     Median_MRE = Float64[],
+    CrossVisit_Frob = Float64[],
+    Mech_Overlap_TFonly = Float64[],
 )
 
 for frac in β_FRACS
@@ -122,24 +156,21 @@ for frac in β_FRACS
     end
     med_mre = median(all_mre)
 
-    push!(results, (β, frac, med_dcr_sr, median_rr, med_nov, med_mre))
-    @info "    DCR(s→r)=$(round(med_dcr_sr,digits=3))  [DCR(r→r)=$(round(median_rr,digits=3))]  " *
-          "Novelty=$(round(med_nov,digits=3))  MRE=$(round(100*med_mre,digits=2))%"
-end
+    # ── Cross-visit Frobenius: safe_cor pattern, copied from run_mcmc_ladder.jl:498-500 ──
+    C_synth = safe_cor(X_synth)
+    frob = norm(C_synth - C_real) / norm(C_real)
 
-# ══════════════════════════════════════════════════════════════════════════════
-# Step 5 (OPTIONAL): mechanistic overlap — SKIPPED.
-#
-# DCR + novelty + MRE already draw the frontier (brief default). Adding
-# Mech_Overlap_TFonly would mean running BZ2012 across 100×7=700 synthetic
-# patients (the S3 ladder needed several minutes for 100×4=400 + 23 real);
-# that cost is not justified for a diagnostic sweep whose only job is to show
-# where the DCR curve sits relative to the real→real baseline. Logged per the
-# brief's "log whichever you chose."
-# ══════════════════════════════════════════════════════════════════════════════
-@info "\nStep 5 (optional mechanistic column): SKIPPED — DCR+novelty+MRE already draw the frontier; " *
-      "BZ2012 over 100×7=700 synthetic patients was judged not worth the runtime for a diagnostic sweep " *
-      "(no Mech_Overlap_TFonly column written)."
+    # ── Mechanistic (TF-only) overlap: bz2012_ratios/overlap_ks pattern, copied
+    # from run_mcmc_ladder.jl:502-504 ──
+    @info "    BZ2012 mechanistic eval (TF-only) on $N_SAMPLES synthetic patients …"
+    synth_ratios = bz2012_ratios(synth_df, TF_TGA_COLS; TM=0.0)
+    mech_overlap, mech_ksD, mech_ksp = overlap_ks(real_ratios.Ratio, synth_ratios.Ratio)
+
+    push!(results, (β, frac, med_dcr_sr, median_rr, med_nov, med_mre, frob, mech_overlap))
+    @info "    DCR(s→r)=$(round(med_dcr_sr,digits=3))  [DCR(r→r)=$(round(median_rr,digits=3))]  " *
+          "Novelty=$(round(med_nov,digits=3))  MRE=$(round(100*med_mre,digits=2))%  " *
+          "Frob=$(round(frob,digits=4))  MechOverlap=$(round(mech_overlap,digits=3))  KS D=$(round(mech_ksD,digits=3))"
+end
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Step 3: Self-check — β_frac=1.0 MUST reproduce the ladder V0 rung (same
@@ -160,6 +191,18 @@ row_betastar = results[findfirst(isapprox(1.0), results.beta_frac), :]
 @assert isapprox(row_betastar.Median_MRE, 0.013; atol=0.004) "β* row does not reproduce V0 fidelity"
 @info "  Self-check PASSED: β_frac=1.0 row reproduces ladder V0 within tolerance."
 
+# Range-sanity for the new joint-fidelity columns, across ALL rows (Task Sβ-extend).
+@assert all(0 .<= results.Mech_Overlap_TFonly .<= 1) "Mech_Overlap_TFonly must be in [0,1] for every row"
+@assert all(isfinite, results.CrossVisit_Frob) && all(results.CrossVisit_Frob .>= 0) "CrossVisit_Frob must be finite and non-negative for every row"
+@info "  Range-sanity PASSED: CrossVisit_Frob finite & ≥0, Mech_Overlap_TFonly ∈ [0,1] for all $(nrow(results)) rows."
+
+# SOFT cross-check (report, do NOT hard-assert): the sweep's β_frac=1.0 uses the
+# canonical sa_generate_from_matrix cohort, whereas ladder V0 uses a separate
+# magnitude-RNG stream, so expect CLOSE (same neighborhood) not identical.
+@info "\n  Soft cross-check — β_frac=1.0 joint-fidelity columns vs ladder V0 (different magnitude-RNG stream, expect close not identical):"
+@info "    Sweep β_frac=1.0:  CrossVisit_Frob=$(round(row_betastar.CrossVisit_Frob,digits=4))  Mech_Overlap_TFonly=$(round(row_betastar.Mech_Overlap_TFonly,digits=4))"
+@info "    Ladder V0:         CrossVisit_Frob=$(round(v0_row.CrossVisit_Frob,digits=4))  Mech_Overlap_TFonly=$(round(v0_row.Mech_Overlap_TFonly,digits=4))"
+
 # ══════════════════════════════════════════════════════════════════════════════
 # Step 4: Write CSV + report the frontier honestly.
 # ══════════════════════════════════════════════════════════════════════════════
@@ -167,7 +210,7 @@ row_betastar = results[findfirst(isapprox(1.0), results.beta_frac), :]
 CSV.write(joinpath(_PATH_TO_DATA, "beta_privacy_sweep.csv"), results)
 
 println("\n" * "="^100)
-println("β–privacy diagnostic sweep (Task Sβ) — β × {DCR, novelty, MRE}")
+println("β–privacy diagnostic sweep (Task Sβ-extend) — β × {DCR, novelty, MRE, CrossVisit_Frob, Mech_Overlap_TFonly}")
 println("="^100)
 pretty_table(results)
 
@@ -191,8 +234,24 @@ for row in eachrow(results)
     moved = row.DCR_synth_to_real_median >= median_rr ? "ABOVE real→real — privacy improves" :
             "still below real→real"
     println("  β_frac=$(row.beta_frac)  β=$(round(row.beta,digits=3))  DCR(s→r)=$(round(row.DCR_synth_to_real_median,digits=3))  " *
-            "Novelty=$(round(row.Median_Novelty,digits=3))  MRE=$(round(100*row.Median_MRE,digits=2))%  — $moved")
+            "Novelty=$(round(row.Median_Novelty,digits=3))  MRE=$(round(100*row.Median_MRE,digits=2))%  " *
+            "Frob=$(round(row.CrossVisit_Frob,digits=4))  MechOverlap=$(round(row.Mech_Overlap_TFonly,digits=3))  — $moved")
 end
+println("="^100)
+
+println("\n" * "="^100)
+println("Honest read-out: does JOINT fidelity (CrossVisit_Frob, Mech_Overlap_TFonly) degrade toward low β? " *
+        "(this is the whole point of Task Sβ-extend — privacy up, joint fidelity down, no sweet spot)")
+println("="^100)
+# Sorted by beta ascending (β_FRACS is sorted ascending and results are pushed in that order).
+frob_lowest_beta, frob_highest_beta = results.CrossVisit_Frob[1], results.CrossVisit_Frob[end]
+overlap_lowest_beta, overlap_highest_beta = results.Mech_Overlap_TFonly[1], results.Mech_Overlap_TFonly[end]
+println("  CrossVisit_Frob:      β_frac=$(results.beta_frac[1]) → $(round(frob_lowest_beta,digits=4))   " *
+        "β_frac=$(results.beta_frac[end]) → $(round(frob_highest_beta,digits=4))   " *
+        "($(frob_lowest_beta > frob_highest_beta ? "RISES toward low β (worse cross-visit fidelity) ✓ cliff" : "does NOT rise toward low β"))")
+println("  Mech_Overlap_TFonly:  β_frac=$(results.beta_frac[1]) → $(round(overlap_lowest_beta,digits=4))   " *
+        "β_frac=$(results.beta_frac[end]) → $(round(overlap_highest_beta,digits=4))   " *
+        "($(overlap_lowest_beta < overlap_highest_beta ? "DROPS toward low β (worse mechanistic fidelity) ✓ cliff" : "does NOT drop toward low β"))")
 println("="^100)
 
 # ── Invariant checks ──
@@ -202,4 +261,6 @@ println("="^100)
 @assert all(0 .<= results.Median_Novelty .<= 1) "Median_Novelty must be in [0,1]"
 @assert all(results.Median_MRE .> 0) "every Median_MRE must be > 0"
 @assert issorted(results.beta) "β grid should be increasing (β_FRACS is sorted ascending)"
+@assert all(0 .<= results.Mech_Overlap_TFonly .<= 1) "Mech_Overlap_TFonly must be in [0,1]"
+@assert all(isfinite, results.CrossVisit_Frob) && all(results.CrossVisit_Frob .>= 0) "CrossVisit_Frob must be finite and non-negative"
 @info "\nAll self-checks and invariants passed. Wrote data/beta_privacy_sweep.csv ($(nrow(results)) rows)."
