@@ -6,14 +6,15 @@
 #   Panel A — V0→V3 MCMC ladder: DCR(synth→real) per rung + MIA AUC (V0, V3)
 #             on a twin axis, against the real→real DCR baseline.
 #   Panel B — V0→V3 ladder fidelity cost: Median_MRE per rung.
-#   Panel C — β-privacy frontier + joint-fidelity cliff (Task Sβ-extend): DCR
-#             (synth→real, privacy, left axis, blue) vs β, against the real→real
-#             baseline, with Mech_Overlap_TFonly (joint mechanistic fidelity,
-#             right axis, orange) and CrossVisit_Frob (joint cross-visit
-#             fidelity, right axis, muted purple) overlaid, and the operating
-#             point β* marked. Shows privacy rising while joint fidelity falls
-#             as β drops — no β both crosses the privacy baseline and holds
-#             joint fidelity.
+#   Panel C — β-privacy frontier + cross-visit-fidelity cliff (Task Sβ-extend):
+#             DCR (synth→real, privacy, left axis, blue) vs β, against the
+#             real→real baseline, with CrossVisit_Frob (cross-visit covariance
+#             error, right axis, dashed purple, diamond markers) overlaid, and
+#             the operating point β* marked. Mech_Overlap_TFonly is flat
+#             (≈0.90) across the whole sweep, so it is reported as a text
+#             annotation instead of a plotted line. Shows privacy rising while
+#             cross-visit fidelity degrades as β drops — no β both crosses the
+#             privacy baseline and holds cross-visit fidelity.
 #
 # Reads:  data/mcmc_ladder_results.csv, data/mcmc_ladder_mia.csv,
 #         data/beta_privacy_sweep.csv
@@ -148,11 +149,14 @@ end
 annotate!(pB, [(2.5, 2.45, text("pooling (V2/V3) raises MRE\nvs V0/V1", 7, :black, :center))])
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Step 5: Panel C — β-privacy frontier + joint-fidelity cliff (Task Sβ-extend):
-# DCR vs β (privacy, left axis) against Mech_Overlap_TFonly + CrossVisit_Frob
-# (joint fidelity, right axis), β* marker.
+# Step 5: Panel C — β-privacy frontier + cross-visit-fidelity cliff (Task
+# Sβ-extend): DCR vs β (privacy, left axis) against CrossVisit_Frob
+# (cross-visit covariance error, right axis), β* marker. Mech_Overlap_TFonly
+# is flat across the sweep, so it is called out as a text annotation rather
+# than plotted as a line (avoids mixed left/right polarity + clutter from a
+# flat series).
 # ══════════════════════════════════════════════════════════════════════════════
-@info "Step 5: Building Panel C (β-privacy frontier + joint-fidelity cliff) …"
+@info "Step 5: Building Panel C (β-privacy frontier + cross-visit-fidelity cliff) …"
 
 pC = plot(β_frac, dcr_beta;
     xlabel="β / β*  (β_frac)", ylabel="DCR (synthetic → real)", ylims=(13.0, 16.6),
@@ -169,38 +173,38 @@ annotate!(pC, [(β_frac[idx_closest] + 0.05, (baseline_dcr + dcr_beta[idx_closes
 plot!(pC, [β_frac[idx_closest], β_frac[idx_closest]], [dcr_beta[idx_closest], baseline_dcr];
     color=:gray30, lw=1, ls=:dot, label=nothing, arrow=false)
 
-# Right axis spans both joint-fidelity series (both dimensionless, similar
-# range) — bounds computed from the data, not hardcoded.
-right_lo = round(max(0.0, 0.90 * minimum(vcat(overlap_beta, frob_beta))), digits=2)
-right_hi = round(1.10 * maximum(vcat(overlap_beta, frob_beta)), digits=2)
+# Right axis spans the cross-visit Frobenius-error series only — bounds
+# computed from the data, not hardcoded.
+right_lo = round(max(0.0, 0.90 * minimum(frob_beta)), digits=2)
+right_hi = round(1.10 * maximum(frob_beta), digits=2)
 
 pC2 = twinx(pC)
-plot!(pC2, β_frac, overlap_beta;
-    ylabel="Joint fidelity  (mech. overlap / cross-visit Frob.)", ylims=(right_lo, right_hi),
+plot!(pC2, β_frac, frob_beta;
+    ylabel="cross-visit covariance error (Frobenius; higher = worse)",
+    ylims=(right_lo, right_hi),
     right_margin=12Plots.mm,
-    color=fidelity_orange, lw=2.5, marker=:utriangle, markersize=6,
-    markerstrokecolor=:white, markerstrokewidth=0.5,
-    label="Mech_Overlap_TFonly (joint mechanistic)", legend=:topright,
+    color=joint_purple, lw=2.5, ls=:dash,
+    marker=:diamond, markersize=6, markerstrokecolor=:white, markerstrokewidth=0.5,
+    label="cross-visit covariance error", legend=:topright,
     background_color_subplot=bg_color,
     guidefontsize=10, tickfontsize=8, legendfontsize=7)
-plot!(pC2, β_frac, frob_beta;
-    color=joint_purple, lw=2.0, ls=:dash,
-    marker=:diamond, markersize=5, markerstrokecolor=:white, markerstrokewidth=0.5,
-    label="CrossVisit_Frob (joint cross-visit)")
 
-# Single open-space summary annotation, reporting the honest joint-fidelity
-# read (overlap stays flat while cross-visit Frobenius rises toward low β).
-# Placed on the PRIMARY axis `pC`, not the twin `pC2`: `annotate!` on this
-# twinx pairing renders visibly SHEARED text (confirmed against the S5
-# original's single short "MRE min. near β*" label on pC2, which showed the
-# same artifact at small scale) — the primary axis does not exhibit it (see
-# the horizontal "gap ≈ …" label above), so longer text goes there instead,
-# positioned in the open DCR-axis whitespace between the rising DCR curve and
-# the real→real baseline.
-annotate!(pC, [(0.45, 15.15,
-    text("Mech_Overlap_TFonly flat (≈$(round(mean(overlap_beta),digits=2))) across β\n" *
-         "CrossVisit_Frob: $(round(frob_beta[end],digits=3))→$(round(frob_beta[1],digits=3)) as β falls",
-         7, :black, :left))])
+# Mech_Overlap_TFonly is flat across the whole β sweep (0.899–0.907), so it
+# carries no visual information as a line and would just clutter the panel —
+# report it as a short text annotation instead. Placed on the PRIMARY axis
+# `pC`, not the twin `pC2`: `annotate!` on this twinx pairing renders visibly
+# SHEARED text (confirmed against the S5 original's single short "MRE min.
+# near β*" label on pC2, which showed the same artifact at small scale) — the
+# primary axis does not exhibit it (see the horizontal "gap ≈ …" label above),
+# so this goes there instead, positioned in the open DCR-axis whitespace
+# between the rising DCR curve and the real→real baseline. Positioned to the
+# right of β* (x≈1.1) and above the CrossVisit_Frob line's trajectory there
+# (which has already dropped to ≈14.6 by that point) so the text sits in open
+# whitespace clear of both the DCR curve, the CrossVisit_Frob line, the
+# "gap ≈ …" annotation (which sits further left near β_frac≈0.1), and the pC2
+# legend box (confined to the top strip of the panel).
+annotate!(pC, [(1.10, 15.30,
+    text("mechanistic overlap flat (≈0.90) across β", 7, :black, :left))])
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Step 6: Compose and save (no overall title — author convention)
