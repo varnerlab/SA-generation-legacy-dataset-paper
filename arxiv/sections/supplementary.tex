@@ -428,3 +428,94 @@ correlations for other features are expected given the 5-parameter
 population-level calibration.}
 \label{sfig:rankcorr}
 \end{figure}
+
+% ── Sampling correctness and privacy diagnostics ────────────────────────
+\subsection*{\rone{Sampling correctness and privacy diagnostics}}
+
+\rone{We assessed re-identification risk directly. For every synthetic patient we
+computed the distance to the closest real record (DCR) in the standardized
+$216$-dimensional space and compared the synthetic-to-real distribution against the
+leave-one-out real-to-real distribution. Synthetic patients sit slightly closer to the
+real cohort than the real patients sit to one another, with median DCR $13.8$ against
+$15.9$. A nearest-neighbor membership-inference attack, which scores each real record
+by its proximity to the synthetic set and is evaluated over repeated random
+train/holdout splits, separates the $15$ training patients from the $8$ held-out
+patients with a mean AUC of $0.97$ (standard deviation $0.02$ over $40$ splits). At the
+published operating point the generator therefore reproduces its training cohort closely
+enough to be identifiable.}
+
+\rone{To attribute this behavior we asked whether it reflects the target distribution
+$\pi(\xi)\propto\exp(-\beta E)$ or merely the sampler used to draw from it. A mixing
+diagnostic showed that at $\beta^*$ the target is strongly multimodal, with $K{=}23$
+sharply peaked basins centered on the stored patterns and negligible discretization bias
+in the Langevin updates, the Metropolis acceptance being near $0.999$
+(Supplementary Fig.~\ref{sfig:mixing-diagnostic}). We then constructed a four-rung
+ladder (Table~\ref{stab:sampling-ladder}, Fig.~\ref{sfig:sampling-ladder}) that holds
+$\beta$, the memory, and the decoding fixed and varies only the sampler, from the
+published anchor-initialized single-endpoint scheme to sphere initialization, to
+burn-in-controlled thinned pooling, to Metropolis-adjusted sampling. Across the ladder
+the membership-inference AUC stays near $0.96$ to $0.97$ and the median DCR rises only
+from $14.0$ to $14.3$, never reaching the real-to-real baseline of $15.9$, at a modest
+cost in marginal fidelity. Proper sampling of $\pi$ does not remove the memorization; it
+is a property of the distribution at this cohort size.}
+
+\rone{The remaining lever is the inverse temperature. Lowering $\beta$ spreads
+probability mass away from the stored patterns and should improve privacy, at the
+expense of the memorization that also underlies fidelity. Sweeping $\beta$ across a
+$40$-fold range around $\beta^*$ (Fig.~\ref{sfig:sampling-ladder}C) confirmed the
+trade-off but bounded it sharply: the median DCR rises monotonically as $\beta$ falls
+yet saturates near $14.3$, remaining well below the real-to-real baseline of $15.9$ even
+at one twentieth of $\beta^*$, while the cross-visit covariance error grows from $0.59$
+to $0.69$. Marginal and mechanistic fidelity are comparatively insensitive to $\beta$,
+so the cost of lowering it is borne by the longitudinal covariance structure. No inverse
+temperature yields a cohort that is at once as private as the real patients are from one
+another and faithful to their joint structure.}
+
+\begin{table}[ht]
+\centering
+\small
+\caption{\rone{\textbf{The four-rung sampler ladder.} Each rung holds $\beta^*$, the
+memory, and the decoding fixed and varies only the direction sampler. Fidelity metrics
+(median relative error, cross-visit correlation Frobenius error, mechanistic cloud
+overlap, median novelty) and privacy metrics (median distance to the closest real
+record, and repeated-split membership-inference AUC where evaluated) are reported per
+rung. The real-to-real DCR baseline is $15.9$. The membership-inference attack was run
+on the two endpoints of the ladder.}}
+\label{stab:sampling-ladder}
+\begin{tabular}{llcccccc}
+\hline
+Rung & Sampler & MRE (\%) & Cross-visit Frob. & Mech. overlap & Novelty & DCR & MIA AUC \\
+\hline
+V0 & anchor, endpoint & 1.31 & 0.65 & 0.89 & 0.51 & 13.97 & 0.97 \\
+V1 & sphere init      & 1.53 & 0.57 & 0.89 & 0.50 & 13.96 & n/a  \\
+V2 & pooled ULA       & 2.02 & 0.59 & 0.88 & 0.50 & 14.15 & n/a  \\
+V3 & pooled MALA      & 1.89 & 0.62 & 0.92 & 0.52 & 14.33 & 0.96 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{mcmc_ladder.pdf}
+\caption{\rone{\textbf{Sampling correctness and the memorization/privacy relationship.}
+(A) Across the V0 to V3 ladder the distance to the closest real record (DCR, left axis)
+rises only slightly and stays below the real-to-real baseline, while the
+membership-inference AUC (right axis) remains near $0.96$ to $0.97$. (B) The fidelity
+cost of multi-chain pooling, as median relative error. (C) Sweeping the inverse
+temperature across a $40$-fold range around the operating point $\beta^*$: the DCR
+(privacy, left axis) rises as $\beta$ falls but never reaches the real-to-real baseline,
+while the cross-visit covariance error (right axis) grows, and the mechanistic overlap
+stays flat.}}
+\label{sfig:sampling-ladder}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{mcmc_mixing_diagnostic.pdf}
+\caption{\rone{\textbf{Mixing diagnostic at $\beta^*$.} Energy traces, the between-chain
+$\hat{R}$ statistic, and the anchor-distance trajectory for sphere-initialized Langevin
+chains, showing that the target distribution at $\beta^*$ is strongly multimodal with
+sharply peaked basins on the stored patterns. Metropolis acceptance near $0.999$
+indicates negligible discretization bias.}}
+\label{sfig:mixing-diagnostic}
+\end{figure}

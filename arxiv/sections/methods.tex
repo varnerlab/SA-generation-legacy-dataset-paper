@@ -92,6 +92,16 @@ all patterns equally weighted) and hard subset curation ($\rho \to \infty$, only
 designated patterns contribute). This is an inference-time operation that requires
 no retraining of the energy landscape.
 
+\rone{The synthetic cohort analyzed in this work was produced by initializing each
+Langevin chain near a stored memory pattern and retaining the endpoint of a single
+trajectory of $T{=}2000$ steps. Because that choice could in principle shape the
+generator independently of the target distribution, we characterized it directly with
+a mixing diagnostic and a four-rung sampler ladder that compares the published scheme
+against sphere-initialized, burn-in-controlled, thinned and pooled Metropolis-adjusted
+sampling. The schemes agree closely in fidelity and in the memorization behavior
+relevant to privacy, indicating that the published scheme faithfully represents the
+target law at $\beta^*$ (Supplementary Fig.~\ref{sfig:sampling-ladder}).}
+
 The inverse temperature $\beta$ controlled the trade-off between retrieval (large
 $\beta$, converging to nearest memory) and generation (small $\beta$, uniform mixing).
 We identified the critical $\beta^*$ at the phase transition by computing the

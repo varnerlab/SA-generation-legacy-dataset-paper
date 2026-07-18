@@ -162,3 +162,20 @@ feature categories. Finally, we did not validate synthetic patients against clin
 outcomes; our validation was restricted to statistical and mechanistic plausibility,
 and prospective validation against real clinical decision-making remains an important
 future direction.
+
+\rone{A distinct limitation concerns privacy. Because the generator concentrates
+probability mass near each of the $K{=}23$ stored patterns, synthetic patients lie
+close to individual real records, and a nearest-neighbor membership-inference attack
+separates cohort members from held-out patients with high accuracy. We find that this
+behavior is intrinsic to the target distribution at this cohort size rather than an
+artifact of the sampler or the operating temperature: an exact Metropolis-adjusted
+sampler leaves it essentially unchanged, and lowering the inverse temperature improves
+the distance to the closest real record only marginally, never to the level separating
+real patients from one another, and at a measurable cost to cross-visit covariance
+fidelity. We therefore do not present the method as privacy-preserving. It is not
+differentially private, and the practical risk is bounded instead by the fully
+de-identified nature of the source cohort and by intended uses, such as mechanistic
+calibration and hypothesis generation, that do not require releasing patient-level
+records. The burn-in and thinning used in the sampling diagnostic were derived once on
+the full cohort and reused for the subset analyses, so the diagnostic characterizes the
+operating regime rather than certifying each subset independently.}
