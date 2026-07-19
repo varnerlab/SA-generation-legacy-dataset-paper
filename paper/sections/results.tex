@@ -92,10 +92,38 @@ beyond component~18), while MVN regularizes via Ledoit--Wolf shrinkage (providin
 full-rank estimate by inflating eigenvalues in the 194 null dimensions). The
 consequence of MVN's approach is that it introduces variance in dimensions where the
 data contain no signal, which manifested as increased dispersion in PCA projections.
-PCA projections by visit confirmed this dispersion gap (Fig.~\ref{fig:pca-by-visit}).
+PCA projections by visit confirmed this dispersion gap (Supplementary Fig.~\ref{sfig:pca-by-visit}).
 SA-generated patients occupied the same region of PCA space as real patients across
 all three visits, while MVN-generated patients showed substantially greater scatter,
 particularly at Visits~2 and~3.
+
+\subsection{\rboth{Robustness Across Data Regimes}}
+
+\rboth{To test whether SA recovers population structure rather than reproducing the
+training cohort, we evaluated it on synthetic ground truth for which the true covariance
+is known and independent of any particular draw. On a low-rank Gaussian generative model
+swept across sample size $n$, dimensionality $p$, and latent rank, SA recovered the
+population covariance more accurately than a multivariate Gaussian throughout the
+rank-deficient $n<p$ regime (Fig.~\ref{fig:sim-recovery}A): at the real cohort's shape
+($n{=}23$, $p{=}216$) the Gaussian's relative covariance error was about $1.5$ times
+SA's, and SA was more accurate in $35$ of the $39$ Gaussian $n<p$ cells. Because the
+target covariance is fixed in advance, this is genuine generalization rather than
+memorization, a distinction the empirical cross-visit comparison could not make. The
+advantage narrowed as $n$ approached and exceeded $p$, where the Gaussian is well
+specified, so the benefit is specific to the small-sample regime this cohort occupies.}
+
+\rboth{On the real cohort, subsampling the $23$ patients to as few as eight and
+regenerating produced graceful degradation rather than collapse: recovery of the
+full-cohort cross-visit correlation structure worsened smoothly as $n$ fell
+(Fig.~\ref{fig:sim-recovery}B), the pooled marginal error rose from about $2\%$ at
+$n{=}20$ to about $5\%$ at $n{=}8$, and mechanistic plausibility stayed near $0.90$
+across all subset sizes. On a deliberately nonlinear ground truth, an S-curve manifold,
+SA's linear principal-component subspace began to place generated points off the true
+manifold as curvature increased, with the off-manifold residual crossing twice its
+linear-baseline value at a curvature of roughly $0.25$ to $0.5$; on this nonlinear target
+SA remained closer to the manifold than the multivariate Gaussian, whereas the Gaussian
+recovered the gross covariance better, so neither method is uniformly preferable and the
+linear embedding is best understood as a deliberate and bounded small-cohort choice.}
 
 \subsection{Conditional Generation of Rare Subgroups}
 \label{sec:results-l3}

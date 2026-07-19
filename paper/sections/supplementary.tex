@@ -429,6 +429,28 @@ population-level calibration.}
 \label{sfig:rankcorr}
 \end{figure}
 
+% ── Fig S8: PCA projections by visit (demoted from main text per R2) ────
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{sa_vs_mvn_pca_by_visit_v2.pdf}
+\caption{\textbf{PCA projections by visit: SA vs.\ MVN.} Each panel shows the
+first two principal components (PC1: 27.7\% variance, PC2: 15.4\%) computed
+from standardized per-visit real patient data ($K{=}23$ patients per visit,
+72 features). Dark markers indicate real patients; lighter markers indicate
+synthetic patients ($N{=}100$). Within each visit (column), the SA panel (top)
+and MVN panel (bottom) share identical axis ranges, so the relative dispersion
+of the two methods can be read against the same real data cloud. Top row:
+SA-generated patients (circles)
+cluster tightly around the real data cloud at all three visits. Bottom row:
+MVN-generated patients (diamonds) show greater dispersion, particularly at
+Visits~2 (first trimester) and~3 (third trimester), where MVN patients extend
+beyond the convex hull of the real data. This excess scatter reflects the
+spurious variance introduced by Ledoit--Wolf regularization of the
+rank-deficient covariance (Fig.~\ref{sfig:eigenvalue-spectrum}). Colors encode visit: blue
+(V1, not pregnant), green (V2, first trimester), orange (V3, third trimester).}
+\label{sfig:pca-by-visit}
+\end{figure}
+
 % ── Sampling correctness and privacy diagnostics ────────────────────────
 \subsection*{\rone{Sampling correctness and privacy diagnostics}}
 

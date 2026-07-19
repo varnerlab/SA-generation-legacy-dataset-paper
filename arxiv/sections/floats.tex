@@ -135,23 +135,21 @@ Fig.~\ref{sfig:cross-visit-corr-supp}.}
 
 \begin{figure}[p]
 \centering
-\includegraphics[width=\textwidth]{sa_vs_mvn_pca_by_visit_v2.pdf}
-\caption{\textbf{PCA projections by visit: SA vs.\ MVN.} Each panel shows the
-first two principal components (PC1: 27.7\% variance, PC2: 15.4\%) computed
-from standardized per-visit real patient data ($K{=}23$ patients per visit,
-72 features). Dark markers indicate real patients; lighter markers indicate
-synthetic patients ($N{=}100$). Within each visit (column), the SA panel (top)
-and MVN panel (bottom) share identical axis ranges, so the relative dispersion
-of the two methods can be read against the same real data cloud. Top row:
-SA-generated patients (circles)
-cluster tightly around the real data cloud at all three visits. Bottom row:
-MVN-generated patients (diamonds) show greater dispersion, particularly at
-Visits~2 (first trimester) and~3 (third trimester), where MVN patients extend
-beyond the convex hull of the real data. This excess scatter reflects the
-spurious variance introduced by Ledoit--Wolf regularization of the
-rank-deficient covariance (Fig.~\ref{sfig:eigenvalue-spectrum}). Colors encode visit: blue
-(V1, not pregnant), green (V2, first trimester), orange (V3, third trimester).}
-\label{fig:pca-by-visit}
+\includegraphics[width=\textwidth]{sim_phase_diagram.pdf}
+\caption{\rboth{\textbf{Recovery across data regimes.} (A)~On a low-rank Gaussian
+ground truth with known population covariance, the ratio of multivariate-Gaussian to
+SA covariance-recovery error (relative Frobenius distance to the population covariance)
+across sample size $n$ and dimensionality $p$, averaged over latent ranks. Values above
+one (blue) mark cells where SA recovers the population covariance more accurately than a
+multivariate Gaussian; the advantage is largest in the rank-deficient $n<p$ regime that
+contains the real cohort's shape ($n{=}23$, $p{=}216$) and narrows as $n$ approaches $p$,
+where the Gaussian is well specified. Because the target covariance is fixed in advance,
+this measures generalization rather than reproduction of the training draw. (B)~On the
+real cohort, SA's recovery of the full 23-patient cross-visit correlation structure as
+the cohort is subsampled to $n{=}20, 15, 10, 8$ (mean and standard deviation over ten
+random subsets, black bars), degrading gracefully toward the full-cohort value (star)
+rather than collapsing.}}
+\label{fig:sim-recovery}
 \end{figure}
 
 \clearpage
