@@ -333,6 +333,33 @@ ETP               & 0.197 & 0.183 & 0.93$\times$ \\
 \end{tabular}
 \end{table}
 
+% ── Table S8: PCA-space ablation (E1) ────────────────────────────────────
+\begin{table}[ht]
+\centering
+\caption{\rone{\textbf{PCA-space ablation.} Five generators fit in the identical
+$d{=}18$ PCA subspace and evaluated on the same harness as SA. Median relative error
+(MRE) and the mechanistic cloud overlap measure fidelity; median novelty measures
+distance from the stored patterns (Frac.\ novel is the fraction above the $0.2$ novelty
+threshold); the cross-visit Frobenius error is the deviation of the synthetic correlation
+matrix from the real one, where a lower value means staying closer to the $23$ real
+patients and therefore rewards memorization rather than generalization. No method
+dominates: $k$-nearest-neighbor interpolation collapses novelty and the kernel-density
+estimator degrades marginal and mechanistic fidelity, while the mixture and copula
+baselines are competitive with SA on the fidelity axes.}}
+\label{stab:pca-ablation}
+\begin{tabular}{lccccc}
+\toprule
+Method & MRE (\%) & Cross-visit Frob. & Mech.\ overlap & Median novelty & Frac.\ novel \\
+\midrule
+SA         & 1.24 & 0.641 & 0.902 & 0.514 & 1.00 \\
+PCA+GMM    & 1.13 & 0.422 & 0.918 & 0.497 & 0.94 \\
+PCA+KDE    & 1.94 & 0.337 & 0.823 & 0.249 & 0.65 \\
+PCA+kNN    & 1.63 & 0.587 & 0.938 & 0.051 & 0.05 \\
+PCA+Copula & 1.34 & 0.417 & 0.934 & 0.462 & 1.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \FloatBarrier
 
 % ══════════════════════════════════════════════════════════════════════════════

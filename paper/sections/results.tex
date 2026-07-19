@@ -53,6 +53,10 @@ fibrinolytic parameters, which were generated as part of the concatenated vector
 showed comparable MREs to the coagulation factors (Table~\ref{stab:mre-summary}), but are
 not individually highlighted here because the mechanistic validation uses the BZ2012
 thrombin generation model, which does not cover fibrinolysis or clot viscoelasticity.
+\rone{These features nonetheless load onto the retained principal components and so shape
+the energy landscape from which every synthetic patient is drawn, so their statistical
+fidelity matters even though they are not mechanistically checked; a fibrinolysis model
+under development is the route to closing that gap.}
 
 We also compared SA against two widely used deep generative methods for tabular data,
 Conditional Tabular GAN (CTGAN) and Tabular Variational Autoencoder
@@ -63,6 +67,28 @@ datasets. TVAE achieved comparable marginal fidelity at high epoch counts (media
 1.8\% at 3,000 epochs), but operated on per-visit rows ($n{=}90$) rather than
 concatenated longitudinal profiles ($n{=}23$), meaning it could not capture cross-visit
 covariance structure and had no mechanism for conditional subgroup generation.
+
+\rone{To ask how much of this fidelity comes from the shared principal-component subspace
+rather than from the stochastic-attention dynamics, we compared SA against four generators
+fit in the identical $d{=}18$ PCA subspace: a Gaussian mixture, a kernel-density estimator,
+$k$-nearest-neighbor interpolation, and a Gaussian copula (Supplementary
+Table~\ref{stab:pca-ablation}). The comparison is instructive precisely because no single
+method wins. Two baselines each failed a distinct axis: $k$-nearest-neighbor interpolation
+collapsed novelty (median $0.05$, essentially memorizing the training patients), and the
+kernel-density estimator degraded both marginal fidelity ($1.9\%$ median relative error)
+and mechanistic plausibility ($0.82$ cloud overlap). The mixture and copula baselines,
+however, were competitive with SA on marginal error ($1.1\%$ and $1.3\%$ against SA's
+$1.2\%$), mechanistic overlap ($0.92$ and $0.93$ against $0.90$), and novelty. We read this
+honestly: with every method sharing the same PCA subspace, much of the marginal and
+mechanistic fidelity is supplied by that subspace rather than by SA specifically, and the
+empirical cross-visit correlation error actually favored the baselines that stayed nearer
+the $23$ real patients, since reproducing the sample correlation matrix is easiest by not
+straying from it. Covariance \emph{generalization}, as distinct from reproduction of the
+sample, is therefore established not here but on the simulation benchmark with a known
+population covariance (Fig.~\ref{fig:sim-recovery}A). What SA adds over the competitive
+subspace baselines is the energy-landscape formulation itself, which supplies the
+closed-form operating point and the inference-time multiplicity steering used below, at a
+fidelity that matches the strongest of them.}
 
 \subsection{Cross-Visit Covariance Structure}
 \label{sec:results-l2}
@@ -92,7 +118,7 @@ beyond component~18), while MVN regularizes via Ledoit--Wolf shrinkage (providin
 full-rank estimate by inflating eigenvalues in the 194 null dimensions). The
 consequence of MVN's approach is that it introduces variance in dimensions where the
 data contain no signal, which manifested as increased dispersion in PCA projections.
-PCA projections by visit confirmed this dispersion gap (Supplementary Fig.~\ref{sfig:pca-by-visit}).
+PCA projections by visit confirmed this dispersion gap (\rtwo{Supplementary Fig.~\ref{sfig:pca-by-visit}}).
 SA-generated patients occupied the same region of PCA space as real patients across
 all three visits, while MVN-generated patients showed substantially greater scatter,
 particularly at Visits~2 and~3.
