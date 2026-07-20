@@ -183,6 +183,36 @@ inside the real cohort's percentile band for the large majority of patients, alt
 strict criterion requiring every feature and visit to fall inside the band simultaneously
 was met by fewer than half.}
 
+\subsection{\rone{Re-identification Risk}}
+
+\rone{Because the energy landscape places a basin at each stored patient, we asked how much
+the generated cohort reveals about who was in it. For every synthetic patient we measured the
+distance to the closest real record and compared it against the leave-one-out distance between
+real patients, and we ran a nearest-neighbor membership-inference attack that retrains the
+generator on a subset of the cohort and scores each real record by its proximity to the
+resulting synthetic set (Supplementary Table~\ref{stab:membership}). Synthetic patients sat
+slightly closer to the real cohort than real patients sat to one another, and the attack
+separated training members from held-out patients with a mean AUC of $0.97$ across $40$ random
+splits. A single fixed split gave perfect separation, but that value sits at the top of the
+split distribution rather than at its center, so we report the repeated-split mean throughout.}
+
+\rone{Decomposing the attack shows what it does and does not recover. Held-out patients sat at
+essentially the generic distance between two unrelated patients from the synthetic cohort,
+matching both the leave-one-out distance among real patients and the distance from held-out
+patients to the training set, whereas training members sat considerably closer. The attack
+therefore recovers which patients were stored in the memory rather than information about
+patients the generator never saw, and the separation follows from the same small-cohort
+geometry that left the hull criterion uninformative. At this cohort size the stored patterns
+lie far enough apart in the standardized space that their basins do not overlap, so no region
+of the landscape mixes several patients and averages membership away. The attack also assumes
+an adversary who already holds a patient's record and asks whether it was in the training
+cohort, so it bounds membership disclosure rather than showing that patient-level values can be
+reconstructed from the synthetic cohort alone. Whether the leak reflects the target
+distribution or the sampler used to draw from it is taken up separately, where an exact
+Metropolis-adjusted sampler and a wide sweep of the inverse temperature both leave it
+essentially unchanged (Supplementary Table~\ref{stab:sampling-ladder},
+Fig.~\ref{sfig:sampling-ladder}).}
+
 \subsection{Conditional Generation of Rare Subgroups}
 \label{sec:results-l3}
 

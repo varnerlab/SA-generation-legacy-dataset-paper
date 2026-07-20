@@ -400,6 +400,44 @@ Mechanistic band, all features and visits   & \multicolumn{2}{c}{$41/100$} \\
 \end{tabular}
 \end{table}
 
+% ── Table S10: membership-inference decomposition (E3) ───────────────────
+\begin{table}[ht]
+\centering
+\caption{\rone{\textbf{Membership inference recovers memory membership, not unseen
+patients.} Median nearest-neighbor distances in the standardized $216$-dimensional space,
+and the attack's discrimination. The attack retrains the generator on $15$ training
+patients and scores each real record by its distance to the resulting synthetic set,
+treating the $15$ training patients as members and the $8$ held-out patients as
+non-members. Non-members sit at the same distance from the synthetic cohort as unrelated
+real patients sit from one another, so the synthetic cohort carries no proximity signal
+about patients the generator never saw; the discrimination comes entirely from members
+sitting closer. The single fixed split reported first is the $15$ lowest-numbered subject
+identifiers against the $8$ highest, which risks tracking recruitment order, so the
+repeated rows redraw the partition at random with the generation seed held fixed and are
+the values quoted in the text.}}
+\label{stab:membership}
+\begin{tabular}{lc}
+\toprule
+Quantity & Value \\
+\midrule
+\multicolumn{2}{l}{\emph{Median nearest-neighbor distance}} \\
+Synthetic to nearest real                      & $13.8$ \\
+Real to nearest real, leave-one-out            & $15.9$ \\
+Held-out real to nearest training real         & $16.4$ \\
+Training member to nearest synthetic           & $10.2$ \\
+Held-out non-member to nearest synthetic       & $16.1$ \\
+\midrule
+\multicolumn{2}{l}{\emph{Membership-inference AUC}} \\
+Single fixed split                             & $1.00$ \\
+Random splits, mean                            & $0.97$ \\
+Random splits, standard deviation              & $0.02$ \\
+Random splits, median                          & $0.98$ \\
+Random splits, minimum                         & $0.90$ \\
+Random splits with AUC above $0.9$             & $39/40$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \FloatBarrier
 
 % ══════════════════════════════════════════════════════════════════════════════
