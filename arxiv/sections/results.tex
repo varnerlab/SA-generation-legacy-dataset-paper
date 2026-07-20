@@ -70,25 +70,31 @@ covariance structure and had no mechanism for conditional subgroup generation.
 
 \rone{To ask how much of this fidelity comes from the shared principal-component subspace
 rather than from the stochastic-attention dynamics, we compared SA against four generators
-fit in the identical $d{=}18$ PCA subspace: a Gaussian mixture, a kernel-density estimator,
+fit in the identical $d{=}18$ PCA subspace, a Gaussian mixture, a kernel-density estimator,
 $k$-nearest-neighbor interpolation, and a Gaussian copula (Supplementary
-Table~\ref{stab:pca-ablation}). The comparison is instructive precisely because no single
-method wins. Two baselines each failed a distinct axis: $k$-nearest-neighbor interpolation
-collapsed novelty (median $0.05$, essentially memorizing the training patients), and the
-kernel-density estimator degraded both marginal fidelity ($1.9\%$ median relative error)
-and mechanistic plausibility ($0.82$ cloud overlap). The mixture and copula baselines,
-however, were competitive with SA on marginal error ($1.1\%$ and $1.3\%$ against SA's
-$1.2\%$), mechanistic overlap ($0.92$ and $0.93$ against $0.90$), and novelty. We read this
-honestly: with every method sharing the same PCA subspace, much of the marginal and
-mechanistic fidelity is supplied by that subspace rather than by SA specifically, and the
-empirical cross-visit correlation error actually favored the baselines that stayed nearer
-the $23$ real patients, since reproducing the sample correlation matrix is easiest by not
-straying from it. Covariance \emph{generalization}, as distinct from reproduction of the
-sample, is therefore established not here but on the simulation benchmark with a known
-population covariance (Fig.~\ref{fig:sim-recovery}A). What SA adds over the competitive
-subspace baselines is the energy-landscape formulation itself, which supplies the
-closed-form operating point and the inference-time multiplicity steering used below, at a
-fidelity that matches the strongest of them.}
+Table~\ref{stab:pca-ablation}). The subspace proved necessary but not sufficient. Two of the
+four baselines failed despite sharing it, with $k$-nearest-neighbor interpolation collapsing
+novelty (median $0.05$, essentially returning the training patients) and the kernel-density
+estimator degrading both marginal fidelity ($1.9\%$ median relative error) and mechanistic
+plausibility ($0.82$ cloud overlap). The mixture and copula baselines cleared both bars and
+were competitive with SA on marginal error ($1.1\%$ and $1.3\%$ against SA's $1.2\%$) and
+mechanistic overlap ($0.92$ and $0.93$ against $0.90$), with SA and the copula the only
+generators for which every synthetic patient exceeded the novelty threshold. Much of the
+marginal and mechanistic fidelity is therefore supplied by the subspace and is available to
+any generator that samples it sensibly, which we take to be the substantive answer to
+whether the representation or the dynamics carries the result.}
+
+\rone{The tie did not extend to the remaining axes. SA showed the largest empirical
+cross-visit correlation error of the five methods ($0.64$ against $0.42$ for the mixture and
+copula), but this quantity measures reproduction of the correlation matrix of the same $23$
+patients every generator was fit to, which at this sample size is a noisy estimate of the
+population structure rather than a test of generalization. On the simulation benchmark,
+where the population covariance is known by construction, SA recovered that structure more
+accurately than the multivariate normal baseline across the $n<p$ regime
+(Fig.~\ref{fig:sim-recovery}A). SA also fixes its operating point from the attention-entropy
+inflection rather than by selecting a bandwidth or component count on $23$ patients, and it
+admits the inference-time multiplicity steering used below for conditional subgroup
+generation, which the subspace baselines do not provide directly.}
 
 \subsection{Cross-Visit Covariance Structure}
 \label{sec:results-l2}
