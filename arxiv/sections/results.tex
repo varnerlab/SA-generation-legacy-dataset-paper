@@ -257,6 +257,16 @@ fitting a separate MVN to three PCOS patients across 216 features is mathematica
 impossible (rank~2 covariance), and post-hoc subsetting of unconditional MVN samples
 does not preserve subgroup-specific structure.
 
+\rone{The amplification is bounded by how few patterns underlie it. At the target effective
+fraction the participation ratio was $4.6$ for the PCOS cohort and $7.7$ for the
+Developed~PE cohort (Table~\ref{stab:multiplicity}), so each cohort of $100$ generated
+patients is a recombination of three and five real individuals respectively. Those cohorts
+carry no more information about the conditions than the underlying patients do, and any
+downstream analysis treating them as $100$ independent observations will understate
+uncertainty. What conditioning provides is a denser sample of the distribution implied by
+those few patients, which supports hypothesis generation and power calculation rather than
+additional evidence about the conditions themselves.}
+
 \subsection{Mechanistic Consistency}
 \label{sec:results-l4}
 
@@ -345,4 +355,19 @@ from the real data (real $\to$ SA $\to$ synthetic $\to$ calibration), so the
 synth-calibrated model is not fully independent of the real data; rather, it
 demonstrates that SA's representation preserves sufficient biological structure for a
 mechanistic model to learn generalizable parameters.
+
+\rone{The direction of that comparison should not be overread. Every piece of information in
+the synthetic training set derives from the same $23$ patients, so the modest advantage is a
+variance-reduction effect rather than evidence of new biological content. Fitting five rate
+constants against $100$ samples drawn from a distribution estimated on $23$ patients smooths
+the objective and dilutes the influence of any single patient, which would be expected of any
+generator producing a denser sample of the same distribution. The result establishes that the
+synthetic cohort is a usable substitute for calibration, not a better one.}
+
+\rtwo{Read alongside the conditioned cohorts, this bounds what the method offers in practice.
+It enables analyses that the original sample size forecloses, calibrating a mechanistic model
+without spending the real cohort on training and comparing subgroups holding three and five
+patients, and it points to factor-level differences a larger study could test. It does not
+substitute for additional patients, and none of these results speak to clinical deployment,
+which would require prospective validation against real clinical decisions.}
 
