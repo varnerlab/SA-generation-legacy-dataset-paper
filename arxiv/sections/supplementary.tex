@@ -342,10 +342,10 @@ $d{=}18$ PCA subspace and evaluated on the same harness as SA. Median relative e
 distance from the stored patterns (Frac.\ novel is the fraction above the $0.2$ novelty
 threshold); the cross-visit Frobenius error is the deviation of the synthetic correlation
 matrix from the real one, where a lower value means staying closer to the $23$ real
-patients and therefore rewards memorization rather than generalization. No method
-dominates: $k$-nearest-neighbor interpolation collapses novelty and the kernel-density
-estimator degrades marginal and mechanistic fidelity, while the mixture and copula
-baselines are competitive with SA on the fidelity axes.}}
+patients and therefore rewards memorization rather than generalization. The shared subspace
+is necessary but not sufficient. $k$-nearest-neighbor interpolation collapses novelty and the
+kernel-density estimator degrades marginal and mechanistic fidelity despite both being fit in
+it, while the mixture and copula baselines are competitive with SA on the fidelity axes.}}
 \label{stab:pca-ablation}
 \begin{tabular}{lccccc}
 \toprule
@@ -356,6 +356,46 @@ PCA+GMM    & 1.13 & 0.422 & 0.918 & 0.497 & 0.94 \\
 PCA+KDE    & 1.94 & 0.337 & 0.823 & 0.249 & 0.65 \\
 PCA+kNN    & 1.63 & 0.587 & 0.938 & 0.051 & 0.05 \\
 PCA+Copula & 1.34 & 0.417 & 0.934 & 0.462 & 1.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ── Table S9: convex-hull geometry (E2) ──────────────────────────────────
+\begin{table}[ht]
+\centering
+\caption{\rtwo{\textbf{Convex-hull membership does not discriminate at $K{=}23$ in
+$d{=}18$.} Hull membership and distance for the $100$ synthetic patients against the $23$
+real patients, and for each real patient against the other $22$. The radial factor $t^{*}$
+is where the ray from the hull centroid through a point exits the hull, so $1/t^{*}$ is the
+factor by which a point overshoots the boundary and $t^{*} \ge 1$ would mean the point is
+inside. Distances and overshoots are severity-matched, each point's nearest vertex having
+been removed on both sides, because a held-out real patient necessarily loses its own
+vertex. Matched this way the distance to the hull is not distinguishable between synthetic
+and real patients (Mann--Whitney $p = 0.07$), while the radial overshoot is smaller for the
+synthetic ones ($p < 10^{-4}$); both tests treat the $100$ synthetic patients as
+independent, which they are not, so the reported significance is optimistic. The geometry
+rows show why no point of either kind falls inside. The hull attains the patients' typical
+radius only along the $23$ vertex directions, and the sampler returns every sample to the
+unit sphere, where a point inside the hull of unit-norm patterns would have to be one of
+those patterns.}}
+\label{stab:hull-geometry}
+\begin{tabular}{lcc}
+\toprule
+Quantity & Synthetic ($n{=}100$) & Real, leave-one-out ($n{=}23$) \\
+\midrule
+Fraction inside hull                        & $0.00$ & $0.00$ \\
+Median distance to hull                     & $11.0$ & $11.9$ \\
+Median radial overshoot $1/t^{*}$           & $10.5$ & $15.2$ \\
+\midrule
+\multicolumn{3}{l}{\emph{Hull geometry of the real cohort}} \\
+Median patient radius                       & \multicolumn{2}{c}{$13.8$} \\
+Median hull extent, generic direction       & \multicolumn{2}{c}{$2.0$} \\
+Largest $t^{*}$ attained on the unit sphere & \multicolumn{2}{c}{$0.231$} \\
+\midrule
+\multicolumn{3}{l}{\emph{Plausibility of the out-of-hull synthetic patients}} \\
+Biological constraints satisfied            & \multicolumn{2}{c}{$81/100$} \\
+Mechanistic band, per feature               & \multicolumn{2}{c}{$83$ to $92\%$} \\
+Mechanistic band, all features and visits   & \multicolumn{2}{c}{$41/100$} \\
 \bottomrule
 \end{tabular}
 \end{table}

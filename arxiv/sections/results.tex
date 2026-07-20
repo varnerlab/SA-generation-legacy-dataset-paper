@@ -157,6 +157,32 @@ SA remained closer to the manifold than the multivariate Gaussian, whereas the G
 recovered the gross covariance better, so neither method is uniformly preferable and the
 linear embedding is best understood as a deliberate and bounded small-cohort choice.}
 
+\subsection{\rtwo{Interpolation and Extrapolation}}
+
+\rtwo{To ask whether the sampler stays within the real cohort or reaches beyond it, we
+tested convex-hull membership of the synthetic patients against the $23$ real patients in
+the $d{=}18$ principal-component space (Supplementary Table~\ref{stab:hull-geometry}).
+Every synthetic patient fell outside the hull. So did every real patient with respect to
+the other $22$, and when the comparison was matched for severity by removing each point's
+nearest vertex on both sides, so that real and synthetic patients faced equally depleted
+hulls, the distance to the hull was not distinguishable between them. The hull criterion
+did not separate synthetic patients from real ones at this sample size.}
+
+\rtwo{The reason is geometric rather than statistical. With $23$ points in $18$ dimensions
+the hull is nearly a simplex, reaching the patients' typical radius only along the $23$
+vertex directions themselves and extending a small fraction of that distance in a generic
+direction, so almost any point that does not sit on a stored pattern lies outside it. The
+sampler compounds this because it normalizes the stored patterns to unit length and returns
+each sample to the unit sphere, and a unit vector inside the convex hull of unit-norm
+patterns must coincide with one of those patterns, which makes hull membership structurally
+unavailable to this generator rather than merely uncommon. We therefore read the result as a
+limit on what the hull criterion can resolve at $K{=}23$ rather than as evidence of runaway
+extrapolation, and assessed the generated points against the plausibility criteria directly,
+where most satisfied the biological constraints and per-feature mechanistic ratios stayed
+inside the real cohort's percentile band for the large majority of patients, although the
+strict criterion requiring every feature and visit to fall inside the band simultaneously
+was met by fewer than half.}
+
 \subsection{Conditional Generation of Rare Subgroups}
 \label{sec:results-l3}
 
