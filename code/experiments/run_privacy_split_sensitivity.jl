@@ -134,7 +134,7 @@ function split_mia_auc(Zreal::Matrix{Float64}, X_concat::Matrix{Float64},
     nonmember_scores = -nonmember_nn_dist
 
     auc_pairs = [m > n ? 1.0 : (m == n ? 0.5 : 0.0) for m in member_scores, n in nonmember_scores]
-    return mean(auc_pairs)
+    return (auc = mean(auc_pairs), member = member_nn_dist, nonmember = nonmember_nn_dist)
 end
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -148,7 +148,7 @@ e3_holdout_ids = sorted_subjects[16:23]
 e3_train_idx   = [findfirst(==(s), complete_subjects) for s in e3_train_ids]
 e3_holdout_idx = [findfirst(==(s), complete_subjects) for s in e3_holdout_ids]
 
-e3_auc = split_mia_auc(Zreal, X_concat, e3_train_idx, e3_holdout_idx, kept_cols, n_assays; gen_seed=42)
+e3_auc = split_mia_auc(Zreal, X_concat, e3_train_idx, e3_holdout_idx, kept_cols, n_assays; gen_seed=42).auc
 @info "  split_mia_auc(E3 fixed split) = $(round(e3_auc, digits=4))  (expect 1.0)"
 @assert isapprox(e3_auc, 1.0; atol=1e-9) "Self-check FAILED: factored split_mia_auc does not reproduce E3's AUC=1.0 on the fixed split (got $e3_auc). Aborting before trusting the repeated-split loop."
 @info "  ✓ Self-check PASSED — factored function matches E3 exactly."
@@ -170,6 +170,11 @@ const SE_TOL  = 0.01
 
 rep_nums    = Int[]
 aucs        = Float64[]
+# Pooled member/non-member NN distances across every rep, so the distance
+# decomposition reported in the paper comes from the SAME randomized protocol
+# as the AUC rather than from the single ID-ordered fixed split.
+member_dists    = Float64[]
+nonmember_dists = Float64[]
 train_sets  = Vector{Vector{Int}}()
 holdout_sets = Vector{Vector{Int}}()
 
@@ -183,8 +188,12 @@ while R < CAP_R
     train_idx   = sort(perm[1:15])
     holdout_idx = sort(perm[16:23])
 
-    auc = split_mia_auc(Zreal, X_concat, train_idx, holdout_idx, kept_cols, n_assays; gen_seed=42)
+    res = split_mia_auc(Zreal, X_concat, train_idx, holdout_idx, kept_cols, n_assays; gen_seed=42)
+    auc = res.auc
     @assert 0.0 <= auc <= 1.0 "AUC out of range at rep $R: $auc"
+
+    append!(member_dists, res.member)
+    append!(nonmember_dists, res.nonmember)
 
     push!(rep_nums, R)
     push!(aucs, auc)
@@ -236,6 +245,14 @@ frac_gt_0p9 = mean(aucs .> 0.9)
 @info "  p05 / p50 / p95         = $(round(p05, digits=4)) / $(round(p50, digits=4)) / $(round(p95, digits=4))"
 @info "  frac(AUC == 1.0)        = $(round(frac_eq_1, digits=4))"
 @info "  frac(AUC > 0.9)         = $(round(frac_gt_0p9, digits=4))"
+
+# Pooled distance decomposition over all reps — the values quoted in Table S10.
+med_member    = median(member_dists)
+med_nonmember = median(nonmember_dists)
+@info "  POOLED over $final_R reps ($(length(member_dists)) member / $(length(nonmember_dists)) non-member records):"
+@info "    median member NN dist to synthetic     = $(round(med_member, digits=3))"
+@info "    median non-member NN dist to synthetic  = $(round(med_nonmember, digits=3))"
+@info "    (compare: real-to-real LOO 15.86, holdout-to-train 16.40 from E3)"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Step 6: Context — reprint the canonical (split-independent) DCR medians
