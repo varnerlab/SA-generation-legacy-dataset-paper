@@ -556,6 +556,27 @@ rank-deficient covariance (Fig.~\ref{sfig:eigenvalue-spectrum}). Colors encode v
 \label{sfig:pca-by-visit}
 \end{figure}
 
+% ── Supplementary Methods: critical inverse temperature ─────────────────
+\subsection*{\rboth{Supplementary Methods: locating the critical inverse temperature}}
+
+\rboth{The operating point $\beta^*$ was located from the attention entropy. For a candidate
+$\beta$ we computed the Shannon entropy of the attention weights
+$\text{softmax}(\beta\,\mhat{X}^\top\vxi)$ evaluated at $20$ probe points placed at stored
+patterns, averaged those entropies, and normalized by $\log K$ so that the resulting curve runs
+from $0$, when one pattern carries all of the weight, to $1$, when every pattern carries equal
+weight. Sweeping $\beta$ logarithmically over $80$ values from $0.1$ to $1000$ traces this
+curve from the diffuse regime into the concentrated one. We took $\beta^*$ to be the point of
+most negative second derivative of the normalized entropy with respect to $\log\beta$, computed
+by finite differences over the sweep, which is the sharpest bend in the curve and marks where
+attention stops being shared across patterns and begins to localize on one. For
+multiplicity-weighted sampling the same computation was carried out with the $\log r_k$ bias
+included in the softmax logits, which gives a $\rho$-dependent $\beta^*(\rho)$ because the
+weighting changes how quickly attention concentrates as $\beta$ grows. For random unit-norm
+patterns the transition is predicted at $\beta^* = \sqrt{d}$, the theoretical reference quoted
+in the main text.}
+
+\FloatBarrier
+
 % ── Sampling correctness and privacy diagnostics ────────────────────────
 \subsection*{\rone{Sampling correctness and privacy diagnostics}}
 
