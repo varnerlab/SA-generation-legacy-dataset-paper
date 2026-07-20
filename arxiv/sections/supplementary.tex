@@ -291,19 +291,20 @@ synthetic $n{=}300$ (100 patients $\times$ 3 visits).}
 \toprule
 Condition & TGA Feature & Cloud overlap & KS $D$ & KS $p$ \\
 \midrule
-TF-only & Lagtime          & 0.92 & 0.112 & 0.46 \\
-TF-only & Peak             & 0.91 & 0.081 & 0.84 \\
-TF-only & T.Peak           & 0.93 & 0.102 & 0.58 \\
-TF-only & Max Rate         & 0.92 & 0.083 & 0.82 \\
-TF-only & ETP              & 0.86 & 0.123 & 0.34 \\
+TF-only & Lagtime          & \rone{0.92} & 0.112 & \rone{0.48} \\
+TF-only & Peak             & \rone{0.91} & 0.081 & \rone{0.86} \\
+TF-only & T.Peak           & \rone{0.92} & 0.102 & \rone{0.61} \\
+TF-only & Max Rate         & \rone{0.91} & 0.083 & \rone{0.84} \\
+TF-only & ETP              & \rone{0.83} & 0.123 & \rone{0.36} \\
 \midrule
-TF+TM   & Lagtime          & 0.93 & 0.127 & 0.30 \\
-TF+TM   & Peak             & 0.91 & 0.079 & 0.87 \\
-TF+TM   & T.Peak           & 0.93 & 0.110 & 0.49 \\
-TF+TM   & Max Rate         & 0.89 & 0.096 & 0.65 \\
-TF+TM   & ETP              & 0.93 & 0.112 & 0.46 \\
+TF+TM   & Lagtime          & \rone{0.92} & 0.127 & \rone{0.32} \\
+TF+TM   & Peak             & \rone{0.88} & 0.079 & \rone{0.88} \\
+TF+TM   & T.Peak           & \rone{0.91} & 0.110 & \rone{0.51} \\
+TF+TM   & Max Rate         & \rone{0.88} & 0.096 & \rone{0.67} \\
+TF+TM   & ETP              & \rone{0.89} & 0.112 & \rone{0.48} \\
 \bottomrule
-\multicolumn{5}{p{0.95\textwidth}}{\small TF-only cloud overlap range: 0.86--0.93. TF+TM cloud overlap range: 0.89--0.93.
+\multicolumn{5}{p{0.95\textwidth}}{\small \rone{TF-only cloud overlap range: 0.83--0.92. TF+TM
+cloud overlap range: 0.88--0.92. Pooled across both conditions and all five features, 0.902.}
 KS $D$ range across both conditions: 0.079--0.127, all $p > 0.30$.}
 \end{tabular}
 \end{table}
