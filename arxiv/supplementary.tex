@@ -12,6 +12,7 @@
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{xr-hyper}   % must precede hyperref; pulls equation numbers from main.tex
 \usepackage{hyperref}
 \usepackage{xcolor}
 \usepackage{caption}
@@ -19,6 +20,18 @@
 \usepackage{placeins}
 
 \graphicspath{{sections/figures/}}
+
+% Import main.tex's labels under an "M-" prefix so the equation numbers resolve
+% here. The prefix is required: main.tex also inputs sections/supplementary.tex,
+% so main.aux already carries every stab:/sfig:/ssec: label in this document and
+% an unprefixed import would multiply-define all of them. Needs main.aux, which
+% the Makefile guarantees by building main.pdf first.
+\externaldocument[M-]{main}
+
+% Equations defined in the main text. In main.tex this is a plain \eqref; here it
+% resolves through the M- prefix above. sections/supplementary.tex is shared by
+% both wrappers, so it must go through this macro rather than \eqref directly.
+\newcommand{\maineqref}[1]{\eqref{M-#1}}
 
 \newcommand{\vxi}{\boldsymbol{\xi}}
 \newcommand{\mhat}[1]{\hat{\mathbf{#1}}}

@@ -30,6 +30,11 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
 
+% Equations defined in the main text. Everything is local here, so this is a plain
+% \eqref; the standalone supplementary.tex wrapper redefines it to reach into
+% main.aux via xr-hyper. sections/supplementary.tex is shared by both wrappers.
+\newcommand{\maineqref}[1]{\eqref{#1}}
+
 % --- Tracked-changes for revision (R1 blue, R2 red, both violet) ---
 \newif\ifreviewmode
 \reviewmodetrue   % set \reviewmodefalse for camera-ready (all edits render black)

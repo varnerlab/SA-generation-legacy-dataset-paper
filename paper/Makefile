@@ -13,7 +13,10 @@ $(MAIN).pdf: $(MAIN).tex references.bib sections/*.tex
 	$(TEX) -interaction=nonstopmode $(MAIN)
 	$(TEX) -interaction=nonstopmode $(MAIN)
 
-$(SUPP).pdf: $(SUPP).tex sections/supplementary.tex
+# Depends on $(MAIN).pdf because the standalone supplement pulls main-text
+# equation numbers out of $(MAIN).aux via xr-hyper. Without main.aux built first,
+# those references render as "Eq. (??)".
+$(SUPP).pdf: $(SUPP).tex sections/supplementary.tex $(MAIN).pdf
 	$(TEX) -interaction=nonstopmode $(SUPP)
 	$(TEX) -interaction=nonstopmode $(SUPP)
 

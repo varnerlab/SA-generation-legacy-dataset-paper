@@ -193,7 +193,7 @@ virtually every ULA proposal satisfies detailed balance, and the
 indistinguishable energy and effective sample size statistics confirm
 negligible discretization bias. \rone{This comparison bounds the
 discretization error of the reported sampler. The direct reference for the
-target itself is the analytic sampler of Eq.~\eqref{eq:exact_mixture},
+target itself is the analytic sampler of Eq.~\maineqref{eq:exact_mixture},
 introduced below.}}
 \label{tab:ula-vs-mala}
 \begin{tabular}{lcc}
@@ -622,7 +622,7 @@ as private as the real patients are from one another and faithful to their joint
 
 \rone{Neither lever settles the question completely, because every scheme compared so far is
 a finite-time Markov chain. The target itself is available in closed form. Completing the
-square in Eq.~\eqref{eq:hopfield_energy} gives Eq.~\eqref{eq:exact_mixture}. For
+square in Eq.~\maineqref{eq:hopfield_energy} gives Eq.~\maineqref{eq:exact_mixture}. For
 unit-normalized memories $\pi_r$ is exactly the isotropic Gaussian mixture $\sum_k
 q_k\,\mathcal{N}(\mathbf{m}_k,\beta^{-1}\mathbf{I})$ with $q_k = r_k/\sum_j r_j$. It can
 therefore be sampled ancestrally, by drawing a component and adding isotropic noise. There is
@@ -651,7 +651,7 @@ record, and repeated-split membership-inference AUC where evaluated) are reporte
 rung. The real-to-real DCR baseline is $15.9$. The membership-inference attack was run
 on the two endpoints of the ladder and on the analytic reference, over the same $40$
 train/holdout splits. \emph{Exact} is not a rung. It draws ancestrally from
-Eq.~\eqref{eq:exact_mixture} with no chain, and serves as the analytic reference
+Eq.~\maineqref{eq:exact_mixture} with no chain, and serves as the analytic reference
 for the four sampled rungs. Over $100$ independently seeded exact cohorts the median
 relative error is $1.40\%$ (fifth to ninety-fifth percentile $0.97$ to $1.91\%$) and the
 median DCR is $13.95$ ($13.61$ to $14.39$).}}
