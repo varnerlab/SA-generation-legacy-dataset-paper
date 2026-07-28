@@ -203,16 +203,20 @@ matching the leave-one-out distance among the real patients themselves, whereas 
 members sat considerably closer. The attack
 therefore recovers which patients were stored in the memory rather than information about
 patients the generator never saw, and the separation follows from the same small-cohort
-geometry that left the hull criterion uninformative. At this cohort size the stored patterns
-lie far enough apart in the standardized space that their basins do not overlap, so no region
-of the landscape mixes several patients and averages membership away. The attack also assumes
+geometry that left the hull criterion uninformative. The mechanism is visible in the form of
+the target itself: the distribution the energy induces is a mixture with one component centered
+on each stored patient (Eq.~\eqref{eq:exact_mixture}), so every draw descends from a single
+stored patient and carries proximity to that patient into the decoded profile. Nothing in the
+construction averages membership across several patients. The attack also assumes
 an adversary who already holds a patient's record and asks whether it was in the training
 cohort, so it bounds membership disclosure rather than showing that patient-level values can be
 reconstructed from the synthetic cohort alone. Whether the leak reflects the target
-distribution or the sampler used to draw from it is taken up separately, where an exact
-Metropolis-adjusted sampler and a wide sweep of the inverse temperature both leave it
-essentially unchanged (Supplementary Table~\ref{stab:sampling-ladder},
-Fig.~\ref{sfig:sampling-ladder}).}
+distribution or the sampler used to draw from it is taken up separately, where
+Metropolis-adjusted sampling and a wide sweep of the inverse temperature both leave it
+essentially unchanged, and exact ancestral draws from Eq.~\eqref{eq:exact_mixture}, which
+involve no chain at all, reproduce it undiminished at an AUC of $0.98$
+(Supplementary Table~\ref{stab:sampling-ladder}, Fig.~\ref{sfig:sampling-ladder}). The signal
+belongs to the target distribution at this cohort size, not to the sampler.}
 
 \subsection{Conditional Generation of Rare Subgroups}
 \label{sec:results-l3}
@@ -273,7 +277,8 @@ additional evidence about the conditions themselves.}
 The preceding validations assessed statistical properties of the synthetic data. We
 next tested whether SA-generated patients produce biologically plausible outputs
 when their coagulation factor levels are fed through
-an independent mechanistic model that knows nothing about the SA generation process?
+\rboth{a mechanistic model that knows nothing about the SA generation process, though it
+was calibrated on the same cohort.}
 We used the Hockin--Mann BZ2012 model~\citep{Hockin2002,BrummelZiedins2012}, a system
 of 58 ordinary differential equations with 64 rate constants that simulates thrombin
 generation from patient-specific coagulation factor inputs. We calibrated 5 of the
@@ -326,8 +331,10 @@ moderate for ETP ($\rho \approx 0.6$--$0.8$ for real, $\rho \approx 0.6$--$0.65$
 for synthetic; Fig.~\ref{sfig:rankcorr}) and weak for other features, consistent with
 a 5-parameter population-level calibration that was not designed to resolve
 inter-patient variability. The key finding was not patient-level prediction but
-population-level plausibility. An independent mechanistic model of the coagulation cascade confirmed that SA-generated patients fell within the same biologically plausible envelope as real patients, and could not be distinguished from
-them by the ODE model under either experimental condition.
+population-level plausibility. \rboth{A mechanistic model of the coagulation cascade,
+structurally independent of the generator but calibrated on the same cohort, placed
+SA-generated patients within the same biologically plausible envelope as real patients, and
+could not distinguish them under either experimental condition.}
 
 \subsection{Downstream Utility: Mechanistic Model Calibration}
 \label{sec:results-utility}

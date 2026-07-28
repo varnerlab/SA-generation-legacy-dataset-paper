@@ -191,7 +191,10 @@ $\alpha = 0.01$ and $\beta^* = 2.94$ on the 18-dimensional PCA memory
 ($K{=}23$ patterns). The MALA acceptance rate of $99.9\%$ confirms that
 virtually every ULA proposal satisfies detailed balance, and the
 indistinguishable energy and effective sample size statistics confirm
-negligible discretization bias.}
+negligible discretization bias. \rone{This comparison bounds the
+discretization error of the reported sampler; the direct reference for the
+target itself is the analytic sampler of Eq.~\eqref{eq:exact_mixture},
+introduced below.}}
 \label{tab:ula-vs-mala}
 \begin{tabular}{lcc}
 \toprule
@@ -579,6 +582,7 @@ in the main text.}
 
 % ── Sampling correctness and privacy diagnostics ────────────────────────
 \subsection*{\rone{Sampling correctness and privacy diagnostics}}
+\label{ssec:sampling-correctness}
 
 \rone{We assessed re-identification risk directly. For every synthetic patient we
 computed the distance to the closest real record (DCR) in the standardized
@@ -594,9 +598,9 @@ enough to be identifiable.}
 
 \rone{To attribute this behavior we asked whether it reflects the target distribution
 $\pi(\xi)\propto\exp(-\beta E)$ or merely the sampler used to draw from it. A mixing
-diagnostic showed that at $\beta^*$ the target is strongly multimodal, with $K{=}23$
-sharply peaked basins centered on the stored patterns and negligible discretization bias
-in the Langevin updates, the Metropolis acceptance being near $0.999$
+diagnostic showed that at $\beta^*$ the target is multimodal, with one component centered
+on each of the $K{=}23$ stored patterns, and that discretization bias in the Langevin
+updates is negligible, the Metropolis acceptance being near $0.999$
 (Supplementary Fig.~\ref{sfig:mixing-diagnostic}). We then constructed a four-rung
 ladder (Table~\ref{stab:sampling-ladder}, Fig.~\ref{sfig:sampling-ladder}) that holds
 $\beta$, the memory, and the decoding fixed and varies only the sampler, from the
@@ -619,16 +623,41 @@ so the cost of lowering it is borne by the longitudinal covariance structure. No
 temperature yields a cohort that is at once as private as the real patients are from one
 another and faithful to their joint structure.}
 
+\rone{Neither lever settles the question completely, because every scheme compared so far is a
+finite-time Markov chain. The target itself, however, is available in closed form. Completing
+the square in Eq.~\eqref{eq:hopfield_energy} gives Eq.~\eqref{eq:exact_mixture}: for
+unit-normalized memories $\pi_r$ is exactly the isotropic Gaussian mixture
+$\sum_k q_k\,\mathcal{N}(\mathbf{m}_k,\beta^{-1}\mathbf{I})$ with $q_k = r_k/\sum_j r_j$. It can
+therefore be sampled ancestrally, by drawing a component and adding isotropic noise, with no
+chain, no initialization, no burn-in and no discretization error. We generated a
+protocol-matched exact cohort ($N{=}100$ at $\beta^*$, reusing the ladder's seeded magnitude
+draw so that only the direction sampler differs) and evaluated it on the identical harness
+(Table~\ref{stab:sampling-ladder}). Every metric falls inside the range spanned by the four
+rungs: median relative error $1.68\%$, cross-visit Frobenius error $0.60$, mechanistic overlap
+$0.91$, median novelty $0.50$, and median DCR $13.87$. One hundred independently seeded exact
+cohorts place these quantities in narrow intervals, with median relative error $1.40\%$ (fifth
+to ninety-fifth percentile $0.97$ to $1.91\%$) and median DCR $13.95$ ($13.61$ to $14.39$), so
+the agreement does not rest on a favorable seed. Evaluated over the same $40$ train/holdout
+splits used for the ladder endpoints, the membership-inference AUC under exact sampling is
+$0.98$, marginally above the published scheme's $0.97$. The memorization is therefore a
+property of $\pi_r$ at $K{=}23$, where every stored patient is a component center, rather than
+of any approximation used to sample it.}
+
 \begin{table}[ht]
 \centering
 \small
-\caption{\rone{\textbf{The four-rung sampler ladder.} Each rung holds $\beta^*$, the
+\caption{\rone{\textbf{Sampler-correctness comparison.} Each rung holds $\beta^*$, the
 memory, and the decoding fixed and varies only the direction sampler. Fidelity metrics
 (median relative error, cross-visit correlation Frobenius error, mechanistic cloud
 overlap, median novelty) and privacy metrics (median distance to the closest real
 record, and repeated-split membership-inference AUC where evaluated) are reported per
 rung. The real-to-real DCR baseline is $15.9$. The membership-inference attack was run
-on the two endpoints of the ladder.}}
+on the two endpoints of the ladder and on the analytic reference, over the same $40$
+train/holdout splits. \emph{Exact} is not a rung: it draws ancestrally from
+Eq.~\eqref{eq:exact_mixture} with no chain, and is reported as the analytic reference
+for the four sampled rungs. Over $100$ independently seeded exact cohorts the median
+relative error is $1.40\%$ (fifth to ninety-fifth percentile $0.97$ to $1.91\%$) and the
+median DCR is $13.95$ ($13.61$ to $14.39$).}}
 \label{stab:sampling-ladder}
 \begin{tabular}{llcccccc}
 \hline
@@ -638,6 +667,8 @@ V0 & anchor, endpoint & 1.31 & 0.65 & 0.89 & 0.51 & 13.97 & 0.97 \\
 V1 & sphere init      & 1.53 & 0.57 & 0.89 & 0.50 & 13.96 & n/a  \\
 V2 & pooled ULA       & 2.02 & 0.59 & 0.88 & 0.50 & 14.15 & n/a  \\
 V3 & pooled MALA      & 1.89 & 0.62 & 0.92 & 0.52 & 14.33 & 0.96 \\
+\hline
+\rone{Exact} & \rone{analytic ancestral} & \rone{1.68} & \rone{0.60} & \rone{0.91} & \rone{0.50} & \rone{13.87} & \rone{0.98} \\
 \hline
 \end{tabular}
 \end{table}
@@ -662,8 +693,8 @@ stays flat.}}
 \includegraphics[width=\textwidth]{mcmc_mixing_diagnostic.pdf}
 \caption{\rone{\textbf{Mixing diagnostic at $\beta^*$.} Energy traces, the between-chain
 $\hat{R}$ statistic, and the anchor-distance trajectory for sphere-initialized Langevin
-chains, showing that the target distribution at $\beta^*$ is strongly multimodal with
-sharply peaked basins on the stored patterns. Metropolis acceptance near $0.999$
+chains, showing that the target distribution at $\beta^*$ is multimodal, with one
+component centered on each stored pattern. Metropolis acceptance near $0.999$
 indicates negligible discretization bias.}}
 \label{sfig:mixing-diagnostic}
 \end{figure}

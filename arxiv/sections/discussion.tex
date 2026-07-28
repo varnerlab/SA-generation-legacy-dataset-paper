@@ -214,13 +214,17 @@ extension in which attention operates over visits as well as over patients. Thes
 boundaries of the present formulation rather than properties of the energy landscape, which is
 indifferent to what the coordinates mean.}
 
-\rone{Cost and behavior at larger cohort sizes follow from the update rule. Each Langevin step
-evaluates the attention weights over the stored patterns and forms their weighted combination,
-so the work per step is proportional to the product of the pattern count and the retained
-dimension, and the cost of one sample is that product multiplied by the number of steps. The
-method is therefore linear in both the number of patients and the reduced dimension, and at
-very high feature counts the practical bound becomes the principal-component decomposition
-rather than the sampling. Statistically the picture runs the other way. The simulation
+\rone{Cost and behavior at larger cohort sizes follow from how the target is sampled. In the
+Langevin implementation used here, each step evaluates the attention weights over the stored
+patterns and forms their weighted combination, so the work per step is proportional to the
+product of the pattern count and the retained dimension, and the cost of one sample is that
+product multiplied by the number of steps. The closed form removes the sequential factor
+entirely for future use: drawing a component and adding isotropic noise costs one selection and
+one Gaussian draw per sample, independent of any step count, and the remaining work is the
+principal-component decomposition and the decoding, which are shared across the cohort. The
+method is linear in both the number of patients and the reduced dimension either way, and at
+very high feature counts the practical bound is the principal-component decomposition rather
+than the sampling. Statistically the picture runs the other way. The simulation
 benchmark shows that SA's advantage over a fitted Gaussian is largest when the sample is
 smallest and narrows as the sample size approaches the dimension, where the Gaussian becomes
 well specified, so the method is positioned for the small-cohort regime rather than as a
@@ -252,11 +256,18 @@ probability mass near each of the $K{=}23$ stored patterns, synthetic patients l
 close to individual real records, and a nearest-neighbor membership-inference attack
 separates cohort members from held-out patients with high accuracy. We find that this
 behavior is intrinsic to the target distribution at this cohort size rather than an
-artifact of the sampler or the operating temperature: an exact Metropolis-adjusted
-sampler leaves it essentially unchanged, and lowering the inverse temperature improves
-the distance to the closest real record only marginally, never to the level separating
-real patients from one another, and at a measurable cost to cross-visit covariance
-fidelity. We therefore do not present the method as privacy-preserving. It is not
+artifact of the sampler or the operating temperature. Metropolis-adjusted sampling,
+which removes the discretization bias of the unadjusted scheme, leaves the signal
+essentially unchanged, and lowering the inverse temperature improves the distance to
+the closest real record only marginally, never to the level separating real patients
+from one another, and at a measurable cost to cross-visit covariance fidelity. The
+attribution is settled by the closed form of the target itself. Because the latent
+distribution is a Gaussian mixture whose components are centered on the stored
+patterns, it can be drawn from analytically rather than by any chain, and exact draws
+carried through the same decoding pipeline reproduce the membership-inference signal
+undiminished. Proximity to individual real records is therefore a property of the
+distribution the method defines at this cohort size, not of how that distribution is
+approximated. We therefore do not present the method as privacy-preserving. It is not
 differentially private, and the practical risk is bounded instead by the fully
 de-identified nature of the source cohort and by intended uses, such as mechanistic
 calibration and hypothesis generation, that do not require releasing patient-level

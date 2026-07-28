@@ -4,9 +4,11 @@ patients to train reliable models, yet too costly and slow to expand through
 additional enrollment. We present multiplicity-weighted Stochastic Attention (SA), a
 generative framework based on modern Hopfield network theory that addresses this
 gap. SA embeds real patient profiles as memory patterns in a continuous energy
-landscape and generates novel synthetic patients via Langevin dynamics that
-interpolate between stored patterns while preserving the geometry of the original
-cohort. Per-pattern multiplicity weights enable targeted amplification of rare
+landscape \rone{whose induced distribution places one component on each stored patient, and
+generates novel synthetic patients by sampling it while preserving the geometry of the
+original cohort. The reported cohort was generated with Langevin dynamics; an exact
+analytic sampler for the same distribution, available in closed form, reproduced its
+evaluated behavior.} Per-pattern multiplicity weights enable targeted amplification of rare
 clinical subgroups at inference time without retraining. We applied SA to a
 longitudinal coagulation dataset from 23 pregnant patients spanning 72 biochemical
 features across 3 visits (pre-pregnancy baseline, first trimester, and third

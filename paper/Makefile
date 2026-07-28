@@ -13,7 +13,7 @@ $(MAIN).pdf: $(MAIN).tex references.bib sections/*.tex
 	$(TEX) -interaction=nonstopmode $(MAIN)
 	$(TEX) -interaction=nonstopmode $(MAIN)
 
-$(SUPP).pdf: $(SUPP).tex
+$(SUPP).pdf: $(SUPP).tex sections/supplementary.tex
 	$(TEX) -interaction=nonstopmode $(SUPP)
 	$(TEX) -interaction=nonstopmode $(SUPP)
 

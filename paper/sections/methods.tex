@@ -74,7 +74,36 @@ where $\{\mathbf{m}_k\}_{k=1}^K$ are stored memory patterns, $\beta$ is an inver
 temperature parameter controlling the sharpness of retrieval, and $\{r_k\}_{k=1}^K$
 are per-pattern multiplicity weights. When all $r_k = 1$, this reduces to the standard
 modern Hopfield energy; when $r_k = \rho > 1$ for a designated subset of patterns, the
-energy landscape is continuously deformed to favor that subset. We sampled from this
+energy landscape is continuously deformed to favor that subset.
+
+\rone{This energy determines its induced distribution in closed form. Writing
+$\pi_r(\vxi)\propto\exp[-\beta E_r(\vxi)]$ and completing the square in each exponent,
+\begin{equation}
+    \exp\!\left[-\frac{\beta}{2}\norm{\vxi}^2 + \beta\,\mathbf{m}_k^\top\vxi\right]
+    = \exp\!\left(\frac{\beta}{2}\norm{\mathbf{m}_k}^2\right)
+      \exp\!\left[-\frac{\beta}{2}\norm{\vxi-\mathbf{m}_k}^2\right],
+    \label{eq:complete_square}
+\end{equation}
+so the target is exactly a finite isotropic Gaussian mixture,
+\begin{equation}
+    \pi_r(\vxi) = \sum_{k=1}^{K} q_k\,
+    \mathcal{N}\!\left(\mathbf{m}_k,\ \beta^{-1}\mathbf{I}\right),
+    \qquad
+    q_k \propto r_k\exp\!\left(\frac{\beta}{2}\norm{\mathbf{m}_k}^2\right).
+    \label{eq:exact_mixture}
+\end{equation}
+Each stored patient is the center of one component, $\beta^{-1}$ is the common component
+variance, and the multiplicity weights enter the mixture probabilities directly. Because the
+memories used here are normalized to unit length, the exponential factor is shared by every
+component and $q_k = r_k/\sum_j r_j$ exactly. The target can therefore be drawn from
+ancestrally, by sampling $k$ from $q$ and then
+$\vxi\sim\mathcal{N}(\mathbf{m}_k,\beta^{-1}\mathbf{I})$, with no Markov chain. The cohort
+analyzed in this work was generated with the Langevin implementation given next, which is what
+the reported results describe. The analytic sampler was added afterward as a reference, using
+the identical normalization, magnitude and decoding pipeline
+(Supplementary Section~\ref{ssec:sampling-correctness}).}
+
+We sampled from this
 landscape using an Unadjusted Langevin Algorithm (ULA):
 \begin{equation}
     \vxi_{t+1} = (1-\alpha)\,\vxi_t
@@ -98,9 +127,11 @@ trajectory of $T{=}2000$ steps. Because that choice could in principle shape the
 generator independently of the target distribution, we characterized it directly with
 a mixing diagnostic and a four-rung sampler ladder that compares the published scheme
 against sphere-initialized, burn-in-controlled, thinned and pooled Metropolis-adjusted
-sampling. The schemes agree closely in fidelity and in the memorization behavior
-relevant to privacy, indicating that the published scheme faithfully represents the
-target law at $\beta^*$ (Supplementary Fig.~\ref{sfig:sampling-ladder}).}
+sampling, and against exact ancestral draws from Eq.~\eqref{eq:exact_mixture}. The
+schemes agree closely in fidelity and in the memorization behavior relevant to privacy,
+and the analytic reference agrees with them as well, indicating that the published
+scheme faithfully represents the target law at $\beta^*$
+(Supplementary Fig.~\ref{sfig:sampling-ladder}).}
 
 The inverse temperature $\beta$ controlled the trade-off between retrieval (large
 $\beta$, converging to nearest memory) and generation (small $\beta$, uniform mixing).

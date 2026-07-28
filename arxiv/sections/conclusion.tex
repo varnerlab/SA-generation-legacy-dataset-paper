@@ -9,7 +9,9 @@ coagulation ODE model calibrated on the same cohort}. A downstream utility test 
 that a mechanistic model calibrated entirely on synthetic patients predicted real
 patient outcomes as well as one calibrated on real data. The SA framework preserves
 the geometry of the clinical data in regimes where parametric approaches such as
-multivariate normal sampling fail due to rank deficiency. Combined with a multi-level
+multivariate normal sampling fail due to rank deficiency. \rone{An analytic sampler for the
+same latent target reproduced the reported implementation's evaluated behavior and offers a
+faster route for future use.} Combined with a multi-level
 validation framework, this approach provides a \rone{proof-of-concept} path for generating
 \rone{synthetic cohorts useful for the modeling use-cases demonstrated here} to support computational research in rare
 conditions and small longitudinal studies.

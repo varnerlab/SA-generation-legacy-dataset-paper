@@ -57,15 +57,17 @@ variational autoencoders (VAEs)~\citep{Goodfellow2014,Kingma2014,Xu2019CTGAN}, i
 extensions~\citep{Kuhnel2024}, require substantially larger training sets and are
 prone to mode collapse at small $n$~\citep{DeMitri2025} (we confirm this empirically for Conditional Tabular GAN (CTGAN) at
 $n{=}23$ in this work). A generative method is needed that can operate
-directly on the geometry of a small dataset without estimating a full parametric
-distribution.
+directly on the geometry of a small dataset without \rone{estimating a full
+covariance model}.
 
-Stochastic Attention (SA) is such a framework. Rather than estimating a
-parametric distribution, SA treats the stored patient profiles themselves as the
-model. Building on modern Hopfield network theory~\citep{Ramsauer2021}, each
-profile becomes a memory pattern in a continuous energy landscape, and Langevin
-dynamics generates novel samples that interpolate between patterns through the
-attention mechanism. Because sampling occurs in a principal component analysis
+Stochastic Attention (SA) is such a framework. \rone{Rather than fitting a full
+covariance model or training a neural generator,} SA treats the stored patient
+profiles themselves as the model. Building on modern Hopfield network
+theory~\citep{Ramsauer2021}, each profile becomes a memory pattern in a
+continuous energy landscape\rone{, and the attention mechanism makes that
+landscape a distribution centered on the stored patterns. Sampling it yields new
+profiles rather than copies, because the memory-centered components overlap in
+the reduced space}. Because sampling occurs in a principal component analysis
 (PCA)-reduced linear subspace anchored on the observed cohort, SA never forms a
 full $p \times p$ covariance matrix and so avoids both the rank deficiency that
 limits MVN and the mode collapse that limits GAN/VAE approaches when $n < p$.
