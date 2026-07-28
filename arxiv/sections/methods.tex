@@ -132,14 +132,17 @@ memorization behavior relevant to privacy, and the analytic reference agrees wit
 well. The published scheme therefore represents the target law faithfully at $\beta^*$
 (Supplementary Fig.~\ref{sfig:sampling-ladder}).}
 
-The inverse temperature $\beta$ controlled the trade-off between retrieval (large
-$\beta$, converging to nearest memory) and generation (small $\beta$, uniform mixing).
-\rboth{Put plainly, $\beta$ sets how sharply the sampler commits to one stored patient. When
-$\beta$ is small the attention weights are nearly uniform, every stored patient contributes
-about equally, and samples collapse toward the cohort average. When $\beta$ is large a single
-patient dominates and samples reproduce that individual. The useful regime is the transition
-between the two, where stored patients stop blurring into one average and begin to act as
-distinct attractors, and $\beta^*$ is our estimate of where that transition occurs.}
+\rboth{The inverse temperature $\beta$ affects two related but distinct objects. In the
+energy-landscape view, small $\beta$ gives diffuse local attention and an average-like
+retrieval fixed point, whereas large $\beta$ sharpens local attention and produces distinct
+memory attractors. In the exact mixture sampler of Eq.~\eqref{eq:exact_mixture}, however,
+component identity is drawn from the multiplicity probabilities $q_k$, which are independent
+of $\beta$ for the unit-normalized memories used here, and $\beta$ instead controls the
+within-component covariance $\beta^{-1}\mathbf{I}$. Thus small $\beta$ produces broader,
+less memory-localized draws rather than draws that collapse to the cohort mean; large
+$\beta$ produces tighter draws around the selected memory. The attention-entropy transition
+used to define $\beta^*$ marks where the retrieval landscape changes from diffuse to
+memory-specific, while the exact sampling law remains multiplicity weighted.}
 We identified the critical $\beta^*$ at the phase transition by locating the inflection of the
 normalized attention entropy across a logarithmic sweep of $\beta$ \rboth{(the entropy
 definition, sweep parameters and finite-difference procedure are given in the Supplementary
@@ -280,7 +283,8 @@ could be amplified while preserving condition-specific signatures, by generating
 cohorts of 100 patients each from the Uncomplicated ($n{=}18$), PCOS ($n{=}3$), and
 Developed~PE ($n{=}5$) subgroups using multiplicity-weighted sampling. \textbf{Level~4 (Mechanistic
 Consistency)} tested whether synthetic patients produced biologically plausible
-outputs under an independent mechanistic model. We used the Hockin--Mann BZ2012
+outputs under \rboth{a separately specified, generator-blind mechanistic model calibrated
+on the same real cohort}. We used the Hockin--Mann BZ2012
 coagulation model~\citep{Hockin2002,BrummelZiedins2012}, a system of 58 ODEs with 64 rate
 constants, in which 5 rate constants were calibrated on Visit~1 real patients at the
 population level and the remaining 59 were held at literature values. We ran the model

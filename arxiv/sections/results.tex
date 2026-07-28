@@ -164,7 +164,7 @@ the $d{=}18$ principal-component space (Supplementary Table~\ref{stab:hull-geome
 synthetic patient fell outside the hull. So did every real patient with respect to the other
 $22$. We then matched the comparison for severity by removing each point's nearest vertex on
 both sides, so that real and synthetic patients faced equally depleted hulls. Matched this
-way, the distance to the hull was not distinguishable between them. The hull criterion did
+way, the Mann--Whitney test detected no difference in distance ($p{=}0.07$). The hull criterion did
 not separate synthetic patients from real ones at $K{=}23$.}
 
 \rtwo{The reason is geometric. With $23$ points in $18$ dimensions the hull is nearly a
@@ -176,10 +176,21 @@ vector inside the convex hull of unit-norm patterns must coincide with one of th
 patterns. Hull membership is unavailable to this generator by construction, not
 merely uncommon. The hull criterion reports its own resolution at $K{=}23$, and we do not
 read it as evidence of runaway extrapolation. We assessed the generated points against the
-plausibility criteria instead. Most satisfied the biological constraints, and per-feature
-mechanistic ratios stayed inside the real cohort's percentile band for most patients. Fewer
-than half met the strict criterion, which requires every feature and visit to fall inside
-the band at once.}
+plausibility criteria instead. Fifty-four of 100 satisfied all implemented biological
+constraints. The 46 failures had at least one negative decoded hormone concentration:
+19 patients for estradiol and 37 for progesterone, with 10 overlapping. Most negative
+measurements were close to zero relative to the real-cohort scale, but the tails reached
+$-2109.8$ for estradiol ($-0.42$ real-cohort SD below zero) and $-75.8$ for progesterone
+($-1.24$ SD). These values arise because Gaussian sampling in PCA space followed by linear
+decoding has unbounded support; we did not clip them because clipping would alter the
+validated covariance structure. The unconstrained concatenated MVN baseline showed a
+comparable failure rate (58 negative hormone measurements across 43 of 100 patients, versus
+57 measurements across 46 of 100 for SA), so this is a limitation of unconstrained
+continuous generation rather than a uniquely SA-specific failure. It remains a biological
+invalidity in both methods. Per-feature mechanistic ratios stayed inside the real
+cohort's percentile band for 83--92\% of patients. Forty-one of 100 met the strict
+all-features-and-visits mechanistic criterion, and 24 of 100 met both that criterion and all
+biological constraints.}
 
 \subsection{\rone{Re-identification Risk}}
 
@@ -235,25 +246,25 @@ across eight coagulation features that exhibited between-condition variation
 condition-specific patterns. PCOS patients showed elevated Factor~VIII and vWF
 relative to Healthy patients in both real and synthetic data, PE patients showed
 elevated $\alpha_2$-AP and Factor~IX, and the between-condition rank ordering was
-maintained across all eight features. To quantify equivalence, we performed a
-bootstrap Mann--Whitney test. For each feature and condition, we subsampled the
+maintained across all eight features. We then performed a \rone{descriptive bootstrap
+Mann--Whitney diagnostic}. For each feature and condition, we subsampled the
 synthetic cohort to match the real sample size ($n_{\text{real}}$), applied a
 Mann--Whitney U test, and repeated 1,000 times. We reported the fraction of
-replicates where $p > 0.05$ (i.e., real and synthetic were statistically
-indistinguishable). Across all 24 feature--condition pairs, 20 (83\%) achieved
-$p > 0.05$ in $\geq$90\% of replicates, with a median non-significance
-fraction of 98.6\% (full per-pair results in
-Table~\ref{stab:bootstrap-mw}). The four features that fell below 90\% were
+replicates where $p > 0.05$, \rone{meaning that this test did not detect a difference in
+that replicate. This power-limited fraction is descriptive and does not establish
+equivalence.} Across all 24 feature--condition pairs, 20 (83\%) achieved
+$p > 0.05$ in $\geq$90\% of replicates, with a median
+no-difference-detected fraction of 98.6\% (full per-pair results in
+Table~\ref{stab:bootstrap-mw}). The four pairs that fell below 90\% were
 high-variance features in the smallest subgroups (FIX and plasminogen in PCOS;
 FIX and plasminogen in Developed~PE), where the real data exhibited large
-inter-patient variability. No multiple-testing correction was applied to the
-24 simultaneous comparisons; the failing pairs had consistently low
-non-significance fractions (62--87\%) rather than borderline values, so
-correction would not change the classification. PCA projections of the conditioned cohorts are provided in
+inter-patient variability. \rone{No multiple-testing correction was applied because this
+diagnostic is not used to make simultaneous inferential claims; the per-pair values and the
+90\% threshold are descriptive reporting summaries.} PCA projections of the conditioned cohorts are provided in
 Figs.~\ref{sfig:conditioned-pca}--\ref{sfig:conditioned-by-visit}. These results showed that SA's multiplicity-weighted
 interpolation can amplify rare subgroups in a way that preserves their distinguishing
-clinical features, useful for hypothesis generation and
-power analysis in small patient populations. MVN has no mechanism for this:
+clinical features, useful for \rone{exploratory hypothesis generation and simulation-based
+workflow testing, but not for increasing the effective clinical sample size}. MVN has no mechanism for this:
 fitting a separate MVN to three PCOS patients across 216 features is mathematically
 impossible (rank~2 covariance), and post-hoc subsetting of unconditional MVN samples
 does not preserve subgroup-specific structure.
@@ -265,8 +276,9 @@ is a recombination of three and five real individuals. Those cohorts carry no mo
 information about the conditions than the underlying patients do. Any downstream analysis
 that treats them as $100$ independent observations will understate uncertainty. What
 conditioning provides is a denser sample of the distribution implied by those few patients.
-That supports hypothesis generation and power calculation. It is not additional evidence
-about the conditions themselves.}
+That supports exploratory hypothesis generation and simulation-based power calculations
+whose uncertainty remains anchored to the original patients. It is not additional evidence
+about the conditions themselves, and it is not a substitute for recruiting patients.}
 
 \subsection{Mechanistic Consistency}
 \label{sec:results-l4}
@@ -328,10 +340,11 @@ moderate for ETP ($\rho \approx 0.6$--$0.8$ for real, $\rho \approx 0.6$--$0.65$
 for synthetic; Fig.~\ref{sfig:rankcorr}) and weak for other features, consistent with
 a 5-parameter population-level calibration that was not designed to resolve
 inter-patient variability. The key finding was not patient-level prediction but
-population-level plausibility. \rboth{A mechanistic model of the coagulation cascade placed SA-generated patients within
-the same biologically plausible envelope as real patients, and could not distinguish them
-under either experimental condition. That model is structurally independent of the
-generator, though it was calibrated on the same cohort.}
+population-level plausibility. \rboth{A separately specified mechanistic model of the
+coagulation cascade, applied identically to both groups and blind to the generator, placed
+SA-generated patients within the same model-predicted envelope as real patients under both
+experimental conditions. The model was calibrated on this same cohort, so this is a
+same-cohort consistency check rather than independent validation.}
 
 \subsection{Downstream Utility: Mechanistic Model Calibration}
 \label{sec:results-utility}
@@ -375,4 +388,3 @@ holding three and five patients. It also points to factor-level differences a la
 could test. It does not substitute for additional patients. None of these results speak to
 clinical deployment, which would require prospective validation against real clinical
 decisions.}
-

@@ -117,9 +117,11 @@ means. The full feature-by-feature table (72 features $\times$ 3 visits = 216
 entries) is provided in the code repository as
 \texttt{paper\_summary\_statistics.csv}.}
 \label{stab:mre-summary}
-\begin{tabular}{lcccccc}
+{\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrrrr}
 \toprule
-Visit & Median MRE & Mean MRE & 25th pctl & 75th pctl & Max MRE & Below 5\% \\
+Visit & Median & Mean & 25th pct. & 75th pct. & Maximum & MRE below 5\% \\
 \midrule
 V1 (baseline)   & 0.022 & 0.029 & 0.008 & 0.039 & 0.158 & 59/72 (81.9\%) \\
 V2 (1st tri)    & 0.009 & 0.021 & 0.004 & 0.022 & 0.224 & 65/72 (90.3\%) \\
@@ -129,6 +131,7 @@ V3 (3rd tri)    & 0.011 & 0.016 & 0.005 & 0.024 & 0.062 & 69/72 (95.8\%) \\
 \bottomrule
 \multicolumn{7}{p{0.95\textwidth}}{\small Pooled median MRE 95\% bootstrap CI: (0.98\%, 1.60\%) over 10{,}000 resamples (seed~42).}
 \end{tabular}
+}
 \end{table}
 
 % ── Table S6: CTGAN/TVAE comparison ──────────────────────────────────────
@@ -235,11 +238,12 @@ Distance ratio (synth--real / real--real)                  & 0.89 \\
 % ── Table S10: Bootstrap MW per feature × condition ───────────────────
 \begin{table}[ht]
 \centering
-\caption{\textbf{Bootstrap Mann--Whitney equivalence per feature and
+\caption{\textbf{Descriptive bootstrap Mann--Whitney diagnostic per feature and
 condition.} For each of 24 feature--condition pairs, we subsampled the
 synthetic cohort to match the real sample size, applied a Mann--Whitney U test,
 and repeated 1{,}000 times. Frac.\ $p > 0.05$ is the fraction of replicates in
-which the test could not distinguish the synthetic from the real distribution.
+which the test detected no difference at the available sample size. This
+power-limited diagnostic is not an equivalence test.
 20 of 24 pairs achieve $p > 0.05$ in $\geq 90\%$ of replicates; the four
 failing pairs (italicized) all involve high-variance features in the smallest
 subgroups.}
@@ -374,14 +378,23 @@ is where the ray from the hull centroid through a point exits the hull, so $1/t^
 factor by which a point overshoots the boundary and $t^{*} \ge 1$ would mean the point is
 inside. Distances and overshoots are severity-matched, with each point's nearest vertex
 removed on both sides, because a held-out real patient necessarily loses its own vertex.
-Matched this way, the distance to the hull is not distinguishable between synthetic and real
-patients (Mann--Whitney $p = 0.07$), while the radial overshoot is smaller for the synthetic
+Matched this way, the Mann--Whitney test detected no difference in distance between synthetic
+and real patients ($p = 0.07$), while the radial overshoot is smaller for the synthetic
 ones ($p < 10^{-4}$). Both tests treat the $100$ synthetic patients as independent, which
 they are not, so the reported significance is optimistic. The geometry rows show why no point
 of either kind falls inside. The hull attains the patients' typical radius only along the
 $23$ vertex directions, and the sampler returns every sample to the unit sphere. A point
 inside the hull of unit-norm patterns would have to be one of those patterns.}}
+\rtwo{The biological constraint includes non-negativity of both hormones. Negative values
+occurred for estradiol in 19 patients and progesterone in 37 patients, with 10 overlapping;
+most were close to zero relative to the real-cohort scale, but the minima were $-2109.8$ and
+$-75.8$, respectively. Gaussian sampling in PCA space followed by linear decoding has
+unbounded support, and no clipping was applied. The unconstrained concatenated MVN baseline
+produced 58 negative hormone measurements across 43 of 100 patients, compared with 57
+measurements across 46 of 100 for SA.}
 \label{stab:hull-geometry}
+{\small
+\setlength{\tabcolsep}{5pt}
 \begin{tabular}{lcc}
 \toprule
 Quantity & Synthetic ($n{=}100$) & Real, leave-one-out ($n{=}23$) \\
@@ -396,11 +409,13 @@ Median hull extent, generic direction       & \multicolumn{2}{c}{$2.0$} \\
 Largest $t^{*}$ attained on the unit sphere & \multicolumn{2}{c}{$0.231$} \\
 \midrule
 \multicolumn{3}{l}{\emph{Plausibility of the out-of-hull synthetic patients}} \\
-Biological constraints satisfied            & \multicolumn{2}{c}{$81/100$} \\
+Biological constraints satisfied            & \multicolumn{2}{c}{$54/100$} \\
 Mechanistic band, per feature               & \multicolumn{2}{c}{$83$ to $92\%$} \\
 Mechanistic band, all features and visits   & \multicolumn{2}{c}{$41/100$} \\
+Both biological and strict mechanistic criteria & \multicolumn{2}{c}{$24/100$} \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
 % ── Table S10: membership-inference decomposition (E3) ───────────────────
@@ -656,6 +671,8 @@ for the four sampled rungs. Over $100$ independently seeded exact cohorts the me
 relative error is $1.40\%$ (fifth to ninety-fifth percentile $0.97$ to $1.91\%$) and the
 median DCR is $13.95$ ($13.61$ to $14.39$).}}
 \label{stab:sampling-ladder}
+{\small
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{llcccccc}
 \hline
 Rung & Sampler & MRE (\%) & Cross-visit Frob. & Mech. overlap & Novelty & DCR & MIA AUC \\
@@ -668,6 +685,7 @@ V3 & pooled MALA      & 1.89 & 0.62 & 0.92 & 0.52 & 14.33 & 0.96 \\
 \rone{Exact} & \rone{analytic ancestral} & \rone{1.68} & \rone{0.60} & \rone{0.91} & \rone{0.50} & \rone{13.87} & \rone{0.98} \\
 \hline
 \end{tabular}
+}
 \end{table}
 
 \begin{figure}[ht]
