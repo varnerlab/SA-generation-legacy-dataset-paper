@@ -1,0 +1,2 @@
+Rung,Sampler,Median_MRE,CrossVisit_Frob,Mech_Overlap_TFonly,Mech_KS_D,Mech_KS_p,Median_Novelty,Frac_Novelty_gt_thresh,DCR_synth_to_real_median,DCR_real_to_real_median,LatentSeed,MagnitudeSeed,N,Beta
+Exact,analytic ancestral,0.01681219196319011,0.5958753493316458,0.9113333333333333,0.04376811594202897,0.6557957981338487,0.4977854377160593,0.99,13.87430705684383,15.860698678881917,42,424242,100,2.9400480643347087
