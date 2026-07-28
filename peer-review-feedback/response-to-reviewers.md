@@ -3,7 +3,7 @@
 **Manuscript:** Validated Synthetic Patient Generation for Small Longitudinal Cohorts: Coagulation Dynamics Across Pregnancy
 **Journal:** npj Systems Biology and Applications
 **Decision:** Major revision
-**Date:** [fill on submission]
+**Date:** 28 July 2026
 
 ---
 
@@ -16,6 +16,8 @@ Each reviewer comment is reproduced (paraphrased faithfully, key specifics retai
 - **Edits addressing both reviewers — violet** (`\rboth{...}`)
 
 A `\reviewmode` toggle in the preamble reverts all colored text to black for the camera-ready version.
+
+One note on numbering. Reviewer 1's comments are numbered 1 through 9 and then 11 through 13 in the original report, with no comment 10. We have kept every comment in its original order and renumbered the final three as R1.10, R1.11 and R1.12 so that the count is continuous. In terms of the original report, our R1.10 is comment 11 (unvalidated feature categories), R1.11 is comment 12 (downstream improvement and variance suppression), and R1.12 is comment 13 (computational scalability). No comment has been omitted.
 
 ---
 
@@ -42,7 +44,7 @@ We have also tempered the independence claim for the mechanistic validation (R1.
 
 *Excellent and central question — this is the crux of attributing the result to SA rather than to dimensionality reduction, and our ablation answers it directly (and candidly).* We ran a PCA-space ablation suite: PCA+GMM, PCA+KDE, PCA+k-NN interpolation, and PCA+Gaussian copula, all fit in the identical d=18 PCA subspace and decoded through the identical evaluation harness (marginal MRE, cross-visit covariance, mechanistic cloud overlap/KS, and novelty/memorization). The result is nuanced and we report it exactly as measured. The shared PCA subspace does carry much of the marginal and mechanistic fidelity: PCA+GMM and PCA+Gaussian copula are competitive with SA on marginal error (median 1.1–1.3% vs. SA 1.2%) and on the mechanistic envelope (overlap 0.92–0.93 vs. SA 0.90). Two baselines fail cleanly on a single axis — PCA+k-NN memorizes (median novelty 0.05; 5% of samples exceed the novelty threshold, vs. 100% for SA), and PCA+KDE degrades both marginals (1.9% MRE) and mechanistic plausibility (overlap 0.82, below the within-real band). The other two baselines do not fail, and we will not claim otherwise. PCA+Gaussian copula matches SA in producing 100% novel samples, and its median novelty (0.46), like PCA+GMM's (0.50), sits close to SA's (0.51) rather than far below it. No method dominates. The empirical 216×216 cross-visit *correlation* distance is in fact larger for SA (0.64) than for the mixture and copula baselines (0.42), but that metric measures reproduction of the correlation matrix of the same 23 patients every generator was fit to, which at this sample size is a noisy estimate of the population rather than a test of generalization. We therefore make the covariance-*generalization* argument where reproduction cannot help — the controlled simulation benchmark with known population covariance (see R1.8/R2.1), in which SA recovers the true cross-visit structure in the n<p regime while the multivariate Gaussian does not. The honest reading for the reviewer's question is thus: the shared PCA subspace supplies much of the marginal and mechanistic fidelity and is available to any generator that samples it sensibly, and what SA adds over the competitive subspace baselines is the energy-landscape formulation itself — an operating point fixed by the attention-entropy inflection rather than selected by cross-validation on 23 patients, together with the inference-time multiplicity steering used for conditional subgroup generation, which the subspace baselines do not provide directly. Regarding (iv) diffusion: a score network cannot be trained at n=23; the k-NN interpolation baseline represents the interpolation family, and we note this explicitly.
 
-**Changes:** New Results paragraph + Supplement section (E1 tables/figure), violet where it also answers R2.2. `\rone{...}`
+**Changes:** New Results paragraph (Marginal Plausibility) + Supplementary Table S8 reporting all five generators on the identical harness, violet where it also answers R2.2. `\rone{...}`
 
 ---
 
