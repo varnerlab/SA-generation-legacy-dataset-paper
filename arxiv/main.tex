@@ -35,7 +35,7 @@
 
 % --- Tracked-changes for revision (R1 blue, R2 red, both violet) ---
 \newif\ifreviewmode
-\reviewmodetrue   % set \reviewmodefalse for camera-ready (all edits render black)
+\reviewmodefalse  % arXiv preprint: tracked-change edits render black (paper/ stays \reviewmodetrue)
 \ifreviewmode
   \newcommand{\rone}[1]{\textcolor[rgb]{0.10,0.30,0.75}{#1}}   % Reviewer 1 — blue
   \newcommand{\rtwo}[1]{\textcolor[rgb]{0.75,0.15,0.15}{#1}}   % Reviewer 2 — red
