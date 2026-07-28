@@ -164,6 +164,103 @@ end
 
 
 """
+    exact_sample(X, n; β=1.0, weights=ones(size(X,2)), rng=Random.default_rng()) -> (Ξ, k, q)
+
+Draw `n` exact samples from the weighted modern-Hopfield target by ancestral
+sampling, with no Langevin dynamics.
+
+The weighted energy used elsewhere in this module,
+``E_r(\\boldsymbol{\\xi}) = \\tfrac{1}{2}\\|\\boldsymbol{\\xi}\\|^2
+- \\tfrac{1}{\\beta}\\log\\sum_k r_k\\exp(\\beta\\,\\mathbf{m}_k^\\top\\boldsymbol{\\xi})``,
+induces the target ``\\pi_r(\\boldsymbol{\\xi}) \\propto \\exp[-\\beta E_r(\\boldsymbol{\\xi})]``.
+Completing the square in the exponent,
+
+```math
+\\exp\\!\\left[-\\tfrac{\\beta}{2}\\|\\boldsymbol{\\xi}\\|^2
++ \\beta\\,\\mathbf{m}_k^\\top\\boldsymbol{\\xi}\\right]
+= \\exp\\!\\left[\\tfrac{\\beta}{2}\\|\\mathbf{m}_k\\|^2\\right]
+  \\exp\\!\\left[-\\tfrac{\\beta}{2}\\|\\boldsymbol{\\xi}-\\mathbf{m}_k\\|^2\\right],
+```
+
+so the target is exactly a finite isotropic Gaussian mixture
+
+```math
+\\pi_r(\\boldsymbol{\\xi})
+= \\sum_{k=1}^{K} q_k\\,\\mathcal{N}(\\mathbf{m}_k,\\ \\beta^{-1}\\mathbf{I}),
+\\qquad
+q_k \\propto r_k\\exp\\!\\left(\\tfrac{\\beta}{2}\\|\\mathbf{m}_k\\|^2\\right).
+```
+
+For unit-norm memories the correction factor is common to every component and
+`q_k = r_k / Σ_j r_j`. Sampling is therefore ancestral: draw a component index
+`k ∼ Categorical(q)`, then draw `ξ = m_k + β^{-1/2} ε` with `ε ∼ N(0, I)`.
+
+This is an analytic reference for the sampler used to generate the published
+cohort; it does not replace `sample`, `mala_sample`, or `weighted_sample`.
+
+# Arguments (positional)
+- `X::Matrix{Float64}`: Memory matrix of size `d × K`, columns are stored patterns.
+- `n::Int`: Number of samples to draw.
+
+# Keyword Arguments
+- `β::Float64=1.0`: Inverse temperature. Component covariance is `β⁻¹ I`.
+- `weights::Vector{Float64}`: Multiplicity weights `r_k` (length `K`, all
+  positive). Defaults to uniform, which recovers the unweighted target.
+- `rng::AbstractRNG=Random.default_rng()`: Random source. Pass an explicit RNG
+  (e.g. `MersenneTwister(42)`) for reproducible or independently-streamed draws.
+
+# Returns
+A named tuple `(Ξ, k, q)` where:
+- `Ξ::Matrix{Float64}`: Samples of size `n × d`; row `i` is the `i`-th draw.
+- `k::Vector{Int}`: Selected component index per draw, length `n`.
+- `q::Vector{Float64}`: The component probabilities used, length `K`.
+"""
+function exact_sample(X::Matrix{Float64}, n::Int;
+    β::Float64 = 1.0,
+    weights::Vector{Float64} = ones(size(X, 2)),
+    rng::Random.AbstractRNG = Random.default_rng())
+
+    # --- input validation ---
+    d, K = size(X)
+    n > 0 || throw(ArgumentError("n must be positive, got n = $n"))
+    β > 0 || throw(ArgumentError("β must be positive, got β = $β"))
+    length(weights) == K || throw(DimensionMismatch(
+        "weights has length $(length(weights)) but X has $K columns"))
+    all(weights .> 0) || throw(ArgumentError("All multiplicity weights must be positive"))
+    all(isfinite, X) || throw(ArgumentError("X contains non-finite entries"))
+    all(isfinite, weights) || throw(ArgumentError("weights contains non-finite entries"))
+
+    # --- component probabilities in log space:  log q_k = log r_k + β‖m_k‖²/2 ---
+    log_q = similar(weights)
+    for k in 1:K
+        log_q[k] = log(weights[k]) + 0.5 * β * dot(view(X, :, k), view(X, :, k))
+    end
+    log_q .-= maximum(log_q)
+    q = exp.(log_q)
+    q ./= sum(q)
+
+    # --- ancestral draw: k ~ Categorical(q), then ξ = m_k + β^(-1/2) ε ---
+    cdf = cumsum(q)
+    cdf[end] = 1.0                      # guard against roundoff below 1
+    noise_scale = 1.0 / sqrt(β)
+
+    Ξ = Matrix{Float64}(undef, n, d)
+    k_sel = Vector{Int}(undef, n)
+
+    for i in 1:n
+        kᵢ = searchsortedfirst(cdf, rand(rng))
+        kᵢ = min(kᵢ, K)                 # guard against rand() == 1.0 edge case
+        k_sel[i] = kᵢ
+        for j in 1:d
+            Ξ[i, j] = X[j, kᵢ] + noise_scale * randn(rng)
+        end
+    end
+
+    return (Ξ = Ξ, k = k_sel, q = q)
+end
+
+
+"""
     weighted_sample(X, ξ₀, T, ρ; β=1.0, α=0.1, seed=nothing) -> (t, Ξ)
 
 Run the multiplicity-weighted SA sampler. Adds a log-multiplicity bias `ρ` to the
