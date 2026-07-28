@@ -92,16 +92,16 @@ so the target is exactly a finite isotropic Gaussian mixture,
     q_k \propto r_k\exp\!\left(\frac{\beta}{2}\norm{\mathbf{m}_k}^2\right).
     \label{eq:exact_mixture}
 \end{equation}
-Each stored patient is the center of one component, $\beta^{-1}$ is the common component
-variance, and the multiplicity weights enter the mixture probabilities directly. Because the
-memories used here are normalized to unit length, the exponential factor is shared by every
-component and $q_k = r_k/\sum_j r_j$ exactly. The target can therefore be drawn from
+Each stored patient is the center of one component. The common component variance is
+$\beta^{-1}$, and the multiplicity weights enter the mixture probabilities directly. The
+memories used here are normalized to unit length, so the exponential factor is shared by
+every component and $q_k = r_k/\sum_j r_j$ exactly. The target can therefore be drawn from
 ancestrally, by sampling $k$ from $q$ and then
 $\vxi\sim\mathcal{N}(\mathbf{m}_k,\beta^{-1}\mathbf{I})$, with no Markov chain. The cohort
-analyzed in this work was generated with the Langevin implementation given next, which is what
-the reported results describe. The analytic sampler was added afterward as a reference, using
-the identical normalization, magnitude and decoding pipeline
-(Supplementary Section~\ref{ssec:sampling-correctness}).}
+analyzed in this work was generated with the Langevin implementation given next, and that is
+what the reported results describe. We added the analytic sampler afterward as a reference,
+using the identical normalization, magnitude and decoding pipeline
+(Table~\ref{stab:sampling-ladder}).}
 
 We sampled from this
 landscape using an Unadjusted Langevin Algorithm (ULA):
@@ -121,16 +121,15 @@ all patterns equally weighted) and hard subset curation ($\rho \to \infty$, only
 designated patterns contribute). This is an inference-time operation that requires
 no retraining of the energy landscape.
 
-\rone{The synthetic cohort analyzed in this work was produced by initializing each
-Langevin chain near a stored memory pattern and retaining the endpoint of a single
-trajectory of $T{=}2000$ steps. Because that choice could in principle shape the
-generator independently of the target distribution, we characterized it directly with
-a mixing diagnostic and a four-rung sampler ladder that compares the published scheme
-against sphere-initialized, burn-in-controlled, thinned and pooled Metropolis-adjusted
-sampling, and against exact ancestral draws from Eq.~\eqref{eq:exact_mixture}. The
-schemes agree closely in fidelity and in the memorization behavior relevant to privacy,
-and the analytic reference agrees with them as well, indicating that the published
-scheme faithfully represents the target law at $\beta^*$
+\rone{The synthetic cohort analyzed in this work was produced by initializing each Langevin
+chain near a stored memory pattern and retaining the endpoint of a single trajectory of
+$T{=}2000$ steps. That choice could shape the generator independently of the target
+distribution, so we characterized it directly. We ran a mixing diagnostic and a four-rung
+sampler ladder. The ladder compares the published scheme against sphere-initialized,
+burn-in-controlled, thinned and pooled Metropolis-adjusted sampling, and against exact
+ancestral draws from Eq.~\eqref{eq:exact_mixture}. All schemes agree in fidelity and in the
+memorization behavior relevant to privacy, and the analytic reference agrees with them as
+well. The published scheme therefore represents the target law faithfully at $\beta^*$
 (Supplementary Fig.~\ref{sfig:sampling-ladder}).}
 
 The inverse temperature $\beta$ controlled the trade-off between retrieval (large
@@ -157,12 +156,11 @@ $\beta^*(\rho)$.
 The effective number of patterns contributing to the dynamics was quantified by the
 participation ratio $K_{\text{eff}} = (\sum_k r_k)^2 / \sum_k r_k^2$, which
 interpolated smoothly between the total pattern count (unconditioned) and the
-designated subset size (strongly conditioned). \rboth{This answers a concrete question. If
-attention is spread unevenly across the $23$ stored patients, how many patients is the
-generator effectively drawing on? Equal weights give $23$, and weights concentrated on three
-patients give a value near three. Reporting $K_{\text{eff}}$ alongside a conditioned cohort
-therefore states how much independent material that cohort rests on, which is the quantity
-that bounds what can be concluded from it.} For a target effective fraction
+designated subset size (strongly conditioned). \rboth{This answers a concrete question. If attention is spread unevenly across the $23$
+stored patients, how many patients is the generator drawing on? Equal weights give $23$, and
+weights concentrated on three patients give a value near three. Reporting $K_{\text{eff}}$
+alongside a conditioned cohort states how few patients that cohort rests on. That
+number bounds what can be concluded from it.} For a target effective fraction
 $f_{\text{target}}$ of probability mass on the designated subset, the required
 multiplicity was $\rho = f_{\text{target}} \cdot K_{\text{bg}} / (K_{\text{des}} \cdot
 (1 - f_{\text{target}}))$, where $K_{\text{des}}$ and $K_{\text{bg}}$ are the

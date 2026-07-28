@@ -192,7 +192,7 @@ $\alpha = 0.01$ and $\beta^* = 2.94$ on the 18-dimensional PCA memory
 virtually every ULA proposal satisfies detailed balance, and the
 indistinguishable energy and effective sample size statistics confirm
 negligible discretization bias. \rone{This comparison bounds the
-discretization error of the reported sampler; the direct reference for the
+discretization error of the reported sampler. The direct reference for the
 target itself is the analytic sampler of Eq.~\eqref{eq:exact_mixture},
 introduced below.}}
 \label{tab:ula-vs-mala}
@@ -342,14 +342,14 @@ ETP               & 0.197 & 0.183 & 0.93$\times$ \\
 \centering
 \caption{\rone{\textbf{PCA-space ablation.} Five generators fit in the identical
 $d{=}18$ PCA subspace and evaluated on the same harness as SA. Median relative error
-(MRE) and the mechanistic cloud overlap measure fidelity; median novelty measures
-distance from the stored patterns (Frac.\ novel is the fraction above the $0.2$ novelty
-threshold); the cross-visit Frobenius error is the deviation of the synthetic correlation
-matrix from the real one, where a lower value means staying closer to the $23$ real
-patients and therefore rewards memorization rather than generalization. The shared subspace
-is necessary but not sufficient. $k$-nearest-neighbor interpolation collapses novelty and the
-kernel-density estimator degrades marginal and mechanistic fidelity despite both being fit in
-it, while the mixture and copula baselines are competitive with SA on the fidelity axes.}}
+(MRE) and the mechanistic cloud overlap measure fidelity. Median novelty measures distance
+from the stored patterns, and Frac.\ novel is the fraction above the $0.2$ novelty threshold.
+The cross-visit Frobenius error is the deviation of the synthetic correlation matrix from the
+real one. A lower value means staying closer to the $23$ real patients, so this metric
+rewards memorization. The shared subspace is necessary but not sufficient.
+$k$-nearest-neighbor interpolation collapses novelty, and the kernel-density estimator
+degrades marginal and mechanistic fidelity, despite both being fit in it. The mixture and
+copula baselines match SA on the fidelity axes.}}
 \label{stab:pca-ablation}
 \begin{tabular}{lccccc}
 \toprule
@@ -372,16 +372,15 @@ $d{=}18$.} Hull membership and distance for the $100$ synthetic patients against
 real patients, and for each real patient against the other $22$. The radial factor $t^{*}$
 is where the ray from the hull centroid through a point exits the hull, so $1/t^{*}$ is the
 factor by which a point overshoots the boundary and $t^{*} \ge 1$ would mean the point is
-inside. Distances and overshoots are severity-matched, each point's nearest vertex having
-been removed on both sides, because a held-out real patient necessarily loses its own
-vertex. Matched this way the distance to the hull is not distinguishable between synthetic
-and real patients (Mann--Whitney $p = 0.07$), while the radial overshoot is smaller for the
-synthetic ones ($p < 10^{-4}$); both tests treat the $100$ synthetic patients as
-independent, which they are not, so the reported significance is optimistic. The geometry
-rows show why no point of either kind falls inside. The hull attains the patients' typical
-radius only along the $23$ vertex directions, and the sampler returns every sample to the
-unit sphere, where a point inside the hull of unit-norm patterns would have to be one of
-those patterns.}}
+inside. Distances and overshoots are severity-matched, with each point's nearest vertex
+removed on both sides, because a held-out real patient necessarily loses its own vertex.
+Matched this way, the distance to the hull is not distinguishable between synthetic and real
+patients (Mann--Whitney $p = 0.07$), while the radial overshoot is smaller for the synthetic
+ones ($p < 10^{-4}$). Both tests treat the $100$ synthetic patients as independent, which
+they are not, so the reported significance is optimistic. The geometry rows show why no point
+of either kind falls inside. The hull attains the patients' typical radius only along the
+$23$ vertex directions, and the sampler returns every sample to the unit sphere. A point
+inside the hull of unit-norm patterns would have to be one of those patterns.}}
 \label{stab:hull-geometry}
 \begin{tabular}{lcc}
 \toprule
@@ -412,12 +411,12 @@ patients.} Median nearest-neighbor distances in the standardized $216$-dimension
 and the attack's discrimination. The attack retrains the generator on $15$ training
 patients and scores each real record by its distance to the resulting synthetic set,
 treating the $15$ training patients as members and the $8$ held-out patients as
-non-members. Every quantity comes from the same protocol, $40$ partitions drawn at random
-with the generation seed held fixed so that only the partition varies, with the distances
-pooled across all partitions. Non-members sit at the same distance from the synthetic
-cohort as unrelated real patients sit from one another, so the synthetic cohort carries no
-proximity signal about patients the generator never saw and the discrimination comes
-entirely from members sitting closer.}}
+non-members. Every quantity comes from the same protocol. We drew $40$ partitions at random
+with the generation seed held fixed, so that only the partition varies, and pooled the
+distances across all partitions. Non-members sit at the same distance from the synthetic
+cohort as unrelated real patients sit from one another. The synthetic cohort
+carries no proximity signal about patients the generator never saw, and the discrimination
+comes entirely from members sitting closer.}}
 \label{stab:membership}
 \begin{tabular}{lc}
 \toprule
@@ -564,19 +563,19 @@ rank-deficient covariance (Fig.~\ref{sfig:eigenvalue-spectrum}). Colors encode v
 
 \rboth{The operating point $\beta^*$ was located from the attention entropy. For a candidate
 $\beta$ we computed the Shannon entropy of the attention weights
-$\text{softmax}(\beta\,\mhat{X}^\top\vxi)$ evaluated at $20$ probe points placed at stored
-patterns, averaged those entropies, and normalized by $\log K$ so that the resulting curve runs
-from $0$, when one pattern carries all of the weight, to $1$, when every pattern carries equal
-weight. Sweeping $\beta$ logarithmically over $80$ values from $0.1$ to $1000$ traces this
-curve from the diffuse regime into the concentrated one. We took $\beta^*$ to be the point of
-most negative second derivative of the normalized entropy with respect to $\log\beta$, computed
-by finite differences over the sweep, which is the sharpest bend in the curve and marks where
-attention stops being shared across patterns and begins to localize on one. For
-multiplicity-weighted sampling the same computation was carried out with the $\log r_k$ bias
-included in the softmax logits, which gives a $\rho$-dependent $\beta^*(\rho)$ because the
-weighting changes how quickly attention concentrates as $\beta$ grows. For random unit-norm
-patterns the transition is predicted at $\beta^* = \sqrt{d}$, the theoretical reference quoted
-in the main text.}
+$\text{softmax}(\beta\,\mhat{X}^\top\vxi)$ at $20$ probe points placed at stored patterns,
+averaged those entropies, and normalized by $\log K$. The normalized curve runs from $0$ to
+$1$. A value of $0$ means one pattern carries all the weight, and a value of $1$ means every
+pattern carries equal weight. Sweeping $\beta$ logarithmically over $80$ values from $0.1$ to
+$1000$ traces this curve from the diffuse regime into the concentrated one. We took $\beta^*$
+to be the point of most negative second derivative of the normalized entropy with respect to
+$\log\beta$, computed by finite differences over the sweep. That point is the sharpest bend
+in the curve, and it marks where attention stops being shared across patterns and begins to
+localize on one. For multiplicity-weighted sampling we repeated the same computation with the
+$\log r_k$ bias included in the softmax logits. This gives a $\rho$-dependent $\beta^*(\rho)$,
+because the weighting changes how quickly attention concentrates as $\beta$ grows. For random
+unit-norm patterns the transition is predicted at $\beta^* = \sqrt{d}$, the theoretical
+reference quoted in the main text.}
 
 \FloatBarrier
 
@@ -589,59 +588,57 @@ computed the distance to the closest real record (DCR) in the standardized
 $216$-dimensional space and compared the synthetic-to-real distribution against the
 leave-one-out real-to-real distribution. Synthetic patients sit slightly closer to the
 real cohort than the real patients sit to one another, with median DCR $13.8$ against
-$15.9$. A nearest-neighbor membership-inference attack, which scores each real record
-by its proximity to the synthetic set and is evaluated over repeated random
-train/holdout splits, separates the $15$ training patients from the $8$ held-out
-patients with a mean AUC of $0.97$ (standard deviation $0.02$ over $40$ splits). At the
-published operating point the generator therefore reproduces its training cohort closely
-enough to be identifiable.}
+$15.9$. We also ran a nearest-neighbor membership-inference attack, which scores each real
+record by its proximity to the synthetic set over repeated random train/holdout splits. It
+separated the $15$ training patients from the $8$ held-out patients with a mean AUC of $0.97$
+(standard deviation $0.02$ over $40$ splits). At the published operating point the generator
+therefore reproduces its training cohort closely enough to be identifiable.}
 
 \rone{To attribute this behavior we asked whether it reflects the target distribution
 $\pi(\xi)\propto\exp(-\beta E)$ or merely the sampler used to draw from it. A mixing
-diagnostic showed that at $\beta^*$ the target is multimodal, with one component centered
-on each of the $K{=}23$ stored patterns, and that discretization bias in the Langevin
-updates is negligible, the Metropolis acceptance being near $0.999$
-(Supplementary Fig.~\ref{sfig:mixing-diagnostic}). We then constructed a four-rung
-ladder (Table~\ref{stab:sampling-ladder}, Fig.~\ref{sfig:sampling-ladder}) that holds
-$\beta$, the memory, and the decoding fixed and varies only the sampler, from the
-published anchor-initialized single-endpoint scheme to sphere initialization, to
-burn-in-controlled thinned pooling, to Metropolis-adjusted sampling. Across the ladder
-the membership-inference AUC stays near $0.96$ to $0.97$ and the median DCR rises only
-from $14.0$ to $14.3$, never reaching the real-to-real baseline of $15.9$, at a modest
-cost in marginal fidelity. Proper sampling of $\pi$ does not remove the memorization; it
-is a property of the distribution at this cohort size.}
+diagnostic showed that at $\beta^*$ the target is multimodal, with one component centered on
+each of the $K{=}23$ stored patterns. It also showed that discretization bias in the Langevin
+updates is negligible, with Metropolis acceptance near $0.999$
+(Supplementary Fig.~\ref{sfig:mixing-diagnostic}). We then constructed a four-rung ladder
+(Table~\ref{stab:sampling-ladder}, Fig.~\ref{sfig:sampling-ladder}) that holds $\beta$, the
+memory, and the decoding fixed and varies only the sampler. The rungs run from the published
+anchor-initialized single-endpoint scheme, to sphere initialization, to burn-in-controlled
+thinned pooling, to Metropolis-adjusted sampling. Across the ladder the
+membership-inference AUC stays near $0.96$ to $0.97$. The median DCR rises only from $14.0$
+to $14.3$ and never reaches the real-to-real baseline of $15.9$, at a modest cost in marginal
+fidelity. Proper sampling of $\pi$ does not remove the memorization. At $K{=}23$ the
+memorization is a property of the distribution.}
 
 \rone{The remaining lever is the inverse temperature. Lowering $\beta$ spreads
 probability mass away from the stored patterns and should improve privacy, at the
-expense of the memorization that also underlies fidelity. Sweeping $\beta$ across a
-$40$-fold range around $\beta^*$ (Fig.~\ref{sfig:sampling-ladder}C) confirmed the
-trade-off but bounded it sharply: the median DCR rises monotonically as $\beta$ falls
-yet saturates near $14.3$, remaining well below the real-to-real baseline of $15.9$ even
-at one twentieth of $\beta^*$, while the cross-visit covariance error grows from $0.59$
-to $0.69$. Marginal and mechanistic fidelity are comparatively insensitive to $\beta$,
-so the cost of lowering it is borne by the longitudinal covariance structure. No inverse
-temperature yields a cohort that is at once as private as the real patients are from one
-another and faithful to their joint structure.}
+expense of the memorization that also underlies fidelity. We swept $\beta$ across a $40$-fold
+range around $\beta^*$ (Fig.~\ref{sfig:sampling-ladder}C). The sweep confirmed the trade-off
+and bounded it sharply. The median DCR rises monotonically as $\beta$ falls, but it saturates
+near $14.3$ and stays below the real-to-real baseline of $15.9$ even at one twentieth of
+$\beta^*$. Over the same range the cross-visit covariance error grows from $0.59$ to $0.69$.
+Marginal and mechanistic fidelity are insensitive to $\beta$, so the longitudinal covariance
+structure bears the cost of lowering it. No inverse temperature yields a cohort that is both
+as private as the real patients are from one another and faithful to their joint structure.}
 
-\rone{Neither lever settles the question completely, because every scheme compared so far is a
-finite-time Markov chain. The target itself, however, is available in closed form. Completing
-the square in Eq.~\eqref{eq:hopfield_energy} gives Eq.~\eqref{eq:exact_mixture}: for
-unit-normalized memories $\pi_r$ is exactly the isotropic Gaussian mixture
-$\sum_k q_k\,\mathcal{N}(\mathbf{m}_k,\beta^{-1}\mathbf{I})$ with $q_k = r_k/\sum_j r_j$. It can
-therefore be sampled ancestrally, by drawing a component and adding isotropic noise, with no
-chain, no initialization, no burn-in and no discretization error. We generated a
+\rone{Neither lever settles the question completely, because every scheme compared so far is
+a finite-time Markov chain. The target itself is available in closed form. Completing the
+square in Eq.~\eqref{eq:hopfield_energy} gives Eq.~\eqref{eq:exact_mixture}. For
+unit-normalized memories $\pi_r$ is exactly the isotropic Gaussian mixture $\sum_k
+q_k\,\mathcal{N}(\mathbf{m}_k,\beta^{-1}\mathbf{I})$ with $q_k = r_k/\sum_j r_j$. It can
+therefore be sampled ancestrally, by drawing a component and adding isotropic noise. There is
+no chain, no initialization, no burn-in and no discretization error. We generated a
 protocol-matched exact cohort ($N{=}100$ at $\beta^*$, reusing the ladder's seeded magnitude
 draw so that only the direction sampler differs) and evaluated it on the identical harness
 (Table~\ref{stab:sampling-ladder}). Every metric falls inside the range spanned by the four
-rungs: median relative error $1.68\%$, cross-visit Frobenius error $0.60$, mechanistic overlap
-$0.91$, median novelty $0.50$, and median DCR $13.87$. One hundred independently seeded exact
-cohorts place these quantities in narrow intervals, with median relative error $1.40\%$ (fifth
-to ninety-fifth percentile $0.97$ to $1.91\%$) and median DCR $13.95$ ($13.61$ to $14.39$), so
-the agreement does not rest on a favorable seed. Evaluated over the same $40$ train/holdout
-splits used for the ladder endpoints, the membership-inference AUC under exact sampling is
-$0.98$, marginally above the published scheme's $0.97$. The memorization is therefore a
-property of $\pi_r$ at $K{=}23$, where every stored patient is a component center, rather than
-of any approximation used to sample it.}
+rungs: median relative error $1.68\%$, cross-visit Frobenius error $0.60$, mechanistic
+overlap $0.91$, median novelty $0.50$, and median DCR $13.87$. One hundred independently
+seeded exact cohorts place these quantities in narrow intervals, with median relative error
+$1.40\%$ (fifth to ninety-fifth percentile $0.97$ to $1.91\%$) and median DCR $13.95$
+($13.61$ to $14.39$). The agreement does not rest on a favorable seed. Over the
+same $40$ train/holdout splits used for the ladder endpoints, the membership-inference AUC
+under exact sampling is $0.98$, marginally above the published scheme's $0.97$. The
+memorization is therefore a property of $\pi_r$ at $K{=}23$, where every stored patient is a
+component center. It is not a property of any approximation used to sample it.}
 
 \begin{table}[ht]
 \centering
@@ -653,8 +650,8 @@ overlap, median novelty) and privacy metrics (median distance to the closest rea
 record, and repeated-split membership-inference AUC where evaluated) are reported per
 rung. The real-to-real DCR baseline is $15.9$. The membership-inference attack was run
 on the two endpoints of the ladder and on the analytic reference, over the same $40$
-train/holdout splits. \emph{Exact} is not a rung: it draws ancestrally from
-Eq.~\eqref{eq:exact_mixture} with no chain, and is reported as the analytic reference
+train/holdout splits. \emph{Exact} is not a rung. It draws ancestrally from
+Eq.~\eqref{eq:exact_mixture} with no chain, and serves as the analytic reference
 for the four sampled rungs. Over $100$ independently seeded exact cohorts the median
 relative error is $1.40\%$ (fifth to ninety-fifth percentile $0.97$ to $1.91\%$) and the
 median DCR is $13.95$ ($13.61$ to $14.39$).}}
@@ -680,11 +677,10 @@ V3 & pooled MALA      & 1.89 & 0.62 & 0.92 & 0.52 & 14.33 & 0.96 \\
 (A) Across the V0 to V3 ladder the distance to the closest real record (DCR, left axis)
 rises only slightly and stays below the real-to-real baseline, while the
 membership-inference AUC (right axis) remains near $0.96$ to $0.97$. (B) The fidelity
-cost of multi-chain pooling, as median relative error. (C) Sweeping the inverse
-temperature across a $40$-fold range around the operating point $\beta^*$: the DCR
-(privacy, left axis) rises as $\beta$ falls but never reaches the real-to-real baseline,
-while the cross-visit covariance error (right axis) grows, and the mechanistic overlap
-stays flat.}}
+cost of multi-chain pooling, as median relative error. (C) The inverse temperature swept
+across a $40$-fold range around the operating point $\beta^*$. The DCR (privacy, left axis)
+rises as $\beta$ falls but never reaches the real-to-real baseline. The cross-visit
+covariance error (right axis) grows, and the mechanistic overlap stays flat.}}
 \label{sfig:sampling-ladder}
 \end{figure}
 
@@ -693,8 +689,8 @@ stays flat.}}
 \includegraphics[width=\textwidth]{mcmc_mixing_diagnostic.pdf}
 \caption{\rone{\textbf{Mixing diagnostic at $\beta^*$.} Energy traces, the between-chain
 $\hat{R}$ statistic, and the anchor-distance trajectory for sphere-initialized Langevin
-chains, showing that the target distribution at $\beta^*$ is multimodal, with one
-component centered on each stored pattern. Metropolis acceptance near $0.999$
-indicates negligible discretization bias.}}
+chains. The target distribution at $\beta^*$ is multimodal, with one component centered on
+each stored pattern. Metropolis acceptance near $0.999$ indicates negligible discretization
+bias.}}
 \label{sfig:mixing-diagnostic}
 \end{figure}

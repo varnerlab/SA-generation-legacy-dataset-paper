@@ -136,43 +136,42 @@ distribution of $K{=}23$ norms. This is a trade-off. SA
 sacrifices some tail fidelity in exchange for preserving the manifold geometry that
 parametric methods cannot capture in the $n < p$ regime.
 
-\rone{The clinical reading of that trade-off deserves weight, because extreme states are often
-the phenomena of interest. If a generated cohort under-represents the severe end of a
-distribution, estimates of how often a severe phenotype occurs, or of how extreme it can
+\rone{The clinical reading of that trade-off matters, because extreme states are often the
+phenomena of interest. If a generated cohort under-represents the severe end of a
+distribution, estimates of how often a severe phenotype occurs, and of how extreme it can
 become, will be biased toward the center. The extrapolation analysis shows that the generator
 does place patients outside the convex hull of the real cohort, so it is not confined to the
-observed range, but producing out-of-range points is not the same as reproducing the frequency
-of extreme ones, and the two should not be conflated. We therefore recommend against using SA
+observed range. But producing out-of-range points is not the same as reproducing how often
+extreme ones occur, and the two should not be conflated. We recommend against using SA
 cohorts to estimate extreme-quantile risk without real anchoring data. The mechanistic checks
-reported here are comparatively insensitive to this limitation, since they compare
-distributions within a fifth to ninety-fifth percentile band and so are by construction a test
-of the central mapping from factor levels to thrombin generation rather than of the tails.}
+reported here are less sensitive to this limitation. They compare distributions within a
+fifth to ninety-fifth percentile band, so they test the central mapping from factor levels to
+thrombin generation and not the tails.}
 
-\rboth{Several of the findings above are best read as one observation rather than as a list.
-With $23$ patients in a $216$-dimensional measurement space the cohort is sparse enough that
-familiar diagnostics stop discriminating. Convex-hull membership rejects every synthetic
-patient, but it rejects every real patient with respect to the others as well, so it reports
-the resolution of the criterion rather than a property of the generator. The stored patterns
-sit far enough apart that their basins do not overlap, which is why a membership-inference
-attack succeeds and why conditioning on three PCOS patients leaves an effective pattern count
-below five. The advantage of the synthetic cohort in downstream calibration is a
-variance-reduction effect obtained by sampling more densely from a distribution estimated on
-those same patients. And the shared principal-component subspace supplies much of the marginal
-and mechanistic fidelity, which is why several baselines fit in that subspace match SA on
-those axes. Each of these follows from the sample size rather than from a separate defect of
-the method.}
+\rboth{Several of the findings above are one observation, not a list. With $23$ patients in
+a $216$-dimensional measurement space, the cohort is sparse enough that familiar diagnostics
+stop discriminating. Convex-hull membership rejects every synthetic patient, but it rejects
+every real patient with respect to the others as well. It reports the resolution of
+the criterion, not a property of the generator. The stored patterns sit far enough apart that
+their basins do not overlap. That is why a membership-inference attack succeeds, and why
+conditioning on three PCOS patients leaves an effective pattern count below five. The
+advantage of the synthetic cohort in downstream calibration is a variance-reduction effect,
+obtained by sampling more densely from a distribution estimated on those same patients. And
+the shared principal-component subspace supplies much of the marginal and mechanistic
+fidelity, which is why several baselines fit in that subspace match SA on those axes. Each of
+these follows from the sample size. None is a separate defect of the method.}
 
 This study had several limitations. Our study used a single longitudinal
 dataset of $K{=}23$ patients; further evaluation on independent datasets and
 across different clinical domains is needed to establish generalizability.
-\rboth{We addressed this in two partial ways rather than with a second clinical cohort. The
-simulation benchmark supplies a ground truth that no single dataset can, since the population
-covariance is known in advance and generalization can be separated from reproduction of the
-sample. And the same energy landscape, operating-point rule, and multiplicity conditioning
-have been applied to discrete protein sequence generation from small family alignments and to
-steering generation toward functional subsets, which is evidence that the mechanism exploited
-here is geometric rather than specific to coagulation. Neither substitutes for replication in
-an independent clinical cohort.} The PCA
+\rboth{We addressed this in two partial ways, short of a second clinical cohort. The
+simulation benchmark supplies a ground truth that no single dataset can. There the population
+covariance is known in advance, so generalization can be separated from reproduction of the
+sample. Separately, the same energy landscape, operating-point rule, and multiplicity
+conditioning have been applied to discrete protein sequence generation from small family
+alignments and to steering generation toward functional subsets. The mechanism exploited here
+is geometric, not specific to coagulation. Neither argument substitutes for
+replication in an independent clinical cohort.} The PCA
 dimensionality reduction assumed linear structure in the feature space; nonlinear
 manifold learning methods may better capture complex clinical relationships, though at
 the cost of reduced interpretability. The mechanistic validation under TF+TM
@@ -188,11 +187,11 @@ concentrations, and inhibitor profiles differ from the model
 assumptions~\citep{Hockin2002,BrummelZiedins2012}. The purpose of the mechanistic
 validation was not to obtain biochemically accurate rate constants but to test whether
 the ODE model processed real and synthetic patients equivalently, a comparison that is
-invariant to the absolute parameter values. \rboth{Because the ODE was calibrated on this
-same cohort, the mechanistic agreement demonstrates consistency with a model fitted to the
-same biological system rather than validation against a fully independent ground truth; its
-evidential value rests on the model being blind to whether a profile is real or synthetic
-and applying one fixed mapping to both.} The mechanistic validation was limited to
+invariant to the absolute parameter values. \rboth{The ODE was calibrated on this same cohort. The mechanistic agreement
+demonstrates consistency with a model fitted to the same biological system. It is not
+validation against a fully independent ground truth. Its evidential value rests on the model
+being blind to whether a profile is real or synthetic, and on its applying one fixed mapping
+to both.} The mechanistic validation was limited to
 thrombin generation (BZ2012) and did not cover the fibrinolytic or viscoelastic
 features included in the dataset; extending this validation to a mechanistic model of
 fibrinolysis, currently under development, would provide additional evidence for these
@@ -201,76 +200,74 @@ outcomes; our validation was restricted to statistical and mechanistic plausibil
 and prospective validation against real clinical decision-making remains an important
 future direction.
 
-\rone{The concatenation that makes cross-visit structure available also constrains the data the
-method accepts. Stacking three visits into a single vector assumes that every patient has every
-visit and that visits are aligned across patients, which holds in this cohort by design but not
-in most observational data. Irregular timing would place physiologically different states in
-the same coordinate, so the principal components would mix visit structure with between-patient
-variation. Missing assays or missing visits have no natural representation in a fixed-length
-vector and would require imputation before the embedding, which at this cohort size would
-itself be a substantial source of uncertainty. Variable-length records fall outside the
-formulation altogether and would need either padding to a common length or a sequence-aware
+\rone{The concatenation that makes cross-visit structure available also constrains the data
+the method accepts. Stacking three visits into a single vector assumes that every patient has
+every visit, and that visits are aligned across patients. This cohort satisfies both by
+design. Most observational data does not. Irregular timing would place physiologically
+different states in the same coordinate, so the principal components would mix visit
+structure with between-patient variation. Missing assays and missing visits have no natural
+representation in a fixed-length vector. They would require imputation before the embedding,
+which at $K{=}23$ would itself carry large uncertainty. Variable-length records fall outside
+the formulation altogether. They would need padding to a common length, or a sequence-aware
 extension in which attention operates over visits as well as over patients. These are scope
-boundaries of the present formulation rather than properties of the energy landscape, which is
-indifferent to what the coordinates mean.}
+boundaries of the present formulation. The energy landscape itself is indifferent to what the
+coordinates mean.}
 
 \rone{Cost and behavior at larger cohort sizes follow from how the target is sampled. In the
-Langevin implementation used here, each step evaluates the attention weights over the stored
-patterns and forms their weighted combination, so the work per step is proportional to the
-product of the pattern count and the retained dimension, and the cost of one sample is that
-product multiplied by the number of steps. The closed form removes the sequential factor
-entirely for future use: drawing a component and adding isotropic noise costs one selection and
-one Gaussian draw per sample, independent of any step count, and the remaining work is the
-principal-component decomposition and the decoding, which are shared across the cohort. The
-method is linear in both the number of patients and the reduced dimension either way, and at
-very high feature counts the practical bound is the principal-component decomposition rather
-than the sampling. Statistically the picture runs the other way. The simulation
-benchmark shows that SA's advantage over a fitted Gaussian is largest when the sample is
-smallest and narrows as the sample size approaches the dimension, where the Gaussian becomes
-well specified, so the method is positioned for the small-cohort regime rather than as a
-general-purpose generator. We expect the memorization documented above to ease as the cohort
-grows, because basins that currently stand apart would begin to overlap and generation would
-interpolate across several patients rather than remaining near one, but this cohort admits
-only subsampling downward and we did not test that expectation.}
+Langevin implementation, each step evaluates the attention weights over the stored patterns
+and forms their weighted combination. The work per step is the pattern count times
+the retained dimension, and one sample costs that product times the number of steps. The
+closed form removes the sequential factor entirely for future use. Drawing a component and
+adding isotropic noise costs one selection and one Gaussian draw per sample, whatever the
+step count. The remaining work is the principal-component decomposition and the decoding, and
+both are shared across the cohort. Either way the method is linear in the number of patients
+and in the reduced dimension. At high feature counts the practical bound is the
+principal-component decomposition, not the sampling. Statistically the picture runs the other
+way. The simulation benchmark shows that SA's advantage over a fitted Gaussian is largest
+when the sample is smallest, and that it narrows as the sample size approaches the dimension
+and the Gaussian becomes well specified. The method is therefore positioned for the
+small-cohort regime, not as a general-purpose generator. We expect the memorization
+documented above to ease as the cohort grows, because basins that currently stand apart would
+begin to overlap and generation would interpolate across several patients instead of staying
+near one. This cohort admits only subsampling downward, so we did not test that
+expectation.}
 
 \rtwo{The linear subspace deserves the same scrutiny. Principal components capture linear
-structure, so a manifold with strong curvature, such as a branching trajectory or a threshold
-effect, is represented only approximately, and that approximation error is one of the sources
-of the tail compression discussed above. The simulation benchmark bounds where this begins to
-matter. On a deliberately curved ground truth the off-manifold residual reached twice its
-linear-baseline value at a curvature of roughly $0.25$ to $0.5$, and beyond that point SA
-nonetheless stayed closer to the manifold than a fitted Gaussian, which in turn recovered the
-gross covariance better, so neither method dominates once the target stops being linear.
-Nonlinear embeddings such as kernel principal components, diffusion maps, or autoencoders would
-represent curvature more faithfully, at three costs. They give up components expressed directly
-in assay space and the interpretability that follows, they give up the closed-form relation
-between the critical temperature and the dimension that fixes the operating point here, and
-they introduce fitting choices that are themselves unstable to estimate from $23$ patients.
-Linearity is therefore a deliberate choice matched to the cohort size rather than an oversight,
-and the subspace ablation indicates which behaviors follow from the representation, since
-generators sharing that subspace match SA on marginal and mechanistic fidelity while differing
-sharply in how far they move from the stored patients.}
+structure. A manifold with strong curvature, such as a branching trajectory or a threshold
+effect, is represented only approximately, and that approximation error is one
+source of the tail compression discussed above. The simulation benchmark bounds where this
+begins to matter. On a deliberately curved ground truth the off-manifold residual reached
+twice its linear-baseline value at a curvature of $0.25$ to $0.5$. Beyond that point SA still
+stayed closer to the manifold than a fitted Gaussian, and the Gaussian recovered the gross
+covariance better. Neither method dominates once the target stops being linear. Nonlinear
+embeddings such as kernel principal components, diffusion maps, or autoencoders would
+represent curvature more faithfully, at three costs. They give up components expressed
+directly in assay space and the interpretability that follows. They give up the closed-form
+relation between the critical temperature and the dimension that fixes the operating point
+here. And they introduce fitting choices that are unstable to estimate from $23$ patients.
+Linearity is therefore a deliberate choice matched to the cohort size, not an oversight. The
+subspace ablation shows which behaviors follow from the representation, since generators
+sharing that subspace match SA on marginal and mechanistic fidelity while differing sharply
+in how far they move from the stored patients.}
 
-\rone{A distinct limitation concerns privacy. Because the generator concentrates
-probability mass near each of the $K{=}23$ stored patterns, synthetic patients lie
-close to individual real records, and a nearest-neighbor membership-inference attack
-separates cohort members from held-out patients with high accuracy. We find that this
-behavior is intrinsic to the target distribution at this cohort size rather than an
-artifact of the sampler or the operating temperature. Metropolis-adjusted sampling,
-which removes the discretization bias of the unadjusted scheme, leaves the signal
-essentially unchanged, and lowering the inverse temperature improves the distance to
-the closest real record only marginally, never to the level separating real patients
-from one another, and at a measurable cost to cross-visit covariance fidelity. The
-attribution is settled by the closed form of the target itself. Because the latent
-distribution is a Gaussian mixture whose components are centered on the stored
-patterns, it can be drawn from analytically rather than by any chain, and exact draws
-carried through the same decoding pipeline reproduce the membership-inference signal
-undiminished. Proximity to individual real records is therefore a property of the
-distribution the method defines at this cohort size, not of how that distribution is
-approximated. We therefore do not present the method as privacy-preserving. It is not
-differentially private, and the practical risk is bounded instead by the fully
-de-identified nature of the source cohort and by intended uses, such as mechanistic
-calibration and hypothesis generation, that do not require releasing patient-level
-records. The burn-in and thinning used in the sampling diagnostic were derived once on
-the full cohort and reused for the subset analyses, so the diagnostic characterizes the
-operating regime rather than certifying each subset independently.}
+\rone{A distinct limitation concerns privacy. The generator concentrates probability mass
+near each of the $K{=}23$ stored patterns, so synthetic patients lie close to individual real
+records. A nearest-neighbor membership-inference attack separates cohort members from
+held-out patients with high accuracy. We find that this behavior belongs to the target
+distribution at $K{=}23$. It is not an artifact of the sampler or the operating temperature.
+Metropolis-adjusted sampling removes the discretization bias of the unadjusted scheme, and it
+left the signal unchanged. Lowering the inverse temperature improved the distance to the
+closest real record only marginally. That distance never reached the level separating real
+patients from one another, and buying it cost cross-visit covariance fidelity. The closed
+form of the target settles the attribution. The latent distribution is a Gaussian mixture
+whose components are centered on the stored patterns, so it can be drawn from analytically,
+with no chain at all. Exact draws carried through the same decoding pipeline reproduce the
+membership-inference signal in full. Proximity to individual real records is therefore a
+property of the distribution the method defines at $K{=}23$, not of how that distribution is
+approximated. We do not present the method as privacy-preserving. It is not differentially
+private. The practical risk is bounded instead by the fully de-identified source cohort, and
+by intended uses that do not require releasing patient-level records, such as mechanistic
+calibration and hypothesis generation. The burn-in and thinning used in the sampling
+diagnostic were derived once on the full cohort and reused for the subset analyses. The
+diagnostic characterizes the operating regime, and does not certify each subset
+independently.}
