@@ -1,4 +1,4 @@
-Condition,Feature,MRE,Frac_NonSig
+Condition,Feature,MRE,Frac_NoDifferenceDetected
 Uncomplicated (n=18),FVIII,0.057,0.952
 Uncomplicated (n=18),vWF,0.022,0.999
 Uncomplicated (n=18),FIX,0.018,0.998

@@ -1,5 +1,6 @@
 # Standalone script: condition-specific feature comparison — grouped bar chart
-# with bootstrap Mann-Whitney equivalence test (subsample synth to match n_real)
+# with a descriptive bootstrap Mann-Whitney non-detection diagnostic
+# (subsample synth to match n_real). This is not an equivalence test.
 using Pkg
 Pkg.activate(joinpath(@__DIR__, ".."))
 
@@ -10,9 +11,11 @@ const _ROOT = joinpath(@__DIR__, "..")
 const _PATH_TO_DATA = joinpath(_ROOT, "data")
 const _PATH_TO_FIG  = joinpath(_ROOT, "figs")
 
-# ── Bootstrap equivalence test ───────────────────────────────────────────────
+# ── Bootstrap non-detection diagnostic ───────────────────────────────────────
 # Subsample synth to n_real, do Mann-Whitney, repeat B times.
-# Returns fraction of replicates where p > α (i.e., cannot distinguish)
+# Returns the fraction of replicates where p > α. A high fraction means this
+# test did not detect a difference at the available sample size; it does not
+# establish equivalence between the real and synthetic distributions.
 function bootstrap_mw(x_real, x_synth; B=1000, α=0.05, seed=42)
     rng = MersenneTwister(seed)
     n_real = length(x_real)
@@ -76,7 +79,7 @@ end
 # ── Build figure ─────────────────────────────────────────────────────────────
 panels = []
 all_results = DataFrame(Condition=String[], Feature=String[], MRE=Float64[],
-                        Frac_NonSig=Float64[])
+                        Frac_NoDifferenceDetected=Float64[])
 
 @info "Running bootstrap MW tests (1000 replicates each) …"
 for (ci, (cond_label, df_r, df_s)) in enumerate(zip(cond_labels, real_dfs, synth_dfs))
@@ -168,11 +171,11 @@ savefig(p_cond, joinpath(_PATH_TO_FIG, "validate_conditioned_features_v2.png"))
 @info "  Saved validate_conditioned_features_v2.pdf"
 
 # Summary
-n_pass = sum(all_results.Frac_NonSig .>= 0.90)
+n_pass = sum(all_results.Frac_NoDifferenceDetected .>= 0.90)
 n_total = nrow(all_results)
 @info "\n═══ Summary ═══"
 @info "  $n_pass / $n_total ($(round(100*n_pass/n_total, digits=1))%) features: p>0.05 in ≥90% of bootstrap replicates"
-@info "  Median non-significance fraction: $(round(median(all_results.Frac_NonSig)*100, digits=1))%"
+@info "  Median no-difference-detected fraction: $(round(median(all_results.Frac_NoDifferenceDetected)*100, digits=1))%"
 
-CSV.write(joinpath(_PATH_TO_DATA, "bootstrap_mw_equivalence.csv"), all_results)
-@info "  Saved bootstrap_mw_equivalence.csv"
+CSV.write(joinpath(_PATH_TO_DATA, "bootstrap_mw_nondetection.csv"), all_results)
+@info "  Saved bootstrap_mw_nondetection.csv"

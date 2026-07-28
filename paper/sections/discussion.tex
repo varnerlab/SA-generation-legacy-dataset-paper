@@ -12,12 +12,12 @@ rank-deficient estimate could not represent, a difference made visible in the
 eigenvalue spectrum where MVN introduced spurious variance in 194 null dimensions
 while SA respected the low-rank geometry of the data. SA could amplify clinically
 meaningful rare subgroups, generating 100 synthetic PCOS patients from only 3 real
-ones, while preserving subgroup-specific signatures that MVN cannot capture. And an
-independent ODE model of the coagulation cascade, calibrated
-exclusively on real patients, confirmed that the factor-to-thrombin-generation mapping
-in synthetic patients was biologically plausible, with 83--92\% cloud overlap and
-Kolmogorov--Smirnov tests unable to distinguish the two populations ($p > 0.35$ for
-all five TGA features).
+ones, while preserving subgroup-specific signatures that MVN cannot capture. And
+\rboth{a separately specified, generator-blind ODE model of the coagulation cascade,
+calibrated on the same real cohort, placed the synthetic profiles in the same
+factor-to-thrombin-generation envelope as the real profiles}, with 83--92\% cloud
+overlap and no difference detected by the Kolmogorov--Smirnov tests under these
+conditions ($p > 0.35$ for all five TGA features).
 
 The ability to generate validated synthetic cohorts from very small longitudinal
 datasets has practical implications for maternal health research. Rare pregnancy
@@ -28,8 +28,11 @@ enable hypothesis generation, power analyses, and computational modeling studies
 these understudied populations by generating synthetic cohorts that preserve both the
 statistical and mechanistic properties of the real data. The conditional generation
 capability is particularly relevant. Rather than requiring researchers to collect
-additional rare patients, SA can amplify existing small subgroups into cohorts large
-enough for meaningful analysis.
+additional rare patients, \rone{SA can provide denser simulated realizations of the
+distribution implied by an existing small subgroup for exploratory modeling and workflow
+testing. It does not increase the subgroup's inferential sample size: that remains three
+patients for PCOS and five for Developed~PE, and recruitment of additional real patients is
+still required for clinical inference.}
 
 Understanding why SA succeeds where parametric methods fail requires examining the
 geometric structure of the problem. SA generates samples by interpolating between
@@ -115,7 +118,8 @@ signal.
 Beyond these statistical and geometric considerations, the mechanistic validation
 introduced an approach that applies beyond coagulation. Rather than relying solely on statistical comparisons between real
 and synthetic distributions, we tested whether synthetic patients produced biologically
-consistent outputs when processed by an independent computational model, and went
+consistent outputs when processed by \rboth{a separately specified computational model
+that was blind to the generator but calibrated on the same real cohort}, and went
 further to show that a mechanistic model calibrated entirely on synthetic data
 predicted real patient outcomes as well as one calibrated on real data (overall ratio
 0.94$\times$ on held-out V2+V3 patients, with 11 random restarts per calibration).
@@ -124,11 +128,13 @@ of interest (pharmacokinetic models in drug development~\citep{MouldUpton2013},
 physiological models in critical care~\citep{Chase2011}, tumor growth
 models~\citep{Ribba2012}, or metabolic models~\citep{Yizhak2015,Shan2018}), and the requirement is not that the
 model be a perfect predictor but that synthetic patients fall within the same
-model-predicted envelope as real patients. The bootstrap Mann--Whitney analysis of
-condition-specific features revealed that 5 of 24 (21\%) feature--condition pairs
-were statistically distinguishable at equal sample sizes, but the mean relative errors
-for these features remained small (5--15\%), and the detected differences likely
-reflected SA's tendency to compress distributional tails rather than shift means. This
+model-predicted envelope as real patients. \rone{In the descriptive bootstrap
+Mann--Whitney diagnostic of condition-specific features, 4 of 24 (17\%)
+feature--condition pairs fell below the criterion of no detected difference in at least
+90\% of equal-size resamples. This power-limited diagnostic is not an equivalence test.}
+The mean relative errors for these features remained small (5--15\%), and the lower
+non-detection fractions likely reflected SA's tendency to compress distributional tails
+rather than shift means. This
 tail compression arises from two sources: the PCA dimensionality reduction, which
 cannot fully represent higher-order moments of every feature, and the
 direction-magnitude decomposition, which draws magnitudes from a finite empirical

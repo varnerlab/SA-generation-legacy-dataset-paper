@@ -32,6 +32,9 @@
 #                                                df_clean)
 #         data/synthetic_full_longitudinal.csv (canonical N=100 SA cohort)
 # Writes: data/convex_hull_results.csv
+#         data/convex_hull_biological_violations.csv
+#         data/nonnegativity_baseline_comparison.csv
+#         data/convex_hull_loo_summary.csv
 # ──────────────────────────────────────────────────────────────────────────────
 
 include(joinpath(@__DIR__, "..", "Include.jl"))
@@ -203,7 +206,8 @@ if !isempty(out_idx)
     #    vs the real cohort). Real cohort = cleaned_full_data.csv (SAME source
     #    validate_biological_constraints.jl uses for df_real, i.e. all subjects
     #    with any visit present, not just complete-case), pooled across visits.
-    positive_cols = [:II, :V, :VII, :VIII, :IX, :X, :AT, :PC, :Fbgn, :Estradiol,
+    positive_cols = [:II, :V, :VII, :VIII, :IX, :X, :AT, :PC, :Fbgn,
+                     :Estradiol, :Progesterone,
                      Symbol("TF Initiator Peak (nM)"), Symbol("TF Initiator ETP (nM·min)"),
                      Symbol("TF Initiator Lagtime (min)")]
     outlier_features = [:II, :V, :VII, :VIII, :IX, :X, :AT, :PC, :Fbgn,
@@ -320,6 +324,85 @@ if !isempty(out_idx)
         MechInEnvelope[k] = me
         @info "  [out-of-hull SyntheticID=$sid] dist=$(round(dists[k],digits=3))  BioPlausible=$bp  MechInEnvelope=$me"
     end
+
+    # Persist the magnitude and patient incidence of every non-negativity
+    # violation. A binary patient-level pass rate alone treats a value just
+    # below zero and a large negative excursion identically; this companion
+    # artifact makes the scale of each failure auditable.
+    violation_rows = NamedTuple[]
+    for col in positive_cols
+        synth_vals = Float64.(df_out_long[!, col])
+        neg_mask = synth_vals .< 0
+        neg_vals = synth_vals[neg_mask]
+        neg_patient_ids = unique(df_out_long[neg_mask, :SyntheticID])
+        real_vals = Float64.(collect(skipmissing(df_real_full[!, col])))
+        push!(violation_rows, (
+            Feature = String(col),
+            NegativeMeasurements = length(neg_vals),
+            NegativePatients = length(neg_patient_ids),
+            MinSynthetic = minimum(synth_vals),
+            MedianAbsNegative = isempty(neg_vals) ? NaN : median(abs.(neg_vals)),
+            MaxAbsNegative = isempty(neg_vals) ? NaN : maximum(abs.(neg_vals)),
+            RealMean = mean(real_vals),
+            RealSD = std(real_vals),
+            RealMin = minimum(real_vals),
+            RealMax = maximum(real_vals),
+        ))
+    end
+    violation_summary = DataFrame(violation_rows)
+    CSV.write(joinpath(_PATH_TO_DATA, "convex_hull_biological_violations.csv"),
+              violation_summary)
+    @info "  ✓ Wrote data/convex_hull_biological_violations.csv"
+
+    # Contextualize the decoded-hormone failures against the manuscript's
+    # concatenated MVN baseline implementation. Both methods generate in an
+    # unconstrained continuous space, so this diagnostic asks whether negative
+    # hormone values are unique to SA rather than using the baseline to relax
+    # the biological constraint. The comparison is seeded and saved separately
+    # from the SA patient-level plausibility classification above.
+    μ_mvn = vec(mean(concat_real_roundtrip, dims=1))
+    Σ_mvn = cov(concat_real_roundtrip)
+    Σ_mvn = (Σ_mvn + Σ_mvn') / 2
+    Σ_mvn += 1e-6 * I
+    Random.seed!(42)
+    concat_mvn = rand(MvNormal(μ_mvn, Σ_mvn), n_synth)'
+
+    baseline_rows = NamedTuple[]
+    for (method, concat) in (("SA", concat_syn), ("MVN", concat_mvn))
+        hormone_blocks = Matrix{Float64}[]
+        for col in (:Estradiol, :Progesterone)
+            j = findfirst(==(col), kept_cols)
+            j === nothing && error("non-negativity diagnostic: missing $col")
+            feature_matrix = hcat([concat[:, (v - 1) * n_assays + j] for v in 1:n_visits]...)
+            push!(hormone_blocks, feature_matrix)
+            neg_mask = feature_matrix .< 0
+            neg_vals = feature_matrix[neg_mask]
+            push!(baseline_rows, (
+                Method = method,
+                Feature = String(col),
+                NegativeMeasurements = sum(neg_mask),
+                NegativePatients = sum(vec(any(neg_mask, dims=2))),
+                MinSynthetic = minimum(feature_matrix),
+                MedianAbsNegative = isempty(neg_vals) ? NaN : median(abs.(neg_vals)),
+                MaxAbsNegative = isempty(neg_vals) ? NaN : maximum(abs.(neg_vals)),
+            ))
+        end
+        hormone_matrix = hcat(hormone_blocks...)
+        hormone_neg_mask = hormone_matrix .< 0
+        push!(baseline_rows, (
+            Method = method,
+            Feature = "AnyHormone",
+            NegativeMeasurements = sum(hormone_neg_mask),
+            NegativePatients = sum(vec(any(hormone_neg_mask, dims=2))),
+            MinSynthetic = NaN,
+            MedianAbsNegative = NaN,
+            MaxAbsNegative = NaN,
+        ))
+    end
+    baseline_summary = DataFrame(baseline_rows)
+    CSV.write(joinpath(_PATH_TO_DATA, "nonnegativity_baseline_comparison.csv"),
+              baseline_summary)
+    @info "  ✓ Wrote data/nonnegativity_baseline_comparison.csv"
 end
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -405,5 +488,7 @@ println("="^90)
 @info "\nInvariant checks …"
 @assert isapprox(frac_in_hull + frac_out_hull, 1.0; atol=1e-12) "frac_in_hull + frac_out_hull must equal 1"
 @assert isempty(out_idx) || (0.0 <= frac_plausible <= 1.0) "frac_plausible must be in [0,1]"
+@assert isempty(out_idx) || sum(bio_only_mask) == 54 "canonical biological-constraint pass count changed; update the manuscript and response letter"
 @info "  ✓ frac_in_hull + frac_out_hull == 1"
 @info "  ✓ frac_plausible ∈ [0,1]"
+@info "  ✓ canonical biological-constraint pass count == 54/100"

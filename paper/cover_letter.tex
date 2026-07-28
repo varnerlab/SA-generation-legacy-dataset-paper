@@ -40,25 +40,29 @@ spanning 72 biochemical features across three visits, including rare subgroups
 (polycystic ovary syndrome, $n{=}3$; preeclampsia, $n{=}5$). We validated the
 synthetic patients through four progressively stringent levels: marginal
 plausibility, cross-visit covariance preservation, conditional subgroup
-amplification, and mechanistic consistency with an independent 58-ODE model of
-the coagulation cascade. At every level, synthetic patients were statistically
-and mechanistically indistinguishable from their real counterparts. A downstream
-utility test further showed that a mechanistic model calibrated entirely on
-synthetic patients predicted held-out real patient outcomes as well as one
-calibrated on real data.
+amplification, and mechanistic consistency with a separately specified,
+generator-blind 58-ODE model calibrated on the same cohort. Across these
+validation levels, the synthetic patients closely matched their real counterparts
+under the reported metrics; non-significant difference tests are treated as
+descriptive non-detection rather than proof of equivalence. A downstream utility
+test further showed that a mechanistic model calibrated entirely on synthetic
+patients predicted held-out real patient outcomes as well as one calibrated on
+real data.
 
 We believe this work is well suited to \textit{npj Systems Biology and
 Applications} for several reasons. First, the methodology bridges systems
 biology (mechanistic ODE modeling of the coagulation cascade) with modern
 machine learning (Hopfield networks, Langevin dynamics), a combination that
 aligns with the journal's scope. Second, the multi-level validation framework,
-particularly the mechanistic validation using an independent ODE model, provides
+particularly the mechanistic validation using a separately specified,
+generator-blind ODE model calibrated on the same cohort, provides
 a template that transfers to any domain with a calibrated mechanistic model
 (pharmacokinetic, physiological, metabolic). Third, the multiplicity-weighted
 conditional generation capability addresses a practical need in rare disease and
 maternal health research, where generating condition-specific synthetic cohorts
-from very small subgroups enables hypothesis generation and power analyses that
-would otherwise be infeasible.
+from very small subgroups supports exploratory simulation and power-analysis
+workflows without increasing the subgroup's effective inferential sample size or
+replacing recruitment.
 
 A preprint of this work is available on arXiv (arXiv:2604.07557). The
 manuscript has not been submitted elsewhere.

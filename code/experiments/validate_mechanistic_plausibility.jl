@@ -2,7 +2,8 @@
 # validate_mechanistic_plausibility.jl — Level 4: Mechanistic Plausibility
 #
 # Do SA-generated synthetic patients produce biologically plausible TGA predictions
-# when their coagulation factor levels are fed through an independent ODE model?
+# when their coagulation factor levels are fed through a separately specified,
+# generator-blind ODE model calibrated on the same cohort?
 #
 # Uses the Hockin/Mann BZ2012 coagulation model (58 species, 64 rate constants)
 # calibrated on Visit 1 real patients (5 rate constants, population-level).

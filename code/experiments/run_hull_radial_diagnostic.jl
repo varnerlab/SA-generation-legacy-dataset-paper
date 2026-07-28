@@ -213,6 +213,8 @@ end
 @info "F. Anchor-free hull distances (nearest vertex removed on both sides) …"
 dist_syn_harsh = [hull_distance(Y[:, setdiff(1:K, nearest_real[i])], Ysyn[:, i]) for i in 1:n_synth]
 dist_loo       = [hull_distance(Y[:, setdiff(1:K, k)], Y[:, k]) for k in 1:K]
+p_overshoot = pvalue(MannWhitneyUTest(overshoot_syn_harsh, overshoot_loo))
+p_distance = pvalue(MannWhitneyUTest(dist_syn_harsh, dist_loo))
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Report
@@ -248,10 +250,10 @@ q(v) = (round(quantile(v, 0.25), digits=3), round(median(v), digits=3), round(qu
 @info "══════ SEVERITY-MATCHED CONTROLS (nearest vertex removed on both sides) ══════"
 @info "   E. radial overshoot   synth (harsh): $(q(overshoot_syn_harsh))   real LOO: $(q(overshoot_loo))"
 @info "      frac of synthetics below the real median: $(round(mean(overshoot_syn_harsh .< median(overshoot_loo)), digits=3))"
-@info "      Mann-Whitney p: $(round(pvalue(MannWhitneyUTest(overshoot_syn_harsh, overshoot_loo)), sigdigits=3))"
+@info "      Mann-Whitney p: $(round(p_overshoot, sigdigits=3))"
 @info "   F. hull DISTANCE (anchor-free)  synth (harsh): $(q(dist_syn_harsh))   real LOO: $(q(dist_loo))"
 @info "      frac of synthetics below the real median: $(round(mean(dist_syn_harsh .< median(dist_loo)), digits=3))"
-@info "      Mann-Whitney p: $(round(pvalue(MannWhitneyUTest(dist_syn_harsh, dist_loo)), sigdigits=3))"
+@info "      Mann-Whitney p: $(round(p_distance, sigdigits=3))"
 @info ""
 @info "   Radius resampling contribution: median t* in raw space $(round(median(t_syn), digits=4))"
 @info "   vs median t* for the same directions on the unit sphere $(round(median(t_unit), digits=4))"
@@ -267,3 +269,28 @@ out = DataFrame(
 )
 CSV.write(joinpath(_PATH_TO_DATA, "hull_radial_diagnostic.csv"), out)
 @info "\nWrote data/hull_radial_diagnostic.csv"
+
+# Persist the severity-matched comparisons used in the manuscript separately
+# from convex_hull_loo_summary.csv, whose synthetic row is intentionally
+# unmatched (all 23 real vertices). Repeating the comparison p-value on the two
+# group rows keeps the artifact tidy and directly machine-readable.
+matched_summary = DataFrame(
+    Metric = ["radial_overshoot", "radial_overshoot", "hull_distance", "hull_distance"],
+    Group = ["synthetic_nearest_vertex_removed", "real_leave_one_out",
+             "synthetic_nearest_vertex_removed", "real_leave_one_out"],
+    N = [length(overshoot_syn_harsh), length(overshoot_loo),
+         length(dist_syn_harsh), length(dist_loo)],
+    Q1 = [quantile(overshoot_syn_harsh, 0.25), quantile(overshoot_loo, 0.25),
+          quantile(dist_syn_harsh, 0.25), quantile(dist_loo, 0.25)],
+    Median = [median(overshoot_syn_harsh), median(overshoot_loo),
+              median(dist_syn_harsh), median(dist_loo)],
+    Q3 = [quantile(overshoot_syn_harsh, 0.75), quantile(overshoot_loo, 0.75),
+          quantile(dist_syn_harsh, 0.75), quantile(dist_loo, 0.75)],
+    Min = [minimum(overshoot_syn_harsh), minimum(overshoot_loo),
+           minimum(dist_syn_harsh), minimum(dist_loo)],
+    Max = [maximum(overshoot_syn_harsh), maximum(overshoot_loo),
+           maximum(dist_syn_harsh), maximum(dist_loo)],
+    MannWhitneyP = [p_overshoot, p_overshoot, p_distance, p_distance],
+)
+CSV.write(joinpath(_PATH_TO_DATA, "hull_severity_matched_summary.csv"), matched_summary)
+@info "Wrote data/hull_severity_matched_summary.csv"

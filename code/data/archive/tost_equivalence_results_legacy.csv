@@ -1,4 +1,4 @@
-Condition,Feature,MRE,TOST_p,Equivalent
+Condition,Feature,MRE,TOST_p,LegacyEquivalent
 Healthy (n=14),FVIII,0.017,0.0795,No
 Healthy (n=14),vWF,0.069,0.3831,No
 Healthy (n=14),FIX,0.071,0.2133,No
