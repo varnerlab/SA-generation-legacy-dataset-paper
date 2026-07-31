@@ -3,7 +3,7 @@
 **Manuscript:** Validated Synthetic Patient Generation for Small Longitudinal Cohorts: Coagulation Dynamics Across Pregnancy
 **Journal:** npj Systems Biology and Applications
 **Decision:** Major revision
-**Date:** 28 July 2026
+**Date:** 7 August 2026
 
 ---
 
