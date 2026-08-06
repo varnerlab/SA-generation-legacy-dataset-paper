@@ -136,19 +136,18 @@ Fig.~\ref{sfig:cross-visit-corr-supp}.}
 \begin{figure}[p]
 \centering
 \includegraphics[width=\textwidth]{sim_phase_diagram.pdf}
-\caption{\rboth{\textbf{Recovery across data regimes.} (A)~On a low-rank Gaussian
-ground truth with known population covariance, the ratio of multivariate-Gaussian to
-SA covariance-recovery error (relative Frobenius distance to the population covariance)
-across sample size $n$ and dimensionality $p$, averaged over latent ranks. Values above
-one (blue) mark cells where SA recovers the population covariance more accurately than a
-multivariate Gaussian. The advantage is largest in the rank-deficient $n<p$ regime that
-contains the real cohort's shape ($n{=}23$, $p{=}216$), and narrows as $n$ approaches $p$,
-where the Gaussian is well specified. The target covariance is fixed in advance, so this
-measures generalization and not reproduction of the training draw. (B)~On the real cohort,
-SA's recovery of the full 23-patient cross-visit correlation structure as the cohort is
-subsampled to $n{=}20, 15, 10, 8$ (mean and standard deviation over ten random subsets,
-black bars). Recovery degrades gracefully toward the full-cohort value (star) instead of
-collapsing.}}
+\caption{\rboth{\textbf{Population recovery and clinical-cohort subsampling.}
+(A)~For each low-rank Gaussian setting, stochastic attention and a sample-covariance
+Gaussian generator were fit to the same simulated training cohort and each generated $100$
+profiles. Color represented the ratio of their relative Frobenius errors against the known
+population covariance (Gaussian error divided by stochastic-attention error), averaged over
+latent ranks $3$, $5$, and~$10$. Values above one (blue) indicated lower error for stochastic
+attention. Because the target covariance was fixed before the training cohort was drawn,
+this measured population recovery rather than reproduction of the training data.
+(B)~Stochastic attention was fit to ten random subsets of the clinical cohort at each of
+$n{=}20,15,10,$ and~$8$, and each fit generated $100$ profiles. Points and bars represented
+the mean and standard deviation of the relative cross-visit correlation error against the
+same full $23$-patient reference; the star represented the fit using all $23$ patients.}}
 \label{fig:sim-recovery}
 \end{figure}
 

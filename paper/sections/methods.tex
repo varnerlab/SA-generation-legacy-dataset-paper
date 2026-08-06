@@ -292,3 +292,49 @@ on all real and synthetic patients under two conditions (TF-only and TF+TM) and
 compared predicted-versus-measured thrombin generation features. The primary metric
 was cloud overlap: the fraction of synthetic predicted/measured ratios falling
 within the 5th--95th percentile range of real ratios.
+
+\subsection{\rboth{Robustness Benchmarks}}
+\label{sec:robustness-benchmarks}
+
+\rboth{We used three benchmarks to separate population recovery, sensitivity to clinical
+sample size, and sensitivity to nonlinearity. For the population-recovery benchmark, we
+generated training cohorts from a low-rank Gaussian factor model,
+$\mathbf{X}=\mathbf{Z}\mathbf{L}^{\top}+\boldsymbol{\epsilon}$, where
+$\mathbf{Z}\in\mathbb{R}^{n\times r}$ and $\mathbf{L}\in\mathbb{R}^{p\times r}$ had
+independent standard-normal entries, and $\boldsymbol{\epsilon}$ had independent Gaussian entries
+with variance $0.1$. The population covariance
+$\boldsymbol{\Sigma}_{\mathrm{pop}}=\mathbf{L}\mathbf{L}^{\top}+0.1\mathbf{I}$ was therefore
+known independently of the training cohort. We crossed
+$n\in\{8,15,23,40,80\}$, $p\in\{30,120,216\}$, and
+$r\in\{3,5,10\}$. In each cell, stochastic attention and a Gaussian generator were fit to
+the same training cohort and each produced $100$ profiles. Stochastic attention used the
+same 95\%-variance PCA, entropy-selected $\beta^*$, and generation settings as the clinical
+analysis. The Gaussian generator used the training mean and sample covariance, with only the
+diagonal jitter required for numerical sampling and no covariance shrinkage. We measured
+covariance recovery as
+$\lVert\widehat{\boldsymbol{\Sigma}}_{\mathrm{gen}}-
+\boldsymbol{\Sigma}_{\mathrm{pop}}\rVert_F/
+\lVert\boldsymbol{\Sigma}_{\mathrm{pop}}\rVert_F$. Figure~\ref{fig:sim-recovery}A reports
+the ratio of Gaussian to stochastic-attention error for the Gaussian ground-truth cells,
+averaged across the three latent ranks.}
+
+\rboth{For the clinical subsampling benchmark, we sampled without replacement from the $23$
+complete patients at $n\in\{20,15,10,8\}$, using ten independently seeded subsets at each
+size. We fit stochastic attention to each subset, generated $100$ profiles, and evaluated
+every generated cohort against the same full $23$-patient reference rather than against its
+own training subset. The three outcomes were relative Frobenius error of the cross-visit
+correlation matrix, median marginal relative error pooled across visits and features, and
+TF-only mechanistic cloud overlap. Figure~\ref{fig:sim-recovery}B shows the mean and standard
+deviation of the cross-visit error over the ten subsets.}
+
+\rboth{For the nonlinearity benchmark, we drew $t$ uniformly from $[-1,1]$ and defined the
+two S-curve coordinates as $x_1=t$ and $x_2=c\sin(\pi t)$. We mapped the curve into $p$
+dimensions with a random orthonormal embedding and added isotropic Gaussian noise with
+standard deviation $0.05$. We used $n{=}23$ and $p{=}30$ or~$120$. We evaluated curvature
+$c{=}0$, $0.25$, $0.5$, $1$, $1.5$, and~$2$, with five independently seeded replicates per
+setting. Both generators produced $100$ profiles per replicate. We measured the mean distance
+of generated profiles from the known curve within its two-dimensional embedding plane and the
+relative Frobenius error from the population covariance, estimated from a $50{,}000$-sample reference
+draw. The reported linearity boundary was the first nonzero curvature at which the mean
+off-manifold error of stochastic attention reached twice its value for the straight-line
+case ($c{=}0$).}

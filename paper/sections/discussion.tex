@@ -159,7 +159,7 @@ a $216$-dimensional measurement space, the cohort is sparse enough that familiar
 stop discriminating. Convex-hull membership rejects every synthetic patient, but it rejects
 every real patient with respect to the others as well. It reports the resolution of
 the criterion, not a property of the generator. The stored patterns sit far enough apart that
-their basins do not overlap. That is why a membership-inference attack succeeds, and why
+their basins do not overlap. That is why the membership-inference test succeeded, and why
 conditioning on three PCOS patients leaves an effective pattern count below five. The
 advantage of the synthetic cohort in downstream calibration is a variance-reduction effect,
 obtained by sampling more densely from a distribution estimated on those same patients. And
@@ -199,9 +199,9 @@ validation against a fully independent ground truth. Its evidential value rests 
 being blind to whether a profile is real or synthetic, and on its applying one fixed mapping
 to both.} The mechanistic validation was limited to
 thrombin generation (BZ2012) and did not cover the fibrinolytic or viscoelastic
-features included in the dataset; extending this validation to a mechanistic model of
-fibrinolysis, currently under development, would provide additional evidence for these
-feature categories. Finally, we did not validate synthetic patients against clinical
+features included in the dataset. Mechanistic validation using models that explicitly
+represent fibrinolysis and clot viscoelasticity remains future work. Finally, we did not
+validate synthetic patients against clinical
 outcomes; our validation was restricted to statistical and mechanistic plausibility,
 and prospective validation against real clinical decision-making remains an important
 future direction.
@@ -229,10 +229,10 @@ step count. The remaining work is the principal-component decomposition and the 
 both are shared across the cohort. Either way the method is linear in the number of patients
 and in the reduced dimension. At high feature counts the practical bound is the
 principal-component decomposition, not the sampling. Statistically the picture runs the other
-way. The simulation benchmark shows that SA's advantage over a fitted Gaussian is largest
-when the sample is smallest, and that it narrows as the sample size approaches the dimension
-and the Gaussian becomes well specified. The method is therefore positioned for the
-small-cohort regime, not as a general-purpose generator. We expect the memorization
+way. The simulation benchmark showed that the advantage of stochastic attention over the
+sample-covariance Gaussian comparator was concentrated in the $n<p$ settings, where the
+empirical covariance was rank deficient. The method was therefore positioned for the
+small-cohort, high-dimensional regime, not as a general-purpose generator. We expect the memorization
 documented above to ease as the cohort grows, because basins that currently stand apart would
 begin to overlap and generation would interpolate across several patients instead of staying
 near one. This cohort admits only subsampling downward, so we did not test that
@@ -256,10 +256,13 @@ subspace ablation shows which behaviors follow from the representation, since ge
 sharing that subspace match SA on marginal and mechanistic fidelity while differing sharply
 in how far they move from the stored patients.}
 
-\rone{A distinct limitation concerns privacy. The generator concentrates probability mass
-near each of the $K{=}23$ stored patterns, so synthetic patients lie close to individual real
-records. A nearest-neighbor membership-inference attack separates cohort members from
-held-out patients with high accuracy. We find that this behavior belongs to the target
+\rone{A distinct limitation concerns membership privacy, not identification of individuals.
+The source cohort was fully de-identified and contained no direct identifiers or link to
+named individuals, and neither the synthetic cohort nor our analysis identified a
+participant. The narrower finding was that the generator concentrated probability mass near
+each of the $K{=}23$ stored patterns, so synthetic patients lay close to individual real
+records. A nearest-neighbor membership-inference test separated cohort members from
+held-out patients with high accuracy. We found that this behavior belonged to the target
 distribution at $K{=}23$. It is not an artifact of the sampler or the operating temperature.
 Metropolis-adjusted sampling removes the discretization bias of the unadjusted scheme, and it
 left the signal unchanged. Lowering the inverse temperature improved the distance to the
@@ -271,9 +274,9 @@ with no chain at all. Exact draws carried through the same decoding pipeline rep
 membership-inference signal in full. Proximity to individual real records is therefore a
 property of the distribution the method defines at $K{=}23$, not of how that distribution is
 approximated. We do not present the method as privacy-preserving. It is not differentially
-private. The practical risk is bounded instead by the fully de-identified source cohort, and
-by intended uses that do not require releasing patient-level records, such as mechanistic
-calibration and hypothesis generation. The burn-in and thinning used in the sampling
+private, and synthetic generation did not add a formal privacy guarantee beyond the source
+cohort's de-identification. The intended uses do not require releasing patient-level records
+and include mechanistic calibration and hypothesis generation. The burn-in and thinning used in the sampling
 diagnostic were derived once on the full cohort and reused for the subset analyses. The
 diagnostic characterizes the operating regime, and does not certify each subset
 independently.}

@@ -53,10 +53,9 @@ fibrinolytic parameters, which were generated as part of the concatenated vector
 showed comparable MREs to the coagulation factors (Table~\ref{stab:mre-summary}), but are
 not individually highlighted here because the mechanistic validation uses the BZ2012
 thrombin generation model, which does not cover fibrinolysis or clot viscoelasticity.
-\rone{These features still load onto the retained principal components, so they shape the
-energy landscape from which every synthetic patient is drawn. Their statistical fidelity
-matters even though we do not check them mechanistically. A fibrinolysis model under
-development will close that gap.}
+\rone{These variables contributed through their loadings on the retained principal
+components to the memory patterns that defined the energy landscape. Their fidelity
+was evaluated statistically here, whereas their mechanistic fidelity was not evaluated.}
 
 We also compared SA against two widely used deep generative methods for tabular data,
 Conditional Tabular GAN (CTGAN) and Tabular Variational Autoencoder
@@ -68,33 +67,33 @@ datasets. TVAE achieved comparable marginal fidelity at high epoch counts (media
 concatenated longitudinal profiles ($n{=}23$), meaning it could not capture cross-visit
 covariance structure and had no mechanism for conditional subgroup generation.
 
-\rone{We next asked how much of this fidelity comes from the shared principal-component
-subspace and how much from the stochastic-attention dynamics. We compared SA against four
-generators fit in the identical $d{=}18$ PCA subspace, a Gaussian mixture, a kernel-density
-estimator, $k$-nearest-neighbor interpolation, and a Gaussian copula (Supplementary
-Table~\ref{stab:pca-ablation}). The subspace proved necessary but not sufficient. Two of the
-four baselines failed despite sharing it. $k$-nearest-neighbor interpolation collapsed
-novelty to a median of $0.05$ and essentially returned the training patients, and the
-kernel-density estimator degraded both marginal fidelity ($1.9\%$ median relative error) and
-mechanistic plausibility ($0.82$ cloud overlap). The mixture and copula baselines cleared
-both bars. They matched SA on marginal error ($1.1\%$ and $1.3\%$ against SA's $1.2\%$) and
-on mechanistic overlap ($0.92$ and $0.93$ against $0.90$), and only SA and the copula put
-every synthetic patient above the novelty threshold. The subspace therefore supplies much of
-the marginal and mechanistic fidelity, and any generator that samples it sensibly inherits
-that fidelity. We take this as the substantive answer to whether the representation or the
-dynamics carries the result.}
-
-\rone{The tie did not extend to the remaining axes. SA showed the largest empirical
-cross-visit correlation error of the five methods ($0.64$ against $0.42$ for the mixture and
-copula). That quantity measures reproduction of the correlation matrix of the same $23$
-patients every generator was fit to. At $K{=}23$ that matrix is a noisy estimate of the
-population structure, so reproducing it does not test generalization. The simulation
-benchmark does, because there the population covariance is known by construction, and SA
-recovered it more accurately than the multivariate normal baseline across the $n<p$ regime
-(Fig.~\ref{fig:sim-recovery}A). SA also has two properties the subspace baselines lack. It
-fixes its operating point from the attention-entropy inflection instead of tuning a
-bandwidth or component count on $23$ patients, and it admits the inference-time multiplicity
-steering used below for conditional subgroup generation.}
+\rone{We next asked how much of this fidelity was attributable to the shared
+principal-component representation rather than specifically to the stochastic-attention
+generative formulation. We compared stochastic attention with four generators operating in
+the identical $d{=}18$ PCA subspace: a two-component diagonal-covariance Gaussian mixture, a
+kernel-density estimator, $k$-nearest-neighbor interpolation, and a Gaussian copula
+(Supplementary Table~\ref{stab:pca-ablation}). The comparison indicated that the shared
+representation accounted for much of the observed fidelity but did not guarantee
+performance. The nearest-neighbor samples remained close to stored profiles: their median
+novelty, defined as $1-\max_k\cos(\hat{\vxi},\hat{\mathbf{m}}_k)$, was $0.05$, and only
+$5\%$ exceeded the operational $0.2$ cutoff, corresponding to cosine similarity below $0.8$
+to every stored pattern. The kernel-density estimator had higher marginal error ($1.9\%$)
+and lower pooled TF-only mechanistic cloud overlap ($0.82$): after pooling across patients,
+visits, and TGA features, $82\%$ of the predicted-to-recorded TGA ratios for its synthetic
+patients fell within the real-data 5th--95th percentile range. By contrast, the mixture
+and copula were competitive with stochastic attention on marginal error ($1.1\%$ and
+$1.3\%$, respectively, versus $1.2\%$) and mechanistic overlap ($0.92$ and $0.93$ versus
+$0.90$). All $100$ profiles generated by stochastic attention and by the copula exceeded
+the novelty cutoff, compared with $94\%$ of mixture profiles. Stochastic attention
+nevertheless had the largest empirical cross-visit correlation error among the five methods
+($0.64$, versus $0.42$ for the mixture and copula). Because this metric compared each
+generated cohort with the same $23$ patients used to construct it, it measured in-sample
+reproduction rather than population generalization. The separate known-ground-truth
+benchmark addressed the latter question: stochastic attention recovered the population
+covariance more accurately than the sample-covariance Gaussian generator in $35$ of $39$
+low-rank Gaussian $n<p$ settings (Fig.~\ref{fig:sim-recovery}A). Thus, the ablation
+attributed much of the marginal and mechanistic fidelity to the shared principal-component
+representation. Within this comparison, no generator dominated across the evaluated metrics.}
 
 \subsection{Cross-Visit Covariance Structure}
 \label{sec:results-l2}
@@ -129,102 +128,106 @@ SA-generated patients occupied the same region of PCA space as real patients acr
 all three visits, while MVN-generated patients showed substantially greater scatter,
 particularly at Visits~2 and~3.
 
-\subsection{\rboth{Robustness Across Data Regimes}}
+\subsection{\rboth{Robustness to Sample Size, Dimensionality, and Nonlinearity}}
 
-\rboth{We next tested whether SA recovers population structure or merely reproduces the
-training cohort. This requires a synthetic ground truth, where the true covariance is known
-and does not depend on any particular draw. We swept a low-rank Gaussian generative model
-across sample size $n$, dimensionality $p$, and latent rank. SA recovered the population
-covariance more accurately than a multivariate Gaussian throughout the rank-deficient $n<p$
-regime (Fig.~\ref{fig:sim-recovery}A). At the real cohort's shape ($n{=}23$, $p{=}216$) the
-Gaussian's relative covariance error was about $1.5$ times SA's, and SA was more accurate in
-$35$ of the $39$ Gaussian $n<p$ cells. The target covariance is fixed in advance here, so
-this is generalization and not memorization. The empirical cross-visit comparison could not
-draw that distinction. The advantage narrowed as $n$ approached and exceeded $p$, where the
-Gaussian is well specified, so the benefit belongs to the small-sample regime this cohort
-occupies.}
-
-\rboth{We also subsampled the real cohort to as few as eight patients and regenerated.
-Performance degraded gracefully. Recovery of the full-cohort cross-visit correlation
-structure worsened smoothly as $n$ fell (Fig.~\ref{fig:sim-recovery}B). The pooled marginal
-error rose from about $2\%$ at $n{=}20$ to about $5\%$ at $n{=}8$, and mechanistic
-plausibility stayed near $0.90$ at every subset size. We then tested a deliberately
-nonlinear ground truth, an S-curve manifold. As curvature increased, SA's linear
-principal-component subspace placed generated points off the true manifold, and the
-off-manifold residual reached twice its linear-baseline value at a curvature of $0.25$ to
-$0.5$. SA still stayed closer to the manifold than the multivariate Gaussian, and the
-Gaussian recovered the gross covariance better. Neither method wins on both counts. The
-linear embedding is a bounded choice matched to the cohort size.}
+\rboth{We evaluated robustness with three complementary benchmarks
+(Methods, Sec.~\ref{sec:robustness-benchmarks}). First, we simulated low-rank Gaussian
+populations whose covariance was known before drawing any training data. For each combination
+of training size ($n{=}8,15,23,40,80$), dimensionality ($p{=}30,120,216$), and latent rank
+($r{=}3,5,10$), we fit stochastic attention and a sample-covariance Gaussian generator to the
+same training cohort, generated $100$ profiles from each, and compared each generated
+covariance with the known population covariance using relative Frobenius error. This tested
+population recovery rather than reproduction of the training draw. Stochastic attention had
+lower error in $35$ of the $39$ rank-deficient $n<p$ settings
+(Fig.~\ref{fig:sim-recovery}A). At the cohort-matched setting ($n{=}23$, $p{=}216$), averaged
+across the three latent ranks, the Gaussian generator's error was about $1.5$ times that of
+stochastic attention. Across the grid, the advantage was concentrated in $n<p$ settings,
+where the Gaussian sample covariance was rank deficient. Second, we tested degradation on
+the clinical data by drawing ten random subsets at each of $n{=}20,15,10,$ and~$8$, fitting
+stochastic attention to each subset, and scoring each generated cohort against the same full
+$23$-patient reference. As $n$ fell from $20$ to~$8$, mean cross-visit correlation error rose
+from $0.63$ to $1.11$ and mean pooled
+marginal error rose from $2.0\%$ to $4.9\%$, while mechanistic cloud overlap remained near
+$0.90$ (Fig.~\ref{fig:sim-recovery}B). Third, we tested the linear embedding against a known
+nonlinear target: a noisy S-curve embedded in $p{=}30$ or~$120$ dimensions. We fit both
+generators to $n{=}23$ samples and measured both distance from the known curve and covariance
+error as curvature increased. The off-manifold error of stochastic attention doubled
+relative to the straight-line case between curvatures $0.25$ and~$0.5$. Its samples remained
+closer to the curve than the Gaussian samples, whereas the Gaussian generator recovered the
+population covariance more accurately. Thus, stochastic attention outperformed this
+sample-covariance Gaussian comparator on covariance recovery in most small, linear low-rank
+settings, but the benchmarks also identified deterioration with fewer patients and a clear
+limitation when the population structure was nonlinear.}
 
 \subsection{\rtwo{Interpolation and Extrapolation}}
 
-\rtwo{We next asked whether the sampler stays within the real cohort or reaches beyond it.
-We tested convex-hull membership of the synthetic patients against the $23$ real patients in
-the $d{=}18$ principal-component space (Supplementary Table~\ref{stab:hull-geometry}). Every
-synthetic patient fell outside the hull. So did every real patient with respect to the other
-$22$. We then matched the comparison for severity by removing each point's nearest vertex on
-both sides, so that real and synthetic patients faced equally depleted hulls. Matched this
-way, the Mann--Whitney test detected no difference in distance ($p{=}0.07$). The hull criterion did
-not separate synthetic patients from real ones at $K{=}23$.}
+\rtwo{We next asked whether the sampler stayed within the real cohort or reached beyond it.
+We constructed the convex hull of the $23$ real patients in the $d{=}18$
+principal-component space and tested whether it contained each synthetic patient
+(Supplementary Table~\ref{stab:hull-geometry}). This hull was the smallest convex region
+enclosing the observed patients. Every synthetic patient lay outside it. In a separate
+leave-one-out analysis, each real patient also lay outside the convex hull formed by the
+remaining $22$ real patients. This indicated that every real patient formed an outer corner,
+or vertex, of the sparse, high-dimensional hull. This binary inside-or-outside result did not
+show whether synthetic patients lay just beyond the hull or much farther away. We therefore
+used distance to the hull to measure the degree of extrapolation. Our hypothesis was that
+unusually extrapolative generation would place synthetic patients farther from the hull than
+real patients treated as unseen. For a like-for-like comparison, the distances for both groups
+were calculated against hulls containing $22$ real patients. The leave-one-out calculation already
+omitted the real patient being evaluated; for each synthetic patient, we omitted its nearest
+real patient. Median distance to the resulting hulls was $11.0$ for synthetic patients and
+$11.9$ for held-out real patients, and a descriptive Mann--Whitney test did not detect a
+difference ($p{=}0.07$). Thus, the comparison provided no evidence that the synthetic
+profiles lay farther beyond the observed cohort than held-out real patients. This result did
+not establish equivalence, but it showed why binary hull membership alone was not an
+informative measure of extrapolation in this sparse, high-dimensional setting.
+}
 
-\rtwo{The reason is geometric. With $23$ points in $18$ dimensions the hull is nearly a
-simplex. It reaches the patients' typical radius only along the $23$ vertex directions and
-extends a small fraction of that distance in a generic direction, so almost any point that
-does not sit on a stored pattern lies outside it. The sampler compounds this. It normalizes
-the stored patterns to unit length and returns each sample to the unit sphere, and a unit
-vector inside the convex hull of unit-norm patterns must coincide with one of those
-patterns. Hull membership is unavailable to this generator by construction, not
-merely uncommon. The hull criterion reports its own resolution at $K{=}23$, and we do not
-read it as evidence of runaway extrapolation. We assessed the generated points against the
-plausibility criteria instead. Fifty-four of 100 satisfied all implemented biological
-constraints. The 46 failures had at least one negative decoded hormone concentration:
-19 patients for estradiol and 37 for progesterone, with 10 overlapping. Most negative
-measurements were close to zero relative to the real-cohort scale, but the tails reached
-$-2109.8$ for estradiol ($-0.42$ real-cohort SD below zero) and $-75.8$ for progesterone
-($-1.24$ SD). These values arise because Gaussian sampling in PCA space followed by linear
-decoding has unbounded support; we did not clip them because clipping would alter the
-validated covariance structure. The unconstrained concatenated MVN baseline showed a
-comparable failure rate (58 negative hormone measurements across 43 of 100 patients, versus
-57 measurements across 46 of 100 for SA), so this is a limitation of unconstrained
-continuous generation rather than a uniquely SA-specific failure. It remains a biological
-invalidity in both methods. Per-feature mechanistic ratios stayed inside the real
-cohort's percentile band for 83--92\% of patients. Forty-one of 100 met the strict
-all-features-and-visits mechanistic criterion, and 24 of 100 met both that criterion and all
-biological constraints.}
+\rtwo{Because geometric proximity did not establish biological validity, we next assessed
+plausibility in two ways. First, $54$ of $100$ synthetic patients satisfied all implemented
+biological constraints; the remaining $46$ had at least one negative estradiol or
+progesterone concentration. The unconstrained concatenated multivariate-normal baseline had
+a comparable failure rate, with negative hormone concentrations in $43$ of $100$ patients.
+Thus, this limitation affected both unconstrained continuous generators rather than
+stochastic attention alone. Second, we asked whether the generated coagulation-factor
+combinations produced thrombin-generation behavior consistent with the real cohort under the
+BZ2012 model. Estradiol and progesterone were not inputs to this model, and all nine generated
+coagulation-factor inputs were positive; we therefore retained all $100$ synthetic patients
+for this mechanistic check. For each thrombin-generation feature, $83$--$92\%$ of synthetic
+patients had a model-predicted-to-recorded ratio within the 5th--95th percentile range
+observed in the real cohort. Forty-one of $100$ patients met this range for every evaluated
+feature at every visit, and $24$ of $100$ met both this criterion and all biological
+constraints. While not included in the current implementation, future implementations could enforce non-negativity by construction through
+positive-variable transformations or constrained decoding.}
 
-\subsection{\rone{Re-identification Risk}}
+\subsection{\rone{Membership-Inference Risk}}
 
-\rone{The energy landscape places a basin at each stored patient, so we asked how much the
-generated cohort reveals about who was in it. For every synthetic patient we measured the
-distance to the closest real record and compared it against the leave-one-out distance
-between real patients. We also ran a nearest-neighbor membership-inference attack, which
-retrains the generator on a subset of the cohort and scores each real record by its proximity
-to the resulting synthetic set (Supplementary Table~\ref{stab:membership}). Synthetic
-patients sat slightly closer to the real cohort than real patients sat to one another. The
-attack separated training members from held-out patients with a mean AUC of $0.97$ across
-$40$ random splits, and reached perfect separation on roughly a fifth of them. At the
-published operating point the generator reproduces its training cohort closely enough for
-membership to be recovered.}
-
-\rone{Decomposing the attack shows what it does and does not recover. Held-out patients sat
-at the generic distance between two unrelated patients from the synthetic cohort, matching
-the leave-one-out distance among the real patients themselves. Training members sat closer.
-The attack therefore recovers which patients were stored in the memory. It recovers nothing
-about patients the generator never saw, and the separation comes from the same small-cohort
-geometry that left the hull criterion uninformative. The mechanism is visible in the form of
-the target. The distribution the energy induces is a mixture with one component centered on
-each stored patient (Eq.~\eqref{eq:exact_mixture}). Every draw descends from a single stored
-patient and carries proximity to that patient into the decoded profile. Nothing in the
-construction averages membership across several patients. The attack also assumes an
-adversary who already holds a patient's record and asks whether it was in the training
-cohort. It bounds membership disclosure, and does not show that patient-level
-values can be reconstructed from the synthetic cohort alone. We also tested whether the leak
-comes from the target distribution or from the sampler. Metropolis-adjusted sampling left it
-unchanged, and so did a wide sweep of the inverse temperature. Exact ancestral draws from
-Eq.~\eqref{eq:exact_mixture} use no chain at all, and they reproduced the signal at an AUC of
-$0.98$ (Supplementary Table~\ref{stab:sampling-ladder},
-Fig.~\ref{sfig:sampling-ladder}). At $K{=}23$ the signal belongs to the target distribution,
-not to the sampler.}
+\rone{Each real patient's $18$-dimensional principal-component profile was one column of the
+memory matrix used during stochastic-attention sampling. We asked whether someone who already
+possessed a candidate de-identified assay profile could use the synthetic cohort to infer
+whether that profile was included in the matrix. This tested record inclusion, not personal
+identity; the source cohort contained no direct identifiers or links to named individuals. As
+an initial check, synthetic profiles were closer to their nearest real record than real
+records were to one another (median distance $13.8$ versus $15.9$). We tested membership more
+directly across $40$ random splits. For each split, the memory matrix contained $15$ patients,
+the other $8$ were held out, and a new synthetic cohort was generated. A smaller distance from
+a candidate record to that cohort provided stronger evidence of inclusion (Supplementary
+Table~\ref{stab:membership}). Included records were closer than held-out records (median
+$10.7$ versus $15.4$). The area under the receiver operating characteristic curve (AUC)
+measured how often the test ranked an included record above a held-out record; $0.5$ indicated
+chance and $1.0$ perfect discrimination. The mean AUC was $0.97$, with perfect discrimination
+in $9$ of $40$ splits. Thus, the test usually inferred whether a candidate profile had been
+included, but could not identify a person or reconstruct an unknown patient's measurements.
+We next asked whether this signal came from the numerical sampler or the target distribution.
+Metropolis-adjusted sampling left the result nearly unchanged (AUC $0.96$). Lowering the
+inverse temperature across a $40$-fold range increased the distance from synthetic to stored
+profiles, but it never reached the real-to-real baseline and cross-visit covariance fidelity
+degraded. Exact draws from the closed-form mixture removed the sampling algorithm entirely
+and reproduced the result (AUC $0.98$; Supplementary
+Table~\ref{stab:sampling-ladder}, Fig.~\ref{sfig:sampling-ladder}). Thus, at $K{=}23$, the
+membership signal came from the target distribution centered on the stored records, not from
+how it was sampled. Synthetic generation therefore added no privacy guarantee beyond
+de-identification of the source cohort.}
 
 \subsection{Conditional Generation of Rare Subgroups}
 \label{sec:results-l3}
@@ -251,7 +254,7 @@ Mann--Whitney diagnostic}. For each feature and condition, we subsampled the
 synthetic cohort to match the real sample size ($n_{\text{real}}$), applied a
 Mann--Whitney U test, and repeated 1,000 times. We reported the fraction of
 replicates where $p > 0.05$, \rone{meaning that this test did not detect a difference in
-that replicate. This power-limited fraction is descriptive and does not establish
+that replicate. This power-limited fraction was descriptive and did not establish
 equivalence.} Across all 24 feature--condition pairs, 20 (83\%) achieved
 $p > 0.05$ in $\geq$90\% of replicates, with a median
 no-difference-detected fraction of 98.6\% (full per-pair results in
@@ -259,8 +262,8 @@ Table~\ref{stab:bootstrap-mw}). The four pairs that fell below 90\% were
 high-variance features in the smallest subgroups (FIX and plasminogen in PCOS;
 FIX and plasminogen in Developed~PE), where the real data exhibited large
 inter-patient variability. \rone{No multiple-testing correction was applied because this
-diagnostic is not used to make simultaneous inferential claims; the per-pair values and the
-90\% threshold are descriptive reporting summaries.} PCA projections of the conditioned cohorts are provided in
+diagnostic was not used to make simultaneous inferential claims; the per-pair values and the
+90\% threshold were descriptive reporting summaries.} PCA projections of the conditioned cohorts are provided in
 Figs.~\ref{sfig:conditioned-pca}--\ref{sfig:conditioned-by-visit}. These results showed that SA's multiplicity-weighted
 interpolation can amplify rare subgroups in a way that preserves their distinguishing
 clinical features, useful for \rone{exploratory hypothesis generation and simulation-based
@@ -269,16 +272,16 @@ fitting a separate MVN to three PCOS patients across 216 features is mathematica
 impossible (rank~2 covariance), and post-hoc subsetting of unconditional MVN samples
 does not preserve subgroup-specific structure.
 
-\rone{The amplification is bounded by how few patterns underlie it. At the target effective
+\rone{The amplification was bounded by how few patterns underlay it. At the target effective
 fraction the participation ratio was $4.6$ for the PCOS cohort and $7.7$ for the
 Developed~PE cohort (Table~\ref{stab:multiplicity}). Each cohort of $100$ generated patients
-is a recombination of three and five real individuals. Those cohorts carry no more
-information about the conditions than the underlying patients do. Any downstream analysis
-that treats them as $100$ independent observations will understate uncertainty. What
-conditioning provides is a denser sample of the distribution implied by those few patients.
-That supports exploratory hypothesis generation and simulation-based power calculations
-whose uncertainty remains anchored to the original patients. It is not additional evidence
-about the conditions themselves, and it is not a substitute for recruiting patients.}
+represented a recombination of three and five real individuals. Those cohorts carried no more
+information about the conditions than the underlying patients did. Any downstream analysis
+that treated them as $100$ independent observations would understate uncertainty.
+Conditioning provided a denser sample of the distribution implied by those few patients.
+This supported exploratory hypothesis generation and simulation-based power calculations
+whose uncertainty remained anchored to the original patients. It did not provide additional
+evidence about the conditions themselves and was not a substitute for recruiting patients.}
 
 \subsection{Mechanistic Consistency}
 \label{sec:results-l4}
@@ -286,7 +289,7 @@ about the conditions themselves, and it is not a substitute for recruiting patie
 The preceding validations assessed statistical properties of the synthetic data. We
 next tested whether SA-generated patients produce biologically plausible outputs
 when their coagulation factor levels are fed through
-\rboth{a mechanistic model that knows nothing about the SA generation process, though it
+\rboth{a mechanistic model that knew nothing about the SA generation process, though it
 was calibrated on the same cohort.}
 We used the Hockin--Mann BZ2012 model~\citep{Hockin2002,BrummelZiedins2012}, a system
 of 58 ordinary differential equations with 64 rate constants that simulates thrombin
@@ -343,7 +346,7 @@ inter-patient variability. The key finding was not patient-level prediction but
 population-level plausibility. \rboth{A separately specified mechanistic model of the
 coagulation cascade, applied identically to both groups and blind to the generator, placed
 SA-generated patients within the same model-predicted envelope as real patients under both
-experimental conditions. The model was calibrated on this same cohort, so this is a
+experimental conditions. The model was calibrated on this same cohort, so this was a
 same-cohort consistency check rather than independent validation.}
 
 \subsection{Downstream Utility: Mechanistic Model Calibration}
@@ -373,18 +376,18 @@ synth-calibrated model is not fully independent of the real data; rather, it
 demonstrates that SA's representation preserves sufficient biological structure for a
 mechanistic model to learn generalizable parameters.
 
-\rone{The direction of that comparison should not be overread. Every piece of information in
-the synthetic training set derives from the same $23$ patients. The modest advantage is a
+\rone{The direction of that comparison was not interpreted as evidence of superiority. Every piece of information in
+the synthetic training set derived from the same $23$ patients. The modest advantage was a
 variance-reduction effect, not new biological content. Fitting five rate
-constants against $100$ samples drawn from a distribution estimated on $23$ patients smooths
-the objective and dilutes the influence of any single patient. Any generator producing a
-denser sample of the same distribution would do the same. The result establishes that the
-synthetic cohort is a usable substitute for calibration, not a better one.}
+constants against $100$ samples drawn from a distribution estimated on $23$ patients smoothed
+the objective and diluted the influence of any single patient. Any generator producing a
+denser sample of the same distribution would have done the same. The result established that the
+synthetic cohort was a usable substitute for calibration, not a better one.}
 
-\rtwo{Read alongside the conditioned cohorts, this bounds what the method offers in
-practice. It enables analyses that the original sample size forecloses. We calibrated a
+\rtwo{Read alongside the conditioned cohorts, this bounded what the method offered in
+practice. It enabled analyses that the original sample size foreclosed. We calibrated a
 mechanistic model without spending the real cohort on training, and we compared subgroups
-holding three and five patients. It also points to factor-level differences a larger study
-could test. It does not substitute for additional patients. None of these results speak to
+holding three and five patients. It also pointed to factor-level differences a larger study
+could test. It did not substitute for additional patients. None of these results spoke to
 clinical deployment, which would require prospective validation against real clinical
 decisions.}
