@@ -376,18 +376,17 @@ synth-calibrated model is not fully independent of the real data; rather, it
 demonstrates that SA's representation preserves sufficient biological structure for a
 mechanistic model to learn generalizable parameters.
 
-\rone{The direction of that comparison was not interpreted as evidence of superiority. Every piece of information in
-the synthetic training set derived from the same $23$ patients. The modest advantage was a
-variance-reduction effect, not new biological content. Fitting five rate
-constants against $100$ samples drawn from a distribution estimated on $23$ patients smoothed
-the objective and diluted the influence of any single patient. Any generator producing a
-denser sample of the same distribution would have done the same. The result established that the
-synthetic cohort was a usable substitute for calibration, not a better one.}
-
-\rtwo{Read alongside the conditioned cohorts, this bounded what the method offered in
-practice. It enabled analyses that the original sample size foreclosed. We calibrated a
-mechanistic model without spending the real cohort on training, and we compared subgroups
-holding three and five patients. It also pointed to factor-level differences a larger study
-could test. It did not substitute for additional patients. None of these results spoke to
-clinical deployment, which would require prospective validation against real clinical
-decisions.}
+\rone{The synthetic-calibrated model's median prediction errors were 2--10\% lower than those
+of the real-calibrated model, but this was not interpreted as evidence that synthetic data
+were superior. All information in the synthetic
+cohort derived from the same $23$ patients, and calibrating five
+rate constants against $100$ samples drawn from that distribution likely smoothed the
+objective and diluted the influence of any single patient. Any generator producing a denser
+sample of the same distribution could have had the same variance-reduction effect. The result
+therefore showed that the synthetic cohort was usable for calibration, not that it contained
+new biological information.} \rtwo{Together with the conditioned-cohort analyses, this
+defined the method's practical value: it supported mechanistic-model calibration without
+using the real cohort directly in that calibration, comparisons of subgroups containing only
+three or five patients, and factor-level hypotheses for testing in a larger study. These uses
+did not replace additional patients or support clinical deployment, which would require
+prospective validation against real clinical decisions.}
