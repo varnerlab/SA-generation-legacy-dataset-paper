@@ -272,16 +272,16 @@ fitting a separate MVN to three PCOS patients across 216 features is mathematica
 impossible (rank~2 covariance), and post-hoc subsetting of unconditional MVN samples
 does not preserve subgroup-specific structure.
 
-\rone{The amplification was bounded by how few patterns underlay it. At the target effective
-fraction the participation ratio was $4.6$ for the PCOS cohort and $7.7$ for the
-Developed~PE cohort (Table~\ref{stab:multiplicity}). Each cohort of $100$ generated patients
-represented a recombination of three and five real individuals. Those cohorts carried no more
-information about the conditions than the underlying patients did. Any downstream analysis
-that treated them as $100$ independent observations would understate uncertainty.
-Conditioning provided a denser sample of the distribution implied by those few patients.
-This supported exploratory hypothesis generation and simulation-based power calculations
-whose uncertainty remained anchored to the original patients. It did not provide additional
-evidence about the conditions themselves and was not a substitute for recruiting patients.}
+\rone{The conditioned cohorts reproduced the observed subgroup signatures, but generating
+$100$ profiles did not increase the amount of independent subgroup information. The PCOS and
+Developed~PE signals still came from only three and five real patients; after accounting for
+the lower-weight background patterns, the corresponding participation ratios were $4.6$ and
+$7.7$ (Table~\ref{stab:multiplicity}). Treating the $100$ synthetic profiles as independent
+observations would therefore understate uncertainty. Conditioning instead provided a denser
+set of profiles around the distributions suggested by those few patients, which could support
+exploratory hypothesis generation, workflow testing, and simulations for planning future
+studies. It did not add evidence about the conditions or replace recruitment of additional
+patients.}
 
 \subsection{Mechanistic Consistency}
 \label{sec:results-l4}
