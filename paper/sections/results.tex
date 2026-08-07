@@ -17,7 +17,8 @@ statistics across all three visits. The pooled median mean relative error
 tendencies of the real cohort. Per-visit MREs for representative
 coagulation features are summarized in Table~\ref{tab:summary}, where
 Factor~II and Factor~VIII fell below 2\%, antithrombin below 3\%, and
-fibrinogen below 1\% across all three visits. We quantified similarity to stored
+fibrinogen below 1\% across all three visits. Marginal agreement alone could result from
+profiles that closely copied stored records, so we also quantified similarity to stored
 profiles with two metrics (Table~\ref{stab:memorization}). The mean novelty score
 ($1 - \max_k \cos(\hat{\vxi}, \hat{\mathbf{m}}_k)$) was 0.50 at
 $\beta = \beta^*$. The median
@@ -25,7 +26,8 @@ nearest-neighbor distance from each synthetic patient to its closest real
 patient was 6.14 standardized units, compared with 6.87 for the median
 real-to-real nearest-neighbor distance, a ratio of 0.89 indicating that
 synthetic patients were approximately as far from real patients as real
-patients were from each other.
+patients were from each other. Thus, stochastic attention matched the central tendencies
+without reproducing stored profiles exactly.
 
 We next examined whether known physiological relationships and longitudinal
 trajectories were preserved in the synthetic cohort. Pairwise scatter plots of
@@ -117,10 +119,9 @@ baseline's greater scatter to variance added in directions unsupported by the co
 \subsection{\rboth{Robustness to Sample Size, Dimensionality, and Nonlinearity}}
 
 \rboth{Performance on one $23$-patient cohort could not show whether the method was robust to
-changes in sample size, dimension, or nonlinear structure. We therefore used three
-robustness tests (Methods, Sec.~\ref{sec:robustness-benchmarks}). The
-covariance-recovery test asked whether each method could recover a known population
-covariance from a small, high-dimensional
+changes in sample size, dimension, or nonlinear structure. We began with a known-covariance
+simulation (Methods, Sec.~\ref{sec:robustness-benchmarks}), which tested whether each method
+recovered the underlying population rather than reproduced one small, high-dimensional
 sample. Training size was $n\in\{8,15,23,40,80\}$, dimension was
 $p\in\{30,120,216\}$, and latent rank was $r\in\{3,5,10\}$. Stochastic attention and a
 sample-covariance Gaussian generator each produced $100$ profiles from the same low-rank
@@ -131,8 +132,9 @@ had lower error in $35$ of $39$ rank-deficient $n<p$ settings
 ranks was about $1.5$ times the stochastic-attention error. Thus, stochastic attention
 recovered covariance more accurately in most small, rank-deficient settings tested here.}
 
-\rboth{We next asked how performance changed when fewer real patients were available or the
-data followed a curved pattern. For the sample-size test, we used ten random subsets of $20$,
+\rboth{We next examined two challenges that are particularly relevant to small clinical
+cohorts: having fewer real patients and representing nonlinear structure. For the sample-size
+test, we used ten random subsets of $20$,
 $15$, $10$, or~$8$ patients, generated $100$ profiles from each subset, and compared every
 cohort with the same $23$-patient reference. As $n$ fell from $20$ to~$8$, mean cross-visit
 correlation error rose from $0.63$ to $1.11$ and mean pooled marginal error rose from $2.0\%$
@@ -147,8 +149,9 @@ measures of nonlinear structure.}
 
 \subsection{\rtwo{Interpolation and Extrapolation}}
 
-\rtwo{We asked whether generated profiles remained within the real cohort or extended beyond
-it. Every synthetic profile lay outside the convex hull of the $23$ real profiles in the
+\rtwo{The robustness tests examined recovery under controlled changes in the data. We next
+asked whether profiles generated from the clinical cohort remained within the real cohort or
+extended beyond it. Every synthetic profile lay outside the convex hull of the $23$ real profiles in the
 $d{=}18$ PCA space (Supplementary Table~\ref{stab:hull-geometry}). However, each real profile
 also lay outside the hull of the other $22$, so binary membership was uninformative in this
 sparse space. We therefore compared hull distances against $22$ real profiles. Each real
@@ -176,9 +179,9 @@ plausibility.}
 
 \subsection{\rone{Membership-Inference Risk}}
 
-\rone{Each real patient's $18$-dimensional PCA profile was stored as one column of the memory
-matrix. We asked whether a synthetic cohort could reveal that an already-known de-identified
-profile was included. The source data had no direct identifiers or links to named individuals,
+\rone{Geometric proximity raised a separate question: could a synthetic cohort reveal whether
+an already-known de-identified profile was stored? Each real patient's $18$-dimensional PCA
+profile was one column of the memory matrix. The source data had no direct identifiers or links to named individuals,
 so this was not a test of personal identification. Synthetic profiles were closer to their
 nearest real record than real records were to one another (median $13.8$ versus $15.9$). In
 $40$ random splits, we generated from $15$ stored profiles and held out $8$. Stored profiles
@@ -232,7 +235,7 @@ high-variance features in the smallest subgroups (FIX and plasminogen in PCOS;
 FIX and plasminogen in Developed~PE), where the real data exhibited large
 inter-patient variability. \rone{No multiple-testing correction was applied because this
 diagnostic was not used to make simultaneous inferential claims; the per-pair values and the
-90\% threshold were descriptive reporting summaries.} PCA projections of the conditioned cohorts are provided in
+90\% threshold were descriptive reporting summaries.} The PCA projections of the conditioned cohorts are provided in
 Figs.~\ref{sfig:conditioned-pca}--\ref{sfig:conditioned-by-visit}. These results showed that SA's multiplicity-weighted
 interpolation can amplify rare subgroups in a way that preserves their distinguishing
 clinical features, useful for \rone{exploratory hypothesis generation and simulation-based
@@ -312,7 +315,8 @@ was a same-cohort consistency check rather than independent validation.}
 \subsection{Downstream Utility: Mechanistic Model Calibration}
 \label{sec:results-utility}
 
-We tested whether synthetic profiles could support mechanistic-model calibration. We fit the
+Having established same-cohort mechanistic consistency, we tested whether synthetic profiles
+could support mechanistic-model calibration. We fit the
 five BZ2012 rate constants under TF-only conditions to either $100$ synthetic V1 profiles or
 $23$ real V1 profiles, using the same bounded Nelder--Mead optimization and 11 random restarts
 (Table~\ref{stab:ode-calibration}). We evaluated both calibrations on held-out real V2 and V3

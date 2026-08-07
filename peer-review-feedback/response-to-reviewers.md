@@ -107,7 +107,7 @@ The membership signal therefore arose from the target distribution at this cohor
 
 *We agree that the current data representation has this limitation.* Concatenating visits preserved relationships across visits, but it required every patient to have the same assays at the same aligned times. The current pipeline could not directly use irregular visit times, missing assays or visits, or variable-length records. Imputation, padding, or a sequence-based method could support these data, but each would add assumptions that would need validation in a small cohort. We added this limitation to the Discussion and presented it together with the limits of the linear principal-component representation.
 
-**Changes:** Discussion (limitations). `\rone{...}`
+**Changes:** Discussion (a unified data-representation paragraph covering aligned visits, missingness, and linear structure, followed by an explicit scope conclusion). `\rone{...}`
 
 ---
 
@@ -118,14 +118,14 @@ The membership signal therefore arose from the target distribution at this cohor
 
 Truncating the principal-component representation and drawing profile magnitudes from only 23 observed values could nevertheless compress the generated tails. If a generated cohort under-represented severe states, it could not establish how often those states occurred or how severe they became. Although synthetic profiles extended beyond the real cohort's convex hull, that result did not show that they reproduced the true tails of the population. We therefore stated that these cohorts should not be used to estimate extreme risk without additional real data. We also clarified that the main mechanistic-overlap measure used the 5th to 95th percentile range of the real cohort and therefore did not validate tail behavior. The Kolmogorov–Smirnov tests compared the full distributions but were not designed specifically to test the tails.
 
-**Changes:** Discussion (reframe and expand the tail-preservation paragraph); links to E2. `\rone{...}`
+**Changes:** Discussion (a question-led tail-preservation paragraph that explains the evidence, clinical concern, and supported conclusion); links to E2. `\rone{...}`
 
 ---
 
 ### R1.8 / R2.1: Generalizability beyond a single cohort
 > Validation is on a single K=23 cohort from a single domain. Encourage external validation or explicit limitation; recommend proof-of-concept framing. (R2: a second dataset, or a synthetic benchmark / simulation study demonstrating robustness to varying data characteristics.)
 
-*We agree that one clinical cohort could not establish generalizability or robustness to changes in sample size, dimension, or nonlinear structure.* We therefore added three robustness tests and explained each question, comparison, and error measure in the Methods and Results.
+*We agree that one clinical cohort could not establish generalizability or robustness to changes in sample size, dimension, or nonlinear structure.* We therefore added complementary robustness tests. The Results first asked whether the method recovered a known population covariance rather than one small sample. They then examined the two challenges most relevant to this cohort: fewer real patients and nonlinear structure.
 
 The covariance test asked whether each method could recover a known population covariance from a small, high-dimensional sample. We drew samples from low-rank Gaussian populations with known covariance. We varied the sample size ($n=8$, 15, 23, 40, or 80), dimension ($p=30$, 120, or 216), and latent rank ($r=3$, 5, or 10). For each setting, we constructed a stochastic-attention memory matrix and estimated a Gaussian generator from the same sample. Each method generated 100 profiles. We measured covariance error as the square root of the summed squared entry-by-entry differences between the generated and known covariance matrices, divided by the corresponding value for the known matrix. This relative Frobenius error allowed comparisons across settings and tested recovery of the population covariance rather than reproduction of the sampled profiles. Stochastic attention had lower error in 35 of the 39 rank-deficient $n<p$ settings. At $n=23$ and $p=216$, the Gaussian generator's error was approximately 1.5 times the stochastic-attention error after averaging across ranks.
 
@@ -135,7 +135,7 @@ The nonlinearity test asked how increasing curvature affected recovery of a nonl
 
 These tests showed good covariance recovery for stochastic attention in most small, linear, low-rank settings. They also showed worse performance with fewer patients and a clear limitation for the nonlinear population tested here. We also noted that related studies have applied the same geometry-based operating-point rule and multiplicity weighting to protein sequence generation and conditional steering. We cited those studies as prior applications in another domain, not as clinical validation. We separately framed the present clinical study as a proof of concept and stated that we did not test the method in a second clinical cohort.
 
-**Changes:** New Methods subsection "Robustness Tests" and Results subsection "Robustness to Sample Size, Dimensionality, and Nonlinearity," both organized around why robustness testing was needed and the questions each test answered; revised main-text figure (`fig:sim-recovery`) and caption; added cross-domain context in the Introduction and Discussion; explicit proof-of-concept framing in the Abstract, Introduction, Discussion, and Conclusion. The Discussion also stated that the subgroup test did not establish equivalence. Violet. `\rboth{...}`
+**Changes:** New Methods subsection "Robustness Tests" and Results subsection "Robustness to Sample Size, Dimensionality, and Nonlinearity." The Results now move from the population-recovery question to the sample-size and nonlinear-structure stress tests, with a conclusion for each part; revised main-text figure (`fig:sim-recovery`) and caption; added cross-domain context in the Introduction and Discussion; explicit proof-of-concept framing in the Abstract, Introduction, Discussion, and Conclusion. The Discussion also stated that the subgroup test did not establish equivalence. Violet. `\rboth{...}`
 
 ---
 
@@ -175,7 +175,7 @@ We chose β\* at the point where the attention-entropy curve bent downward most 
 
 The simulation benchmark did not establish how the method would perform in larger clinical cohorts. Its advantage over the sample-covariance Gaussian generator was concentrated in the $n<p$ settings, and the clinical analyses included only 23 patients. Stability and fidelity at larger cohort sizes remained open questions.
 
-**Changes:** Discussion, including a brief connection to the simulation benchmark. `\rone{...}`
+**Changes:** Discussion, including a brief connection to the simulation benchmark. The scaling paragraph appears immediately before the final limitations paragraph. `\rone{...}`
 
 ---
 
@@ -197,7 +197,7 @@ The simulation benchmark did not establish how the method would perform in large
 ### R2.1: Generalizability beyond a single dataset
 > All validation is on a single cohort (K=23). Application to a second dataset, or a synthetic benchmark / simulation study demonstrating robustness to varying data characteristics, would significantly strengthen the manuscript.
 
-*We agree that validation in one clinical cohort was a major limitation.* As described in **R1.8**, we added three robustness tests. They measured recovery of a known covariance across several sample sizes, dimensions, and latent ranks; changes in performance as fewer clinical profiles were stored in the memory matrix; and performance as a simulated population became more curved. We also cited previous protein-sequence studies as examples of applications in another domain, not as clinical validation, and framed the clinical study as a proof of concept. The simulations tested specific data properties, but we did not test the method in a second clinical cohort.
+*We agree that validation in one clinical cohort was a major limitation.* As described in **R1.8**, we added complementary robustness tests. They measured recovery of a known covariance across several sample sizes, dimensions, and latent ranks; changes in performance as fewer clinical profiles were stored in the memory matrix; and performance as a simulated population became more curved. We also cited previous protein-sequence studies as examples of applications in another domain, not as clinical validation, and framed the clinical study as a proof of concept. The simulations tested specific data properties, but we did not test the method in a second clinical cohort.
 
 **Changes:** See R1.8. Violet. `\rboth{...}`
 

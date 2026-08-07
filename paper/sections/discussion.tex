@@ -12,18 +12,16 @@ profiles in the same factor-to-thrombin-generation envelope}. Cloud overlap was 
 the Kolmogorov--Smirnov tests did not detect differences under these conditions ($p>0.35$ for
 all five TGA features).
 
-The ability to generate validated synthetic cohorts from very small longitudinal
-datasets has practical implications for maternal health research. Rare pregnancy
-complications such as PCOS and preeclampsia are difficult
-to study because assembling large, well-characterized longitudinal cohorts requires
-years of recruitment across multiple clinical sites. Our results support hypothesis
-generation, computational modeling, and workflow testing with dense simulations of these
-small cohorts.
+Dense simulations from very small longitudinal datasets could support maternal health
+research. Rare pregnancy complications such as PCOS and preeclampsia are difficult to study
+because assembling large, well-characterized longitudinal cohorts requires years of
+recruitment across multiple clinical sites. Our results support hypothesis generation,
+computational modeling, and workflow testing with dense simulations of these small cohorts.
 \rone{Stochastic attention can provide denser simulated realizations of the distribution implied by an
 existing small subgroup. These generated profiles do not add clinical evidence beyond the
 source cohort: the inferential sample size remains three patients for PCOS and five for
 Developed~PE.}
-\rtwo{Synthetic profiles could also be used, for example, to train deep learning models that
+\rtwo{Synthetic profiles could also support the development of deep learning models that
 predict TGA responses from coagulation factors or estimate factor profiles compatible with
 an observed TGA response. Related modeling work has predicted thrombin dynamics from factor
 levels and searched for factor changes that move thrombin generation toward a
@@ -48,10 +46,12 @@ showed gradual changes in generation quality across $\beta/\beta^* \in [0.1, 3.0
 Similarly, varying the PCA variance retention threshold from 85\% to 99\%
 ($d_{\text{PCA}} = 13$ to 21) had minimal impact on generation quality. Median MRE
 remained between 1.2\% and 1.8\% across all thresholds (Table~\ref{stab:pca-sensitivity}),
-so the 95\% threshold was not a critical design choice.
+so the 95\% threshold was not a critical design choice. \rboth{Together, these sensitivity
+analyses showed that performance was not tied to a narrow choice of inverse temperature or
+PCA threshold within the ranges tested.}
 
-The multiplicity
-weighting for conditional generation introduced an additional consideration. Achieving
+Conditional generation raised a different question: how much diversity remained after the
+selected subgroup was upweighted? Achieving
 80\% of finite-mixture component probability on the PCOS subgroup required
 $\rho \approx 26.7$, reducing the participation ratio to
 $K_{\text{eff}} \approx 4.6$ (multiplicity parameters
@@ -62,24 +62,28 @@ three real PCOS profiles, and the lower-weight background profiles pulled genera
 toward the population average; $K_{\text{eff}}$ did not represent an independent patient
 count. Magnitudes were drawn from all $23$ empirical PCA-space norms, so conditioning acted
 through the weighted directions rather than a subgroup-specific magnitude distribution.
+Thus, weighting concentrated sampling toward the subgroup directions while retaining some
+influence from the full cohort.
 \rboth{Related studies have applied the same geometry-based operating-point rule
 and multiplicity weighting to protein sequence generation and conditional
 steering~\citep{Varner2026SAProtein,Varner2026Multiplicity,Alswaidan2026SA}.}
 
-VAMBN-MT provides a useful comparison in a larger-data setting~\citep{Kuhnel2024}. It combines
+Among longitudinal clinical generators, VAMBN-MT provides a useful comparison in a
+larger-data setting~\citep{Kuhnel2024}. It combines
 expert-defined modules, Bayesian-network constraints, and LSTM-augmented variational
 autoencoders. The authors evaluated it on the DONALD nutritional cohort and the Alzheimer's
 Disease Neuroimaging Initiative. DONALD included $1{,}312$ participants and 33 longitudinal
 variables, compared with 23 patients and 216 features here. Its best variant had cross-visit
 correlation error near 0.70, and weaker time trends were not reproduced at the tested sample
-sizes. The methods address different regimes. VAMBN-MT uses a trained modular architecture
+sizes. The methods address different regimes. The VAMBN-MT model uses a trained modular architecture
 for moderate cohorts. Stochastic attention uses PCA geometry when $n<p$, applies a generic
 generator-blind mechanistic check instead of domain-specific rules, and uses multiplicity
 weights for conditional generation. This was a regime comparison, not a head-to-head test.
 
-The mechanistic analysis also illustrated a general validation approach. We processed real
-and synthetic profiles with \rboth{the same separately specified model, which was blind to the
-generator but calibrated on the real cohort}. A model calibrated on synthetic profiles also
+The mechanistic analysis addressed a different validation question: whether a model of the
+underlying biology processed real and synthetic profiles similarly. We processed both groups
+with \rboth{the same separately specified model, which was blind to the generator but
+calibrated on the real cohort}. A model calibrated on synthetic profiles also
 predicted held-out real TGA measurements as well as one calibrated on real profiles (error
 ratio $0.94$, with 11 random restarts). The same comparison can be used wherever a validated
 mechanistic model exists, including pharmacokinetic~\citep{MouldUpton2013},
@@ -87,8 +91,9 @@ physiological~\citep{Chase2011}, tumor-growth~\citep{Ribba2012}, and
 metabolic~\citep{Yizhak2015,Shan2018} models. The relevant test is whether the model places
 real and synthetic profiles in the same predicted envelope.
 
-\rone{A separate concern was whether the conditioned cohorts preserved clinically important
-distribution tails. In the descriptive bootstrap Mann--Whitney diagnostic, four of 24
+\rone{The average subgroup results did not show whether the conditioned cohorts preserved
+clinically important distribution tails. In the descriptive bootstrap Mann--Whitney
+diagnostic, four of 24
 feature--condition pairs fell below the 90\% no-difference-detected criterion: FIX and
 plasminogen in the PCOS and Developed~PE groups. The relative differences between the real
 and synthetic subgroup means for these pairs were 9--15\%, and variability among the real
@@ -109,12 +114,13 @@ improvement was consistent with denser sampling of the same patient-derived dist
 not with added biological information. These findings supported simulation and model testing,
 but they did not increase the clinical evidence supplied by the original cohort.}
 
-\rone{Concatenating visits allowed the method to preserve cross-visit relationships, but it
-required every patient to have the same assays at the same aligned visits. The current
-pipeline could not directly accept irregular timing, missing assays or visits, or
-variable-length records. Imputation, padding, or a sequence-aware extension could support
-such data, but each would add assumptions that require validation in a small cohort.}
-\rtwo{The PCA representation imposed a related limit because it captured linear structure.
+\rone{The data representation imposed a further limit. Concatenating visits allowed the
+method to preserve cross-visit relationships, but it required every patient to have the same
+assays at the same aligned visits. The current pipeline could not directly accept irregular
+timing, missing assays or visits, or variable-length records. Imputation, padding, or a
+sequence-aware extension could support such data, but each would add assumptions that require
+validation in a small cohort.}
+\rtwo{The PCA representation imposed a related limit because it captured only linear structure.
 In the S-curve benchmark, generated profiles moved farther from the known curve as curvature
 increased. Stochastic attention remained closer to the curve than the Gaussian generator,
 whereas the Gaussian generator recovered covariance more accurately. Neither method was best
@@ -122,6 +128,9 @@ on both measures in this benchmark. Nonlinear embeddings could better represent 
 branching relationships, but they would add fitting and decoding choices that are difficult
 to estimate from $23$ patients. The linear representation was therefore a practical choice
 for this cohort, not evidence that clinical trajectories are generally linear.}
+\rboth{Thus, the present results did not establish performance on irregular, incomplete, or
+strongly nonlinear records.}
+
 \rone{Computational cost and behavior at larger cohort sizes are separate questions. The
 reported Langevin sampler required work proportional to $TKd$ for each profile. The exact
 mixture sampler removed the $T$ sequential updates: its component weights could be prepared
@@ -134,25 +143,27 @@ questions.}
 
 This study had two broad limitations: the absence of independent clinical data and the
 restricted scope of the validation analyses. First, the clinical analysis used one
-longitudinal cohort of $23$ patients. \rboth{The known-covariance simulations tested selected properties
-under controlled conditions, and related protein studies applied the sampling framework in
-another domain, but neither established that the clinical findings would generalize to a
-different patient population. We did not test the method in a second clinical cohort, which
-is needed to assess that generalizability.} Second, the validation analyses answered narrower
-questions than full biological or clinical validity. \rboth{The BZ2012 model was calibrated
-on the same cohort used for generation. Applying one fixed, generator-blind model to real and
-synthetic profiles therefore tested consistency with that model, not independent biological
-validity.}
-The calibration required a 50-fold reduction in intrinsic tenase $k_{\text{cat}}$ and a 15-fold
+longitudinal cohort of $23$ patients. \rboth{The known-covariance simulations tested selected
+properties under controlled conditions, and related protein studies applied the sampling
+framework in another domain, but neither established that the clinical findings would
+generalize to a different patient population. We did not test the method in a second clinical
+cohort, which is needed to assess that generalizability.} Second, the validation analyses
+answered narrower questions than full biological or clinical validity. \rboth{The BZ2012
+model was calibrated on the same cohort used for generation. Applying one fixed,
+generator-blind model to real and synthetic profiles therefore tested consistency with that
+model, not independent biological validity.}
+The fitted rate constants also required a 50-fold reduction in intrinsic tenase
+$k_{\text{cat}}$ and a 15-fold
 increase in extrinsic tenase $k_{\text{cat}}$ relative to published values
 (Table~\ref{stab:ode-calibration}), likely because the published measurements and the
 plasma-based assay used different experimental conditions. These fitted values should not be
-read as new biochemical estimates. \rone{The mechanistic test covered thrombin generation but
-not the fibrinolytic or viscoelastic features. The membership-inference analysis was also
-narrow: it asked whether an already-known de-identified profile had been stored in the memory
-matrix. It distinguished stored from held-out profiles, but it did not identify a participant
-or reconstruct an unknown record.} We also did not test clinical outcomes. Thus, the results
+read as new biochemical estimates. \rone{The biological scope was also incomplete. The
+mechanistic test covered thrombin generation but not the fibrinolytic or viscoelastic
+features. The membership-inference analysis answered a separate, narrow question: whether an
+already-known de-identified profile had been stored in the memory matrix. It distinguished
+stored from held-out profiles, but it did not identify a participant or reconstruct an
+unknown record.} Finally, we did not test clinical outcomes. Thus, the results
 did not establish biological fidelity across the full profile or clinical utility. An
 independently calibrated model, models covering the other feature classes, and prospective
-outcome validation could address these gaps. The present results therefore establish proof of
-concept, while independent clinical data are still needed to test generalizability.
+outcome validation could address these gaps. The results establish proof of concept, not
+generalizability.
