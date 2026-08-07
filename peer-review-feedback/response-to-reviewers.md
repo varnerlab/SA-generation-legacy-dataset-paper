@@ -241,9 +241,9 @@ The second check used the BZ2012 model to test whether the generated coagulation
 
 *We agree that the paper needed a concrete account of its practical value.* The revised Results showed that synthetic profiles could support mechanistic-model calibration, exploratory comparisons of small subgroups, and factor-level hypotheses for testing in larger studies. However, confirming those hypotheses and establishing clinical value would require additional real patients or independent experimental data.
 
-We also added the original motivation for developing the method to the Introduction and Discussion. Synthetic profiles could be used to support deep models that predict thrombin-generation responses from coagulation factors or estimate factor profiles compatible with an observed thrombin-generation response. We did not test either task in this study. We therefore described them as intended uses that require evaluation with held-out or external real patients. We also explained that the inverse model should return a distribution or set of compatible profiles, not a single claimed reconstruction. As noted in R1.11, the 0.94× downstream error ratio did not add independent evidence about the broader population. It may instead have reflected a more stable calibration objective.
+We also added the original motivation for developing the method to the Introduction and Discussion. Synthetic profiles could also be used, for example, to train deep learning models that predict TGA responses from coagulation factors or estimate factor profiles compatible with an observed TGA response. We have not yet evaluated either task. As noted in R1.11, the 0.94× downstream error ratio did not add independent evidence about the broader population. It may instead have reflected a more stable calibration objective.
 
-**Changes:** Introduction (original motivating application); Results (Downstream Utility); Discussion (limits of the forward and inverse modeling use cases). `\rtwo{...}`
+**Changes:** Introduction (original motivating application); Results (Downstream Utility); Discussion (forward and inverse modeling use cases). `\rtwo{...}`
 
 ---
 

@@ -27,22 +27,16 @@ years of recruitment across multiple clinical sites. Our results suggest that SA
 enable hypothesis generation, power analyses, and computational modeling studies for
 these understudied populations by generating synthetic cohorts that preserve both the
 statistical and mechanistic properties of the real data. The conditional generation
-capability is particularly relevant. Rather than requiring researchers to collect
-additional rare patients, \rone{SA can provide denser simulated realizations of the
-distribution implied by an existing small subgroup for exploratory modeling and workflow
-testing. It does not increase the subgroup's inferential sample size: that remains three
-patients for PCOS and five for Developed~PE, and recruitment of additional real patients is
-still required for clinical inference.}
-
-\rtwo{A further intended use was to train deep learning models in both directions: predicting
-TGA responses from coagulation factors and estimating factor profiles compatible with an
-observed TGA response. Related modeling work has predicted thrombin dynamics from factor
+capability is particularly relevant for exploratory modeling and workflow testing.
+\rone{SA can provide denser simulated realizations of the distribution implied by an
+existing small subgroup. These generated profiles do not add clinical evidence beyond the
+source cohort: the inferential sample size remains three patients for PCOS and five for
+Developed~PE.}
+\rtwo{Synthetic profiles could also be used, for example, to train deep learning models that
+predict TGA responses from coagulation factors or estimate factor profiles compatible with
+an observed TGA response. Related modeling work has predicted thrombin dynamics from factor
 levels and searched for factor changes that move thrombin generation toward a
-target~\citep{Ghetmiri2021}. We did not evaluate either task here. Synthetic profiles could
-support model development or initial training, but performance would still need to be tested
-on held-out or external real patients. Because more than one factor profile may produce a
-similar TGA response, an inverse model should return a distribution or set of compatible
-profiles rather than a single recovered profile.}
+target~\citep{Ghetmiri2021}. We have not yet evaluated either task.}
 
 \rboth{Understanding why the method worked in this setting required separating the
 principal component representation from the sampler. The ablation showed that the shared
