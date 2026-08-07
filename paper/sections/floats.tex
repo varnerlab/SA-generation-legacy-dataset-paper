@@ -137,17 +137,18 @@ Fig.~\ref{sfig:cross-visit-corr-supp}.}
 \centering
 \includegraphics[width=\textwidth]{sim_phase_diagram.pdf}
 \caption{\rboth{\textbf{Population recovery and clinical-cohort subsampling.}
-(A)~For each low-rank Gaussian setting, stochastic attention and a sample-covariance
-Gaussian generator were fit to the same simulated training cohort and each generated $100$
-profiles. Color represented the ratio of their relative Frobenius errors against the known
+(A)~For each low-rank Gaussian setting, the stochastic-attention memory matrix was constructed
+and a sample-covariance Gaussian generator was estimated from the same simulated training
+cohort; each generated $100$ profiles. Color represented the ratio of their relative Frobenius errors against the known
 population covariance (Gaussian error divided by stochastic-attention error), averaged over
 latent ranks $3$, $5$, and~$10$. Values above one (blue) indicated lower error for stochastic
 attention. Because the target covariance was fixed before the training cohort was drawn,
 this measured population recovery rather than reproduction of the training data.
-(B)~Stochastic attention was fit to ten random subsets of the clinical cohort at each of
-$n{=}20,15,10,$ and~$8$, and each fit generated $100$ profiles. Points and bars represented
+(B)~A stochastic-attention memory matrix was constructed from each of ten random subsets of
+the clinical cohort at $n{=}20,15,10,$ and~$8$, and each matrix generated $100$ profiles.
+Points and bars represented
 the mean and standard deviation of the relative cross-visit correlation error against the
-same full $23$-patient reference; the star represented the fit using all $23$ patients.}}
+same full $23$-patient reference; the star represented generation using all $23$ patients.}}
 \label{fig:sim-recovery}
 \end{figure}
 

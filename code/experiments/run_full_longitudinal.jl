@@ -109,7 +109,7 @@ end
 # ══════════════════════════════════════════════════════════════════════════════
 # Step 4: β* and generate
 # ══════════════════════════════════════════════════════════════════════════════
-@info "\nStep 4: Phase transition + generation …"
+@info "\nStep 4: Attention-entropy transition + generation …"
 phase = find_entropy_inflection(X̂; α=0.01, n_betas=80, β_range=(0.1, 1000.0))
 β_star = phase.β_star
 

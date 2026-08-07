@@ -38,12 +38,12 @@ real_mean_dist = mean(real_dists)
 # ══════════════════════════════════════════════════════════════════════════════
 # Find β* for raw memory matrix
 # ══════════════════════════════════════════════════════════════════════════════
-@info "\n── Phase transition (raw) ──"
+@info "\n── Attention-entropy transition (raw) ──"
 phase_raw = find_entropy_inflection(X̂_raw; α=0.01, n_betas=80,
                                      β_range=(0.001, 100.0))
 β_star_raw = phase_raw.β_star
 
-@info "\n── Phase transition (unit-norm) ──"
+@info "\n── Attention-entropy transition (unit-norm) ──"
 phase_norm = find_entropy_inflection(X̂_norm; α=0.01, n_betas=80,
                                       β_range=(0.1, 1000.0))
 β_star_norm = phase_norm.β_star

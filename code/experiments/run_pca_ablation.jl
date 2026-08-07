@@ -54,7 +54,7 @@ include(joinpath(@__DIR__, "mechanistic_eval.jl"))
 using Random, LinearAlgebra, Statistics, Distributions
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Step 1: Four baseline samplers, fit in the raw PCA coordinate space.
+# Step 1: Four baseline samplers constructed in the raw PCA coordinate space.
 # Y :: d×23 raw PCA coords; returns d×N samples. rng passed for reproducibility.
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -379,7 +379,7 @@ df_out = DataFrame(
 CSV.write(joinpath(_PATH_TO_DATA, "pca_ablation_results.csv"), df_out)
 
 println("\n" * "="^100)
-println("E1: PCA-space ablation suite — SA vs. baselines fit in the same 18-D raw PCA coordinate space")
+println("E1: PCA-space ablation suite — SA vs. baselines operating in the same 18-D raw PCA coordinate space")
 println("="^100)
 pretty_table(df_out)
 

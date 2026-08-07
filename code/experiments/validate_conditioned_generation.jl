@@ -86,9 +86,9 @@ for cohort in cohorts
     ρ = ρ_for_target_fraction(K_sub, K_bg, f_target)
     r = multiplicity_vector(K, indices; ρ=ρ)
     eff_frac = effective_subset_fraction(r, indices)
-    @info "    ρ = $(round(ρ, digits=2)), effective fraction = $(round(eff_frac, digits=3))"
+    @info "    ρ = $(round(ρ, digits=2)), component-probability fraction = $(round(eff_frac, digits=3))"
 
-    # find β*(ρ) via weighted entropy inflection
+    # select β*(ρ) at the weighted attention-entropy transition
     β_star, _ = find_weighted_entropy_inflection(X̂, r; β_range=(0.1, 50.0), n_betas=200)
     @info "    β*(ρ) = $(round(β_star, digits=2))"
 

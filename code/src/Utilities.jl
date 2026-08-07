@@ -93,7 +93,8 @@ The multiplicity ratio ρ = r_designated / r_background controls conditioning:
   - ρ → ∞: hard curation (only designated patterns contribute)
   - intermediate ρ: soft conditioning with tunable strength
 
-The effective designated fraction in the stationary distribution is:
+For unit-normalized memories, the designated finite-mixture component
+probability is:
   f_eff = K_d · ρ / (K_d · ρ + K_bg)
 """
 function multiplicity_vector(K::Int, subset_indices::Vector{Int}; ρ::Float64=10.0)
@@ -108,7 +109,8 @@ end
 """
     effective_subset_fraction(r, subset_indices) -> Float64
 
-Fraction of softmax probability mass that designated patterns receive:
+Fraction of finite-mixture component probability assigned to designated
+patterns for unit-normalized memories:
   f_eff = Σ_{k ∈ subset} r_k / Σ_k r_k
 """
 function effective_subset_fraction(r::Vector{Float64}, subset_indices::Vector{Int})
@@ -123,8 +125,9 @@ end
 Participation ratio of the multiplicity vector:
   K_eff(r) = (Σ_k r_k)² / Σ_k r_k²
 
-Measures how many patterns effectively contribute to the energy landscape.
-When all r_k are equal, K_eff = K. When one r_k dominates, K_eff → 1.
+This is the inverse concentration of the component probabilities q_k = r_k/Σ_j r_j
+across repeated draws. When all r_k are equal, K_eff = K. When one r_k dominates,
+K_eff → 1. It is not a count of independent patients.
 """
 function effective_num_patterns(r::Vector{Float64})
     return sum(r)^2 / sum(r .^ 2)
@@ -133,8 +136,9 @@ end
 """
     ρ_for_target_fraction(K_sub, K_bg, f_target) -> Float64
 
-Compute the multiplicity ratio ρ needed to achieve a target effective
-fraction f_target, given K_sub designated and K_bg background patterns.
+Compute the multiplicity ratio ρ needed to assign a target finite-mixture
+component-probability fraction f_target to K_sub designated patterns, with
+K_bg background patterns, when memories are unit normalized.
 
 From f_eff = K_sub · ρ / (K_sub · ρ + K_bg), solving for ρ:
   ρ = f_target · K_bg / (K_sub · (1 - f_target))
@@ -178,8 +182,9 @@ end
 """
     find_weighted_entropy_inflection(X̂, r; α, n_betas, β_range) -> NamedTuple
 
-Find the phase transition β*(r) for the multiplicity-weighted Hopfield energy.
-Same algorithm as find_entropy_inflection but uses weighted attention entropy.
+Select the weighted attention-entropy operating point β*(r) at the greatest
+downward curvature with respect to log β. The historical function name is
+retained for compatibility. Uses weighted attention entropy.
 """
 function find_weighted_entropy_inflection(X̂::Matrix{Float64}, r::Vector{Float64};
                                            α::Float64=0.01, n_betas::Int=50,
@@ -201,19 +206,19 @@ function find_weighted_entropy_inflection(X̂::Matrix{Float64}, r::Vector{Float6
     dH = diff(Hs) ./ diff(log_βs)
     d2H = diff(dH) ./ diff(log_βs[1:end-1])
 
-    inflection_idx = 1
+    transition_idx = 1
     min_d2H = Inf
     for i in eachindex(d2H)
         if d2H[i] < min_d2H
             min_d2H = d2H[i]
-            inflection_idx = i + 1
+            transition_idx = i + 1
         end
     end
 
-    β_star = βs[inflection_idx]
+    β_star = βs[transition_idx]
     K_eff = effective_num_patterns(r)
 
-    @info "  Weighted phase transition (d=$d, K=$K, K_eff=$(round(K_eff, digits=1))):"
+    @info "  Weighted attention-entropy transition (d=$d, K=$K, K_eff=$(round(K_eff, digits=1))):"
     @info "    β*(ρ) = $(round(β_star, digits=2))"
 
     return (β_star=β_star, K_eff=K_eff, βs=βs, Hs=Hs)
@@ -248,7 +253,9 @@ end
 """
     find_entropy_inflection(X̂; α, n_betas, β_range) -> NamedTuple
 
-Compute the entropy inflection point β* for the memory matrix X̂.
+Select the attention-entropy operating point β* for the memory matrix X̂ at
+the greatest downward curvature with respect to log β. The historical function
+name is retained for compatibility.
 Returns β*, SNR*, theoretical predictions, and the full β/H curves.
 """
 function find_entropy_inflection(X̂::Matrix{Float64};
@@ -274,30 +281,30 @@ function find_entropy_inflection(X̂::Matrix{Float64};
     H_max = log(K)
     Hs_norm = Hs ./ H_max
 
-    # numerical second derivative in log-β space to find inflection
+    # numerical second derivative in log-β space
     log_βs = log.(βs)
     dH = diff(Hs_norm) ./ diff(log_βs)
     d2H = diff(dH) ./ diff(log_βs[1:end-1])
 
-    # inflection: where d2H is most negative
-    inflection_idx = 1
+    # operating point: where d2H is most negative (greatest downward curvature)
+    transition_idx = 1
     min_d2H = Inf
     for i in 1:length(d2H)
         if d2H[i] < min_d2H
             min_d2H = d2H[i]
-            inflection_idx = i + 1
+            transition_idx = i + 1
         end
     end
 
-    β_star = βs[inflection_idx]
+    β_star = βs[transition_idx]
     snr_star = sqrt(α * β_star / (2 * d))
 
     # theoretical prediction for random unit-norm patterns
     β_star_theory = sqrt(d)
     snr_star_theory = sqrt(α / (2 * sqrt(d)))
 
-    @info "  Phase transition analysis (d=$d, K=$K):"
-    @info "    Empirical inflection:  β* = $(round(β_star, digits=2)),  SNR* = $(round(snr_star, digits=4))"
+    @info "  Attention-entropy transition analysis (d=$d, K=$K):"
+    @info "    Greatest downward curvature: β* = $(round(β_star, digits=2)),  SNR* = $(round(snr_star, digits=4))"
     @info "    Theoretical (√d):      β* = $(round(β_star_theory, digits=2)),  SNR* = $(round(snr_star_theory, digits=4))"
 
     return (β_star=β_star, snr_star=snr_star,

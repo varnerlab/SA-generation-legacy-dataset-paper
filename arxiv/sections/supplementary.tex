@@ -20,9 +20,9 @@
 % ── Table S1: Beta sweep ─────────────────────────────────────────────────
 \begin{table}[ht]
 \centering
-\caption{\textbf{Inverse temperature sensitivity analysis.} SA generation
+\caption{\textbf{Inverse temperature sensitivity analysis.} Generation under stochastic attention
 quality as a function of $\beta / \beta^*$, where $\beta^* \approx 2.94$ was
-identified via entropy inflection in the 18-dimensional PCA space ($K{=}23$
+selected at the attention-entropy transition in the 18-dimensional PCA space ($K{=}23$
 stored patterns). Operating at $\beta = \beta^*$ (bold row) balances generation
 novelty against fidelity. Med MRE = median relative error of per-feature means;
 Novelty = $1 - \max_k \cos(\hat{\xi}, \hat{m}_k)$.}
@@ -46,10 +46,10 @@ $\beta/\beta^*$ & $\beta$ & Noise scale & PC1 std ratio & Novelty & Med MRE (\%)
 \begin{table}[ht]
 \centering
 \caption{\textbf{Multiplicity weighting parameters for conditional generation.}
-The multiplicity ratio $\rho$ was computed to achieve a target effective fraction
-$f_{\text{target}} = 0.80$ of softmax attention on the designated patterns.
-$K_{\text{eff}}$ is the participation ratio quantifying the effective number of
-patterns contributing to generation.}
+For the unit-normalized memories used here, the multiplicity ratio $\rho$ was computed
+to place a target fraction $f_{\text{target}} = 0.80$ of finite-mixture component
+probability on the designated patterns. $K_{\text{eff}}$ is the participation ratio of
+those component probabilities and describes their concentration across repeated draws.}
 \label{stab:multiplicity}
 \begin{tabular}{lccccc}
 \toprule
@@ -66,7 +66,8 @@ Developed PE   & 5  & 18 & 14.40 & 0.80 & 7.7 \\
 \begin{table}[ht]
 \centering
 \caption{\textbf{SA generation hyperparameters.} The same values were used for
-unconditioned and conditioned generation except where noted.}
+unconditioned and conditioned generation except that $\beta^*$ was recomputed with the
+multiplicity bias for conditioned cohorts.}
 \label{stab:hyperparams}
 \begin{tabular}{lll}
 \toprule
@@ -74,12 +75,12 @@ Parameter & Value & Description \\
 \midrule
 $\alpha$ & 0.01 & Langevin step size (see Table~\ref{tab:ula-vs-mala}) \\
 $T$ & 2,000 & Langevin iterations per sample \\
-$\beta^*$ & 2.94 & Inverse temperature (entropy inflection) \\
+$\beta^*$ & 2.94 & Entropy-transition point (unconditioned) \\
 PCA threshold & 95\% & Variance retained \\
 $d_{\text{PCA}}$ & 18 & PCA dimensionality \\
 $N$ & 100 & Synthetic patients per cohort \\
 Random seed & 42 & For reproducibility \\
-$f_{\text{target}}$ & 0.80 & Target attention fraction (conditioned only) \\
+$f_{\text{target}}$ & 0.80 & Designated-component probability (conditioned) \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -582,8 +583,26 @@ rank-deficient covariance (Fig.~\ref{sfig:eigenvalue-spectrum}). Colors encode v
 \label{sfig:pca-by-visit}
 \end{figure}
 
-% ── Supplementary Methods: critical inverse temperature ─────────────────
-\subsection*{\rboth{Supplementary Methods: locating the critical inverse temperature}}
+% ── Supplementary Methods: PCA-space ablation ───────────────────────────
+\subsection*{\rone{Supplementary Methods: PCA-space ablation}}
+
+\rone{We compared the canonical stochastic-attention cohort with four baseline generators
+operating on the same unnormalized 18-dimensional PCA coordinates. Each baseline generated
+$100$ profiles with a separate random-number stream initialized using seed~42. The Gaussian
+mixture used two components with diagonal covariance matrices, $100$
+expectation--maximization iterations, and a variance floor of $10^{-3}$. The kernel-density sampler chose
+a stored PCA point uniformly and added Gaussian noise with the empirical PCA covariance and
+Scott bandwidth $h=K^{-1/(d+4)}$; $10^{-8}\mathbf{I}$ was added for numerical factorization.
+The nearest-neighbor sampler chose a stored point, selected one of its three nearest
+neighbors uniformly, and interpolated between them with a coefficient drawn from
+$\operatorname{Uniform}(0,1)$. The Gaussian copula transformed empirical marginal ranks to
+normal scores, estimated their correlation matrix with $10^{-6}\mathbf{I}$ added for
+factorization, and mapped sampled scores back through the empirical marginal quantiles. All
+samples were passed through the same inverse-PCA and destandardization pipeline and evaluated
+with the same marginal, cross-visit, mechanistic, and novelty calculations.}
+
+% ── Supplementary Methods: inverse-temperature operating point ──────────
+\subsection*{\rboth{Supplementary Methods: selecting the inverse-temperature operating point}}
 
 \rboth{The operating point $\beta^*$ was located from the attention entropy. For a candidate
 $\beta$ we computed the Shannon entropy of the attention weights
@@ -591,15 +610,14 @@ $\text{softmax}(\beta\,\mhat{X}^\top\vxi)$ at $20$ probe points placed at stored
 averaged those entropies, and normalized by $\log K$. The normalized curve runs from $0$ to
 $1$. A value of $0$ means one pattern carries all the weight, and a value of $1$ means every
 pattern carries equal weight. Sweeping $\beta$ logarithmically over $80$ values from $0.1$ to
-$1000$ traces this curve from the diffuse regime into the concentrated one. We took $\beta^*$
-to be the point of most negative second derivative of the normalized entropy with respect to
-$\log\beta$, computed by finite differences over the sweep. That point is the sharpest bend
-in the curve, and it marks where attention stops being shared across patterns and begins to
-localize on one. For multiplicity-weighted sampling we repeated the same computation with the
+$1000$ traces this curve from the diffuse regime into the concentrated one. We selected
+$\beta^*$ at the point of greatest downward curvature, calculated as the most negative
+finite-difference second derivative of normalized entropy with respect to $\log\beta$. This
+marked the transition from attention shared across patterns toward attention localized on
+individual patterns. For multiplicity-weighted sampling we repeated the same computation with the
 $\log r_k$ bias included in the softmax logits. This gives a $\rho$-dependent $\beta^*(\rho)$,
-because the weighting changes how quickly attention concentrates as $\beta$ grows. For random
-unit-norm patterns the transition is predicted at $\beta^* = \sqrt{d}$, the theoretical
-reference quoted in the main text.}
+because the weighting changes how quickly attention concentrates as $\beta$ grows. The
+random-pattern scale $\sqrt{d}$ served as the theoretical reference quoted in the main text.}
 
 \FloatBarrier
 

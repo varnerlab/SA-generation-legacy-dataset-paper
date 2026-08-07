@@ -34,49 +34,43 @@ testing. It does not increase the subgroup's inferential sample size: that remai
 patients for PCOS and five for Developed~PE, and recruitment of additional real patients is
 still required for clinical inference.}
 
-Understanding why SA succeeds where parametric methods fail requires examining the
-geometric structure of the problem. SA generates samples by interpolating between
-stored patient profiles via the Hopfield
-energy landscape operating in a PCA-reduced linear subspace, rather than fitting a
-parametric distribution that must regularize or truncate high-dimensional structure. In
-the $n < p$ regime that characterizes most small clinical studies, any parametric
-distribution faces a fundamental identifiability problem. There are more parameters to
-estimate than observations to estimate them from. SA sidesteps this by operating in a
-PCA-reduced space where the memory-to-dimension ratio is favorable
-($K/d_{\text{PCA}} \approx 1.28$) and by preserving the full directional structure of
-the data through the attention mechanism. A natural concern is whether the $\beta^*$
+\rboth{Understanding why the method worked in this setting required separating the
+principal component representation from the sampler. The ablation showed that the shared
+$18$-dimensional subspace supplied much of the marginal and mechanistic fidelity. Stochastic
+attention used the patient profiles in that subspace as its memory matrix and avoided
+estimating a full $216$-dimensional covariance from $23$ patients. The competitive mixture
+and copula baselines showed, however, that the benefit of this representation was not unique
+to stochastic attention.} A natural concern is whether the $\beta^*$
 selection procedure, originally developed for protein sequence
 generation~\citep{Varner2026SAProtein}, transfers to clinical coagulation data. The entropy
-inflection method identifies the phase transition in the Hopfield energy landscape,
-which is a geometric property of $K$ patterns in $d$ dimensions, not a property of
-what the features represent; for our dataset the empirical inflection
-($\beta^* \approx 2.94$) was close to the theoretical prediction
-($\sqrt{d} \approx 4.24$), and a sensitivity analysis confirmed that generation
+transition rule selected the point of greatest downward curvature in attention entropy, a
+geometric property of $K$ patterns in $d$ dimensions rather than a property of what the
+features represented. For this dataset it gave $\beta^* \approx 2.94$, with the random-pattern
+scale $\sqrt{d} \approx 4.24$ serving as a theoretical reference, and a sensitivity analysis
+confirmed that generation
 quality degraded gracefully across $\beta/\beta^* \in [0.1, 3.0]$ (Table~\ref{stab:beta-sweep}). 
 Similarly, varying the PCA variance retention threshold from 85\% to 99\%
 ($d_{\text{PCA}} = 13$ to 21) had minimal impact on generation quality. Median MRE
 remained between 1.2\% and 1.8\% across all thresholds (Table~\ref{stab:pca-sensitivity}),
-confirming that the 95\% threshold was not a critical design choice. The multiplicity
+confirming that the 95\% threshold was not a critical design choice.
+
+The multiplicity
 weighting for conditional generation introduced an additional consideration. Achieving
-80\% attention on the PCOS subgroup required $\rho \approx 26.7$, reducing the
-effective pattern count to $K_{\text{eff}} \approx 4.6$ (multiplicity parameters
+80\% of finite-mixture component probability on the PCOS subgroup required
+$\rho \approx 26.7$, reducing the participation ratio to
+$K_{\text{eff}} \approx 4.6$ (multiplicity parameters
 for all three subgroups in Table~\ref{stab:multiplicity}),
-which explains the larger MREs observed for PCOS features because the energy landscape
-was effectively shaped by fewer than 5 independent patterns, pulling means toward the
-population average. The direction-magnitude decomposition compounds this limitation.
-For PCOS, magnitudes are drawn from only 3 empirical norms, providing minimal
-diversity in the scale of generated samples. More broadly, the SA framework and its
-multiplicity-weighted conditioning have been \rboth{demonstrated in companion studies from this
-group} on discrete protein sequence generation from small family
-alignments~\citep{Varner2026SAProtein}, on steering generation toward functional
-subsets such as binding peptides~\citep{Varner2026Multiplicity}, and on the
-theoretical foundations connecting modern Hopfield networks to
-attention-based generation~\citep{Alswaidan2026SA}. Across these domains, the
-critical temperature prediction ($\beta^* \approx \sqrt{d}$) and the
-multiplicity-weighted conditioning mechanism transfer without modification,
-suggesting that the geometric properties exploited here are not specific to
-clinical coagulation data but are general features of the Hopfield energy
-landscape operating on small pattern sets.
+which indicated that mixture-component probability was concentrated around a small number
+of stored profiles across repeated draws. The subgroup-specific signal still rested on only
+three real PCOS profiles, and the lower-weight background profiles pulled generated means
+toward the population average; $K_{\text{eff}}$ did not represent an independent patient
+count. Magnitudes were drawn from all $23$ empirical PCA-space norms, so conditioning acted
+through the weighted directions rather than a subgroup-specific magnitude distribution.
+\rboth{Related studies from this group applied the same geometry-based operating-point rule
+and multiplicity weighting to protein sequence generation and conditional
+steering~\citep{Varner2026SAProtein,Varner2026Multiplicity,Alswaidan2026SA}. These studies
+showed that the sampling framework was not limited to coagulation data, although they did not
+replace validation in an independent clinical cohort.}
 
 An alternative precedent for validated longitudinal synthetic generation is
 the VAMBN-MT framework of K\"uhnel et al.~\citep{Kuhnel2024}, which extends a
@@ -132,151 +126,71 @@ model-predicted envelope as real patients. \rone{In the descriptive bootstrap
 Mann--Whitney diagnostic of condition-specific features, 4 of 24 (17\%)
 feature--condition pairs fell below the criterion of no detected difference in at least
 90\% of equal-size resamples. This power-limited diagnostic is not an equivalence test.}
-The mean relative errors for these features remained small (5--15\%), and the lower
-non-detection fractions likely reflected SA's tendency to compress distributional tails
-rather than shift means. This
-tail compression arises from two sources: the PCA dimensionality reduction, which
-cannot fully represent higher-order moments of every feature, and the
-direction-magnitude decomposition, which draws magnitudes from a finite empirical
-distribution of $K{=}23$ norms. This is a trade-off. SA
-sacrifices some tail fidelity in exchange for preserving the manifold geometry that
-parametric methods cannot capture in the $n < p$ regime.
 
-\rone{The clinical reading of that trade-off matters, because extreme states are often the
-phenomena of interest. If a generated cohort under-represents the severe end of a
-distribution, estimates of how often a severe phenotype occurs, and of how extreme it can
-become, will be biased toward the center. The extrapolation analysis shows that the generator
-does place patients outside the convex hull of the real cohort, so it is not confined to the
-observed range. But producing out-of-range points is not the same as reproducing how often
-extreme ones occur, and the two should not be conflated. We recommend against using SA
-cohorts to estimate extreme-quantile risk without real anchoring data. The mechanistic checks
-reported here are less sensitive to this limitation. They compare distributions within a
-fifth to ninety-fifth percentile band, so they test the central mapping from factor levels to
-thrombin generation and not the tails.}
+\rone{The mean relative errors for these features remained small (5--15\%), and the lower
+non-detection fractions were consistent with compressed tails rather than shifted means.
+This compression could reflect both PCA truncation and the finite empirical distribution of
+$23$ PCA-space norms. The clinical consequence is important. A synthetic cohort that
+under-represents severe states cannot be used to estimate how often those states occur or how
+severe they become. Although synthetic profiles extended beyond the real cohort's convex
+hull, that result did not show that they reproduced the true tail distribution. We therefore
+do not recommend using these cohorts to estimate extreme risk without additional real data.
+The primary mechanistic cloud-overlap measure also focused on the real 5th--95th percentile
+range and therefore did not validate behavior in the tails.} \rboth{More generally, several
+findings reflected the limits of generating from only $23$ source patients. Hull membership
+had little resolution, membership in the memory matrix remained detectable, and conditioned
+cohorts still relied on three PCOS or five Developed~PE patients. The modest calibration
+improvement was consistent with denser sampling of the same patient-derived distribution,
+not with added biological information. These findings supported simulation and model testing,
+but they did not increase the clinical evidence supplied by the original cohort.}
 
-\rboth{Several of the findings above are one observation, not a list. With $23$ patients in
-a $216$-dimensional measurement space, the cohort is sparse enough that familiar diagnostics
-stop discriminating. Convex-hull membership rejects every synthetic patient, but it rejects
-every real patient with respect to the others as well. It reports the resolution of
-the criterion, not a property of the generator. The stored patterns sit far enough apart that
-their basins do not overlap. That is why the membership-inference test succeeded, and why
-conditioning on three PCOS patients leaves an effective pattern count below five. The
-advantage of the synthetic cohort in downstream calibration is a variance-reduction effect,
-obtained by sampling more densely from a distribution estimated on those same patients. And
-the shared principal-component subspace supplies much of the marginal and mechanistic
-fidelity, which is why several baselines fit in that subspace match SA on those axes. Each of
-these follows from the sample size. None is a separate defect of the method.}
+This study had several limitations. The clinical analysis used one longitudinal cohort of
+$23$ patients. \rboth{The known-covariance simulations and the protein studies tested the
+method outside this single coagulation dataset, but neither replaced validation in an
+independent clinical cohort. The BZ2012 model was also calibrated on the same cohort used for
+generation. Applying one fixed, generator-blind model to both groups tested whether it treated
+real and synthetic profiles similarly; it was not independent biological validation.} The
+calibration required a 50-fold reduction in intrinsic tenase $k_{\text{cat}}$ and a 15-fold
+increase in extrinsic tenase $k_{\text{cat}}$ relative to published values
+(Table~\ref{stab:ode-calibration}), likely because the published measurements and the
+plasma-based assay used different experimental conditions. These fitted values should not be
+read as new biochemical estimates. \rone{The mechanistic test covered thrombin generation but
+not the fibrinolytic or viscoelastic features.} We also did not test clinical outcomes.
+Independent clinical data, broader mechanistic models, and prospective outcome validation are
+therefore still needed.
 
-This study had several limitations. Our study used a single longitudinal
-dataset of $K{=}23$ patients; further evaluation on independent datasets and
-across different clinical domains is needed to establish generalizability.
-\rboth{We addressed this in two partial ways, short of a second clinical cohort. The
-simulation benchmark supplies a ground truth that no single dataset can. There the population
-covariance is known in advance, so generalization can be separated from reproduction of the
-sample. Separately, the same energy landscape, operating-point rule, and multiplicity
-conditioning have been applied to discrete protein sequence generation from small family
-alignments and to steering generation toward functional subsets. The mechanism exploited here
-is geometric, not specific to coagulation. Neither argument substitutes for
-replication in an independent clinical cohort.} The PCA
-dimensionality reduction assumed linear structure in the feature space; nonlinear
-manifold learning methods may better capture complex clinical relationships, though at
-the cost of reduced interpretability. The mechanistic validation under TF+TM
-conditions revealed systematic ODE model bias, though the observation that real and
-synthetic patients shared the same bias pattern was itself informative. The BZ2012
-calibration required substantial departures from published rate constants, notably a
-50-fold reduction in intrinsic tenase $k_{\text{cat}}$ and a 15-fold increase in
-extrinsic tenase $k_{\text{cat}}$ (Table~\ref{stab:ode-calibration}). These deviations likely
-reflect differences between the \textit{in vitro} conditions under which the
-literature rate constants were measured (purified component systems) and the
-plasma-based TGA used in this study, where phospholipid surfaces, factor
-concentrations, and inhibitor profiles differ from the model
-assumptions~\citep{Hockin2002,BrummelZiedins2012}. The purpose of the mechanistic
-validation was not to obtain biochemically accurate rate constants but to test whether
-the ODE model processed real and synthetic patients equivalently, a comparison that is
-invariant to the absolute parameter values. \rboth{The ODE was calibrated on this same cohort. The mechanistic agreement
-demonstrates consistency with a model fitted to the same biological system. It is not
-validation against a fully independent ground truth. Its evidential value rests on the model
-being blind to whether a profile is real or synthetic, and on its applying one fixed mapping
-to both.} The mechanistic validation was limited to
-thrombin generation (BZ2012) and did not cover the fibrinolytic or viscoelastic
-features included in the dataset. Mechanistic validation using models that explicitly
-represent fibrinolysis and clot viscoelasticity remains future work. Finally, we did not
-validate synthetic patients against clinical
-outcomes; our validation was restricted to statistical and mechanistic plausibility,
-and prospective validation against real clinical decision-making remains an important
-future direction.
+\rone{Concatenating visits allowed the method to preserve cross-visit relationships, but it
+required every patient to have the same assays at the same aligned visits. The current
+pipeline could not directly accept irregular timing, missing assays or visits, or
+variable-length records. Imputation, padding, or a sequence-aware extension could support
+such data, but each would add assumptions that require validation in a small cohort.}
+\rtwo{The PCA representation imposed a related limit because it captured linear structure.
+In the S-curve benchmark, generated profiles moved farther from the known curve as curvature
+increased. Stochastic attention remained closer to the curve than the Gaussian generator,
+whereas the Gaussian generator recovered covariance more accurately. Neither method was best
+on both measures in this benchmark. Nonlinear embeddings could better represent curved or
+branching relationships, but they would add fitting and decoding choices that are difficult
+to estimate from $23$ patients. The linear representation was therefore a practical choice
+for this cohort, not evidence that clinical trajectories are generally linear.}
 
-\rone{The concatenation that makes cross-visit structure available also constrains the data
-the method accepts. Stacking three visits into a single vector assumes that every patient has
-every visit, and that visits are aligned across patients. This cohort satisfies both by
-design. Most observational data does not. Irregular timing would place physiologically
-different states in the same coordinate, so the principal components would mix visit
-structure with between-patient variation. Missing assays and missing visits have no natural
-representation in a fixed-length vector. They would require imputation before the embedding,
-which at $K{=}23$ would itself carry large uncertainty. Variable-length records fall outside
-the formulation altogether. They would need padding to a common length, or a sequence-aware
-extension in which attention operates over visits as well as over patients. These are scope
-boundaries of the present formulation. The energy landscape itself is indifferent to what the
-coordinates mean.}
+\rone{Computational cost and behavior at larger cohort sizes are separate questions. The
+reported Langevin sampler required work proportional to $TKd$ for each profile. The exact
+mixture sampler removed the $T$ sequential updates: its component weights could be prepared
+once, after which each profile required a component draw, a $d$-dimensional Gaussian draw,
+and decoding. The principal-component model was estimated once, but inverse transformation
+and decoding were still performed for every generated profile. The simulation advantage over
+the sample-covariance Gaussian was concentrated in the $n<p$ settings. We did not test cohorts larger than $23$
+patients, so stability and membership risk as $K$ grows remain open questions.}
 
-\rone{Cost and behavior at larger cohort sizes follow from how the target is sampled. In the
-Langevin implementation, each step evaluates the attention weights over the stored patterns
-and forms their weighted combination. The work per step is the pattern count times
-the retained dimension, and one sample costs that product times the number of steps. The
-closed form removes the sequential factor entirely for future use. Drawing a component and
-adding isotropic noise costs one selection and one Gaussian draw per sample, whatever the
-step count. The remaining work is the principal-component decomposition and the decoding, and
-both are shared across the cohort. Either way the method is linear in the number of patients
-and in the reduced dimension. At high feature counts the practical bound is the
-principal-component decomposition, not the sampling. Statistically the picture runs the other
-way. The simulation benchmark showed that the advantage of stochastic attention over the
-sample-covariance Gaussian comparator was concentrated in the $n<p$ settings, where the
-empirical covariance was rank deficient. The method was therefore positioned for the
-small-cohort, high-dimensional regime, not as a general-purpose generator. We expect the memorization
-documented above to ease as the cohort grows, because basins that currently stand apart would
-begin to overlap and generation would interpolate across several patients instead of staying
-near one. This cohort admits only subsampling downward, so we did not test that
-expectation.}
-
-\rtwo{The linear subspace deserves the same scrutiny. Principal components capture linear
-structure. A manifold with strong curvature, such as a branching trajectory or a threshold
-effect, is represented only approximately, and that approximation error is one
-source of the tail compression discussed above. The simulation benchmark bounds where this
-begins to matter. On a deliberately curved ground truth the off-manifold residual reached
-twice its linear-baseline value at a curvature of $0.25$ to $0.5$. Beyond that point SA still
-stayed closer to the manifold than a fitted Gaussian, and the Gaussian recovered the gross
-covariance better. Neither method dominates once the target stops being linear. Nonlinear
-embeddings such as kernel principal components, diffusion maps, or autoencoders would
-represent curvature more faithfully, at three costs. They give up components expressed
-directly in assay space and the interpretability that follows. They give up the closed-form
-relation between the critical temperature and the dimension that fixes the operating point
-here. And they introduce fitting choices that are unstable to estimate from $23$ patients.
-Linearity is therefore a deliberate choice matched to the cohort size, not an oversight. The
-subspace ablation shows which behaviors follow from the representation, since generators
-sharing that subspace match SA on marginal and mechanistic fidelity while differing sharply
-in how far they move from the stored patients.}
-
-\rone{A distinct limitation concerns membership privacy, not identification of individuals.
-The source cohort was fully de-identified and contained no direct identifiers or link to
-named individuals, and neither the synthetic cohort nor our analysis identified a
-participant. The narrower finding was that the generator concentrated probability mass near
-each of the $K{=}23$ stored patterns, so synthetic patients lay close to individual real
-records. A nearest-neighbor membership-inference test separated cohort members from
-held-out patients with high accuracy. We found that this behavior belonged to the target
-distribution at $K{=}23$. It is not an artifact of the sampler or the operating temperature.
-Metropolis-adjusted sampling removes the discretization bias of the unadjusted scheme, and it
-left the signal unchanged. Lowering the inverse temperature improved the distance to the
-closest real record only marginally. That distance never reached the level separating real
-patients from one another, and buying it cost cross-visit covariance fidelity. The closed
-form of the target settles the attribution. The latent distribution is a Gaussian mixture
-whose components are centered on the stored patterns, so it can be drawn from analytically,
-with no chain at all. Exact draws carried through the same decoding pipeline reproduce the
-membership-inference signal in full. Proximity to individual real records is therefore a
-property of the distribution the method defines at $K{=}23$, not of how that distribution is
-approximated. We do not present the method as privacy-preserving. It is not differentially
-private, and synthetic generation did not add a formal privacy guarantee beyond the source
-cohort's de-identification. The intended uses do not require releasing patient-level records
-and include mechanistic calibration and hypothesis generation. The burn-in and thinning used in the sampling
-diagnostic were derived once on the full cohort and reused for the subset analyses. The
-diagnostic characterizes the operating regime, and does not certify each subset
-independently.}
+\rone{A separate limitation concerns membership privacy. The source cohort was fully
+de-identified, so neither the synthetic cohort nor our analysis identified a named
+participant. The narrower test assumed that someone already possessed a candidate assay
+profile and asked whether it had been included in the memory matrix. The test usually ranked
+included records above held-out records, with a mean AUC of $0.97$. Metropolis-adjusted
+sampling, the tested inverse-temperature range, and exact sampling all retained this signal.
+The exact sampler showed why: at $K{=}23$, the target was a finite Gaussian mixture with one
+component centered on each stored profile. The signal therefore came from the target
+distribution rather than from numerical sampling error. The method was not differentially
+private, and patient-level synthetic records should not be treated as anonymized data. The
+intended uses, including mechanistic calibration and hypothesis generation, can be performed
+without releasing patient-level records.}

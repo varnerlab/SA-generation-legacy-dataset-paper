@@ -10,7 +10,8 @@
 # MVN cannot do this — you can't fit a covariance matrix from 3 patients.
 #
 # The multiplicity ratio ρ controls conditioning strength. For each cohort,
-# we upweight the designated patients and find β*(ρ) via entropy inflection.
+# we upweight the designated patients and select β*(ρ) at the
+# attention-entropy transition.
 # ──────────────────────────────────────────────────────────────────────────────
 
 include(joinpath(@__DIR__, "..", "Include.jl"))
@@ -73,7 +74,8 @@ S_pe = fisher_separation_index(X̂, pe_indices)
 # ══════════════════════════════════════════════════════════════════════════════
 @info "\nStep 4: Multiplicity weighting …"
 
-# target: 80% of softmax attention on the designated subpopulation
+# target: 80% of finite-mixture component probability on the designated
+# subpopulation (valid because the stored memories are unit normalized)
 f_target = 0.80
 
 cohorts = [

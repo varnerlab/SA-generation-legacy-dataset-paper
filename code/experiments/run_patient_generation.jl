@@ -13,7 +13,7 @@
 # Steps:
 #   1. Load and clean the dataset
 #   2. Standardize + PCA → memory matrix
-#   3. Find β* via entropy inflection
+#   3. Select β* at the attention-entropy transition
 #   4. Generate unconditioned synthetic patients
 #   5. Generate condition-specific patients (Healthy, Prior PE, PCOS)
 #   6. Evaluate: feature-level statistics, correlation preservation, novelty
@@ -55,9 +55,9 @@ d_pca, K = size(X̂)
 JLD2.@save joinpath(_PATH_TO_DATA, "patient_memory.jld2") X̂ pca_model std_params df_clean kept_cols
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Step 3: Find β* via entropy inflection
+# Step 3: Select β* at the attention-entropy transition
 # ══════════════════════════════════════════════════════════════════════════════
-@info "\nStep 3: Finding β* (entropy inflection) …"
+@info "\nStep 3: Selecting β* (greatest downward curvature of attention entropy) …"
 phase = find_entropy_inflection(X̂; α=0.01, n_betas=80,
                                  β_range=(0.1, 1000.0))
 β_star = phase.β_star

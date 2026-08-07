@@ -115,7 +115,7 @@ end
 @info "  Memory: $d_pca × $K (unit-norm)"
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Step 3: Phase transition
+# Step 3: Attention-entropy transition
 # ══════════════════════════════════════════════════════════════════════════════
 @info "\nStep 3: Finding β* …"
 phase = find_entropy_inflection(X̂; α=0.01, n_betas=80,
