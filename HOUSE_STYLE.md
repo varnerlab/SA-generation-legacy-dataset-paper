@@ -84,6 +84,8 @@ the text moves to a new biological or technical question.
 - Each paragraph should have one central job and a clear opening sentence.
 - Preserve necessary detail, but move implementation detail to Methods or the Supplement
   when it interrupts the main narrative.
+- End the Discussion with its limitations paragraph. Place computational scaling and other
+  methodological scope considerations before that final paragraph.
 
 ## Claims and Limitations
 
