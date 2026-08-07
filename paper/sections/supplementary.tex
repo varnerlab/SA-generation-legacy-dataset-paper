@@ -395,7 +395,11 @@ generated direction could remain inside the hull only by exactly matching a stor
 \rtwo{The biological constraint included non-negativity of both hormones. Negative values
 occurred for estradiol in 19 patients and progesterone in 37 patients, with 10 overlapping;
 most were close to zero relative to the real-cohort scale, but the minima were $-2109.8$ and
-$-75.8$, respectively. All nine coagulation-factor inputs to the BZ2012 model were positive,
+$-75.8$, respectively. Positivity was not enforced for any variable. Relative to the pooled
+real-cohort distributions, zero was less than one standard deviation below the mean for both
+hormones but at least $2.6$ standard deviations below the mean for each coagulation factor.
+This difference explained why only the hormones crossed zero in this sample; it did not
+guarantee positivity of coagulation factors in other draws. All nine coagulation-factor inputs to the BZ2012 model were positive,
 so all 100 synthetic patients were retained for the mechanistic check. Gaussian sampling in
 PCA space followed by linear decoding had unbounded support, and no clipping was applied. The
 unconstrained concatenated MVN baseline produced 58 negative hormone measurements across 43

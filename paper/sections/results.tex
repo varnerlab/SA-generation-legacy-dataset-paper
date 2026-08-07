@@ -67,9 +67,8 @@ datasets. TVAE achieved comparable marginal fidelity at high epoch counts (media
 concatenated longitudinal profiles ($n{=}23$), meaning it could not capture cross-visit
 covariance structure and had no mechanism for conditional subgroup generation.
 
-\rone{We next asked how much of this fidelity was attributable to the shared
-principal-component representation rather than specifically to the stochastic-attention
-generative formulation. We compared stochastic attention with four generators operating in
+\rone{To distinguish the contribution of PCA from that of the stochastic-attention generation
+process, we compared stochastic attention with four generators operating in
 the identical $d{=}18$ PCA subspace: a two-component diagonal-covariance Gaussian mixture, a
 kernel-density estimator, $k$-nearest-neighbor interpolation, and a Gaussian copula
 (Supplementary Table~\ref{stab:pca-ablation}). The comparison indicated that the shared
@@ -130,9 +129,10 @@ particularly at Visits~2 and~3.
 
 \subsection{\rboth{Robustness to Sample Size, Dimensionality, and Nonlinearity}}
 
-\rboth{We evaluated robustness with three complementary benchmarks
-(Methods, Sec.~\ref{sec:robustness-benchmarks}). First, we simulated low-rank Gaussian
-populations whose covariance was known before drawing any training data. For each combination
+\rboth{We evaluated robustness with three complementary tests
+(Methods, Sec.~\ref{sec:robustness-benchmarks}). The first test examined recovery of a known
+population covariance from a small, high-dimensional sample. We
+simulated low-rank Gaussian populations whose covariance was known before drawing any training data. For each combination
 of training size ($n{=}8,15,23,40,80$), dimensionality ($p{=}30,120,216$), and latent rank
 ($r{=}3,5,10$), we constructed the stochastic-attention memory matrix and estimated a
 sample-covariance Gaussian generator from the same training cohort, generated $100$ profiles
@@ -143,28 +143,33 @@ lower error in $35$ of the $39$ rank-deficient $n<p$ settings
 (Fig.~\ref{fig:sim-recovery}A). At the cohort-matched setting ($n{=}23$, $p{=}216$), averaged
 across the three latent ranks, the Gaussian generator's error was about $1.5$ times that of
 stochastic attention. Across the grid, the advantage was concentrated in $n<p$ settings,
-where the Gaussian sample covariance was rank deficient. Second, we tested degradation on
-the clinical data by drawing ten random subsets at each of $n{=}20,15,10,$ and~$8$,
-constructing a stochastic-attention memory matrix from each subset, and scoring each generated
-cohort against the same full $23$-patient reference. As $n$ fell from $20$ to~$8$, mean
+where the Gaussian sample covariance was rank deficient.}
+
+\rboth{We next asked how the method performed when fewer real patients were represented in
+the memory matrix. We randomly selected $20$, $15$, $10$, or~$8$ patients from the full
+cohort, repeating this process ten times at each size. For each subset, we constructed a new
+memory matrix and generated $100$ synthetic profiles. We compared every synthetic cohort with
+the same complete set of $23$ real patients, providing a common reference across all subset
+sizes. As $n$ fell from $20$ to~$8$, mean
 cross-visit correlation error rose
 from $0.63$ to $1.11$ and mean pooled
 marginal error rose from $2.0\%$ to $4.9\%$, while mechanistic cloud overlap remained near
-$0.90$ (Fig.~\ref{fig:sim-recovery}B). Third, we tested the linear embedding against a known
-nonlinear target: a noisy S-curve embedded in $p{=}30$ or~$120$ dimensions. We constructed
+$0.90$ (Fig.~\ref{fig:sim-recovery}B). The final test evaluated how the linear embedding
+performed when the population followed a curved rather than straight pattern. We used a noisy S-curve
+embedded in $p{=}30$ or~$120$ dimensions. We constructed
 the stochastic-attention memory matrix and estimated the Gaussian generator from $n{=}23$
 samples, then measured both distance from the known curve and covariance error as curvature
-increased. The off-manifold error of stochastic attention doubled
+increased. The mean distance of stochastic-attention samples from the curve doubled
 relative to the straight-line case between curvatures $0.25$ and~$0.5$. Its samples remained
 closer to the curve than the Gaussian samples, whereas the Gaussian generator recovered the
-population covariance more accurately. Thus, stochastic attention outperformed this
-sample-covariance Gaussian comparator on covariance recovery in most small, linear low-rank
-settings, but the benchmarks also identified deterioration with fewer patients and a clear
-limitation when the population structure was nonlinear.}
+population covariance more accurately. Thus, stochastic attention had lower covariance error
+than the Gaussian generator in most small, linear, low-rank settings, but the tests also
+identified deterioration with fewer patients and a clear limitation when the population
+structure was nonlinear.}
 
 \subsection{\rtwo{Interpolation and Extrapolation}}
 
-\rtwo{We next asked whether the sampler stayed within the real cohort or reached beyond it.
+\rtwo{We then examined whether the sampler stayed within the real cohort or reached beyond it.
 We constructed the convex hull of the $23$ real patients in the $d{=}18$
 principal-component space and tested whether it contained each synthetic patient
 (Supplementary Table~\ref{stab:hull-geometry}). This hull was the smallest convex region
@@ -186,21 +191,24 @@ not establish equivalence, but it showed why binary hull membership alone was no
 informative measure of extrapolation in this sparse, high-dimensional setting.
 }
 
-\rtwo{Because geometric proximity did not establish biological validity, we next assessed
-plausibility in two ways. First, $54$ of $100$ synthetic patients satisfied all implemented
-biological constraints; the remaining $46$ had at least one negative estradiol or
-progesterone concentration. The unconstrained concatenated multivariate-normal baseline had
-a comparable failure rate, with negative hormone concentrations in $43$ of $100$ patients.
-Thus, this limitation affected both unconstrained continuous generators rather than
-stochastic attention alone. Second, we asked whether the generated coagulation-factor
-combinations produced thrombin-generation behavior consistent with the real cohort under the
-BZ2012 model. Estradiol and progesterone were not inputs to this model, and all nine generated
-coagulation-factor inputs were positive; we therefore retained all $100$ synthetic patients
-for this mechanistic check. For each thrombin-generation feature, $83$--$92\%$ of synthetic
-patients had a model-predicted-to-recorded ratio within the 5th--95th percentile range
-observed in the real cohort. Forty-one of $100$ patients met this range for every evaluated
-feature at every visit, and $24$ of $100$ met both this criterion and all biological
-constraints. While not included in the current implementation, future implementations could enforce non-negativity by construction through
+\rtwo{Because distance from the convex hull did not show whether a profile was biologically
+valid, we applied two additional checks. The first checked two biological constraints:
+quantities that should be positive could not be negative, and coagulation-factor or TGA values
+could not lie more than five real-cohort standard deviations from the mean. Fifty-four of $100$ synthetic patients passed this check; the
+other $46$ had a negative estradiol or progesterone value. The unconstrained multivariate-normal
+baseline had a similar failure rate, with negative hormone values in $43$ of $100$ patients.
+Neither generator enforced positivity. Hormone concentrations were closer to zero relative to
+their observed variation than the coagulation-factor levels, which explained why only the
+hormones crossed zero in these samples. The positive coagulation factors did not imply a
+general positivity guarantee. The second check used the BZ2012 model to determine whether the
+generated factor combinations produced thrombin-generation behavior consistent with the real
+cohort. Estradiol and progesterone were not inputs to this model, and all nine generated
+coagulation-factor inputs were positive, so all $100$ synthetic patients were included. For
+each thrombin-generation feature, $83$--$92\%$ of patients had a
+model-predicted-to-recorded ratio within the real cohort's 5th--95th percentile range.
+Forty-one patients met this criterion for every feature and visit, and $24$ passed both checks.
+These results showed that extrapolation beyond the observed cohort and biological plausibility
+were separate questions. Future implementations could enforce non-negativity through
 positive-variable transformations or constrained decoding.}
 
 \subsection{\rone{Membership-Inference Risk}}
@@ -221,15 +229,15 @@ measured how often the test ranked an included record above a held-out record; $
 chance and $1.0$ perfect discrimination. The mean AUC was $0.97$, with perfect discrimination
 in $9$ of $40$ splits. Thus, the test usually inferred whether a candidate profile had been
 included, but could not identify a person or reconstruct an unknown patient's measurements.
-We next asked whether this signal came from the numerical sampler or the target distribution.
+To identify the source of this signal, we compared the numerical sampler with the target distribution.
 Metropolis-adjusted sampling left the result nearly unchanged (AUC $0.96$). Lowering the
 inverse temperature across a $40$-fold range increased the distance from synthetic to stored
 profiles, but it never reached the real-to-real baseline and cross-visit covariance fidelity
-degraded. Exact draws from the closed-form mixture removed the sampling algorithm entirely
+degraded. Exact draws from the closed-form mixture did not use the Markov-chain sampler
 and reproduced the result (AUC $0.98$; Supplementary
 Table~\ref{stab:sampling-ladder}, Fig.~\ref{sfig:sampling-ladder}). Thus, at $K{=}23$, the
-membership signal came from the target distribution centered on the stored records, not from
-how it was sampled. Synthetic generation therefore added no privacy guarantee beyond
+membership signal was a property of the target distribution, not of the Markov-chain
+implementation. Synthetic generation therefore added no privacy guarantee beyond
 de-identification of the source cohort.}
 
 \subsection{Conditional Generation of Rare Subgroups}
@@ -279,21 +287,21 @@ does not preserve subgroup-specific structure.
 $100$ profiles did not increase the amount of independent subgroup information. The PCOS and
 Developed~PE signals still came from only three and five real patients; after accounting for
 the lower-weight background patterns, the corresponding participation ratios were $4.6$ and
-$7.7$ (Table~\ref{stab:multiplicity}). Treating the $100$ synthetic profiles as independent
+$7.7$ (Table~\ref{stab:multiplicity}), meaning that repeated draws were concentrated around
+only a few stored profiles. Treating the $100$ synthetic profiles as independent
 observations would therefore understate uncertainty. Conditioning instead provided a denser
 set of profiles around the distributions suggested by those few patients, which could support
 exploratory hypothesis generation, workflow testing, and simulations for planning future
-studies. It did not add evidence about the conditions or replace recruitment of additional
+studies. However, it did not add evidence about the conditions or replace recruitment of additional
 patients.}
 
 \subsection{Mechanistic Consistency}
 \label{sec:results-l4}
 
-The preceding validations assessed statistical properties of the synthetic data. We
-next tested whether SA-generated patients produce biologically plausible outputs
-when their coagulation factor levels are fed through
-\rboth{a mechanistic model that knew nothing about the SA generation process, though it
-was calibrated on the same cohort.}
+The preceding validations assessed statistical properties of the synthetic data. \rboth{We
+next tested whether factor combinations generated by stochastic attention produced
+biologically plausible outputs when passed through a separately specified mechanistic model.
+The model was blind to the generation process but was calibrated on the same cohort.}
 We used the Hockin--Mann BZ2012 model~\citep{Hockin2002,BrummelZiedins2012}, a system
 of 58 ordinary differential equations with 64 rate constants that simulates thrombin
 generation from patient-specific coagulation factor inputs. We calibrated 5 of the
@@ -346,11 +354,10 @@ moderate for ETP ($\rho \approx 0.6$--$0.8$ for real, $\rho \approx 0.6$--$0.65$
 for synthetic; Fig.~\ref{sfig:rankcorr}) and weak for other features, consistent with
 a 5-parameter population-level calibration that was not designed to resolve
 inter-patient variability. The key finding was not patient-level prediction but
-population-level plausibility. \rboth{A separately specified mechanistic model of the
-coagulation cascade, applied identically to both groups and blind to the generator, placed
-patients generated by stochastic attention within the same model-predicted envelope as real patients under both
-experimental conditions. The model was calibrated on this same cohort, so this was a
-same-cohort consistency check rather than independent validation.}
+population-level plausibility. \rboth{Applied identically to both groups, the mechanistic model
+produced overlapping predicted-to-recorded ratio distributions for real and synthetic patients
+under both experimental conditions. Because the model was calibrated on this same cohort, this
+was a same-cohort consistency check rather than independent validation.}
 
 \subsection{Downstream Utility: Mechanistic Model Calibration}
 \label{sec:results-utility}
@@ -379,17 +386,12 @@ synth-calibrated model is not fully independent of the real data; rather, it
 demonstrates that SA's representation preserves sufficient biological structure for a
 mechanistic model to learn generalizable parameters.
 
-\rone{The synthetic-calibrated model's median prediction errors were 2--10\% lower than those
-of the real-calibrated model, but this was not interpreted as evidence that synthetic data
-were superior. All information in the synthetic
-cohort derived from the same $23$ patients, and calibrating five
-rate constants against $100$ samples drawn from that distribution likely smoothed the
-objective and diluted the influence of any single patient. Any generator producing a denser
-sample of the same distribution could have had the same variance-reduction effect. The result
-therefore showed that the synthetic cohort was usable for calibration, not that it contained
-new biological information.} \rtwo{Together with the conditioned-cohort analyses, this
-defined the practical value demonstrated in this study: it supported mechanistic-model calibration without
-using the real cohort directly in that calibration, comparisons of subgroups containing only
-three or five patients, and factor-level hypotheses for testing in a larger study. These uses
-did not replace additional patients or support clinical deployment, which would require
-prospective validation against real clinical decisions.}
+\rone{The modest reduction in prediction error did not show that synthetic data were
+superior. All $100$ synthetic profiles were derived from the same $23$ patients, so they did
+not increase the independent evidence available about the broader patient population. Their
+value was computational: averaging the calibration objective over a denser sample from the
+represented distribution may have made the optimization more stable.} \rtwo{The results
+therefore showed that synthetic profiles could support mechanistic-model calibration,
+exploratory comparisons of small subgroups, and factor-level hypotheses for testing in larger
+studies. However, confirming those hypotheses and establishing clinical utility would require
+additional real patients or independent experimental data.}
