@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Manuscript House Style
+
+Before editing the manuscript, supplement, or response to reviewers, read and follow
+[`HOUSE_STYLE.md`](HOUSE_STYLE.md). The guide is authoritative for all new and
+reviewer-added prose and includes the required synchronization and verification workflow.
+
 ## Project Overview
 
 Research paper and codebase for validated synthetic patient generation using Stochastic Attention (SA) applied to a small longitudinal pregnancy coagulation dataset (N=23 patients, 72 assays, 3 visits). The SA algorithm uses modern Hopfield network energy with Unadjusted Langevin sampling to generate biologically plausible synthetic patients.

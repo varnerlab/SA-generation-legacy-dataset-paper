@@ -76,7 +76,7 @@ are per-pattern multiplicity weights. When all $r_k = 1$, this reduces to the st
 modern Hopfield energy; when $r_k = \rho > 1$ for a designated subset of patterns, the
 energy landscape is continuously deformed to favor that subset.
 
-\rone{This energy determines its induced distribution in closed form. Writing
+\rone{This energy defines a probability distribution that can be written exactly. Writing
 $\pi_r(\vxi)\propto\exp[-\beta E_r(\vxi)]$ and completing the square in each exponent,
 \begin{equation}
     \exp\!\left[-\frac{\beta}{2}\norm{\vxi}^2 + \beta\,\mathbf{m}_k^\top\vxi\right]
@@ -84,7 +84,7 @@ $\pi_r(\vxi)\propto\exp[-\beta E_r(\vxi)]$ and completing the square in each exp
       \exp\!\left[-\frac{\beta}{2}\norm{\vxi-\mathbf{m}_k}^2\right],
     \label{eq:complete_square}
 \end{equation}
-so the target is exactly a finite isotropic Gaussian mixture,
+so the resulting sampling distribution is exactly a finite isotropic Gaussian mixture,
 \begin{equation}
     \pi_r(\vxi) = \sum_{k=1}^{K} q_k\,
     \mathcal{N}\!\left(\mathbf{m}_k,\ \beta^{-1}\mathbf{I}\right),
@@ -95,12 +95,13 @@ so the target is exactly a finite isotropic Gaussian mixture,
 Each stored patient is the center of one component. The common component variance is
 $\beta^{-1}$, and the multiplicity weights enter the mixture probabilities directly. The
 memories used here are normalized to unit length, so the exponential factor is shared by
-every component and $q_k = r_k/\sum_j r_j$ exactly. The target can therefore be sampled
-exactly by ancestral sampling: first sampling $k$ from $q$ and then drawing
-$\vxi\sim\mathcal{N}(\mathbf{m}_k,\beta^{-1}\mathbf{I})$, with no Markov chain. The cohort
+every component and $q_k = r_k/\sum_j r_j$ exactly. We could therefore sample this
+distribution directly: first choose $k$ from $q$ and then draw
+$\vxi\sim\mathcal{N}(\mathbf{m}_k,\beta^{-1}\mathbf{I})$. This procedure requires no Markov
+chain. The cohort
 analyzed in this work was generated with the Langevin implementation given next, and that is
-what the reported results describe. We added the analytic sampler afterward as a reference,
-using the identical normalization, magnitude and decoding pipeline
+what the reported results describe. We added the direct-sampling procedure afterward as a check,
+using the same normalization, magnitude rescaling, and decoding steps
 (Table~\ref{stab:sampling-ladder}).}
 
 We sampled from this
@@ -122,47 +123,48 @@ designated patterns contribute). This is an inference-time operation that requir
 no change to the stored patterns.
 
 \rone{The synthetic cohort analyzed in this work was produced by initializing each Langevin
-chain near a randomly selected stored pattern and retaining the endpoint after $T{=}2000$
-steps. Because initialization and finite chain length could affect the output independently
-of the target distribution, we evaluated them with a four-rung sampler ladder: the published
-anchor-initialized endpoint scheme, sphere initialization, burn-in-controlled thinned
-pooling, and Metropolis-adjusted sampling. Exact ancestral sampling from
-Eq.~\eqref{eq:exact_mixture} served as a separate analytic reference rather than as a fifth
-rung. The evaluated fidelity and membership-inference measures were similar across the four
-rungs and the analytic reference, indicating that the published implementation reproduced
-the evaluated properties of the target distribution at $\beta^*$ (Supplementary
+chain near a randomly selected stored pattern and retaining the final state after $T{=}2000$
+steps. Because the starting point and chain length could affect the output, we compared four
+sampling procedures. These used the original initialization near a stored pattern, random
+initialization on the unit sphere, pooled samples from multiple chains after burn-in and
+thinning, and Metropolis-adjusted sampling. As a separate check, we also drew directly from
+Eq.~\eqref{eq:exact_mixture}, without using a Markov chain. The fidelity and
+membership-inference results were similar across all four procedures and the direct draws.
+This agreement indicated that the original implementation reproduced the evaluated behavior
+of the sampling distribution at $\beta^*$ (Supplementary
 Fig.~\ref{sfig:sampling-ladder}).}
 
-\rboth{The inverse temperature $\beta$ affects two related but distinct objects. In the
-energy-landscape view, small $\beta$ gives diffuse local attention and an average-like
-retrieval fixed point, whereas large $\beta$ sharpens local attention and produces distinct
-memory attractors. In the exact mixture sampler of Eq.~\eqref{eq:exact_mixture}, however,
-component identity is drawn from the multiplicity probabilities $q_k$, which are independent
-of $\beta$ for the unit-normalized memories used here, and $\beta$ instead controls the
-within-component covariance $\beta^{-1}\mathbf{I}$. Thus small $\beta$ produces broader,
-less memory-localized draws rather than draws that collapse to the cohort mean; large
-$\beta$ produces tighter draws around the selected memory. The attention-entropy transition
-used to define $\beta^*$ marks where the retrieval landscape changes from diffuse to
-memory-specific, while the exact sampling law remains multiplicity weighted.}
+\rboth{The inverse temperature $\beta$ affects Hopfield retrieval and direct sampling in
+different ways. In the Hopfield update, small $\beta$ spreads attention across many stored
+profiles and tends toward their weighted average, whereas large $\beta$ concentrates attention on
+individual profiles. When sampling directly from Eq.~\eqref{eq:exact_mixture}, the stored
+profile is chosen according to $q_k$. For the unit-normalized profiles used here, these
+probabilities are independent of $\beta$ and are set by the multiplicity weights. Instead,
+$\beta$ controls the spread around the selected profile through the covariance
+$\beta^{-1}\mathbf{I}$. Small $\beta$ therefore produces broader draws, whereas large $\beta$
+produces tighter draws. The attention-entropy transition used to define $\beta^*$ marks the
+shift from attention shared across profiles to attention concentrated on individual profiles.}
 \rboth{We selected $\beta^*$ from the transition in normalized attention entropy across a
-logarithmic sweep of $\beta$. Specifically, $\beta^*$ was the grid point with the greatest
-downward curvature, calculated as the most negative finite-difference second derivative with
-respect to $\log\beta$ (Supplementary Methods). This procedure depended on the geometry of the
-$K$ patterns in $d$ dimensions rather than on the meaning of their features. For this dataset
+logarithmic sweep of $\beta$. Specifically, $\beta^*$ was the grid point where the entropy
+curve bent downward most strongly, calculated as the most negative finite-difference second
+derivative with respect to $\log\beta$ (Supplementary Methods). This choice depended on the
+relative positions of the $K$ profiles in $d$ dimensions, not on what their features
+represented. For this dataset
 ($K{=}23$, $d_{\text{PCA}}{=}18$), it gave $\beta^*\approx2.94$; the random-pattern prediction
 $\sqrt{d}\approx4.24$ served as a theoretical reference. A sensitivity analysis across
-$\beta/\beta^*\in[0.1,3.0]$ showed that the selected operating point balanced novelty and
+$\beta/\beta^*\in[0.1,3.0]$ showed that the selected value balanced novelty and
 fidelity (Table~\ref{stab:beta-sweep}). For conditioned generation, we repeated the entropy
 calculation with the multiplicity bias included, giving a $\rho$-dependent $\beta^*(\rho)$.}
 
 \rboth{For unit-normalized memories, the component probabilities satisfy
-$q_k=r_k/\sum_j r_j$. We summarized their concentration with the participation ratio
-$K_{\text{eff}}=1/\sum_k q_k^2=(\sum_k r_k)^2/\sum_k r_k^2$. This was the number of equally
-weighted mixture components that would have the same probability concentration: equal weights
+$q_k=r_k/\sum_j r_j$. We summarized how concentrated these probabilities were with the
+participation ratio
+$K_{\text{eff}}=1/\sum_k q_k^2=(\sum_k r_k)^2/\sum_k r_k^2$. This quantity is the effective
+number of equally weighted components needed to produce the same concentration. Equal weights
 gave $K_{\text{eff}}=23$, whereas concentrating weight on three stored profiles moved it toward
-three. The quantity described how broadly repeated draws were distributed across stored
-profiles; it did not represent an independent clinical sample size. To place a target fraction
-$f_{\text{target}}$ of mixture-component probability on a designated subset, we used
+three. It showed whether repeated draws were spread across many stored profiles or concentrated
+near a few; it was not an independent clinical sample size. To make a designated subgroup
+account for a target fraction $f_{\text{target}}$ of the component probability, we used
 $\rho=f_{\text{target}}K_{\text{bg}}/[K_{\text{des}}(1-f_{\text{target}})]$, where
 $K_{\text{des}}$ and $K_{\text{bg}}$ are the designated and background pattern counts.}
 
@@ -208,7 +210,8 @@ listed in Table~\ref{stab:multiplicity}. For the PCOS subgroup
 ($K_{\text{des}}{=}3$), this required $\rho \approx 26.7$, reducing the
 participation ratio to $K_{\text{eff}} \approx 4.6$. \rone{For both unconditioned and
 conditioned generation, magnitudes were drawn from the empirical distribution of all $23$
-PCA-space norms; conditioning acted through the multiplicity-weighted direction sampler.}
+PCA-space norms. Subgroup weighting affected directional sampling, not the distribution of
+magnitudes.}
 
 
 The complete generation pipeline is summarized in Algorithm~\ref{alg:sa-pipeline}.
@@ -240,7 +243,7 @@ $T{=}2{,}000$ was sufficient for convergence.
 \State Standardize: $\mathbf{z}_k \gets (\mathbf{x}_k - \boldsymbol{\mu}) \oslash \boldsymbol{\sigma}$
 \State PCA: $\mathbf{m}_k \gets \mathbf{W}^\top \mathbf{z}_k \in \mathbb{R}^{18}$ \Comment{95\% variance retained}
 \State Record norms: $s_k \gets \|\mathbf{m}_k\|$; normalize $\hat{\mathbf{m}}_k \gets \mathbf{m}_k / s_k$
-\State \rboth{Select $\beta^*$ at the greatest downward curvature of attention entropy, including $\log\mathbf{r}$ when conditioned}
+\State \rboth{Select $\beta^*$ where the attention-entropy curve bends downward most strongly, including $\log\mathbf{r}$ when conditioned}
 \For{$i = 1, \ldots, N$}
     \State \rone{Select anchor $k_0$ from all patterns, or from the designated subset when conditioned}
     \State \rone{$\hat{\vxi}_0 \gets \hat{\mathbf{m}}_{k_0}+0.01\boldsymbol{\varepsilon}_0$; normalize $\hat{\vxi}_0$}
@@ -289,18 +292,20 @@ compared predicted-versus-measured thrombin generation features. The primary met
 was cloud overlap: the fraction of synthetic predicted/measured ratios falling
 within the 5th--95th percentile range of real ratios.
 
-\subsection{\rboth{Robustness Benchmarks}}
+\subsection{\rboth{Robustness Tests}}
 \label{sec:robustness-benchmarks}
 
-\rboth{We used three benchmarks to separate population recovery, sensitivity to clinical
-sample size, and sensitivity to nonlinearity. For the population-recovery benchmark, we
-generated training cohorts from a low-rank Gaussian factor model,
+\rboth{We used three tests, each designed to answer a separate question: whether generated
+profiles recovered a known population covariance, how performance changed as the clinical
+training set became smaller, and how performance changed as a data pattern became more
+nonlinear. First, to test population covariance recovery, we generated training cohorts from a
+low-rank Gaussian factor model,
 $\mathbf{X}=\mathbf{Z}\mathbf{L}^{\top}+\boldsymbol{\epsilon}$, where
 $\mathbf{Z}\in\mathbb{R}^{n\times r}$ and $\mathbf{L}\in\mathbb{R}^{p\times r}$ had
 independent standard-normal entries, and $\boldsymbol{\epsilon}$ had independent Gaussian entries
 with variance $0.1$. The population covariance
 $\boldsymbol{\Sigma}_{\mathrm{pop}}=\mathbf{L}\mathbf{L}^{\top}+0.1\mathbf{I}$ was therefore
-known independently of the training cohort. We crossed
+known independently of the training cohort. We tested every combination of
 $n\in\{8,15,23,40,80\}$, $p\in\{30,120,216\}$, and
 $r\in\{3,5,10\}$. In each cell, we constructed the stochastic-attention memory matrix from
 the training cohort and estimated a Gaussian generator from the same cohort; each produced
@@ -312,12 +317,14 @@ covariance recovery as
 $\lVert\widehat{\boldsymbol{\Sigma}}_{\mathrm{gen}}-
 \boldsymbol{\Sigma}_{\mathrm{pop}}\rVert_F/
 \lVert\boldsymbol{\Sigma}_{\mathrm{pop}}\rVert_F$. Figure~\ref{fig:sim-recovery}A reports
-the ratio of Gaussian to stochastic-attention error for the Gaussian ground-truth cells,
-averaged across the three latent ranks.}
+Gaussian error divided by stochastic-attention error for these simulated populations,
+averaged across the three latent ranks. A ratio above one indicated lower error for stochastic
+attention.}
 
-\rboth{For the clinical subsampling benchmark, we sampled without replacement from the $23$
-complete patients at $n\in\{20,15,10,8\}$, using ten independently seeded subsets at each
-size. We constructed the stochastic-attention memory matrix from each subset, generated
+\rboth{Second, we asked how performance changed as the clinical training set became smaller.
+We sampled without replacement from the $23$ complete patients at
+$n\in\{20,15,10,8\}$, using ten independently seeded subsets at each size. We constructed the
+stochastic-attention memory matrix from each subset, generated
 $100$ profiles, and evaluated
 every generated cohort against the same full $23$-patient reference rather than against its
 own training subset. The three outcomes were relative Frobenius error of the cross-visit
@@ -325,14 +332,14 @@ correlation matrix, median marginal relative error pooled across visits and feat
 TF-only mechanistic cloud overlap. Figure~\ref{fig:sim-recovery}B shows the mean and standard
 deviation of the cross-visit error over the ten subsets.}
 
-\rboth{For the nonlinearity benchmark, we drew $t$ uniformly from $[-1,1]$ and defined the
-two S-curve coordinates as $x_1=t$ and $x_2=c\sin(\pi t)$. We mapped the curve into $p$
+\rboth{Third, we asked how increasing curvature affected recovery of a nonlinear data pattern.
+We drew $t$ uniformly from $[-1,1]$ and defined the two S-curve coordinates as $x_1=t$ and
+$x_2=c\sin(\pi t)$. We mapped the curve into $p$
 dimensions with a random orthonormal embedding and added isotropic Gaussian noise with
 standard deviation $0.05$. We used $n{=}23$ and $p{=}30$ or~$120$. We evaluated curvature
 $c{=}0$, $0.25$, $0.5$, $1$, $1.5$, and~$2$, with five independently seeded replicates per
 setting. Both generators produced $100$ profiles per replicate. We measured the mean distance
 of generated profiles from the known curve within its two-dimensional embedding plane and the
-relative Frobenius error from the population covariance, estimated from a $50{,}000$-sample reference
-draw. The reported linearity boundary was the first nonzero curvature at which the mean
-off-manifold error of stochastic attention reached twice its value for the straight-line
-case ($c{=}0$).}
+relative Frobenius error from the population covariance, estimated from a $50{,}000$-sample
+reference draw. For stochastic attention, we marked the first nonzero curvature at which the
+mean distance from the curve reached twice its value for the straight-line case ($c{=}0$).}
