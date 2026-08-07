@@ -135,7 +135,7 @@ The nonlinearity test asked how increasing curvature affected recovery of a nonl
 
 These tests showed good covariance recovery for stochastic attention in most small, linear, low-rank settings. They also showed worse performance with fewer patients and a clear limitation for the nonlinear population tested here. We also noted that related studies have applied the same geometry-based operating-point rule and multiplicity weighting to protein sequence generation and conditional steering. We cited those studies as prior applications in another domain, not as clinical validation. We separately framed the present clinical study as a proof of concept and stated that we did not test the method in a second clinical cohort.
 
-**Changes:** New Methods subsection "Robustness Tests"; new Results subsection "Robustness to Sample Size, Dimensionality, and Nonlinearity"; revised main-text figure (`fig:sim-recovery`) and caption; added cross-domain context in the Introduction and Discussion; explicit proof-of-concept framing in the Abstract, Introduction, Discussion, and Conclusion. The Discussion also stated that the subgroup test did not establish equivalence. Violet. `\rboth{...}`
+**Changes:** New Methods subsection "Robustness Tests" and Results subsection "Robustness to Sample Size, Dimensionality, and Nonlinearity," both organized around why robustness testing was needed and the questions each test answered; revised main-text figure (`fig:sim-recovery`) and caption; added cross-domain context in the Introduction and Discussion; explicit proof-of-concept framing in the Abstract, Introduction, Discussion, and Conclusion. The Discussion also stated that the subgroup test did not establish equivalence. Violet. `\rboth{...}`
 
 ---
 
