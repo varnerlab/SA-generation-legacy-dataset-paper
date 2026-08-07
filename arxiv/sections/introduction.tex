@@ -46,7 +46,9 @@ approaches because covariance matrices are rank-deficient, cross-validation is
 unreliable, and overfitting is nearly inevitable~\citep{Hastie2009}. Synthetic data generation addresses this by augmenting small real datasets with statistically faithful synthetic
 records, enabling downstream analyses (mechanistic modeling, clinical comparisons,
 hypothesis generation for rare complications) that would otherwise be
-infeasible~\citep{Gonzales2023,Kuhnel2024}. However, existing methods face
+infeasible~\citep{Gonzales2023,Kuhnel2024}. \rtwo{An original motivation for this work was
+to support deep learning models in both directions: predicting TGA responses from coagulation
+factors and estimating factor profiles compatible with an observed TGA response.} However, existing methods face
 limitations in the small-cohort longitudinal setting. Sampling from a fitted
 multivariate normal (MVN) distribution is singular when $n < p$ and must be
 regularized~\citep{Ledoit2004}, introducing bias that distorts the joint distribution.

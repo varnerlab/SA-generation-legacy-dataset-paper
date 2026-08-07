@@ -223,6 +223,14 @@
   \url{https://www.youtube.com/watch?v=IGtUqMLHBvQ}} (\bibinfo{year}{2023}).
 \newblock \bibinfo{note}{Conference proceedings talk}.
 
+\bibitem{Ghetmiri2021}
+\bibinfo{author}{Ghetmiri, D.~E.}, \bibinfo{author}{Cohen, M.~J.} \&
+  \bibinfo{author}{Menezes, A.~A.}
+\newblock \bibinfo{title}{Personalized modulation of coagulation factors using
+  a thrombin dynamics model to treat trauma-induced coagulopathy}.
+\newblock \emph{\bibinfo{journal}{npj Systems Biology and Applications}}
+  \textbf{\bibinfo{volume}{7}}, \bibinfo{pages}{44} (\bibinfo{year}{2021}).
+
 \bibitem{Varner2026SAProtein}
 \bibinfo{author}{Varner, J.~D.}
 \newblock \bibinfo{title}{Training-free generation of protein sequences from
