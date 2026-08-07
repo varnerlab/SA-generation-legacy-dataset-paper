@@ -1,33 +1,24 @@
 \section{Discussion}
 \label{sec:discussion}
 
-This study tested whether a geometry-preserving generative method could produce
-synthetic patients from a very small longitudinal cohort that were not merely
-statistically similar to real patients but consistent with the underlying coagulation
-biology. Our results provided evidence at each validation level that
-SA-generated patients met this standard. Individual feature distributions were
-reproduced with median MRE of \rone{1.2\%}, which MVN also achieved by construction. SA
-additionally preserved the joint cross-visit covariance structure that MVN's
-rank-deficient estimate could not represent, a difference made visible in the
-eigenvalue spectrum where MVN introduced spurious variance in 194 null dimensions
-while SA respected the low-rank geometry of the data. SA could amplify clinically
-meaningful rare subgroups, generating 100 synthetic PCOS patients from only 3 real
-ones, while preserving subgroup-specific signatures that MVN cannot capture. And
-\rboth{a separately specified, generator-blind ODE model of the coagulation cascade,
-calibrated on the same real cohort, placed the synthetic profiles in the same
-factor-to-thrombin-generation envelope as the real profiles}, with 83--92\% cloud
-overlap and no difference detected by the Kolmogorov--Smirnov tests under these
-conditions ($p > 0.35$ for all five TGA features).
+This study asked whether a geometry-based method could generate synthetic profiles from a
+very small longitudinal cohort while preserving statistical and modeled biological
+relationships. Median feature MRE was \rone{1.2\%}, which the MVN baseline also achieved.
+Stochastic attention also retained cross-visit covariance, whereas MVN introduced variance in
+194 null dimensions. Conditioned generation preserved the subgroup patterns represented by
+three PCOS and five Developed~PE patients. Finally, \rboth{a separately specified,
+generator-blind coagulation model calibrated on the same cohort placed real and synthetic
+profiles in the same factor-to-thrombin-generation envelope}. Cloud overlap was 83--92\%, and
+the Kolmogorov--Smirnov tests did not detect differences under these conditions ($p>0.35$ for
+all five TGA features).
 
 The ability to generate validated synthetic cohorts from very small longitudinal
 datasets has practical implications for maternal health research. Rare pregnancy
 complications such as PCOS and preeclampsia are difficult
 to study because assembling large, well-characterized longitudinal cohorts requires
-years of recruitment across multiple clinical sites. Our results suggest that SA can
-enable hypothesis generation, power analyses, and computational modeling studies for
-these understudied populations by generating synthetic cohorts that preserve both the
-statistical and mechanistic properties of the real data. The conditional generation
-capability is particularly relevant for exploratory modeling and workflow testing.
+years of recruitment across multiple clinical sites. Our results support hypothesis
+generation, computational modeling, and workflow testing with dense simulations of these
+small cohorts.
 \rone{Stochastic attention can provide denser simulated realizations of the distribution implied by an
 existing small subgroup. These generated profiles do not add clinical evidence beyond the
 source cohort: the inferential sample size remains three patients for PCOS and five for
@@ -43,7 +34,7 @@ principal component representation from the sampler. The ablation showed that th
 $18$-dimensional subspace supplied much of the marginal and mechanistic fidelity. Stochastic
 attention used the patient profiles in that subspace as its memory matrix and avoided
 estimating a full $216$-dimensional covariance from $23$ patients. The competitive mixture
-and copula baselines showed, however, that the benefit of this representation was not unique
+and copula baselines showed that the benefit of this representation was not unique
 to stochastic attention. The stochastic-attention sampler still required a choice of inverse
 temperature.} A natural concern is whether the $\beta^*$
 selection procedure, originally developed for protein sequence
@@ -51,13 +42,13 @@ generation~\citep{Varner2026SAProtein}, transfers to clinical coagulation data. 
 transition rule selected the point of greatest downward curvature in attention entropy, a
 geometric property of $K$ patterns in $d$ dimensions rather than a property of what the
 features represented. For this dataset it gave $\beta^* \approx 2.94$, with the random-pattern
-scale $\sqrt{d} \approx 4.24$ serving as a theoretical reference, and a sensitivity analysis
-confirmed that generation
-quality degraded gracefully across $\beta/\beta^* \in [0.1, 3.0]$ (Table~\ref{stab:beta-sweep}). 
+scale $\sqrt{d} \approx 4.24$ serving as a theoretical reference. A sensitivity analysis
+showed gradual changes in generation quality across $\beta/\beta^* \in [0.1, 3.0]$
+(Table~\ref{stab:beta-sweep}).
 Similarly, varying the PCA variance retention threshold from 85\% to 99\%
 ($d_{\text{PCA}} = 13$ to 21) had minimal impact on generation quality. Median MRE
 remained between 1.2\% and 1.8\% across all thresholds (Table~\ref{stab:pca-sensitivity}),
-confirming that the 95\% threshold was not a critical design choice.
+so the 95\% threshold was not a critical design choice.
 
 The multiplicity
 weighting for conditional generation introduced an additional consideration. Achieving
@@ -75,57 +66,26 @@ through the weighted directions rather than a subgroup-specific magnitude distri
 and multiplicity weighting to protein sequence generation and conditional
 steering~\citep{Varner2026SAProtein,Varner2026Multiplicity,Alswaidan2026SA}.}
 
-An alternative precedent for validated longitudinal synthetic generation is
-the VAMBN-MT framework of K\"uhnel et al.~\citep{Kuhnel2024}, which extends a
-Variational Autoencoder Modular Bayesian Network with an LSTM time-encoder to
-better capture cross-visit dependencies. They evaluated VAMBN-MT on the DONALD
-nutritional cohort and on the Alzheimer's Disease Neuroimaging Initiative
-(ADNI) cohort. Their study is instructive because it offers a regime contrast
-to ours. With $N{=}1{,}312$ DONALD participants and 33 longitudinal variables,
-their setting sits in the data-rich regime for which VAMBN-MT was designed,
-where deep parametric models can be trained directly on the cohort. The
-published configuration combines expert-curated module assignments,
-Bayesian-network edge constraints, an LSTM-augmented HI-VAE per module, and
-10{,}000 synthetic samples drawn from the trained model to reproduce a
-published age-trend regression. In their evaluation, the best variant reported
-a cross-visit correlation matrix relative Frobenius error of roughly 0.70, and
-downstream time trends weaker than the strongest signals in the real data were
-not reproduced at the sample sizes they tested, both honest indicators of how
-hard this generative task is even in the data-rich regime. On the other hand,
-our setting inverts both the number of patients and the number of features.
-With $K{=}23$ patients across 216 features we operate two orders of magnitude
-smaller and squarely in the $n < p$ regime, well below the cohort sizes for
-which VAMBN-MT was developed. The non-parametric design
-of SA addresses this regime in three ways that contrast with VAMBN-MT. First,
-PCA-derived linear geometry replaces the modular HI-VAE architecture as the
-mechanism for capturing cross-visit dependencies. Second, a generic
-mechanistic-model validation pattern, transferable to any domain with a
-calibrated ODE model, replaces the domain-specific dependency rules used in
-their evaluation, such as graduation-status monotonicity, age-time arithmetic
-identities, and macronutrient summation. Finally, multiplicity weighting
-provides an inference-time conditional-generation lever that the VAMBN-MT
-framework does not offer. These are complementary positions in the design
-space rather than a head-to-head comparison. VAMBN-MT addresses the
-moderate-cohort regime where deep generative models are feasible but
-expert-specified modular structure helps capture cross-visit dependencies,
-while SA addresses the small-cohort regime where parametric models cannot be
-fit and the geometry of the few real patients must itself carry the generative
-signal.
+VAMBN-MT provides a useful comparison in a larger-data setting~\citep{Kuhnel2024}. It combines
+expert-defined modules, Bayesian-network constraints, and LSTM-augmented variational
+autoencoders. The authors evaluated it on the DONALD nutritional cohort and the Alzheimer's
+Disease Neuroimaging Initiative. DONALD included $1{,}312$ participants and 33 longitudinal
+variables, compared with 23 patients and 216 features here. Its best variant had cross-visit
+correlation error near 0.70, and weaker time trends were not reproduced at the tested sample
+sizes. The methods address different regimes. VAMBN-MT uses a trained modular architecture
+for moderate cohorts. Stochastic attention uses PCA geometry when $n<p$, applies a generic
+generator-blind mechanistic check instead of domain-specific rules, and uses multiplicity
+weights for conditional generation. This was a regime comparison, not a head-to-head test.
 
-Beyond these statistical and geometric considerations, the mechanistic validation
-introduced an approach that applies beyond coagulation. Rather than relying solely on statistical comparisons between real
-and synthetic distributions, we tested whether synthetic patients produced biologically
-consistent outputs when processed by \rboth{a separately specified computational model
-that was blind to the generator but calibrated on the same real cohort}, and went
-further to show that a mechanistic model calibrated entirely on synthetic data
-predicted real patient outcomes as well as one calibrated on real data (overall ratio
-0.94$\times$ on held-out V2+V3 patients, with 11 random restarts per calibration).
-This approach is available whenever a validated mechanistic model exists for the domain
-of interest (pharmacokinetic models in drug development~\citep{MouldUpton2013},
-physiological models in critical care~\citep{Chase2011}, tumor growth
-models~\citep{Ribba2012}, or metabolic models~\citep{Yizhak2015,Shan2018}), and the requirement is not that the
-model be a perfect predictor but that synthetic patients fall within the same
-model-predicted envelope as real patients.
+The mechanistic analysis also illustrated a general validation approach. We processed real
+and synthetic profiles with \rboth{the same separately specified model, which was blind to the
+generator but calibrated on the real cohort}. A model calibrated on synthetic profiles also
+predicted held-out real TGA measurements as well as one calibrated on real profiles (error
+ratio $0.94$, with 11 random restarts). The same comparison can be used wherever a validated
+mechanistic model exists, including pharmacokinetic~\citep{MouldUpton2013},
+physiological~\citep{Chase2011}, tumor-growth~\citep{Ribba2012}, and
+metabolic~\citep{Yizhak2015,Shan2018} models. The relevant test is whether the model places
+real and synthetic profiles in the same predicted envelope.
 
 \rone{A separate concern was whether the conditioned cohorts preserved clinically important
 distribution tails. In the descriptive bootstrap Mann--Whitney diagnostic, four of 24
@@ -134,14 +94,13 @@ plasminogen in the PCOS and Developed~PE groups. The relative differences betwee
 and synthetic subgroup means for these pairs were 9--15\%, and variability among the real
 patients was large. This power-limited diagnostic was not an equivalence test and did not
 determine whether the lower fractions reflected mean shifts, compressed tails, or limited
-power. PCA truncation and the finite empirical distribution of $23$ PCA-space norms could
-nevertheless compress the generated tails. The clinical consequence is important. A
-synthetic cohort that under-represents severe states cannot be used to estimate how often
+power. Truncating the PCA representation and drawing from only $23$ observed PCA-space norms
+could nevertheless compress the generated tails. A synthetic cohort that under-represents
+severe states cannot estimate how often
 those states occur or how severe they become. Although synthetic profiles extended beyond
 the real cohort's convex hull, that result did not show that they reproduced the true tail
 distribution. We therefore do not recommend using these cohorts to estimate extreme risk
-without additional real data.
-The primary mechanistic cloud-overlap measure also focused on the real 5th--95th percentile
+without additional real data. The primary mechanistic cloud-overlap measure also focused on the real 5th--95th percentile
 range and therefore did not validate behavior in the tails.} \rboth{More generally, several
 findings reflected the limits of generating from only $23$ source patients. Hull membership
 had little resolution, and conditioned cohorts still relied on three PCOS or five

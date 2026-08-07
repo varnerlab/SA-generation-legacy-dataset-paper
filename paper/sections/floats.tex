@@ -76,13 +76,12 @@ TF ETP (nM$\cdot$min) & 0.013 & 0.008 & 0.023 \\
 \begin{figure}[p]
 \centering
 \includegraphics[width=\textwidth]{validate_bio_correlations.pdf}
-\caption{\textbf{Physiological correlations are preserved in synthetic patients.}
+\caption{\textbf{Physiological correlations.}
 Scatter plots of coagulation factor levels versus thrombin generation parameters
 across all three visits. Filled markers are real patients; open markers are
 SA-generated synthetic patients. Colors encode visit: blue (V1/baseline),
 green (V2/first trimester), orange (V3/third trimester). Real and synthetic
-patients occupy the same joint regions across all four pairwise relationships,
-confirming that biologically meaningful dependencies are preserved: AT
+patients occupy the same joint regions across all four pairwise relationships. AT
 inversely correlates with TF-initiated peak thrombin (top left), FVIII
 positively correlates with peak (top right), and both FII (bottom left) and AT
 (bottom right) show the expected relationships with ETP. The visit-dependent
@@ -96,7 +95,7 @@ procoagulant factors, is also preserved in the synthetic cohort.}
 \begin{figure}[p]
 \centering
 \includegraphics[width=\textwidth]{validate_pregnancy_progression.pdf}
-\caption{\textbf{Pregnancy-driven longitudinal trajectories are reproduced.}
+\caption{\textbf{Pregnancy-related longitudinal trajectories.}
 Mean $\pm$ standard deviation bands for six key coagulation features across
 visits (BL = baseline, 1st = first trimester, 3rd = third trimester) for real
 (blue) and SA-generated synthetic (orange) patients. The characteristic
@@ -116,14 +115,14 @@ and MVN ($N{=}100$, right) populations. Each matrix is organized as a
 $3 \times 3$ grid of $72 \times 72$ blocks (delineated by black lines), where
 the diagonal blocks capture within-visit feature correlations (V1--V1, V2--V2,
 V3--V3) and the off-diagonal blocks capture cross-visit dependencies (e.g.,
-V1--V3: does a patient's baseline Factor~VIII predict their third-trimester
-Factor~VIII?). SA preserves both the within-visit and cross-visit block
+V1--V3 correlations between baseline and third-trimester Factor~VIII).
+Stochastic attention preserves both the within-visit and cross-visit block
 structure. Bottom row: pairwise residual matrices (element-wise subtraction),
 all plotted on the same $\pm 1$ color scale as the top row. The SA$-$Real
 residual shows small, unstructured deviations. The MVN$-$Real residual is
 smoother, particularly in the off-diagonal blocks, reflecting the Ledoit--Wolf
 regularization that systematically shrinks cross-visit correlations toward zero.
-The SA$-$MVN residual confirms that the two methods differ most in these
+The SA$-$MVN residual shows the largest differences in these
 off-diagonal blocks, where SA retains longitudinal dependencies that MVN's
 rank-deficient covariance estimate cannot represent. A version with amplified
 residual color scale ($\pm 0.5$) and Frobenius norms is provided in
@@ -139,7 +138,7 @@ Fig.~\ref{sfig:cross-visit-corr-supp}.}
 \caption{\rboth{\textbf{Population recovery and clinical-cohort subsampling.}
 (A)~For each low-rank Gaussian setting, the stochastic-attention memory matrix was constructed
 and a sample-covariance Gaussian generator was estimated from the same simulated training
-cohort; each generated $100$ profiles. Color represented the ratio of their relative Frobenius errors against the known
+cohort; each method generated $100$ profiles. Color represented the ratio of their relative Frobenius errors against the known
 population covariance (Gaussian error divided by stochastic-attention error), averaged over
 latent ranks $3$, $5$, and~$10$. Values above one (blue) indicated lower error for stochastic
 attention. Because the target covariance was fixed before the training cohort was drawn,
@@ -196,13 +195,11 @@ patients, open markers are SA-generated synthetic patients, colored by visit:
 blue (V1/baseline, training set), green (V2/first trimester), orange (V3/third
 trimester). Real and synthetic patients occupy the same cloud with the same
 pattern of ODE model bias. Bottom row: ODE-predicted/dataset ratio
-distributions for real (blue) and synthetic (orange) patients. If SA had
-generated biologically implausible factor combinations, the ODE model would
-process them differently, producing divergent ratio distributions. Instead, the
+distributions for real (blue) and synthetic (orange) patients. The
 distributions overlap substantially. Each panel is annotated with cloud overlap
 (OL), the two-sample Kolmogorov--Smirnov statistic ($D$), and $p$-value. All
-five features show $p > 0.35$, confirming that the ODE model cannot
-distinguish real from synthetic patients.}
+five features had $p>0.35$; these tests did not detect a difference between real and
+synthetic ratio distributions.}
 \label{fig:mechanistic-combined}
 \end{figure}
 
@@ -211,16 +208,15 @@ distinguish real from synthetic patients.}
 \begin{figure}[p]
 \centering
 \includegraphics[width=\textwidth]{downstream_utility_scatter_v2.pdf}
-\caption{\textbf{Downstream utility: synth-calibrated vs.\ real-calibrated
-mechanistic model predictions on held-out real patients.} Each panel compares
+\caption{\textbf{Downstream utility: synthetic and real calibrations on held-out real
+profiles.} Each panel compares
 the BZ2012 ODE predictions for one TGA feature when the model is calibrated on
 real V1 patients (horizontal axis) versus synthetic V1 patients (vertical
 axis), evaluated on the same held-out real V2 and V3 patients. Points near the
-$y{=}x$ line indicate that the two calibrations produce equivalent predictions.
+$y{=}x$ line indicate similar predictions from the two calibrations.
 Green: V2 (first trimester); orange: V3 (third trimester). The synth-calibrated
-model matched or outperformed the real-calibrated model on all five features
-(overall ratio 0.94$\times$), demonstrating that a mechanistic model trained
-entirely on synthetic data generalizes to real patients as well as one trained
-on real data. Both calibrations used 11 random restarts; all starts converged.}
+model had slightly lower median relative error on all five features (overall
+synthetic-to-real error ratio $0.94$). Both calibrations used 11 random restarts; all starts
+converged.}
 \label{fig:downstream-utility}
 \end{figure}

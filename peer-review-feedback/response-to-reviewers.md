@@ -98,7 +98,7 @@ We then sampled the target distribution directly, without a Markov chain. For th
 
 The membership signal therefore arose from the target distribution at this cohort size, where every stored profile was the center of a mixture component. It did not result from the numerical sampler or the selected inverse temperature. Under this narrow test, inclusion could be inferred for an already-known de-identified record. The analysis did not attach a name to that record, reconstruct an unknown patient's measurements, or identify a participant. With 23 patients, neither changing the sampler nor lowering the temperature removed the membership signal while preserving joint fidelity. We reported the full diagnostics in the Results and a new Supplement subsection and limited the Discussion to the distinction between detecting inclusion of an already-known record and identifying or reconstructing a participant.
 
-**Changes:** Results and Discussion (bounded candidate-record interpretation); new Supplement subsection "Sampling correctness and privacy diagnostics" (E3, E3b, four sampling procedures, the inverse-temperature sweep, and direct sampling); Methods (closed-form sampling distribution); Introduction (finite-mixture explanation and the source of non-identical samples); corresponding revisions to the computational-cost and interpolation language. Blue. `\rone{...}`
+**Changes:** Results and Discussion (bounded candidate-record interpretation); new Supplement subsection "Sampling correctness and privacy diagnostics," condensed into two question-driven paragraphs (E3, E3b, four sampling procedures, the inverse-temperature sweep, and direct sampling); Methods (closed-form sampling distribution); Introduction (finite-mixture explanation and the source of non-identical samples); corresponding revisions to the computational-cost and interpolation language. Blue. `\rone{...}`
 
 ---
 
@@ -146,7 +146,7 @@ These tests showed good covariance recovery for stochastic attention in most sma
 
 We chose β\* at the point where the attention-entropy curve bent downward most strongly. We calculated this as the most negative finite-difference second derivative of normalized entropy with respect to log β. We defined the participation ratio as the number of equally weighted mixture components that would give the same concentration of sampling probability. It was not an independent patient count. We moved the entropy definition and calculation details to a new Supplementary Methods subsection while keeping the explanation and resulting values in the main text. We did not add another figure because the main text already contained seven figures and Reviewer 2 requested figure consolidation.
 
-**Changes:** Methods (simplified explanation); Supplement (detailed theory and calculation). Violet. `\rboth{...}`
+**Changes:** Methods (simplified explanation and a separate concise participation-ratio paragraph); Supplement (detailed theory and calculation). Violet. `\rboth{...}`
 
 ---
 
@@ -234,7 +234,7 @@ Distance from the hull did not show whether a profile was biologically valid, so
 
 The second check used the BZ2012 model to test whether the generated coagulation-factor combinations produced thrombin-generation behavior consistent with the real cohort. Estradiol and progesterone were not model inputs, and all nine generated factor inputs were positive. We therefore included all 100 synthetic profiles. For each thrombin-generation feature, 83% to 92% of profiles had a model-predicted-to-recorded ratio within the 5th to 95th percentile range of the real cohort. Forty-one profiles met this criterion for every feature and visit, and 24 passed both the biological and mechanistic checks. These results showed that extrapolation and biological plausibility were separate questions. Positive-variable transformations or constrained decoding could enforce non-negativity in future implementations. The Supplement reported the hormone-specific counts, extreme values, and comparison with the real-cohort scale.
 
-**Changes:** New Results paragraph + Supplement (E2). `\rtwo{...}`
+**Changes:** New Results paragraph and Supplement (E2), including a corrected and condensed convex-hull table caption. `\rtwo{...}`
 
 ---
 
