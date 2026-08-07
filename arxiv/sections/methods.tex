@@ -312,15 +312,17 @@ $\lVert\widehat{\boldsymbol{\Sigma}}_{\mathrm{gen}}-
 Gaussian error divided by stochastic-attention error, averaged across the three latent ranks.
 A ratio above one favored stochastic attention.}
 
-\rboth{The sample-size test drew ten subsets without replacement from the $23$ complete
-patients at each $n\in\{20,15,10,8\}$. We constructed a memory matrix from each subset,
+\rboth{The sample-size test asked how performance changed as the clinical training set became
+smaller. We drew ten subsets without replacement from the $23$ complete patients at each
+$n\in\{20,15,10,8\}$. We constructed a memory matrix from each subset,
 generated $100$ profiles, and evaluated every cohort against the same $23$-patient reference.
 The outcomes were cross-visit correlation error, pooled median marginal relative error, and
 TF-only mechanistic cloud overlap. Figure~\ref{fig:sim-recovery}B shows the mean and standard
 deviation of cross-visit error across the ten subsets.}
 
-\rboth{The nonlinearity test drew $t$ uniformly from $[-1,1]$ and defined an S-curve by
-$x_1=t$ and $x_2=c\sin(\pi t)$. We mapped the curve into $p{=}30$ or~$120$ dimensions with a
+\rboth{The nonlinearity test asked how increasing curvature affected recovery of a nonlinear
+pattern. We drew $t$ uniformly from $[-1,1]$ and defined an S-curve by $x_1=t$ and
+$x_2=c\sin(\pi t)$. We mapped the curve into $p{=}30$ or~$120$ dimensions with a
 random orthonormal embedding and added isotropic Gaussian noise with standard deviation
 $0.05$. We used $n{=}23$ and curvature $c\in\{0,0.25,0.5,1,1.5,2\}$, with five replicates per
 setting. Each generator produced $100$ profiles per replicate. We measured mean distance from

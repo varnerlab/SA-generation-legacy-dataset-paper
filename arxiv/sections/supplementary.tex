@@ -629,9 +629,10 @@ A matched exact cohort gave median relative error $1.68\%$, cross-visit error $0
 mechanistic overlap $0.91$, median novelty $0.50$, and median DCR $13.87$, all within the range
 of the four Markov-chain procedures. Across $100$ exact cohorts, median relative error was
 $1.40\%$ (5th--95th percentile $0.97$--$1.91\%$) and median DCR was $13.95$
-($13.61$--$14.39$). Exact sampling gave AUC $0.98$ over the same $40$ splits. Thus, at
-$K{=}23$, the membership signal came from the target distribution, in which each stored
-profile is a component center, rather than from an approximation used to sample it.}
+($13.61$--$14.39$). Exact sampling gave AUC $0.98$ over the same $40$ splits. This showed that
+the membership signal came from the target distribution, not from the numerical sampler. At
+$K{=}23$, the test could therefore distinguish whether an already-known de-identified profile
+was stored regardless of how the target distribution was sampled.}
 
 \begin{table}[ht]
 \centering
