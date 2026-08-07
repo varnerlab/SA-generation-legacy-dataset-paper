@@ -117,12 +117,14 @@ baseline's greater scatter to variance added in directions unsupported by the co
 \subsection{\rboth{Robustness to Sample Size, Dimensionality, and Nonlinearity}}
 
 \rboth{Performance on one $23$-patient cohort could not show whether the method was robust to
-changes in sample size, dimension, or nonlinear structure. We therefore used three tests to explore this question
-(Methods, Sec.~\ref{sec:robustness-benchmarks}). The covariance-recovery test asked whether
-each method could recover a known population covariance from a small, high-dimensional
-sample. For each training size ($n{=}8,15,23,40,80$), dimension ($p{=}30,120,216$), and
-latent rank ($r{=}3,5,10$), stochastic attention and a sample-covariance Gaussian generator
-each produced $100$ profiles from the same low-rank Gaussian training cohort. Relative
+changes in sample size, dimension, or nonlinear structure. We therefore used three
+robustness tests (Methods, Sec.~\ref{sec:robustness-benchmarks}). The
+covariance-recovery test asked whether each method could recover a known population
+covariance from a small, high-dimensional
+sample. Training size was $n\in\{8,15,23,40,80\}$, dimension was
+$p\in\{30,120,216\}$, and latent rank was $r\in\{3,5,10\}$. Stochastic attention and a
+sample-covariance Gaussian generator each produced $100$ profiles from the same low-rank
+Gaussian training cohort. Relative
 Frobenius error measured deviation from the known population covariance. Stochastic attention
 had lower error in $35$ of $39$ rank-deficient $n<p$ settings
 (Fig.~\ref{fig:sim-recovery}A). At $n{=}23$ and $p{=}216$, the Gaussian error averaged across
