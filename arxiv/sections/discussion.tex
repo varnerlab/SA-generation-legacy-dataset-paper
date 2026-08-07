@@ -173,26 +173,27 @@ the sample-covariance Gaussian was concentrated in the $n<p$ settings. We did no
 cohorts larger than $23$ patients, so stability and fidelity as $K$ grows remain open
 questions.}
 
-This study had three main limitations. First, the clinical analysis used one longitudinal
-cohort of $23$ patients. \rboth{The known-covariance simulations tested selected properties
+This study had two broad limitations: the absence of independent clinical data and the
+restricted scope of the validation analyses. First, the clinical analysis used one
+longitudinal cohort of $23$ patients. \rboth{The known-covariance simulations tested selected properties
 under controlled conditions, and related protein studies applied the sampling framework in
 another domain, but neither established that the clinical findings would generalize to a
 different patient population. We did not test the method in a second clinical cohort, which
-is needed to assess that generalizability.} Second, the mechanistic evidence was limited in
-both independence and scope. \rboth{The BZ2012 model was calibrated on the same cohort used
-for generation. Applying one fixed, generator-blind model to real and synthetic profiles
-therefore tested consistency with that model, not independent biological validity.}
+is needed to assess that generalizability.} Second, the validation analyses answered narrower
+questions than full biological or clinical validity. \rboth{The BZ2012 model was calibrated
+on the same cohort used for generation. Applying one fixed, generator-blind model to real and
+synthetic profiles therefore tested consistency with that model, not independent biological
+validity.}
 The calibration required a 50-fold reduction in intrinsic tenase $k_{\text{cat}}$ and a 15-fold
 increase in extrinsic tenase $k_{\text{cat}}$ relative to published values
 (Table~\ref{stab:ode-calibration}), likely because the published measurements and the
 plasma-based assay used different experimental conditions. These fitted values should not be
 read as new biochemical estimates. \rone{The mechanistic test covered thrombin generation but
-not the fibrinolytic or viscoelastic features,} and we did not test clinical outcomes. Thus,
-the results did not establish biological fidelity across the full profile or clinical utility.
-An independently calibrated model, models covering the other feature classes, and prospective
-outcome validation could address these gaps. \rone{Finally, the membership-inference analysis
-asked only whether an already-known de-identified profile had been stored in the memory
-matrix. It distinguished stored from held-out profiles, so the generator did not conceal
-membership under that test. However, it did not identify a participant or reconstruct an
-unknown record.} Together, these limitations confine the present conclusions to proof-of-concept
-generation and mechanistic modeling within the represented cohort.
+not the fibrinolytic or viscoelastic features. The membership-inference analysis was also
+narrow: it asked whether an already-known de-identified profile had been stored in the memory
+matrix. It distinguished stored from held-out profiles, but it did not identify a participant
+or reconstruct an unknown record.} We also did not test clinical outcomes. Thus, the results
+did not establish biological fidelity across the full profile or clinical utility. An
+independently calibrated model, models covering the other feature classes, and prospective
+outcome validation could address these gaps. The present results therefore establish proof of
+concept, while independent clinical data are still needed to test generalizability.

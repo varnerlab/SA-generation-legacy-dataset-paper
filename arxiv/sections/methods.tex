@@ -156,17 +156,16 @@ $\beta/\beta^*\in[0.1,3.0]$ showed that the selected value balanced novelty and
 fidelity (Table~\ref{stab:beta-sweep}). For conditioned generation, we repeated the entropy
 calculation with the multiplicity bias included, giving a $\rho$-dependent $\beta^*(\rho)$.}
 
-\rboth{For unit-normalized memories, the component probabilities satisfy
-$q_k=r_k/\sum_j r_j$. We summarized how concentrated these probabilities were with the
-participation ratio
-$K_{\text{eff}}=1/\sum_k q_k^2=(\sum_k r_k)^2/\sum_k r_k^2$. This quantity is the effective
-number of equally weighted components needed to produce the same concentration. Equal weights
-gave $K_{\text{eff}}=23$, whereas concentrating weight on three stored profiles moved it toward
-three. It showed whether repeated draws were spread across many stored profiles or concentrated
-near a few; it was not an independent clinical sample size. To make a designated subgroup
-account for a target fraction $f_{\text{target}}$ of the component probability, we used
+\rboth{We used the participation ratio to measure how strongly multiplicity weighting
+concentrated repeated draws around a few stored profiles. For unit-normalized memories,
+$q_k=r_k/\sum_j r_j$ and
+$K_{\text{eff}}=1/\sum_k q_k^2=(\sum_k r_k)^2/\sum_k r_k^2$. Thus,
+$K_{\text{eff}}$ is the number of equally weighted components with the same concentration.
+Equal weights gave $K_{\text{eff}}=23$; concentrating weight on three profiles moved it toward
+three. This was not an independent clinical sample size. To assign a target fraction
+$f_{\text{target}}$ of component probability to a subgroup, we used
 $\rho=f_{\text{target}}K_{\text{bg}}/[K_{\text{des}}(1-f_{\text{target}})]$, where
-$K_{\text{des}}$ and $K_{\text{bg}}$ are the designated and background pattern counts.}
+$K_{\text{des}}$ and $K_{\text{bg}}$ are the subgroup and background profile counts.}
 
 
 \subsection{Pipeline for Continuous Longitudinal Data}
@@ -295,51 +294,39 @@ within the 5th--95th percentile range of real ratios.
 \subsection{\rboth{Robustness Tests}}
 \label{sec:robustness-benchmarks}
 
-\rboth{We used three tests, each designed to answer a separate question: whether generated
-profiles recovered a known population covariance, how performance changed as the clinical
-training set became smaller, and how performance changed as a data pattern became more
-nonlinear. First, to test population covariance recovery, we generated training cohorts from a
-low-rank Gaussian factor model,
+\rboth{We used three tests to examine population covariance recovery, sensitivity to a smaller
+clinical training set, and recovery of a nonlinear pattern. The covariance test generated
+training cohorts from a low-rank Gaussian factor model,
 $\mathbf{X}=\mathbf{Z}\mathbf{L}^{\top}+\boldsymbol{\epsilon}$, where
 $\mathbf{Z}\in\mathbb{R}^{n\times r}$ and $\mathbf{L}\in\mathbb{R}^{p\times r}$ had
-independent standard-normal entries, and $\boldsymbol{\epsilon}$ had independent Gaussian entries
-with variance $0.1$. The population covariance
-$\boldsymbol{\Sigma}_{\mathrm{pop}}=\mathbf{L}\mathbf{L}^{\top}+0.1\mathbf{I}$ was therefore
-known independently of the training cohort. We tested every combination of
+independent standard-normal entries and $\boldsymbol{\epsilon}$ had independent Gaussian
+entries with variance $0.1$. This gave the known population covariance
+$\boldsymbol{\Sigma}_{\mathrm{pop}}=\mathbf{L}\mathbf{L}^{\top}+0.1\mathbf{I}$. We tested
+every combination of
 $n\in\{8,15,23,40,80\}$, $p\in\{30,120,216\}$, and
 $r\in\{3,5,10\}$. In each cell, we constructed the stochastic-attention memory matrix from
-the training cohort and estimated a Gaussian generator from the same cohort; each produced
-$100$ profiles. Stochastic attention used the
-same 95\%-variance PCA, entropy-selected $\beta^*$, and generation settings as the clinical
-analysis. The Gaussian generator used the training mean and sample covariance, with only the
-diagonal jitter required for numerical sampling and no covariance shrinkage. We measured
-covariance recovery as
+the training cohort and estimated a Gaussian generator from the same cohort. Each generated
+$100$ profiles. Stochastic attention used the clinical analysis settings. The Gaussian
+generator used the training mean and sample covariance, with diagonal jitter for numerical
+sampling and no shrinkage. Covariance error was
 $\lVert\widehat{\boldsymbol{\Sigma}}_{\mathrm{gen}}-
 \boldsymbol{\Sigma}_{\mathrm{pop}}\rVert_F/
 \lVert\boldsymbol{\Sigma}_{\mathrm{pop}}\rVert_F$. Figure~\ref{fig:sim-recovery}A reports
-Gaussian error divided by stochastic-attention error for these simulated populations,
-averaged across the three latent ranks. A ratio above one indicated lower error for stochastic
-attention.}
+Gaussian error divided by stochastic-attention error, averaged across the three latent ranks.
+A ratio above one favored stochastic attention.}
 
-\rboth{Second, we asked how performance changed as the clinical training set became smaller.
-We sampled without replacement from the $23$ complete patients at
-$n\in\{20,15,10,8\}$, using ten independently seeded subsets at each size. We constructed the
-stochastic-attention memory matrix from each subset, generated
-$100$ profiles, and evaluated
-every generated cohort against the same full $23$-patient reference rather than against its
-own training subset. The three outcomes were relative Frobenius error of the cross-visit
-correlation matrix, median marginal relative error pooled across visits and features, and
+\rboth{The sample-size test drew ten subsets without replacement from the $23$ complete
+patients at each $n\in\{20,15,10,8\}$. We constructed a memory matrix from each subset,
+generated $100$ profiles, and evaluated every cohort against the same $23$-patient reference.
+The outcomes were cross-visit correlation error, pooled median marginal relative error, and
 TF-only mechanistic cloud overlap. Figure~\ref{fig:sim-recovery}B shows the mean and standard
-deviation of the cross-visit error over the ten subsets.}
+deviation of cross-visit error across the ten subsets.}
 
-\rboth{Third, we asked how increasing curvature affected recovery of a nonlinear data pattern.
-We drew $t$ uniformly from $[-1,1]$ and defined the two S-curve coordinates as $x_1=t$ and
-$x_2=c\sin(\pi t)$. We mapped the curve into $p$
-dimensions with a random orthonormal embedding and added isotropic Gaussian noise with
-standard deviation $0.05$. We used $n{=}23$ and $p{=}30$ or~$120$. We evaluated curvature
-$c{=}0$, $0.25$, $0.5$, $1$, $1.5$, and~$2$, with five independently seeded replicates per
-setting. Both generators produced $100$ profiles per replicate. We measured the mean distance
-of generated profiles from the known curve within its two-dimensional embedding plane and the
-relative Frobenius error from the population covariance, estimated from a $50{,}000$-sample
-reference draw. For stochastic attention, we marked the first nonzero curvature at which the
-mean distance from the curve reached twice its value for the straight-line case ($c{=}0$).}
+\rboth{The nonlinearity test drew $t$ uniformly from $[-1,1]$ and defined an S-curve by
+$x_1=t$ and $x_2=c\sin(\pi t)$. We mapped the curve into $p{=}30$ or~$120$ dimensions with a
+random orthonormal embedding and added isotropic Gaussian noise with standard deviation
+$0.05$. We used $n{=}23$ and curvature $c\in\{0,0.25,0.5,1,1.5,2\}$, with five replicates per
+setting. Each generator produced $100$ profiles per replicate. We measured mean distance from
+the known curve and relative covariance error against a $50{,}000$-sample reference. For
+stochastic attention, we identified the first nonzero curvature at which mean distance doubled
+from the straight-line case.}

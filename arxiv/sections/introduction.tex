@@ -43,17 +43,16 @@ complications compound this problem. Small longitudinal cohorts inevitably conta
 only a handful of patients with any given condition, far too few for
 condition-specific statistical analysis. This $n < p$ regime limits conventional
 approaches because covariance matrices are rank-deficient, cross-validation is
-unreliable, and overfitting is nearly inevitable~\citep{Hastie2009}. Synthetic data generation addresses this by augmenting small real datasets with statistically faithful synthetic
-records, enabling downstream analyses (mechanistic modeling, clinical comparisons,
-hypothesis generation for rare complications) that would otherwise be
-infeasible~\citep{Gonzales2023,Kuhnel2024}. \rtwo{An original motivation for this work was
+unreliable, and overfitting is nearly inevitable~\citep{Hastie2009}. Synthetic data can
+provide dense simulated inputs for mechanistic modeling, workflow testing, and hypothesis
+generation~\citep{Gonzales2023,Kuhnel2024}. \rtwo{An original motivation for this work was
 to support deep learning models in both directions: predicting TGA responses from coagulation
 factors and estimating factor profiles compatible with an observed TGA response.} However, existing methods face
 limitations in the small-cohort longitudinal setting. Sampling from a fitted
 multivariate normal (MVN) distribution is singular when $n < p$ and must be
 regularized~\citep{Ledoit2004}, introducing bias that distorts the joint distribution.
-MVN also assumes Gaussian marginals and linear correlations, and provides no mechanism
-for conditional generation: it cannot amplify a specific subpopulation while preserving
+The multivariate-normal model also assumes Gaussian marginals and linear correlations and
+cannot amplify a specific subpopulation while preserving
 its signatures. More expressive models such as generative adversarial networks (GANs) and
 variational autoencoders (VAEs)~\citep{Goodfellow2014,Kingma2014,Xu2019CTGAN}, including recent longitudinal
 extensions~\citep{Kuhnel2024}, require substantially larger training sets and are
@@ -76,17 +75,16 @@ full $p \times p$ covariance matrix and so avoids both the rank deficiency that
 limits MVN and the mode collapse that limits GAN/VAE approaches when $n < p$.
 We recently introduced a multiplicity-weighted extension of the Hopfield energy
 that attaches a per-pattern weight to each stored profile~\citep{Varner2026Multiplicity},
-which provides exactly the lever that MVN lacks: continuous interpolation
+which allows continuous interpolation
 between unconditioned generation and targeted amplification of a rare
-subpopulation at inference time, without retraining. What remains open, and what
-this study addresses, is whether SA can faithfully generate \emph{longitudinal}
+subpopulation at inference time, without retraining. This study asked whether SA could
+faithfully generate \emph{longitudinal}
 trajectories from a small cohort. In earlier proceedings work, we paired our
 mechanistic coagulation pipeline with per-visit MVN sampling to produce
 synthetic populations~\citep{Varner2023JuliaCon}; that approach captured
 single-visit marginals but, by fitting each visit independently, generated
-patients whose trajectories across gestation were statistically incoherent. A
-generator that respects the joint structure across visits is what a small
-longitudinal pregnancy cohort actually demands.
+patients whose trajectories across gestation were statistically incoherent. Small
+longitudinal cohorts require a generator that preserves this joint structure.
 
 In this study, we used multiplicity-weighted SA to generate complete
 longitudinal patient profiles from a small pregnancy coagulation cohort
@@ -102,13 +100,9 @@ covariance structure, condition-specific signatures of rare clinical
 subgroups, and the biological consistency obtained when the profiles were processed by
 \rboth{a separately specified, generator-blind ordinary differential equation (ODE) model
 of the coagulation cascade that was calibrated on the same real
-cohort}~\citep{BrummelZiedins2012}. As a downstream-utility test, we further
+cohort}~\citep{BrummelZiedins2012}. As a downstream-utility test, we
 asked whether a mechanistic model calibrated entirely on synthetic patients
-could predict held-out real patient outcomes. \rboth{As a proof-of-concept,} the
-results show that SA recovers the statistical structure of the real cohort and
-matches its mechanistic plausibility at this sample size. If this generalizes, the implication is that the bottleneck
-for studying rare obstetric and pediatric conditions may be shifting from
-cohort size toward cohort fidelity: a few dozen carefully phenotyped
-longitudinal patients, augmented through SA, may be enough to support
-mechanistic and statistical analyses that have traditionally relied on much
-larger cohorts.
+could predict held-out real-patient TGA measurements. \rboth{As a proof of concept,} the
+results show that SA recovered the statistical structure of this cohort and matched its
+mechanistic plausibility under the tests used here. Generalization to other clinical cohorts
+remains to be tested.
