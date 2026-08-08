@@ -122,37 +122,40 @@ baseline's greater scatter to variance added in directions unsupported by the co
 
 \subsection{\rboth{Robustness to Sample Size, Dimensionality, and Nonlinearity}}
 
-\rboth{A single $23$-patient clinical cohort could not establish how the stochastic-attention
-generator would respond to changes in training-set size, dimension, or nonlinear population
-structure. We therefore performed three robustness tests (Methods,
-Sec.~\ref{sec:robustness-benchmarks}) to explore this question. 
-First, we drew training cohorts from low-rank Gaussian
-populations with known covariance across every combination of
-$n\in\{8,15,23,40,80\}$, $p\in\{30,120,216\}$, and latent rank $r\in\{3,5,10\}$. 
-From each cohort, we constructed a stochastic-attention memory matrix and
-estimated a sample-covariance Gaussian generator; both generated $100$ profiles. The Gaussian
-comparator used the training mean and sample covariance, with diagonal jitter for numerical
-sampling but no covariance shrinkage. Relative Frobenius error measured deviation from the
-known population covariance. Stochastic attention had lower error in $35$ of the $39$
-rank-deficient $n<p$ settings (Fig.~\ref{fig:sim-recovery}A); at $n{=}23$ and $p{=}216$,
-Gaussian error averaged across ranks was approximately $1.5$ times the stochastic-attention
-error. Second, we evaluated stochastic attention alone on ten random subsets at each
-$n\in\{20,15,10,8\}$, constructed a new memory matrix from every subset, generated $100$
-profiles, and evaluated each generated cohort against the same $23$-patient reference. As
-$n$ decreased from $20$ to~$8$, mean cross-visit correlation error increased from $0.63$ to
-$1.11$ (Fig.~\ref{fig:sim-recovery}B), mean pooled marginal error increased from $2.0\%$ to
-$4.9\%$, and mechanistic overlap remained near $0.90$. Third, for five independent
-$n{=}23$ training cohorts, we compared stochastic attention
-with the sample-covariance Gaussian generator on a noisy S-curve embedded in $p{=}30$ or~$120$
-dimensions; each generator produced $100$ profiles. As curvature increased, the mean
-within-plane distance of stochastic-attention samples from the known curve, averaged across
-the five replicates and both dimensions, crossed twice its straight-line value between
-curvatures $0.25$ and~$0.5$. Stochastic-attention samples remained
-closer to the curve on average at every nonzero curvature, whereas the Gaussian generator
-recovered covariance more accurately. These tests therefore supported stochastic attention's covariance recovery
-in most of the tested linear, rank-deficient settings, showed declining marginal and
-correlation fidelity as the clinical training set became smaller, and identified a trade-off
-between geometric and covariance recovery for the nonlinear population tested here.}
+\rboth{Results from a single cohort of $23$ patients could not show how stochastic attention
+would perform if the amount or structure of the available data changed. We therefore asked three
+questions in controlled tests (Methods, Sec.~\ref{sec:robustness-benchmarks}). First,
+could generated profiles recover the true covariance? We simulated datasets in which the
+covariance was known. We varied the size of the simulated datasets from $8$ to~$80$ profiles,
+the number of variables per profile from $30$ to~$216$, and the complexity of the correlation patterns.
+From each dataset, we constructed a stochastic-attention memory matrix. For comparison, we
+estimated a Gaussian generator from the dataset's sample mean and covariance. Each generator
+then produced $100$ profiles. We compared the covariance of each generated cohort
+with the known population covariance. Stochastic attention had lower error in $35$ of the $39$ settings in which the
+simulated dataset contained fewer profiles than variables (Fig.~\ref{fig:sim-recovery}A). For
+simulations matching the clinical dataset in this study in terms of size, with $23$ profiles and $216$ variables per
+profile, the Gaussian generator's covariance error was approximately $1.5$ times the stochastic-attention error
+after averaging across the three levels of correlation-pattern complexity.
+Second, we examined how well stochastic attention preserved characteristics of the full
+$23$-patient cohort when fewer patients were available. Using subsets of $20$, $15$, $10$, or~$8$ patients, we repeated the random selection ten times
+at each size, constructed a new memory matrix from each, generated $100$ profiles, and compared every generated cohort with the same full $23$-patient
+reference. As the subset size decreased from $20$ to~$8$, error in the cross-visit correlations
+increased from $0.63$ to $1.11$ (Fig.~\ref{fig:sim-recovery}B), the typical relative error in
+variable means increased from $2.0\%$ to $4.9\%$, and overlap with the mechanistic-model
+reference remained near $0.90$. Third, could stochastic attention and the Gaussian generator
+reproduce curved relationships? We used a noisy S-curve embedded among either $30$ or~$120$
+variables. For each amount of curvature and each number of variables, we created five simulated
+datasets, each with $23$ profiles. From every dataset, we constructed a stochastic-attention
+memory matrix and estimated a Gaussian generator; each generator produced $100$ profiles. As the curve became more
+pronounced, stochastic-attention profiles moved farther from it. After averaging across the
+five repeats and both numbers of variables, the mean distance crossed twice its value for a
+straight line between curvatures $0.25$ and~$0.5$. At every nonzero
+curvature, stochastic-attention profiles remained closer to the curve on average, whereas the
+Gaussian generator reproduced the population covariance more accurately. Together, these
+tests showed that stochastic attention recovered covariance more accurately than the Gaussian
+comparator in most of the small linear simulations with more variables than profiles, but its
+clinical correlations and variable means became less accurate when fewer patients were used.
+On curved data, each generator performed better on a different measure.}
 
 \subsection{\rtwo{Interpolation and Extrapolation}}
 
