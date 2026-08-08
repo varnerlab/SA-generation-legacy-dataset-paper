@@ -133,28 +133,27 @@ estimated a Gaussian generator from the dataset's sample mean and covariance. Ea
 then produced $100$ profiles. We compared the covariance of each generated cohort
 with the known population covariance. Stochastic attention had lower error in $35$ of the $39$ settings in which the
 simulated dataset contained fewer profiles than variables (Fig.~\ref{fig:sim-recovery}A). For
-simulations matching the clinical dataset in size, with $23$ profiles and $216$ variables per
-profile, the Gaussian
-generator's covariance error was approximately $1.5$ times the stochastic-attention error
+simulations matching the clinical dataset in this study in terms of size, with $23$ profiles and $216$ variables per
+profile, the Gaussian generator's covariance error was approximately $1.5$ times the stochastic-attention error
 after averaging across the three levels of correlation-pattern complexity.
 Second, we examined how well stochastic attention preserved characteristics of the full
-$23$-patient cohort when fewer patients were available.
-Using subsets of $20$, $15$, $10$, or~$8$ patients, we repeated the random selection ten times
+$23$-patient cohort when fewer patients were available. Using random subsets of $20$, $15$, $10$, or~$8$ patients, we repeated the random selection ten times
 at each size, constructed a new memory matrix from each, generated $100$ profiles, and compared every generated cohort with the same full $23$-patient
 reference. As the subset size decreased from $20$ to~$8$, error in the cross-visit correlations
-increased from $0.63$ to $1.11$ (Fig.~\ref{fig:sim-recovery}B), the typical relative error in
-variable means increased from $2.0\%$ to $4.9\%$, and overlap with the mechanistic-model
+increased from $0.63$ to $1.11$ (Fig.~\ref{fig:sim-recovery}B), the median error in variable
+means increased from $2.0\%$ to $4.9\%$, and overlap with the mechanistic-model
 reference remained near $0.90$. Third, could stochastic attention and the Gaussian generator
 reproduce curved relationships? We used a noisy S-curve embedded among either $30$ or~$120$
 variables. For each amount of curvature and each number of variables, we created five simulated
 datasets, each with $23$ profiles. From every dataset, we constructed a stochastic-attention
-memory matrix and estimated a Gaussian generator; each generator produced $100$ profiles. As the curve became more
-pronounced, stochastic-attention profiles moved farther from it. After averaging across the
-five repeats and both numbers of variables, the mean distance crossed twice its value for a
-straight line between curvatures $0.25$ and~$0.5$. At every nonzero
-curvature, stochastic-attention profiles remained closer to the curve on average, whereas the
-Gaussian generator reproduced the population covariance more accurately. Together, these
-tests showed that stochastic attention recovered covariance more accurately than the Gaussian
+memory matrix and estimated a Gaussian generator; each generator produced $100$ profiles. As
+curvature increased, stochastic-attention profiles moved farther from the curve. At curvature
+$0.5$, their mean distance was at least twice the straight-line value after averaging across
+the five repeats and both numbers of variables. It remained below this threshold at curvature
+$0.25$. Despite this decline, at every nonzero curvature, stochastic-attention profiles
+remained closer to the curve on average than Gaussian profiles. However, the Gaussian
+generator reproduced the population covariance more accurately than stochastic attention for
+the curved data. Together, these tests showed that stochastic attention recovered covariance more accurately than the Gaussian
 comparator in most of the small linear simulations with more variables than profiles, but its
 clinical correlations and variable means became less accurate when fewer patients were used.
 On curved data, each generator performed better on a different measure.}
@@ -167,27 +166,29 @@ extended beyond it. Every synthetic profile lay outside the convex hull of the $
 $d{=}18$ PCA space (Supplementary Table~\ref{stab:hull-geometry}). However, each real profile
 also lay outside the hull of the other $22$, so binary membership was uninformative in this
 sparse space. We therefore compared hull distances against $22$ real profiles. Each real
-calculation omitted the profile being evaluated; each synthetic calculation omitted its
+calculation omitted the profile being evaluated, while each synthetic calculation omitted its
 nearest real profile. If generation extrapolated unusually far, synthetic distances would
 exceed leave-one-out real distances. The medians were $11.0$ and $11.9$, respectively, and a
-descriptive Mann--Whitney test did not detect a difference ($p{=}0.07$). This did not establish
-equivalence, but it provided no evidence that synthetic profiles extended farther from the
-cohort than real profiles treated as unseen.}
-
-\rtwo{Hull distance does not establish biological validity, so we applied two further checks.
-The first required nonnegative values where appropriate and limited coagulation-factor and TGA
-values to five real-cohort standard deviations from the mean. Fifty-four of $100$ synthetic
+descriptive Mann--Whitney test did not detect a difference ($p{=}0.07$). While this did not establish
+equivalence, it provided no evidence that synthetic profiles extended farther from the
+cohort than real profiles treated as unseen. Geometric similarity did not establish biological
+plausibility, so we applied two further checks. The first required nonnegative values where
+appropriate and limited coagulation-factor and TGA values to five real-cohort standard
+deviations from the mean. Fifty-four of $100$ synthetic
 profiles passed; the other $46$ contained a negative estradiol or progesterone value. The
 unconstrained multivariate-normal baseline produced negative hormones in $43$ profiles.
 Neither method enforced positivity, and positive factors in these draws did not guarantee
-positivity in others. The second check used BZ2012 to test the generated factor combinations.
-Estradiol and progesterone were not model inputs, and all nine factor inputs were positive, so
+positivity in others. The second check used the BZ2012 model to test the generated factor combinations.
+Estradiol and progesterone were not model inputs, and all nine coagulation factor inputs were positive, so
 all $100$ profiles were included. For each TGA feature, $83$--$92\%$ of profiles had a
 predicted-to-recorded ratio within the real 5th--95th percentile range. Forty-one met this
 criterion for every feature and visit, and $24$ passed both checks. Positive-variable
-transformations or constrained decoding could enforce non-negativity. These checks showed that
-extension beyond the observed hull did not by itself establish or rule out biological
-plausibility.}
+transformations or constrained decoding could prevent negative values. Together, these checks
+separated geometric extrapolation from biological plausibility. Hull distance provided no
+evidence that synthetic profiles extended farther than real profiles treated as unseen, but
+only $24$ of $100$ profiles passed both the biological and strict mechanistic criteria. Thus,
+hull position alone could not determine whether an individual generated profile was
+biologically plausible.}
 
 \subsection{\rone{Membership-Inference Risk}}
 
