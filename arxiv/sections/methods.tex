@@ -296,6 +296,18 @@ compared predicted-versus-measured thrombin generation features. The primary met
 was cloud overlap: the fraction of synthetic predicted/measured ratios falling
 within the 5th--95th percentile range of real ratios.
 
+\rone{For the membership-inference analysis, we drew $40$ random partitions of the $23$ real
+profiles. For each partition, we repeated the preprocessing using $15$ profiles, constructed
+the memory matrix, and generated $100$ synthetic profiles; the other $8$ real profiles were
+held out. We assigned each real profile a membership score equal to the negative Euclidean
+distance to its nearest synthetic profile in standardized $216$-dimensional space, so a
+higher score indicated stronger evidence that the profile had been stored. A receiver
+operating characteristic curve compared the fraction of stored profiles correctly identified
+with the fraction of held-out profiles incorrectly identified as the score threshold changed.
+We calculated the area under this curve using the equivalent Mann--Whitney rank statistic,
+with ties contributing one half, and reported the mean across the $40$ partitions. An AUC of
+$0.5$ indicated chance discrimination, whereas $1.0$ indicated perfect discrimination.}
+
 \subsection{\rboth{Robustness Tests}}
 \label{sec:robustness-benchmarks}
 

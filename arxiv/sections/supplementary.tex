@@ -456,9 +456,11 @@ with the generation seed held fixed, so that only the partition varied, and pool
 distances across all partitions. Non-members sat at the same distance from the synthetic
 cohort as unrelated real patients sat from one another. The synthetic cohort
 carried no proximity signal about patients the generator never saw, and the discrimination
-came entirely from members sitting closer. The AUC measured how often the test ranked a
-member above a non-member; $0.5$ indicated no discrimination and $1.0$ indicated perfect
-discrimination.}}
+came entirely from members sitting closer. The area under the receiver operating
+characteristic curve (AUC), calculated using the equivalent Mann--Whitney rank statistic,
+measured how often the test assigned stronger membership evidence to a randomly chosen member
+than to a randomly chosen non-member; $0.5$ indicated no discrimination and $1.0$ indicated
+perfect discrimination.}}
 \label{stab:membership}
 \begin{tabular}{lc}
 \toprule
@@ -633,8 +635,8 @@ of the four Markov-chain procedures. Across $100$ direct-sampler cohorts, median
 $1.40\%$ (5th--95th percentile $0.97$--$1.91\%$) and median DCR was $13.95$
 ($13.61$--$14.39$). Exact sampling gave AUC $0.98$ over the same $40$ splits. This showed that
 the membership signal came from the target distribution, not from the numerical sampler. At
-$K{=}23$, the test could therefore distinguish whether an already-known de-identified profile
-was stored regardless of how the target distribution was sampled.}
+this cohort size, the test could therefore distinguish whether an already-known de-identified
+profile was stored regardless of how the target distribution was sampled.}
 
 \begin{table}[ht]
 \centering

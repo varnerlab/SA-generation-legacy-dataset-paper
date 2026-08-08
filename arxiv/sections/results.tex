@@ -192,26 +192,28 @@ biologically plausible.}
 
 \subsection{\rone{Membership-Inference Risk}}
 
-\rone{Geometric proximity raised a separate question: could a synthetic cohort reveal whether
-an already-known de-identified profile was stored? Each real patient's $18$-dimensional PCA
-profile was one column of the memory matrix. The source data had no direct identifiers or links to named individuals,
-so this was not a test of personal identification. Synthetic profiles were closer to their
-nearest real record than real records were to one another (median $13.8$ versus $15.9$). In
-$40$ random splits, we generated from $15$ stored profiles and held out $8$. Stored profiles
-were closer to the synthetic cohort than held-out profiles (median $10.7$ versus $15.4$;
-Supplementary Table~\ref{stab:membership}). The AUC, the probability that the test ranked a
-stored profile above a held-out profile, averaged $0.97$; $0.5$ indicated chance and $1.0$
-perfect discrimination. Nine splits reached $1.0$. The test therefore usually distinguished
-stored from held-out candidate profiles.}
-
-\rone{We next asked whether this signal was an artifact of the numerical sampler. Changing the
-sampler, including adding a Metropolis correction, left the AUC nearly unchanged at $0.96$.
-Lowering inverse temperature over a $40$-fold range increased distance from stored profiles but
-reduced cross-visit covariance fidelity. Direct draws from the closed-form mixture gave AUC
-$0.98$ (Supplementary Table~\ref{stab:sampling-ladder},
-Fig.~\ref{sfig:sampling-ladder}). The signal therefore came from the target distribution at
-$K{=}23$, not from the Markov-chain implementation. At this cohort size, the test could
-distinguish whether an already-known de-identified assay profile was stored, but it could not
+\rone{Geometric proximity raised a separate privacy question: could a synthetic cohort reveal
+whether an already-known de-identified assay profile had been stored in the memory matrix?
+To answer this question, we tested whether distance from a candidate profile to the synthetic
+cohort could distinguish profiles used to construct the memory matrix from profiles withheld
+from it. In each of $40$ random splits of the $23$-patient cohort, we constructed the memory
+matrix from $15$ profiles, held out the other $8$, and generated a synthetic cohort. A smaller
+distance to the nearest synthetic profile provided stronger evidence that a candidate had
+been stored. Stored profiles were closer to the synthetic cohort than held-out profiles
+(median $10.7$ versus $15.4$; Supplementary Table~\ref{stab:membership}). We quantified this
+discrimination using the area under the receiver operating characteristic curve (AUC). The
+AUC was the probability that the test ranked a randomly chosen stored profile as more likely
+to have been stored than a randomly chosen held-out profile; $0.5$ indicated chance
+discrimination and $1.0$ indicated perfect discrimination. The mean AUC was $0.97$, and nine
+splits reached $1.0$. We next asked whether this signal came from the numerical sampling
+procedure. A Metropolis-adjusted procedure left the mean AUC nearly unchanged at $0.96$.
+Lowering the inverse temperature over a $40$-fold range increased the median distance from
+synthetic profiles to their nearest stored profiles, but cross-visit covariance fidelity
+declined. Drawing directly from the target distribution, without a Markov chain, produced a
+mean AUC of $0.98$ (Supplementary Table~\ref{stab:sampling-ladder},
+Fig.~\ref{sfig:sampling-ladder}). Thus, the membership signal came from the target
+distribution in this small-cohort setting, not from the Markov-chain implementation. The test
+could reveal whether an already-known de-identified profile had been stored, but it could not
 identify a person or reconstruct an unknown record.}
 
 \subsection{Conditional Generation of Rare Subgroups}
