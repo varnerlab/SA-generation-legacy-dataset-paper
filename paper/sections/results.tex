@@ -62,24 +62,28 @@ concatenated longitudinal profiles ($n{=}23$), meaning it could not capture cros
 covariance structure and had no mechanism for conditional subgroup generation. Thus, neither
 deep model provided a suitable complete-profile baseline for this $23$-patient cohort.
 
-\rone{To separate the PCA representation from the generator, we compared stochastic attention
-with a Gaussian mixture, kernel-density estimator, $k$-nearest-neighbor interpolation, and
+\rone{To examine the role of the shared PCA representation, we compared stochastic attention
+with a fitted two-component diagonal-covariance Gaussian mixture, a kernel-density estimator, $k$-nearest-neighbor interpolation, and a
 Gaussian copula in the same $d{=}18$ PCA subspace
-(Supplementary Table~\ref{stab:pca-ablation}). Nearest-neighbor samples remained close to
+(Supplementary Methods, PCA-space ablation; Supplementary Table~\ref{stab:pca-ablation}).
+Nearest-neighbor samples remained close to
 stored profiles: median novelty, $1-\max_k\cos(\hat{\vxi},\hat{\mathbf{m}}_k)$, was $0.05$,
-and only $5\%$ exceeded the $0.2$ cutoff. The kernel-density estimator had marginal error
-$1.9\%$ and mechanistic overlap $0.82$, the fraction of pooled synthetic
-predicted-to-recorded TGA ratios within the real 5th--95th percentile range. The mixture and
+and only $5\%$ of the synthetic patients exceeded the $0.2$ novelty cutoff.
+The kernel-density estimator had marginal error $1.9\%$ and mechanistic overlap $0.82$ (the fraction of pooled synthetic
+predicted-to-recorded TGA ratios within the real 5th--95th percentile range). The two-component mixture and
 copula matched stochastic attention more closely in marginal error ($1.1\%$ and $1.3\%$
 versus $1.2\%$) and mechanistic overlap ($0.92$ and $0.93$ versus $0.90$). All profiles from
 stochastic attention and the copula exceeded the novelty cutoff, compared with $94\%$ from
-the mixture. Stochastic attention had the largest empirical cross-visit correlation error
-($0.64$ versus $0.42$ for the mixture and copula), but this measured reproduction of the same
-$23$ patients used to construct each generator. In the separate population-covariance
-benchmark, stochastic attention outperformed the sample-covariance Gaussian generator in
-$35$ of $39$ low-rank $n<p$ settings (Fig.~\ref{fig:sim-recovery}A). The shared PCA
-representation therefore supplied much of the marginal and mechanistic fidelity, and no
-generator performed best on every measure.}
+the two-component mixture. Stochastic attention had a larger empirical cross-visit correlation error
+than the two-component mixture and copula ($0.64$ versus $0.42$ for both). This metric measured
+agreement with the correlation matrix of the same $23$ patients used to construct the
+stochastic-attention memory matrix or fit the baseline generators; it therefore assessed
+in-sample reproduction rather than recovery of the unknown population correlation matrix.
+Holding the PCA representation constant showed that the marginal errors and mechanistic
+overlaps achieved by the two-component mixture and copula were similar to those of stochastic
+attention and therefore were not specific to the stochastic-attention generator. In contrast,
+empirical correlation error and novelty differed across generators. Thus, generator choice
+affected these aspects of performance, and no generator performed best on every measure.}
 
 \subsection{Cross-Visit Covariance Structure}
 \label{sec:results-l2}
@@ -118,34 +122,37 @@ baseline's greater scatter to variance added in directions unsupported by the co
 
 \subsection{\rboth{Robustness to Sample Size, Dimensionality, and Nonlinearity}}
 
-\rboth{Performance on one $23$-patient cohort could not show whether the method was robust to
-changes in sample size, dimension, or nonlinear structure. We began with a known-covariance
-simulation (Methods, Sec.~\ref{sec:robustness-benchmarks}), which tested whether each method
-recovered the underlying population rather than reproduced one small, high-dimensional
-sample. Training size was $n\in\{8,15,23,40,80\}$, dimension was
-$p\in\{30,120,216\}$, and latent rank was $r\in\{3,5,10\}$. Stochastic attention and a
-sample-covariance Gaussian generator each produced $100$ profiles from the same low-rank
-Gaussian training cohort. Relative
-Frobenius error measured deviation from the known population covariance. Stochastic attention
-had lower error in $35$ of $39$ rank-deficient $n<p$ settings
-(Fig.~\ref{fig:sim-recovery}A). At $n{=}23$ and $p{=}216$, the Gaussian error averaged across
-ranks was about $1.5$ times the stochastic-attention error. Thus, stochastic attention
-recovered covariance more accurately in most small, rank-deficient settings tested here.}
-
-\rboth{We next examined two challenges that are particularly relevant to small clinical
-cohorts: having fewer real patients and representing nonlinear structure. For the sample-size
-test, we used ten random subsets of $20$,
-$15$, $10$, or~$8$ patients, generated $100$ profiles from each subset, and compared every
-cohort with the same $23$-patient reference. As $n$ fell from $20$ to~$8$, mean cross-visit
-correlation error rose from $0.63$ to $1.11$ and mean pooled marginal error rose from $2.0\%$
-to $4.9\%$, while mechanistic overlap remained near $0.90$
-(Fig.~\ref{fig:sim-recovery}B). For the nonlinearity test, we used $n{=}23$ samples from a
-noisy S-curve embedded in $p{=}30$ or~$120$ dimensions. As curvature increased, the mean
-distance of stochastic-attention samples from the curve doubled between $0.25$ and~$0.5$.
-These samples remained closer to the curve than Gaussian samples, but the Gaussian generator
-recovered covariance more accurately. Together, these tests showed that performance worsened
-with fewer patients and increasing nonlinearity, and that neither method was best on both
-measures of nonlinear structure.}
+\rboth{A single $23$-patient clinical cohort could not establish how the stochastic-attention
+generator would respond to changes in training-set size, dimension, or nonlinear population
+structure. We therefore performed three robustness tests (Methods,
+Sec.~\ref{sec:robustness-benchmarks}) to explore this question. 
+First, we drew training cohorts from low-rank Gaussian
+populations with known covariance across every combination of
+$n\in\{8,15,23,40,80\}$, $p\in\{30,120,216\}$, and latent rank $r\in\{3,5,10\}$. 
+From each cohort, we constructed a stochastic-attention memory matrix and
+estimated a sample-covariance Gaussian generator; both generated $100$ profiles. The Gaussian
+comparator used the training mean and sample covariance, with diagonal jitter for numerical
+sampling but no covariance shrinkage. Relative Frobenius error measured deviation from the
+known population covariance. Stochastic attention had lower error in $35$ of the $39$
+rank-deficient $n<p$ settings (Fig.~\ref{fig:sim-recovery}A); at $n{=}23$ and $p{=}216$,
+Gaussian error averaged across ranks was approximately $1.5$ times the stochastic-attention
+error. Second, we evaluated stochastic attention alone on ten random subsets at each
+$n\in\{20,15,10,8\}$, constructed a new memory matrix from every subset, generated $100$
+profiles, and evaluated each generated cohort against the same $23$-patient reference. As
+$n$ decreased from $20$ to~$8$, mean cross-visit correlation error increased from $0.63$ to
+$1.11$ (Fig.~\ref{fig:sim-recovery}B), mean pooled marginal error increased from $2.0\%$ to
+$4.9\%$, and mechanistic overlap remained near $0.90$. Third, for five independent
+$n{=}23$ training cohorts, we compared stochastic attention
+with the sample-covariance Gaussian generator on a noisy S-curve embedded in $p{=}30$ or~$120$
+dimensions; each generator produced $100$ profiles. As curvature increased, the mean
+within-plane distance of stochastic-attention samples from the known curve, averaged across
+the five replicates and both dimensions, crossed twice its straight-line value between
+curvatures $0.25$ and~$0.5$. Stochastic-attention samples remained
+closer to the curve on average at every nonzero curvature, whereas the Gaussian generator
+recovered covariance more accurately. These tests therefore supported stochastic attention's covariance recovery
+in most of the tested linear, rank-deficient settings, showed declining marginal and
+correlation fidelity as the clinical training set became smaller, and identified a trade-off
+between geometric and covariance recovery for the nonlinear population tested here.}
 
 \subsection{\rtwo{Interpolation and Extrapolation}}
 

@@ -27,14 +27,15 @@ an observed TGA response. Related modeling work has predicted thrombin dynamics 
 levels and searched for factor changes that move thrombin generation toward a
 target~\citep{Ghetmiri2021}. We have not yet evaluated either task.}
 
-\rboth{Understanding why the method worked in this setting required separating the
-principal component representation from the sampler. The ablation showed that the shared
-$18$-dimensional subspace supplied much of the marginal and mechanistic fidelity. Stochastic
-attention used the patient profiles in that subspace as its memory matrix and avoided
-estimating a full $216$-dimensional covariance from $23$ patients. The competitive mixture
-and copula baselines showed that the benefit of this representation was not unique
-to stochastic attention. The stochastic-attention sampler still required a choice of inverse
-temperature.} A natural concern is whether the $\beta^*$
+\rboth{Understanding why the method worked in this setting required examining the role of the
+PCA representation as well as the generator. When all methods used
+the same $18$-dimensional subspace, the fitted two-component mixture and copula achieved
+marginal errors and mechanistic overlaps similar to those of stochastic attention. These results were therefore
+not unique to stochastic attention, although the comparison did not quantify the contribution
+of PCA itself. Empirical correlation error and novelty differed across generators. Stochastic
+attention used the patient profiles in the PCA subspace as its memory matrix and avoided
+estimating a full $216$-dimensional covariance from $23$ patients. Its sampler still required
+a choice of inverse temperature.} A natural concern is whether the $\beta^*$
 selection procedure, originally developed for protein sequence
 generation~\citep{Varner2026SAProtein}, transfers to clinical coagulation data. The entropy
 transition rule selected the point of greatest downward curvature in attention entropy, a
@@ -122,8 +123,9 @@ sequence-aware extension could support such data, but each would add assumptions
 validation in a small cohort.}
 \rtwo{The PCA representation imposed a related limit because it captured only linear structure.
 In the S-curve benchmark, generated profiles moved farther from the known curve as curvature
-increased. Stochastic attention remained closer to the curve than the Gaussian generator,
-whereas the Gaussian generator recovered covariance more accurately. Neither method was best
+increased. At every nonzero curvature, stochastic attention remained closer to the curve on
+average than the Gaussian generator, whereas the Gaussian generator recovered covariance more
+accurately. Neither generator was best
 on both measures in this benchmark. Nonlinear embeddings could better represent curved or
 branching relationships, but they would add fitting and decoding choices that are difficult
 to estimate from $23$ patients. The linear representation was therefore a practical choice

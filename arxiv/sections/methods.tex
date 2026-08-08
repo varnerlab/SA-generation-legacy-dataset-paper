@@ -99,7 +99,8 @@ distribution directly: first choose $k$ from $q$ and then draw
 $\vxi\sim\mathcal{N}(\mathbf{m}_k,\beta^{-1}\mathbf{I})$. This procedure requires no Markov
 chain. The cohort
 analyzed in this work was generated with the Langevin implementation given next, and that is
-what the reported results describe. We added the direct-sampling procedure afterward as a check,
+what the reported results describe. We added the direct sampler for the stochastic-attention
+target afterward as a check,
 using the same normalization, magnitude rescaling, and decoding steps
 (Table~\ref{stab:sampling-ladder}).}
 
@@ -125,7 +126,8 @@ steps. Because the starting point and chain length could affect the output, we c
 sampling procedures. These used the original initialization near a stored pattern, random
 initialization on the unit sphere, pooled samples from multiple chains after burn-in and
 thinning, and Metropolis-adjusted sampling. As a separate check, we also drew directly from
-Eq.~\eqref{eq:exact_mixture}, without using a Markov chain. The fidelity and
+the exact stochastic-attention mixture in Eq.~\eqref{eq:exact_mixture}, without using a Markov
+chain. The fidelity and
 membership-inference results were similar across all four procedures and the direct draws.
 This agreement indicated that the original implementation reproduced the evaluated behavior
 of the sampling distribution at $\beta^*$ (Supplementary
@@ -266,8 +268,14 @@ dependencies. For SA, this structure was preserved through the Hopfield energy
 landscape operating on 18-dimensional PCA projections of the concatenated vectors.
 For MVN, the $216 \times 216$ sample covariance matrix had rank at most~22 and was
 regularized using Ledoit--Wolf shrinkage~\citep{Ledoit2004}, which inflated
-eigenvalues in the 194 null dimensions. We then evaluated both SA and MVN synthetic
-patients through four progressively stringent validation levels.
+eigenvalues in the 194 null dimensions.
+\rone{To examine the role of the shared PCA representation, we also evaluated a fitted
+two-component diagonal-covariance Gaussian mixture, a kernel-density estimator,
+$k$-nearest-neighbor interpolation, and a Gaussian copula in the same 18-dimensional PCA
+space. Their implementations and shared evaluation pipeline are described in Supplementary
+Methods (PCA-space ablation).}
+We then evaluated both SA and MVN synthetic patients through four progressively stringent
+validation levels.
 \textbf{Level~1 (Marginal Plausibility)} tested whether individual feature
 distributions matched, using per-feature means, standard deviations, and known
 physiological relationships. \textbf{Level~2 (Joint Structure)} tested whether the
@@ -291,10 +299,11 @@ within the 5th--95th percentile range of real ratios.
 \subsection{\rboth{Robustness Tests}}
 \label{sec:robustness-benchmarks}
 
-\rboth{Results from one clinical cohort could not show how the method behaved as sample size,
-dimension, and nonlinear structure changed. We therefore used three tests. The covariance
-test asked whether each method could recover a known population covariance from a small,
-high-dimensional sample. We generated training cohorts from a low-rank Gaussian factor model,
+\rboth{Results from one clinical cohort could not show how stochastic-attention generation
+behaved as training-set size, dimension, and nonlinear structure changed. We therefore used
+three tests. The covariance test compared stochastic attention with a sample-covariance
+Gaussian generator on low-rank Gaussian populations with known covariance. We generated one
+training cohort for every tested combination from the factor model
 $\mathbf{X}=\mathbf{Z}\mathbf{L}^{\top}+\boldsymbol{\epsilon}$, where
 $\mathbf{Z}\in\mathbb{R}^{n\times r}$ and $\mathbf{L}\in\mathbb{R}^{p\times r}$ had
 independent standard-normal entries and $\boldsymbol{\epsilon}$ had independent Gaussian
@@ -302,30 +311,42 @@ entries with variance $0.1$. This gave the known population covariance
 $\boldsymbol{\Sigma}_{\mathrm{pop}}=\mathbf{L}\mathbf{L}^{\top}+0.1\mathbf{I}$. We tested
 every combination of
 $n\in\{8,15,23,40,80\}$, $p\in\{30,120,216\}$, and
-$r\in\{3,5,10\}$. In each cell, we constructed the stochastic-attention memory matrix from
-the training cohort and estimated a Gaussian generator from the same cohort. Each generated
-$100$ profiles. Stochastic attention used the clinical analysis settings. The Gaussian
-generator used the training mean and sample covariance, with diagonal jitter for numerical
-sampling and no shrinkage. Covariance error was
+$r\in\{3,5,10\}$. For each training cohort, we standardized the features, retained enough
+principal components to explain $95\%$ of the variance, constructed the stochastic-attention
+memory matrix from the resulting scores, and selected $\beta$ separately using the same
+attention-entropy criterion as in the clinical analysis. Stochastic attention generated
+$100$ profiles using ULA with $\alpha{=}0.01$, $T{=}2{,}000$, and empirical magnitude
+rescaling. The Gaussian generator used the training mean and sample covariance. For numerical
+sampling, diagonal jitter began at $10^{-8}\mathbf{I}$ and increased tenfold as needed through
+$10^{-2}\mathbf{I}$; if Cholesky sampling still failed, we sampled in the nonnegative
+eigenspace of the sample covariance. We applied no covariance shrinkage. The Gaussian
+generator also produced $100$ profiles. Covariance error was
 $\lVert\widehat{\boldsymbol{\Sigma}}_{\mathrm{gen}}-
 \boldsymbol{\Sigma}_{\mathrm{pop}}\rVert_F/
 \lVert\boldsymbol{\Sigma}_{\mathrm{pop}}\rVert_F$. Figure~\ref{fig:sim-recovery}A reports
 Gaussian error divided by stochastic-attention error, averaged across the three latent ranks.
 A ratio above one favored stochastic attention.}
 
-\rboth{The remaining tests asked how performance changed with less clinical information or a
-nonlinear data pattern. For the sample-size test, we drew ten subsets without replacement
-from the $23$ complete patients at each $n\in\{20,15,10,8\}$. We constructed a memory matrix
-from each subset, generated $100$ profiles, and evaluated every cohort against the same
-$23$-patient reference. The outcomes were cross-visit correlation error, pooled median
-marginal relative error, and TF-only mechanistic cloud overlap.
-Figure~\ref{fig:sim-recovery}B shows the mean and standard deviation of cross-visit error
-across the ten subsets. For the nonlinearity test, we drew $t$ uniformly from $[-1,1]$ and
-defined an S-curve by $x_1=t$ and
-$x_2=c\sin(\pi t)$. We mapped the curve into $p{=}30$ or~$120$ dimensions with a
-random orthonormal embedding and added isotropic Gaussian noise with standard deviation
-$0.05$. We used $n{=}23$ and curvature $c\in\{0,0.25,0.5,1,1.5,2\}$, with five replicates per
-setting. Each generator produced $100$ profiles per replicate. We measured mean distance from
-the known curve and relative covariance error against a $50{,}000$-sample reference. For
-stochastic attention, we identified the first nonzero curvature at which mean distance doubled
-from the straight-line case.}
+\rboth{The remaining tests asked how stochastic attention changed with less clinical
+information and how it compared with the Gaussian generator on a nonlinear population. For
+the sample-size test, we drew ten subsets without replacement from the $23$ complete patients
+at each $n\in\{20,15,10,8\}$. For every subset, we repeated the standardization, PCA, and
+$\beta$ selection, constructed a new stochastic-attention memory matrix, generated $100$
+profiles, and evaluated the generated cohort against the same $23$-patient reference. The
+outcomes were relative cross-visit correlation error, pooled median marginal relative error,
+and TF-only mechanistic cloud overlap. Figure~\ref{fig:sim-recovery}B shows the mean and
+standard deviation of cross-visit error across the ten subsets. For the nonlinearity test, we
+drew $t$ uniformly from $[-1,1]$ and defined an S-curve by $x_1=t$ and
+$x_2=c\sin(\pi t)$. We mapped the curve into $p{=}30$ or~$120$ dimensions with a new random
+orthonormal embedding for each replicate and added isotropic Gaussian noise with standard
+deviation $0.05$. We used $n{=}23$ and curvature
+$c\in\{0,0.25,0.5,1,1.5,2\}$, with five replicates per setting. From every training cohort, we
+constructed a stochastic-attention memory matrix and estimated the same sample-covariance
+Gaussian comparator; each generator produced $100$ profiles. We projected generated profiles
+onto the known two-dimensional embedding plane and measured their mean distance from the
+curve, thereby excluding noise orthogonal to that plane. We also measured relative covariance
+error against the covariance of an independent $50{,}000$-profile population draw. For
+the reported curvature threshold, we averaged stochastic-attention curve distance across the
+five replicates and both dimensions at each curvature and identified the first nonzero value at
+which this mean was at least twice its value for the straight-line population. All simulation
+cells used deterministic, cell-specific random-number streams derived from seed~42.}
