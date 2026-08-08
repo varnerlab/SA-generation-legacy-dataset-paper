@@ -162,7 +162,7 @@ We chose β\* at the point where the attention-entropy curve bent downward most 
 ### R1.11: Downstream improvement may reflect smoothing/variance suppression
 > The synthetic-calibrated model's improvement over the real-calibrated model may partly reflect smoothing/regularization that suppresses physiologically meaningful heterogeneity.
 
-*We agree and made this interpretation more direct.* The modest downstream gain (0.94× ratio) did not show that synthetic data were superior. All 100 synthetic profiles were derived from the same 23 patients, so they did not increase the independent evidence about the broader patient population. Their value was computational. Averaging the calibration objective over a denser sample from the represented distribution may have made the optimization more stable. We also connected this interpretation to the tail-compression limitation and did not claim that we had established the cause of the numerical gain.
+*We agree and made this interpretation more direct.* The modest downstream gain (0.94× ratio) did not show that synthetic data were superior. The original Results paragraph already stated that the profiles came from the same real cohort and that the comparison was not independent validation. We therefore focused the reviewer-added text on the distinct interpretation: the gain may instead have reflected a more stable calibration objective produced by sampling the represented distribution more densely. We also connected this interpretation to the tail-compression limitation and did not claim that we had established the cause of the numerical gain.
 
 **Changes:** Results (Downstream Utility) + Discussion. `\rone{...}`
 
@@ -241,7 +241,7 @@ The second check used the BZ2012 model to test whether the generated coagulation
 ### R2.5: Demonstration of real-world utility
 > Does synthetic data improve predictive models beyond the original cohort? Enhance power for subgroup analyses? Enable concrete new hypotheses? Even a limited quantitative demonstration would strengthen translational significance.
 
-*We agree that the paper needed a concrete account of its practical value.* The revised Results showed that synthetic profiles could support mechanistic-model calibration, exploratory comparisons of small subgroups, and factor-level hypotheses for testing in larger studies. However, confirming those hypotheses and establishing clinical value would require additional real patients or independent experimental data.
+*We agree that the paper needed a concrete account of its practical value.* The revised Results placed the calibration result alongside the subgroup and factor-level analyses. Together, these results supported exploratory modeling and hypothesis generation. Confirming those hypotheses and establishing clinical value would require additional real patients or independent experimental data.
 
 We also clarified in the Introduction that a further motivation was to support the development of deep learning models. In the Discussion, we specified two possible tasks: predicting TGA responses from coagulation factors and estimating factor profiles compatible with an observed TGA response. We have not yet evaluated either task. As noted in R1.11, the 0.94× downstream error ratio did not add independent evidence about the broader population. It may instead have reflected a more stable calibration objective.
 
