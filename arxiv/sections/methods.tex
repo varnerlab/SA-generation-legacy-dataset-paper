@@ -76,14 +76,16 @@ modern Hopfield energy; when $r_k = \rho > 1$ for a designated subset of pattern
 energy landscape is continuously deformed to favor that subset.
 
 \rone{This energy defines a probability distribution that can be written exactly. Writing
-$\pi_r(\vxi)\propto\exp[-\beta E_r(\vxi)]$ and completing the square in each exponent,
+$\pi_r(\vxi)\propto\exp[-\beta E_r(\vxi)]$ and completing the square in each exponent gives
+the expression:
 \begin{equation}
     \exp\!\left[-\frac{\beta}{2}\norm{\vxi}^2 + \beta\,\mathbf{m}_k^\top\vxi\right]
     = \exp\!\left(\frac{\beta}{2}\norm{\mathbf{m}_k}^2\right)
       \exp\!\left[-\frac{\beta}{2}\norm{\vxi-\mathbf{m}_k}^2\right],
     \label{eq:complete_square}
 \end{equation}
-so the resulting sampling distribution is exactly a finite isotropic Gaussian mixture,
+Substituting Eq.~\eqref{eq:complete_square} into the probability density gives an exact
+finite isotropic Gaussian mixture:
 \begin{equation}
     \pi_r(\vxi) = \sum_{k=1}^{K} q_k\,
     \mathcal{N}\!\left(\mathbf{m}_k,\ \beta^{-1}\mathbf{I}\right),

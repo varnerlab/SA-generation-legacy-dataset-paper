@@ -49,6 +49,15 @@ the text moves to a new biological or technical question.
 - Use “profiles” or “patients” consistently and do not call generated profiles independent
   clinical observations.
 
+## Equations and Mathematical Transitions
+
+- Introduce every displayed equation with a complete sentence that says what the equation
+  gives, defines, or shows, and end the sentence with a colon.
+- Do not lead into a displayed equation with a dangling phrase or comma. For example, write
+  “Completing the square in each exponent gives the expression:” before the equation.
+- When displayed equations occur in sequence, connect them with a short sentence that
+  explains how the second follows from the first.
+
 ## Project-Specific Technical Language
 
 - Stochastic attention was not fit to the cohort. Patient profiles were stored as columns of
