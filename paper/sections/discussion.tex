@@ -92,56 +92,50 @@ physiological~\citep{Chase2011}, tumor-growth~\citep{Ribba2012}, and
 metabolic~\citep{Yizhak2015,Shan2018} models. The relevant test is whether the model places
 real and synthetic profiles in the same predicted envelope.
 
-\rone{The average subgroup results did not show whether the conditioned cohorts preserved
-clinically important distribution tails. In the descriptive bootstrap Mann--Whitney
-diagnostic, four of 24
-feature--condition pairs fell below the 90\% no-difference-detected criterion: FIX and
-plasminogen in the PCOS and Developed~PE groups. The relative differences between the real
-and synthetic subgroup means for these pairs were 9--15\%, and variability among the real
-patients was large. This power-limited diagnostic was not an equivalence test and did not
-determine whether the lower fractions reflected mean shifts, compressed tails, or limited
-power. Truncating the PCA representation and drawing from only $23$ observed PCA-space norms
-could nevertheless compress the generated tails. A synthetic cohort that under-represents
-severe states cannot estimate how often
-those states occur or how severe they become. Although synthetic profiles extended beyond
-the real cohort's convex hull, that result did not show that they reproduced the true tail
-distribution. We therefore do not recommend using these cohorts to estimate extreme risk
-without additional real data. The primary mechanistic cloud-overlap measure also focused on the real 5th--95th percentile
-range and therefore did not validate behavior in the tails.} \rboth{More generally, several
-findings reflected the limits of generating from only $23$ source patients. Hull membership
-had little resolution, and conditioned cohorts still relied on three PCOS or five
-Developed~PE patients. The modest calibration
-improvement was consistent with denser sampling of the same patient-derived distribution,
-not with added biological information. These findings supported simulation and model testing,
-but they did not increase the clinical evidence supplied by the original cohort.}
+\rone{The subgroup analysis focused on average differences between groups, but it did not
+show whether the conditioned cohorts preserved clinically important extremes. In the
+descriptive bootstrap Mann--Whitney diagnostic, the test detected no difference in fewer
+than 90\% of replicates for four of the 24 feature--condition pairs: FIX and plasminogen in
+the PCOS and Developed~PE groups. For these pairs, the relative differences between the real
+and synthetic subgroup means were 9--15\%, and values varied widely among the real patients.
+This diagnostic had limited power and was not an equivalence test. The lower fractions could
+therefore reflect shifts in the means, a loss of extreme values, or simply the small samples.
+Truncating the PCA representation and drawing profile magnitudes from only $23$ observed
+values could also make the generated extremes too narrow. If so, a synthetic cohort could
+not show how often severe states occur or how severe they become. Profiles outside the real cohort's
+convex hull did not show that the true extremes were reproduced, and the primary mechanistic
+cloud-overlap measure considered only the real 5th--95th percentile range. We therefore do
+not recommend using these cohorts to estimate extreme risk without additional real data.}
+\rboth{The small source cohort caused other limits. Hull membership had little resolution,
+and the conditioned cohorts still relied on only three PCOS or five Developed~PE patients.
+The modest calibration improvement was consistent with drawing more profiles from the same
+patient-derived distribution, not with adding biological information. The generated profiles
+supported simulation and model testing, but they did not add clinical evidence beyond the
+source cohort.}
 
-\rone{The data representation imposed a further limit. Concatenating visits allowed the
-method to preserve cross-visit relationships, but it required every patient to have the same
-assays at the same aligned visits. The current pipeline could not directly accept irregular
-timing, missing assays or visits, or variable-length records. Imputation, padding, or a
-sequence-aware extension could support such data, but each would add assumptions that require
-validation in a small cohort.}
-\rtwo{The PCA representation imposed a related limit because it captured only linear structure.
-In the S-curve benchmark, generated profiles moved farther from the known curve as curvature
-increased. At every nonzero curvature, stochastic attention remained closer to the curve on
-average than the Gaussian generator, whereas the Gaussian generator recovered covariance more
-accurately. Neither generator was best
-on both measures in this benchmark. Nonlinear embeddings could better represent curved or
-branching relationships, but they would add fitting and decoding choices that are difficult
-to estimate from $23$ patients. The linear representation was therefore a practical choice
-for this cohort, not evidence that clinical trajectories are generally linear.}
-\rboth{Thus, the present results did not establish performance on irregular, incomplete, or
-strongly nonlinear records.}
-
-\rone{Computational cost and behavior at larger cohort sizes are separate questions. The
-reported Langevin sampler required work proportional to $TKd$ for each profile. The exact
-mixture sampler removed the $T$ sequential updates: its component weights could be prepared
-once, after which each profile required a component draw, a $d$-dimensional Gaussian draw,
-and decoding. The principal-component model was estimated once, but inverse transformation
-and decoding were still performed for every generated profile. The simulation advantage over
-the sample-covariance Gaussian was concentrated in the $n<p$ settings. We did not test
-cohorts larger than $23$ patients, so stability and fidelity as $K$ grows remain open
-questions.}
+\rboth{The clinical analysis also covered only one kind of record and one cohort size.}
+\rone{The pipeline required every patient to have the same assays at the same aligned visits.
+Concatenating the visits preserved relationships across visits, but the pipeline could not
+directly use irregular visit times, missing assays or visits, or different numbers of visits.
+Imputation, padding, or a sequence-aware method could support these records, but each would
+add assumptions that require validation in a small cohort.}
+\rtwo{PCA added another limit because it captured only linear patterns. In the S-curve
+benchmark, generated profiles moved farther from the known curve as curvature increased.
+At every nonzero curvature, stochastic attention remained closer to the curve on average
+than the Gaussian generator, whereas the Gaussian generator recovered covariance more
+accurately. Neither generator was best on both measures. A nonlinear representation could
+better follow curved or branching patterns, but it would add choices about fitting the model
+and converting the generated values back to patient measurements. Those choices are
+difficult to make from $23$ patients. The linear representation was practical for this
+cohort, but the results did not show that clinical trajectories are generally linear.}
+\rone{Cohort size also affects computational cost. The reported Langevin sampler required
+work proportional to $TKd$ for each profile. The exact mixture sampler removed the $T$
+sequential updates: its component weights could be prepared once, after which each profile
+required a component draw, a $d$-dimensional Gaussian draw, and conversion back to the
+original variables. The simulation advantage over the sample-covariance Gaussian occurred
+mainly in the $n<p$ settings, and we did not test cohorts larger than $23$ patients.}
+\rboth{The results therefore did not establish performance on irregular, incomplete, or
+strongly nonlinear records or in larger clinical cohorts.}
 
 This study had two broad limitations: the absence of independent clinical data and the
 restricted scope of the validation analyses. First, the clinical analysis used one
