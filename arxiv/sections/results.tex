@@ -143,8 +143,9 @@ reference. As the subset size decreased from $20$ to~$8$, error in the cross-vis
 increased from $0.63$ to $1.11$ (Fig.~\ref{fig:sim-recovery}B), the median error in variable
 means increased from $2.0\%$ to $4.9\%$, and overlap with the mechanistic-model
 reference remained near $0.90$. Third, could stochastic attention and the Gaussian generator
-reproduce curved relationships? We used a noisy S-curve embedded among either $30$ or~$120$
-variables. For each amount of curvature and each number of variables, we created five simulated
+reproduce curved relationships? We used a noisy S-curve, a simulated path that resembled the
+letter S because it had two opposing bends. We spread this path across either $30$ or~$120$
+variables while preserving its shape (Methods, Sec.~\ref{sec:robustness-benchmarks}). For each amount of curvature and each number of variables, we created five simulated
 datasets, each with $23$ profiles. From every dataset, we constructed a stochastic-attention
 memory matrix and estimated a Gaussian generator; each generator produced $100$ profiles. As
 curvature increased, stochastic-attention profiles moved farther from the curve. At curvature

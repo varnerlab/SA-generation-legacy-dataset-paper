@@ -351,9 +351,12 @@ outcomes were relative cross-visit correlation error, pooled median marginal rel
 and TF-only mechanistic cloud overlap. Figure~\ref{fig:sim-recovery}B shows the mean and
 standard deviation of cross-visit error across the ten subsets. For the nonlinearity test, we
 drew $t$ uniformly from $[-1,1]$ and defined an S-curve by $x_1=t$ and
-$x_2=c\sin(\pi t)$. We mapped the curve into $p{=}30$ or~$120$ dimensions with a new random
-orthonormal embedding for each replicate and added isotropic Gaussian noise with standard
-deviation $0.05$. We used $n{=}23$ and curvature
+$x_2=c\sin(\pi t)$. Viewed in the $(x_1,x_2)$ plane, this one-dimensional path resembled the
+letter S because it had two opposing bends. Setting $c{=}0$ produced a straight line, and
+increasing $c$ made the bends stronger. Each simulated profile was a noisy point near this
+path. For each replicate, we used a new random transformation to spread the two coordinates
+across $p{=}30$ or~$120$ simulated variables while preserving the curve's geometry. We then
+added Gaussian noise with standard deviation $0.05$ in every direction. We used $n{=}23$ and curvature
 $c\in\{0,0.25,0.5,1,1.5,2\}$, with five replicates per setting. From every training cohort, we
 constructed a stochastic-attention memory matrix and estimated the same sample-covariance
 Gaussian comparator; each generator produced $100$ profiles. We projected generated profiles
