@@ -123,8 +123,10 @@ and converting the generated values back to patient measurements. Those choices 
 difficult to make from $23$ patients. The linear representation was practical for this
 cohort, but the results did not show that clinical trajectories are generally linear.}
 \rone{Cohort size also affects computational cost. The reported Langevin sampler required
-work proportional to $TKd$ for each profile. The exact mixture sampler removed the $T$
-sequential updates: its component weights could be prepared once, after which each profile
+work proportional to $TKd$ for each profile, where $T$ was the number of Langevin steps,
+$K$ was the number of stored profiles, and $d$ was the dimension of each profile in the
+sampling space. The exact mixture sampler removed the $T$ sequential updates: its component
+weights could be prepared once, after which each profile
 required a component draw, a $d$-dimensional Gaussian draw, and conversion back to the
 original variables. The simulation advantage over the sample-covariance Gaussian occurred
 mainly in the $n<p$ settings, and we did not test cohorts larger than $23$ patients.}
