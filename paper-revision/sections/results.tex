@@ -1,0 +1,350 @@
+\section{Results}
+\label{sec:results}
+
+We generated $N{=}100$ synthetic longitudinal patient profiles using SA and compared
+them against the $K{=}23$ real patients across four validation levels. As a baseline, we generated
+$N{=}100$ patients from a regularized multivariate normal (MVN) distribution fitted
+to the same data.
+
+\subsection{Marginal Plausibility}
+\label{sec:results-l1}
+
+We first assessed whether SA-generated patients reproduced per-feature summary
+statistics across all three visits. The pooled median mean relative error
+(MRE) across all 216 feature--visit entries was 1.2\% (95\% bootstrap CI:
+1.0--1.6\%), with 193 of 216 entries (89\%) below 5\%
+(Table~\ref{stab:mre-summary}), indicating that SA captured the central
+tendencies of the real cohort. Per-visit MREs for representative
+coagulation features are summarized in Table~\ref{tab:summary}, where
+Factor~II and Factor~VIII fell below 2\%, antithrombin below 3\%, and
+fibrinogen below 1\% across all three visits. Marginal agreement alone could result from
+profiles that closely copied stored records, so we also quantified similarity to stored
+profiles with two metrics (Table~\ref{stab:memorization}). The mean novelty score
+($1 - \max_k \cos(\hat{\vxi}, \hat{\mathbf{m}}_k)$) was 0.50 at
+$\beta = \beta^*$. The median
+nearest-neighbor distance from each synthetic patient to its closest real
+patient was 6.14 standardized units, compared with 6.87 for the median
+real-to-real nearest-neighbor distance, a ratio of 0.89 indicating that
+synthetic patients were approximately as far from real patients as real
+patients were from each other. Thus, stochastic attention matched the central tendencies
+without reproducing stored profiles exactly.
+
+We next examined whether known physiological relationships and longitudinal
+trajectories were preserved in the synthetic cohort. Pairwise scatter plots of
+coagulation factor levels against thrombin generation parameters showed that
+SA-generated patients occupied the same joint regions as real patients
+(Fig.~\ref{fig:bio-correlations}). The expected inverse relationship between
+antithrombin and TF-initiated peak thrombin was preserved, as were the positive
+associations between Factor~VIII and peak, prothrombin and endogenous thrombin
+potential (ETP), and the inverse relationship between antithrombin and ETP.
+Per-visit means and standard deviations for six key coagulation features showed
+that synthetic patients tracked the real longitudinal trajectories closely, with
+overlapping confidence bands at all three visits
+(Fig.~\ref{fig:pregnancy-progression}). Fibrinogen, Factor~VIII, and von Willebrand
+factor showed the expected monotonic increases from baseline through the third
+trimester in both cohorts, while Factor~II increased modestly and antithrombin
+declined then partially recovered, consistent with the known hypercoagulable shift
+of pregnancy. The 72 features also included viscoelastic (ROTEM) and fibrinolytic
+parameters, which had comparable MREs to the coagulation factors
+(Table~\ref{stab:mre-summary}). \rone{These variables influenced the generated profiles
+through their loadings on the retained principal components.} Together, these results
+showed that the synthetic cohort preserved the tested physiological relationships and
+the direction and magnitude of longitudinal change.
+
+To determine whether standard deep tabular models provided a viable baseline at this sample
+size, we compared SA against Conditional Tabular GAN (CTGAN) and Tabular Variational Autoencoder
+(TVAE)~\citep{Xu2019CTGAN} (Table~\ref{stab:ctgan}). The CTGAN model produced median
+MREs of approximately 19\% across all tested epoch counts (300--3,000), consistent with
+mode collapse at this sample size. The TVAE model achieved comparable marginal fidelity at
+high epoch counts (median MRE
+1.8\% at 3,000 epochs), but operated on per-visit rows ($n{=}90$) rather than
+concatenated longitudinal profiles ($n{=}23$), meaning it could not capture cross-visit
+covariance structure and had no mechanism for conditional subgroup generation. Thus, neither
+deep model provided a suitable complete-profile baseline for this $23$-patient cohort.
+
+\rone{To examine the role of the shared PCA representation, we compared stochastic attention
+with a fitted two-component diagonal-covariance Gaussian mixture, a kernel-density estimator, $k$-nearest-neighbor interpolation, and a
+Gaussian copula in the same $d{=}18$ PCA subspace
+(Supplementary Methods, PCA-space ablation; Supplementary Table~\ref{stab:pca-ablation}).
+Nearest-neighbor samples remained close to
+stored profiles: median novelty, $1-\max_k\cos(\hat{\vxi},\hat{\mathbf{m}}_k)$, was $0.05$,
+and only $5\%$ of the synthetic patients exceeded the $0.2$ novelty cutoff.
+The kernel-density estimator had marginal error $1.9\%$ and mechanistic overlap $0.82$ (the fraction of pooled synthetic
+predicted-to-recorded TGA ratios within the real 5th--95th percentile range). The two-component mixture and
+copula matched stochastic attention more closely in marginal error ($1.1\%$ and $1.3\%$
+versus $1.2\%$) and mechanistic overlap ($0.92$ and $0.93$ versus $0.90$). All profiles from
+stochastic attention and the copula exceeded the novelty cutoff, compared with $94\%$ from
+the two-component mixture. Stochastic attention had a larger empirical cross-visit correlation error
+than the two-component mixture and copula ($0.64$ versus $0.42$ for both). This metric measured
+agreement with the correlation matrix of the same $23$ patients used to construct the
+stochastic-attention memory matrix or fit the baseline generators; it therefore assessed
+in-sample reproduction rather than recovery of the unknown population correlation matrix.
+Holding the PCA representation constant showed that the marginal errors and mechanistic
+overlaps achieved by the two-component mixture and copula were similar to those of stochastic
+attention and therefore were not specific to the stochastic-attention generator. In contrast,
+empirical correlation error and novelty differed across generators. Thus, generator choice
+affected these aspects of performance, and no generator performed best on every measure.}
+
+\subsection{Cross-Visit Covariance Structure}
+\label{sec:results-l2}
+
+Having established that SA reproduces marginal distributions and pairwise
+relationships, we next asked whether it preserves the higher-order joint structure
+across visits. We compared the full $216 \times 216$ cross-visit correlation matrices for real,
+SA-generated, and MVN-generated populations. The real data exhibited a characteristic
+block structure with strong within-visit correlations along the diagonal and
+structured off-diagonal blocks reflecting cross-visit dependencies; for example,
+a patient's Visit~1 Factor~X level predicting their Visit~3 Factor~X level. We found
+that SA preserved this block structure, including the off-diagonal cross-visit
+correlations (Fig.~\ref{fig:cross-visit-corr}). The SA$-$Real residual matrix showed
+small, unstructured deviations distributed throughout, whereas the MVN$-$Real residual
+was notably smoother, reflecting the regularization-induced shrinkage of off-diagonal
+correlations toward zero. This difference was most apparent in the off-diagonal blocks,
+where MVN systematically underestimated cross-visit dependencies that SA retained.
+We note that Pearson correlation captures linear associations; Spearman rank
+correlations, used in the mechanistic validation, would additionally capture
+monotonic nonlinear dependencies. Within the linear analysis used here, stochastic attention
+retained the observed cross-visit structure more closely than the regularized MVN baseline.
+
+We examined the eigenvalue spectrum of the sample covariance matrix to understand the
+structural origin of this difference (Fig.~\ref{sfig:eigenvalue-spectrum}). The real data had
+rank~22, reflecting the $K{=}23$ patient constraint. Stochastic attention and MVN make different
+trade-offs in handling this rank deficiency: SA truncates via PCA (zeroing variance
+beyond component~18), while MVN regularizes via Ledoit--Wolf shrinkage (providing a
+full-rank estimate by inflating eigenvalues in the 194 null dimensions). The
+consequence of MVN's approach is that it introduces variance in dimensions where the
+data contain no signal, which manifested as increased dispersion in PCA projections.
+Visit-specific PCA projections showed this dispersion gap (\rtwo{Supplementary Fig.~\ref{sfig:pca-by-visit}}).
+Patients generated by stochastic attention occupied the same region of PCA space as real
+patients across all three visits, while MVN-generated patients showed substantially greater scatter,
+particularly at Visits~2 and~3. The spectrum and projections therefore linked the MVN
+baseline's greater scatter to variance added in directions unsupported by the cohort.
+
+\subsection{\rboth{Robustness to Sample Size, Dimensionality, and Nonlinearity}}
+
+\rboth{Results from a single cohort of $23$ patients could not show how stochastic attention
+would perform if the amount or structure of the available data changed. We therefore asked three
+questions in controlled tests (Methods, Sec.~\ref{sec:robustness-benchmarks}). First,
+could generated profiles recover the true covariance? We simulated datasets in which the
+covariance was known. We varied the size of the simulated datasets from $8$ to~$80$ profiles,
+the number of variables per profile from $30$ to~$216$, and the complexity of the correlation patterns.
+From each dataset, we constructed a stochastic-attention memory matrix. For comparison, we
+estimated a Gaussian generator from the dataset's sample mean and covariance. Each generator
+then produced $100$ profiles. We compared the covariance of each generated cohort
+with the known population covariance. Stochastic attention had lower error in $35$ of the $39$ settings in which the
+simulated dataset contained fewer profiles than variables (Fig.~\ref{fig:sim-recovery}A). For
+simulations matching the clinical dataset in this study in terms of size, with $23$ profiles and $216$ variables per
+profile, the Gaussian generator's covariance error was approximately $1.5$ times the stochastic-attention error
+after averaging across the three levels of correlation-pattern complexity.
+Second, we examined how well stochastic attention preserved characteristics of the full
+$23$-patient cohort when fewer patients were available. Using random subsets of $20$, $15$, $10$, or~$8$ patients, we repeated the random selection ten times
+at each size, constructed a new memory matrix from each, generated $100$ profiles, and compared every generated cohort with the same full $23$-patient
+reference. As the subset size decreased from $20$ to~$8$, error in the cross-visit correlations
+increased from $0.63$ to $1.11$ (Fig.~\ref{fig:sim-recovery}B), the median error in variable
+means increased from $2.0\%$ to $4.9\%$, and overlap with the mechanistic-model
+reference remained near $0.90$. Third, could stochastic attention and the Gaussian generator
+reproduce curved relationships? We used a noisy S-curve, a simulated path that resembled the
+letter S because it had two opposing bends. We spread this path across either $30$ or~$120$
+variables while preserving its shape (Methods, Sec.~\ref{sec:robustness-benchmarks}). For each amount of curvature and each number of variables, we created five simulated
+datasets, each with $23$ profiles. From every dataset, we constructed a stochastic-attention
+memory matrix and estimated a Gaussian generator; each generator produced $100$ profiles. As
+curvature increased, stochastic-attention profiles moved farther from the curve. At curvature
+$0.5$, their mean distance was at least twice the straight-line value after averaging across
+the five repeats and both numbers of variables. It remained below this threshold at curvature
+$0.25$. Despite this decline, at every nonzero curvature, stochastic-attention profiles
+remained closer to the curve on average than Gaussian profiles. However, the Gaussian
+generator reproduced the population covariance more accurately than stochastic attention for
+the curved data. Together, these tests showed that stochastic attention recovered covariance more accurately than the Gaussian
+comparator in most of the small linear simulations with more variables than profiles, but its
+clinical correlations and variable means became less accurate when fewer patients were used.
+On curved data, each generator performed better on a different measure.}
+
+\subsection{\rtwo{Interpolation and Extrapolation}}
+
+\rtwo{The robustness tests examined recovery under controlled changes in the data. We next
+asked whether profiles generated from the clinical cohort remained within the real cohort or
+extended beyond it. Every synthetic profile lay outside the convex hull of the $23$ real profiles in the
+$d{=}18$ PCA space (Supplementary Table~\ref{stab:hull-geometry}). However, each real profile
+also lay outside the hull of the other $22$, so binary membership was uninformative in this
+sparse space. We therefore compared hull distances against $22$ real profiles. Each real
+calculation omitted the profile being evaluated, while each synthetic calculation omitted its
+nearest real profile. If generation extrapolated unusually far, synthetic distances would
+exceed leave-one-out real distances. The medians were $11.0$ and $11.9$, respectively, and a
+descriptive Mann--Whitney test did not detect a difference ($p{=}0.07$). While this did not establish
+equivalence, it provided no evidence that synthetic profiles extended farther from the
+cohort than real profiles treated as unseen. Geometric similarity did not establish biological
+plausibility, so we applied two further checks. The first required nonnegative values where
+appropriate and limited coagulation-factor and TGA values to five real-cohort standard
+deviations from the mean. Fifty-four of $100$ synthetic
+profiles passed; the other $46$ contained a negative estradiol or progesterone value. The
+unconstrained multivariate-normal baseline produced negative hormones in $43$ profiles.
+Neither method enforced positivity, and positive factors in these draws did not guarantee
+positivity in others. The second check used the BZ2012 model to test the generated factor combinations.
+Estradiol and progesterone were not model inputs, and all nine coagulation factor inputs were positive, so
+all $100$ profiles were included. For each TGA feature, $83$--$92\%$ of profiles had a
+predicted-to-recorded ratio within the real 5th--95th percentile range. Forty-one met this
+criterion for every feature and visit, and $24$ passed both checks. Positive-variable
+transformations or constrained decoding could prevent negative values. Together, these checks
+separated geometric extrapolation from biological plausibility. Hull distance provided no
+evidence that synthetic profiles extended farther than real profiles treated as unseen, but
+only $24$ of $100$ profiles passed both the biological and strict mechanistic criteria. Thus,
+hull position alone could not determine whether an individual generated profile was
+biologically plausible.}
+
+\subsection{\rone{Membership-Inference Risk}}
+
+\rone{Geometric proximity raised a separate privacy question: could a synthetic cohort reveal
+whether an already-known de-identified assay profile had been stored in the memory matrix?
+To answer this question, we tested whether distance from a candidate profile to the synthetic
+cohort could distinguish profiles used to construct the memory matrix from profiles withheld
+from it. In each of $40$ random splits of the $23$-patient cohort, we constructed the memory
+matrix from $15$ profiles, held out the other $8$, and generated a synthetic cohort. A smaller
+distance to the nearest synthetic profile provided stronger evidence that a candidate had
+been stored. Stored profiles were closer to the synthetic cohort than held-out profiles
+(median $10.7$ versus $15.4$; Supplementary Table~\ref{stab:membership}). We quantified this
+discrimination using the area under the receiver operating characteristic curve (AUC). The
+AUC was the probability that the test ranked a randomly chosen stored profile as more likely
+to have been stored than a randomly chosen held-out profile; $0.5$ indicated chance
+discrimination and $1.0$ indicated perfect discrimination. The mean AUC was $0.97$, and nine
+splits reached $1.0$. We next asked whether this signal came from the numerical sampling
+procedure. A Metropolis-adjusted procedure left the mean AUC nearly unchanged at $0.96$.
+Lowering the inverse temperature over a $40$-fold range increased the median distance from
+synthetic profiles to their nearest stored profiles, but cross-visit covariance fidelity
+declined. Drawing directly from the target distribution, without a Markov chain, produced a
+mean AUC of $0.98$ (Supplementary Table~\ref{stab:sampling-ladder},
+Fig.~\ref{sfig:sampling-ladder}). Thus, the membership signal came from the target
+distribution in this small-cohort setting, not from the Markov-chain implementation. The test
+could reveal whether an already-known de-identified profile had been stored, but it could not
+identify a person or reconstruct an unknown record.}
+
+\subsection{Conditional Generation of Rare Subgroups}
+\label{sec:results-l3}
+
+The previous analyses used unconditioned SA, generating from the full cohort. A key
+clinical application, however, is generating patients from specific subpopulations
+that are too small to study independently. We therefore tested whether SA could
+amplify rare clinical subpopulations while preserving their
+condition-specific signatures. We defined three overlapping subgroups by pregnancy
+outcome and comorbidity: Uncomplicated ($n{=}18$), PCOS ($n{=}3$, cross-cutting;
+1~patient also in the PE group), and Developed~PE ($n{=}5$). The PCOS and
+Developed~PE groups were too small for any independent statistical analysis. We used
+SA's multiplicity-weighted sampling to generate condition-specific cohorts of 100
+patients each by upweighting attention on the relevant stored patterns.
+
+We compared condition-specific feature means between real and SA-generated patients
+across eight coagulation features that exhibited between-condition variation
+(Fig.~\ref{fig:conditioned-features}). The generated cohorts preserved the
+condition-specific patterns. Patients with PCOS showed elevated Factor~VIII and vWF
+relative to Healthy patients in both real and synthetic data, PE patients showed
+elevated $\alpha_2$-AP and Factor~IX, and the between-condition rank ordering was
+maintained across all eight features. We then performed a \rone{descriptive bootstrap
+Mann--Whitney diagnostic}. For each feature and condition, we subsampled the
+synthetic cohort to match the real sample size ($n_{\text{real}}$), applied a
+Mann--Whitney U test, and repeated 1,000 times. We reported the fraction of
+replicates where $p > 0.05$, \rone{meaning that this test did not detect a difference in
+that replicate. This power-limited fraction was descriptive and did not establish
+equivalence.} Across all 24 feature--condition pairs, 20 (83\%) achieved
+$p > 0.05$ in $\geq$90\% of replicates, with a median
+no-difference-detected fraction of 98.6\% (full per-pair results in
+Table~\ref{stab:bootstrap-mw}). The four pairs that fell below 90\% were
+high-variance features in the smallest subgroups (FIX and plasminogen in PCOS;
+FIX and plasminogen in Developed~PE), where the real data exhibited large
+inter-patient variability. \rone{No multiple-testing correction was applied because this
+diagnostic was not used to make simultaneous inferential claims; the per-pair values and the
+90\% threshold were descriptive reporting summaries.} The PCA projections of the conditioned cohorts are provided in
+Figs.~\ref{sfig:conditioned-pca}--\ref{sfig:conditioned-by-visit}. These results showed that SA's multiplicity-weighted
+interpolation can amplify rare subgroups in a way that preserves their distinguishing
+clinical features, useful for \rone{exploratory hypothesis generation and simulation-based
+workflow testing, but not for increasing the effective clinical sample size}. The multivariate-normal model cannot do this:
+fitting a separate MVN to three PCOS patients across 216 features is mathematically
+impossible (rank~2 covariance), and post-hoc subsetting of unconditional MVN samples
+does not preserve subgroup-specific structure. Together, these comparisons showed that
+multiplicity weighting preserved the subgroup patterns represented in the source cohort.
+
+\rone{Generating $100$ conditioned profiles did not add independent subgroup information.
+The PCOS and Developed~PE signals still came from three and five real patients, and their
+participation ratios were $4.6$ and $7.7$ (Table~\ref{stab:multiplicity}). Thus, repeated draws
+were concentrated around a few stored profiles. Treating them as independent observations
+would understate uncertainty. They instead provided denser simulations of the distributions
+suggested by those patients for exploratory modeling and workflow testing.}
+
+\subsection{Mechanistic Consistency}
+\label{sec:results-l4}
+
+The preceding validations assessed statistical properties of the synthetic data. \rboth{We
+next tested whether factor combinations generated by stochastic attention produced
+biologically plausible outputs when passed through a separately specified mechanistic model.
+The model was blind to the generation process but was calibrated on the same cohort.}
+We used the Hockin--Mann BZ2012 model~\citep{Hockin2002,BrummelZiedins2012}, a system
+of 58 ordinary differential equations with 64 rate constants that simulates thrombin
+generation from patient-specific coagulation factor inputs. We calibrated 5 of the
+64 rate constants (prothrombinase, intrinsic and extrinsic tenase, protein~C
+activation, and meizothrombin conversion; Table~\ref{stab:ode-calibration}) on Visit~1 real
+patients at the population level and held the remaining 59 at published literature
+values. We then ran the calibrated model on all 23 real patients and 100 synthetic
+patients under both TF-only and TF+TM conditions (738 total simulations, 0 failures). For each patient, we
+computed five ODE-predicted thrombin generation features (lagtime, peak, time-to-peak,
+maximum rate, and ETP) and compared them against the corresponding values from the
+patient record. In these comparisons (Fig.~\ref{fig:mechanistic-combined}, top row),
+the horizontal axis is the TGA value from the patient record, which exists for both
+real and synthetic patients, while the vertical axis is the value computed by the
+BZ2012 model from that patient's factor inputs. Systematic deviations from the
+$y{=}x$ line reflect ODE model bias (e.g., lagtime is underpredicted at
+$\approx$0.77$\times$), not a failure of the synthetic data; the key observation is
+that real and synthetic patients share the same pattern of model bias, occupying the
+same cloud with the same systematic offset.
+
+We formalized this observation by computing the ODE-predicted/dataset ratio for each
+patient and comparing the resulting distributions between real and synthetic
+populations (Fig.~\ref{fig:mechanistic-combined}, bottom row). These ratio
+distributions capture how the ODE model processes each patient's factor levels. If
+SA had generated patients with biologically implausible factor combinations, the
+model would process them differently, producing a shifted or broadened ratio
+distribution. Instead, the distributions overlapped substantially, with cloud
+overlap (fraction of synthetic ratios within the 5th--95th percentile of real
+ratios) ranging from \rone{0.83 for ETP to 0.92 for T.Peak} under TF-only conditions,
+and two-sample Kolmogorov--Smirnov (KS) tests \rone{did not detect a difference between
+the real and synthetic ratio distributions at this sample size} across all five TGA features
+($D = 0.081$--$0.123$, all $p > 0.30$; full diagnostics in
+Table~\ref{stab:mechanistic-validation}).
+Under TF+TM conditions, the model systematically overcorrected the protein~C
+anticoagulant pathway, producing peak and maximum rate predictions
+approximately 0.5$\times$ measured values for both real and synthetic patients
+(Fig.~\ref{sfig:mechanistic-tm-combined}, same layout as the main-text
+comparison). Cloud overlap remained high (\rone{0.88--0.92} across the
+five features), showing similar model behavior for real and synthetic profiles despite the
+imperfect calibration.
+
+The model was calibrated only on Visit~1 real patients, but the per-visit median predicted-to-measured
+ratios under TF-only conditions remained close to 1.0 at Visits~2 and~3
+(Fig.~\ref{sfig:generalization}). This was consistent with rate constants that remained useful
+beyond the calibration visit. Spearman rank correlations between predicted and measured values were
+moderate for ETP ($\rho \approx 0.6$--$0.8$ for real, $\rho \approx 0.6$--$0.65$
+for synthetic; Fig.~\ref{sfig:rankcorr}) and weak for other features, consistent with
+a 5-parameter population-level calibration that was not designed to resolve
+inter-patient variability. The key finding was not patient-level prediction but
+population-level plausibility. \rboth{Applied identically to both groups, the mechanistic model
+produced overlapping predicted-to-recorded ratio distributions for real and synthetic patients
+under both experimental conditions. Because the model was calibrated on this same cohort, this
+was a same-cohort consistency check rather than independent validation.}
+
+\subsection{Downstream Utility: Mechanistic Model Calibration}
+\label{sec:results-utility}
+
+Having established same-cohort mechanistic consistency, we tested whether synthetic profiles
+could support mechanistic-model calibration. We fit the
+five BZ2012 rate constants under TF-only conditions to either $100$ synthetic V1 profiles or
+$23$ real V1 profiles, using the same bounded Nelder--Mead optimization and 11 random restarts
+(Table~\ref{stab:ode-calibration}). We evaluated both calibrations on held-out real V2 and V3
+TGA measurements. Median relative errors for the synthetic calibration were 2--10\% lower
+across the five features, with an overall synthetic-to-real error ratio of $0.94$
+(Fig.~\ref{fig:downstream-utility}; Table~\ref{stab:downstream-utility}). The parameter
+estimates differed, but the two calibrations produced highly correlated predictions. Because
+the synthetic profiles came from the real cohort, this was not an independent validation. It
+tested whether the representation retained enough structure for calibration.
+\rone{The modest reduction in prediction error did not show that synthetic data were
+superior. It may instead have reflected a more stable calibration objective produced by
+sampling the represented distribution more densely.} \rtwo{Together with the subgroup and
+factor-level analyses, this result supported exploratory modeling and hypothesis generation.
+Confirming those hypotheses and establishing clinical utility would require additional real
+patients or independent experimental data.}

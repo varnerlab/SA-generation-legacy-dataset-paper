@@ -1,0 +1,369 @@
+\section{Methods}
+\label{sec:methods}
+
+\subsection{Population Dataset}
+\label{sec:dataset}
+We analyzed a longitudinal dataset of coagulation, fibrinolysis, thrombin generation
+assay (TGA), and rotational thromboelastometry (ROTEM) measurements from women
+desiring a pregnancy. The study was approved by the Institutional Review Board at
+the University of Vermont. All participants gave written consent before enrollment.
+Blood collection, plasma processing, and assay protocols have been described
+previously~\citep{McLean2012TGA,Hale2012,Psoinos2021,Bernstein2016}. Briefly, citrated platelet-poor plasma
+was collected without tourniquet use after supine rest at three clinical visits:
+Visit~1 (pre-pregnancy baseline in the follicular phase), Visit~2 (end of first
+trimester), and Visit~3 (mid-third trimester). Plasma aliquots were stored at
+$-80^{\circ}$C for subsequent analysis. Measurements of secondary analytes were
+measured as follows: Stago clotting assays measured coagulation-factor activity, ELISA
+measured fibrinolysis proteins, and the CLIA-certified laboratory at the University of Vermont
+Medical Center measured hormone levels. We performed TGA using 5~pM relipidated tissue factor with
+fluorogenic substrate on a Synergy4 plate reader as described
+in McLean et al.\citep{McLean2012TGA}. Clot formation and fibrinolysis dynamics were assessed via
+viscoelastometry using the ROTEM Delta Instrument (Werfen). Thawed plasma was mixed
+with or without 4~nM tPA (with respect to plasma volume), recalcified with 15~mM
+calcium chloride, and incubated for 3~minutes at 37$^{\circ}$C. The reaction was
+initiated by adding the plasma mixture to ROTEM cups containing tissue factor at a
+17:1 ratio; the final concentration of TF in the reaction was 5~pM.
+
+The dataset contained 153 total records across approximately 50 subjects. After
+removing columns with $>30\%$ missing values and retaining only subjects with
+complete data across all three visits, we obtained $K=23$ complete longitudinal
+profiles across $n=72$ assay measurements per visit.
+The 72 assay measurements spanned five categories: (i)~hormones (estradiol,
+progesterone), (ii)~coagulation factors and inhibitors (Factors~II, V, VII, VIII,
+IX, X, XI, XII; antithrombin (AT), protein~C (PC), tissue factor pathway inhibitor (TFPI),
+von Willebrand factor (vWF), fibrinogen, etc.), (iii)~fibrinolytic markers
+(plasminogen, plasminogen activator inhibitor-1 (PAI-1), plasminogen activator inhibitor-2 (PAI-2),
+$\alpha_2$-antiplasmin ($\alpha_2$-AP), thrombin-activatable fibrinolysis inhibitor (TAFI),
+tissue plasminogen activator (tPA), D-dimer equivalents),
+(iv)~thrombin generation parameters under four initiator conditions (TF at 5~pM,
+TF+thrombomodulin (TM), No~TF, No~TF+anti-FXIa), and (v)~ROTEM/viscoelastic parameters
+(clotting time (CT), maximum clot firmness (MCF),
+alpha angle, lysis onset time (LOT), maximum lysis (ML), lysis time (LT),
+area under the curve (AUC) under TF~Only and TF+tPA conditions).
+
+Demographics and clinical characteristics of the resulting cohort, including
+age at enrollment, prepregnancy BMI, parity, gestational ages at each visit,
+and the cross-tabulation of enrollment cohort against pregnancy outcome, are
+summarized in Table~\ref{tab:demographics}. The 23 patients were drawn from
+three enrollment conditions: Healthy nulliparous women ($n{=}14$), women with
+a personal history of preeclampsia from a previous pregnancy (Prior~PE,
+$n{=}6$), and women with polycystic ovarian syndrome (PCOS, $n{=}3$;
+2~individuals were nulliparous). For conditional generation, we defined three
+overlapping subgroups based on pregnancy outcome and comorbidity rather than
+enrollment condition: Uncomplicated ($n{=}18$, all patients whose study pregnancy
+did not result in preeclampsia), PCOS ($n{=}3$, a cross-cutting comorbidity;
+1~patient also developed PE), and Developed~PE ($n{=}5$, patients who developed
+preeclampsia during the study pregnancy, drawn from 2~healthy-enrolled,
+2~prior-PE-enrolled, and 1~PCOS-enrolled participants).
+
+
+\subsection{Multiplicity-Weighted Stochastic Attention}
+\label{sec:sa}
+
+We generated synthetic patients using a multiplicity-weighted variant of Stochastic
+Attention (SA) rooted in modern Hopfield network theory~\citep{Ramsauer2021}. We
+stored $K$ memory patterns as columns of a matrix $\mhat{X}\in\R^{d\times K}$ and
+defined a weighted Hopfield energy landscape:
+\begin{equation}
+    E_r(\vxi) = \frac{1}{2}\norm{\vxi}^2
+    - \frac{1}{\beta}\log\sum_{k=1}^{K} r_k \exp\left(\beta\,\mathbf{m}_k^\top\vxi\right)
+    \label{eq:hopfield_energy}
+\end{equation}
+where $\{\mathbf{m}_k\}_{k=1}^K$ are stored memory patterns, $\beta$ is an inverse
+temperature parameter controlling the sharpness of retrieval, and $\{r_k\}_{k=1}^K$
+are per-pattern multiplicity weights. When all $r_k = 1$, this reduces to the standard
+modern Hopfield energy; when $r_k = \rho > 1$ for a designated subset of patterns, the
+energy landscape is continuously deformed to favor that subset.
+
+\rone{This energy defines a probability distribution that can be written exactly. Writing
+$\pi_r(\vxi)\propto\exp[-\beta E_r(\vxi)]$ and completing the square in each exponent gives
+the expression:
+\begin{equation}
+    \exp\!\left[-\frac{\beta}{2}\norm{\vxi}^2 + \beta\,\mathbf{m}_k^\top\vxi\right]
+    = \exp\!\left(\frac{\beta}{2}\norm{\mathbf{m}_k}^2\right)
+      \exp\!\left[-\frac{\beta}{2}\norm{\vxi-\mathbf{m}_k}^2\right],
+    \label{eq:complete_square}
+\end{equation}
+Substituting Eq.~\eqref{eq:complete_square} into the probability density gives an exact
+finite isotropic Gaussian mixture:
+\begin{equation}
+    \pi_r(\vxi) = \sum_{k=1}^{K} q_k\,
+    \mathcal{N}\!\left(\mathbf{m}_k,\ \beta^{-1}\mathbf{I}\right),
+    \qquad
+    q_k \propto r_k\exp\!\left(\frac{\beta}{2}\norm{\mathbf{m}_k}^2\right).
+    \label{eq:exact_mixture}
+\end{equation}
+Each stored patient is the center of one component. The common component variance is
+$\beta^{-1}$, and the multiplicity weights enter the mixture probabilities directly. The
+memories used here are normalized to unit length, so the exponential factor is shared by
+every component and $q_k = r_k/\sum_j r_j$ exactly. We could therefore sample this
+distribution directly: first choose $k$ from $q$ and then draw
+$\vxi\sim\mathcal{N}(\mathbf{m}_k,\beta^{-1}\mathbf{I})$. This procedure requires no Markov
+chain. The cohort
+analyzed in this work was generated with the Langevin implementation given next, and that is
+what the reported results describe. We added the direct sampler for the stochastic-attention
+target afterward as a check,
+using the same normalization, magnitude rescaling, and decoding steps
+(Table~\ref{stab:sampling-ladder}).}
+
+We sampled from this landscape using an Unadjusted Langevin Algorithm (ULA):
+\begin{equation}
+    \vxi_{t+1} = (1-\alpha)\,\vxi_t
+    + \alpha\,\mhat{X}\,\text{softmax}\!\left(\beta\,\mhat{X}^\top\vxi_t + \log\mathbf{r}\right)
+    + \sqrt{\frac{2\alpha}{\beta}}\,\boldsymbol{\varepsilon}_t
+    \label{eq:ula}
+\end{equation}
+where $\alpha$ is a step size, $\boldsymbol{\varepsilon}_t\sim\mathcal{N}(\mathbf{0},\mathbf{I})$,
+and $\log\mathbf{r}$ is the element-wise log of the multiplicity vector. The
+deterministic component drove $\vxi_t$ toward a multiplicity-weighted combination of
+stored patterns, while the stochastic component added variation. The
+$\log r_k$ bias in the softmax logits interpolated between unconditioned generation ($\rho = 1$,
+all patterns equally weighted) and hard subset curation ($\rho \to \infty$, only
+designated patterns contribute). This is an inference-time operation that requires
+no change to the stored patterns.
+
+\rone{The synthetic cohort analyzed in this work was produced by initializing each Langevin
+chain near a randomly selected stored pattern and retaining the final state after $T{=}2000$
+steps. Because the starting point and chain length could affect the output, we compared four
+sampling procedures. These used the original initialization near a stored pattern, random
+initialization on the unit sphere, pooled samples from multiple chains after burn-in and
+thinning, and Metropolis-adjusted sampling. As a separate check, we also drew directly from
+the exact stochastic-attention mixture in Eq.~\eqref{eq:exact_mixture}, without using a Markov
+chain. The fidelity and
+membership-inference results were similar across all four procedures and the direct draws.
+This agreement indicated that the original implementation reproduced the evaluated behavior
+of the sampling distribution at $\beta^*$ (Supplementary
+Fig.~\ref{sfig:sampling-ladder}).}
+
+\rboth{The inverse temperature $\beta$ affects Hopfield retrieval and direct sampling in
+different ways. In the Hopfield update, small $\beta$ spreads attention across many stored
+profiles and tends toward their weighted average, whereas large $\beta$ concentrates attention on
+individual profiles. When sampling directly from Eq.~\eqref{eq:exact_mixture}, the stored
+profile is chosen according to $q_k$. For the unit-normalized profiles used here, these
+probabilities are independent of $\beta$ and are set by the multiplicity weights. Instead,
+$\beta$ controls the spread around the selected profile through the covariance
+$\beta^{-1}\mathbf{I}$. Small $\beta$ therefore produces broader draws, whereas large $\beta$
+produces tighter draws. The attention-entropy transition used to define $\beta^*$ marks the
+shift from attention shared across profiles to attention concentrated on individual profiles.}
+\rboth{We selected $\beta^*$ from the transition in normalized attention entropy across a
+logarithmic sweep of $\beta$. Specifically, $\beta^*$ was the grid point where the entropy
+curve bent downward most strongly, calculated as the most negative finite-difference second
+derivative with respect to $\log\beta$ (Supplementary Methods). This choice depended on the
+relative positions of the $K$ profiles in $d$ dimensions, not on what their features
+represented. For this dataset
+($K{=}23$, $d_{\text{PCA}}{=}18$), it gave $\beta^*\approx2.94$; the random-pattern prediction
+$\sqrt{d}\approx4.24$ served as a theoretical reference. A sensitivity analysis across
+$\beta/\beta^*\in[0.1,3.0]$ showed that the selected value balanced novelty and
+fidelity (Table~\ref{stab:beta-sweep}). For conditioned generation, we repeated the entropy
+calculation with the multiplicity bias included, giving a $\rho$-dependent $\beta^*(\rho)$.}
+
+\rboth{We used the participation ratio to measure how strongly multiplicity weighting
+concentrated repeated draws around a few stored profiles. For unit-normalized memories,
+$q_k=r_k/\sum_j r_j$ and
+$K_{\text{eff}}=1/\sum_k q_k^2=(\sum_k r_k)^2/\sum_k r_k^2$. Thus,
+$K_{\text{eff}}$ is the number of equally weighted components with the same concentration.
+Equal weights gave $K_{\text{eff}}=23$; concentrating weight on three profiles moved it toward
+three. This was not an independent clinical sample size. To assign a target fraction
+$f_{\text{target}}$ of component probability to a subgroup, we used
+$\rho=f_{\text{target}}K_{\text{bg}}/[K_{\text{des}}(1-f_{\text{target}})]$, where
+$K_{\text{des}}$ and $K_{\text{bg}}$ are the subgroup and background profile counts.}
+
+
+\subsection{Pipeline for Continuous Longitudinal Data}
+\label{sec:pipeline}
+
+Applying SA to continuous longitudinal clinical data required several adaptations
+beyond the standard Hopfield sampling framework. We first concatenated each patient's
+$n{=}72$ assay measurements across all three visits into a single vector of dimension
+$d_{\text{concat}} = 3n = 216$, so that each stored memory pattern encoded a
+complete longitudinal profile and generated synthetic patients would have internally
+consistent multi-visit trajectories. We then standardized each feature to zero mean
+and unit variance and applied PCA retaining 95\% of the variance, reducing
+dimensionality from 216 to $d_{\text{PCA}}{=}18$. This compression served two
+purposes: it removed collinearity among the 216 features and yielded a
+memory-to-dimension ratio of $K/d_{\text{PCA}} \approx 1.28$, placing SA in a
+favorable operating regime where the number of stored patterns exceeded the
+dimensionality of the representation.
+
+Standard SA operates on unit-norm patterns, which is appropriate for discrete data
+(e.g., one-hot protein sequences) but destroys the anisotropic variance structure
+of continuous clinical measurements, collapsing dispersion across all principal
+components to a unit sphere. We addressed this with a direction-magnitude
+decomposition. Before normalization, we recorded each pattern's PCA-space norm
+$s_k = \|\mathbf{m}_k\|$; we then ran SA on unit-norm patterns to obtain a
+directional sample $\hat{\vxi}$, drew a magnitude $s$ from the empirical
+distribution of $\{s_k\}$, and reconstructed the rescaled sample as
+$\vxi_{\text{rescaled}} = s \cdot \hat{\vxi}$. This preserved the directional
+structure learned by the Hopfield energy while restoring the natural scale of
+variation. The rescaled PCA vector was mapped back to the original feature space via
+inverse PCA and destandardization, then split into three 72-dimensional visit records.
+
+To generate condition-specific cohorts (e.g., PCOS-only), we set the multiplicity
+$r_k = \rho$ for patterns belonging to the target subgroup and $r_k = 1$ for all
+others, and sampled using the weighted Langevin update (Eq.~\ref{eq:ula}). The
+multiplicity $\rho$ was computed to place a target fraction
+$f_{\text{target}} = 0.80$ of the mixture-component probability on the designated subset,
+while retaining 20\% probability on background patterns, via
+$\rho = f_{\text{target}} \cdot K_{\text{bg}} / (K_{\text{des}} \cdot (1 -
+f_{\text{target}}))$. Multiplicity parameters for all three subgroups are
+listed in Table~\ref{stab:multiplicity}. For the PCOS subgroup
+($K_{\text{des}}{=}3$), this required $\rho \approx 26.7$, reducing the
+participation ratio to $K_{\text{eff}} \approx 4.6$. \rone{For both unconditioned and
+conditioned generation, magnitudes were drawn from the empirical distribution of all $23$
+PCA-space norms. Subgroup weighting affected directional sampling, not the distribution of
+magnitudes.}
+
+
+The complete generation pipeline is summarized in Algorithm~\ref{alg:sa-pipeline}.
+The full set of SA hyperparameters used for all experiments is listed in
+Table~\ref{stab:hyperparams}, with key operating values $\alpha = 0.01$,
+$T = 2{,}000$ Langevin iterations per sample, and random seed 42 for
+reproducibility. A control experiment comparing ULA with the
+Metropolis-Adjusted Langevin Algorithm (MALA) showed that the
+discretization bias is negligible at this step size. Across 10 chains of
+5{,}000 iterations the MALA acceptance rate was $99.9 \pm 0.03\%$, and mean
+post-burn-in energies and effective sample sizes were indistinguishable
+between the two samplers (Supplementary Table~\ref{tab:ula-vs-mala}). The pipeline was implemented in Julia (v1.12) using the packages listed in the code
+repository. Generating 100 synthetic patients required approximately 0.1~seconds on
+a standard laptop (Apple M-series), comparable to MVN sampling ($\approx$0.15~s),
+because SA operates in the 18-dimensional PCA space rather than the full
+216-dimensional feature space. Each synthetic patient was generated by an independent
+Langevin chain (no shared state between patients); generation quality was stable
+across $T \in [500, 4000]$ iterations (median MRE 1.0--1.6\%), indicating that
+$T{=}2{,}000$ was sufficient for convergence.
+
+\begin{algorithm}[ht]
+\caption{Multiplicity-Weighted SA for Longitudinal Patient Generation}
+\label{alg:sa-pipeline}
+\begin{algorithmic}[1]
+\Require Patient data $\{\mathbf{x}_k^{(v)}\}$ for $k=1,\ldots,K$ patients, $v=1,2,3$ visits
+\Require Multiplicity vector $\mathbf{r}$ (all ones for unconditioned; $r_k = \rho$ for designated subset)
+\Ensure $N$ synthetic longitudinal patient profiles
+\State Concatenate: $\mathbf{x}_k \gets [\mathbf{x}_k^{(1)}; \mathbf{x}_k^{(2)}; \mathbf{x}_k^{(3)}] \in \mathbb{R}^{216}$
+\State Standardize: $\mathbf{z}_k \gets (\mathbf{x}_k - \boldsymbol{\mu}) \oslash \boldsymbol{\sigma}$
+\State PCA: $\mathbf{m}_k \gets \mathbf{W}^\top \mathbf{z}_k \in \mathbb{R}^{18}$ \Comment{95\% variance retained}
+\State Record norms: $s_k \gets \|\mathbf{m}_k\|$; normalize $\hat{\mathbf{m}}_k \gets \mathbf{m}_k / s_k$
+\State \rboth{Select $\beta^*$ where the attention-entropy curve bends downward most strongly, including $\log\mathbf{r}$ when conditioned}
+\For{$i = 1, \ldots, N$}
+    \State \rone{Select anchor $k_0$ from all patterns, or from the designated subset when conditioned}
+    \State \rone{$\hat{\vxi}_0 \gets \hat{\mathbf{m}}_{k_0}+0.01\boldsymbol{\varepsilon}_0$; normalize $\hat{\vxi}_0$}
+    \For{$t = 0, \ldots, T-1$} \Comment{Langevin dynamics}
+        \State $\hat{\vxi}_{t+1} \gets (1-\alpha)\hat{\vxi}_t + \alpha\hat{\mathbf{M}}\,\mathrm{softmax}(\beta^*\hat{\mathbf{M}}^\top\hat{\vxi}_t + \log\mathbf{r}) + \sqrt{2\alpha/\beta^*}\,\boldsymbol{\varepsilon}_t$
+    \EndFor
+    \State Draw magnitude: $s \sim \{s_k\}_{k=1}^K$
+    \State Rescale: $\mathbf{m}_{\text{synth}} \gets s \cdot \hat{\vxi}_T / \|\hat{\vxi}_T\|$
+    \State Inverse PCA + destandardize: $\mathbf{x}_{\text{synth}} \gets \boldsymbol{\sigma} \odot (\mathbf{W}\,\mathbf{m}_{\text{synth}} + \bar{\mathbf{z}}) + \boldsymbol{\mu}$
+    \State Split into visit records: $\mathbf{x}_{\text{synth}}^{(1)}, \mathbf{x}_{\text{synth}}^{(2)}, \mathbf{x}_{\text{synth}}^{(3)}$
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Baseline and Validation Framework}
+\label{sec:validation}
+
+As a baseline, we generated synthetic patients by fitting a single multivariate
+normal (MVN) distribution to the same $K{=}23$ concatenated 216-dimensional patient
+profiles. Both methods operated on the same concatenated
+representation. Each patient's three visits were joined into one vector before
+generation, so that both methods had the opportunity to capture cross-visit
+dependencies. For SA, this structure was preserved through the Hopfield energy
+landscape operating on 18-dimensional PCA projections of the concatenated vectors.
+For MVN, the $216 \times 216$ sample covariance matrix had rank at most~22 and was
+regularized using Ledoit--Wolf shrinkage~\citep{Ledoit2004}, which inflated
+eigenvalues in the 194 null dimensions.
+\rone{To examine the role of the shared PCA representation, we also evaluated a fitted
+two-component diagonal-covariance Gaussian mixture, a kernel-density estimator,
+$k$-nearest-neighbor interpolation, and a Gaussian copula in the same 18-dimensional PCA
+space. Their implementations and shared evaluation pipeline are described in Supplementary
+Methods (PCA-space ablation).}
+We then evaluated both SA and MVN synthetic patients through four progressively stringent
+validation levels.
+\textbf{Level~1 (Marginal Plausibility)} tested whether individual feature
+distributions matched, using per-feature means, standard deviations, and known
+physiological relationships. \textbf{Level~2 (Joint Structure)} tested whether the
+cross-visit covariance was preserved, by comparing full $216 \times 216$ correlation
+matrices, eigenvalue spectra, and PCA projections between real, SA, and MVN
+populations. \textbf{Level~3 (Conditional Structure)} tested whether rare subgroups
+could be amplified while preserving condition-specific signatures, by generating
+cohorts of 100 patients each from the Uncomplicated ($n{=}18$), PCOS ($n{=}3$), and
+Developed~PE ($n{=}5$) subgroups using multiplicity-weighted sampling. \textbf{Level~4 (Mechanistic
+Consistency)} tested whether synthetic patients produced biologically plausible
+outputs under \rboth{a separately specified, generator-blind mechanistic model calibrated
+on the same real cohort}. We used the Hockin--Mann BZ2012
+coagulation model~\citep{Hockin2002,BrummelZiedins2012}, a system of 58 ODEs with 64 rate
+constants, in which 5 rate constants were calibrated on Visit~1 real patients at the
+population level and the remaining 59 were held at literature values. We ran the model
+on all real and synthetic patients under two conditions (TF-only and TF+TM) and
+compared predicted-versus-measured thrombin generation features. The primary metric
+was cloud overlap: the fraction of synthetic predicted/measured ratios falling
+within the 5th--95th percentile range of real ratios.
+
+\rone{For the membership-inference analysis, we drew $40$ random partitions of the $23$ real
+profiles. For each partition, we repeated the preprocessing using $15$ profiles, constructed
+the memory matrix, and generated $100$ synthetic profiles; the other $8$ real profiles were
+held out. We assigned each real profile a membership score equal to the negative Euclidean
+distance to its nearest synthetic profile in standardized $216$-dimensional space, so a
+higher score indicated stronger evidence that the profile had been stored. A receiver
+operating characteristic curve compared the fraction of stored profiles correctly identified
+with the fraction of held-out profiles incorrectly identified as the score threshold changed.
+We calculated the area under this curve using the equivalent Mann--Whitney rank statistic,
+with ties contributing one half, and reported the mean across the $40$ partitions. An AUC of
+$0.5$ indicated chance discrimination, whereas $1.0$ indicated perfect discrimination.}
+
+\subsection{\rboth{Robustness Tests}}
+\label{sec:robustness-benchmarks}
+
+\rboth{Results from one clinical cohort could not show how stochastic-attention generation
+behaved as training-set size, dimension, and nonlinear structure changed. We therefore used
+three tests. The covariance test compared stochastic attention with a sample-covariance
+Gaussian generator on low-rank Gaussian populations with known covariance. We generated one
+training cohort for every tested combination from the factor model
+$\mathbf{X}=\mathbf{Z}\mathbf{L}^{\top}+\boldsymbol{\epsilon}$, where
+$\mathbf{Z}\in\mathbb{R}^{n\times r}$ and $\mathbf{L}\in\mathbb{R}^{p\times r}$ had
+independent standard-normal entries and $\boldsymbol{\epsilon}$ had independent Gaussian
+entries with variance $0.1$. This gave the known population covariance
+$\boldsymbol{\Sigma}_{\mathrm{pop}}=\mathbf{L}\mathbf{L}^{\top}+0.1\mathbf{I}$. We tested
+every combination of
+$n\in\{8,15,23,40,80\}$, $p\in\{30,120,216\}$, and
+$r\in\{3,5,10\}$. For each training cohort, we standardized the features, retained enough
+principal components to explain $95\%$ of the variance, constructed the stochastic-attention
+memory matrix from the resulting scores, and selected $\beta$ separately using the same
+attention-entropy criterion as in the clinical analysis. Stochastic attention generated
+$100$ profiles using ULA with $\alpha{=}0.01$, $T{=}2{,}000$, and empirical magnitude
+rescaling. The Gaussian generator used the training mean and sample covariance. For numerical
+sampling, diagonal jitter began at $10^{-8}\mathbf{I}$ and increased tenfold as needed through
+$10^{-2}\mathbf{I}$; if Cholesky sampling still failed, we sampled in the nonnegative
+eigenspace of the sample covariance. We applied no covariance shrinkage. The Gaussian
+generator also produced $100$ profiles. Covariance error was
+$\lVert\widehat{\boldsymbol{\Sigma}}_{\mathrm{gen}}-
+\boldsymbol{\Sigma}_{\mathrm{pop}}\rVert_F/
+\lVert\boldsymbol{\Sigma}_{\mathrm{pop}}\rVert_F$. Figure~\ref{fig:sim-recovery}A reports
+Gaussian error divided by stochastic-attention error, averaged across the three latent ranks.
+A ratio above one favored stochastic attention.}
+
+\rboth{The remaining tests asked how stochastic attention changed with less clinical
+information and how it compared with the Gaussian generator on a nonlinear population. For
+the sample-size test, we drew ten subsets without replacement from the $23$ complete patients
+at each $n\in\{20,15,10,8\}$. For every subset, we repeated the standardization, PCA, and
+$\beta$ selection, constructed a new stochastic-attention memory matrix, generated $100$
+profiles, and evaluated the generated cohort against the same $23$-patient reference. The
+outcomes were relative cross-visit correlation error, pooled median marginal relative error,
+and TF-only mechanistic cloud overlap. Figure~\ref{fig:sim-recovery}B shows the mean and
+standard deviation of cross-visit error across the ten subsets. For the nonlinearity test, we
+drew $t$ uniformly from $[-1,1]$ and defined an S-curve by $x_1=t$ and
+$x_2=c\sin(\pi t)$. Viewed in the $(x_1,x_2)$ plane, this one-dimensional path resembled the
+letter S because it had two opposing bends. Setting $c{=}0$ produced a straight line, and
+increasing $c$ made the bends stronger. Each simulated profile was a noisy point near this
+path. For each replicate, we used a new random transformation to spread the two coordinates
+across $p{=}30$ or~$120$ simulated variables while preserving the curve's geometry. We then
+added Gaussian noise with standard deviation $0.05$ in every direction. We used $n{=}23$ and curvature
+$c\in\{0,0.25,0.5,1,1.5,2\}$, with five replicates per setting. From every training cohort, we
+constructed a stochastic-attention memory matrix and estimated the same sample-covariance
+Gaussian comparator; each generator produced $100$ profiles. We projected generated profiles
+onto the known two-dimensional embedding plane and measured their mean distance from the
+curve, thereby excluding noise orthogonal to that plane. We also measured relative covariance
+error against the covariance of an independent $50{,}000$-profile population draw. For
+the reported curvature threshold, we averaged stochastic-attention curve distance across the
+five replicates and both dimensions at each curvature and identified the first nonzero value at
+which this mean was at least twice its value for the straight-line population. All simulation
+cells used deterministic, cell-specific random-number streams derived from seed~42.}
