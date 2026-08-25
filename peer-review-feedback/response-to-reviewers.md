@@ -21,7 +21,7 @@ Reviewer 1's original report numbered the comments 1 through 9 and then 11 throu
 
 ---
 
-## General response to the editor and reviewers
+## General response to reviewers
 
 We thank both reviewers for their careful and constructive comments. Both recognized the value of combining statistical and mechanistic validation for very small longitudinal cohorts. They also identified four main concerns: generalizability beyond the single cohort of 23 patients, the separate contributions of principal-component analysis and stochastic attention, the limited independence of the mechanistic validation, and the generator's extrapolation and privacy behavior. We addressed each concern with new analyses and revised text.
 
@@ -33,7 +33,7 @@ The privacy analysis found a clear membership signal at the reported inverse-tem
 
 Several findings reflected the small source cohort and the choices used to represent and condition the data. These included the convex-hull result, the membership signal, the limits of conditional generation, and the modest downstream gain. We therefore framed the clinical study as a proof of concept. We removed claims of equivalence and limited the proposed uses to exploratory simulation and workflow testing. For statistical inference, the sample size remained the number of real patients, not the number of generated profiles.
 
-We also clarified that the mechanistic validation was not independent of the source cohort (R1.2, R2.3). We added limitations concerning irregular visit timing, missing data, tail compression, and the linear representation. We simplified the Hopfield explanation and moved the detailed derivation to the Supplement (R1.9, R2.minor2). Finally, we reorganized the figures so that the main text still contained seven figures after the new analyses were added (R2.minor1).
+We also clarified that the mechanistic validation was not independent of the source cohort (R1.2, R2.3). We added limitations concerning irregular visit timing, missing data, tail compression, and the linear representation. We simplified the Hopfield explanation and consolidated its methodological details in the Methods (R1.9, R2.minor2). Finally, we reorganized the figures so that the main text still contained seven figures after the new analyses were added (R2.minor1).
 
 ---
 
@@ -52,7 +52,7 @@ The fitted two-component mixture and copula were competitive with stochastic att
 
 We did not include a neural diffusion model because estimating one from 23 observations would not provide a credible small-sample baseline. The nearest-neighbor method provided a non-neural interpolation comparison.
 
-**Changes:** Methods (PCA-space comparison and Supplementary Methods pointer); Results (Marginal Plausibility); Discussion (representation and sampler distinction); Supplementary Methods (four baseline implementations, placed before the tables and figures); Supplementary Table S13 (five-generator comparison). Blue, with the shared Discussion transition in violet. `\rone{...}` `\rboth{...}`
+**Changes:** Methods (PCA-space comparison and implementation details); Results (Marginal Plausibility); Discussion (representation and sampler distinction); Supplementary Table S13 (five-generator comparison). Blue, with the shared Discussion transition in violet. `\rone{...}` `\rboth{...}`
 
 ---
 
@@ -98,7 +98,7 @@ We then used the direct sampler for the stochastic-attention target, without a M
 
 Thus, the membership signal arose from the target distribution in this small-cohort setting, where every stored profile was the center of a mixture component. It did not result from the numerical sampler. Under this narrow test, inclusion could be inferred for an already-known de-identified record. The analysis did not attach a name to that record, reconstruct an unknown patient's measurements, or identify a participant. We reported the full diagnostics in the Results and a new Supplement subsection and limited the Discussion to the distinction between detecting inclusion of an already-known record and identifying or reconstructing a participant.
 
-**Changes:** Results (one question-driven paragraph ending with the bounded candidate-record conclusion) and Discussion (bounded candidate-record interpretation); new Supplement subsection "Sampling correctness and privacy diagnostics," condensed into two question-driven paragraphs (E3, E3b, four sampling procedures, the inverse-temperature sweep, and direct sampling); Methods (closed-form sampling distribution and the membership score, receiver operating characteristic curve, and AUC calculation); Introduction (finite-mixture explanation and the source of non-identical samples); corresponding revisions to the computational-cost and interpolation language. Blue. `\rone{...}`
+**Changes:** Results (one question-driven paragraph ending with the bounded candidate-record conclusion) and Discussion (bounded candidate-record interpretation); new Supplement subsection "Supplementary Sampling and Privacy Results," condensed into two question-driven paragraphs (E3, E3b, four sampling procedures, the inverse-temperature sweep, and direct sampling); Methods (closed-form sampling distribution and the membership score, receiver operating characteristic curve, and AUC calculation); Introduction (finite-mixture explanation and the source of non-identical samples); corresponding revisions to the computational-cost and interpolation language. Blue. `\rone{...}`
 
 ---
 
@@ -135,7 +135,7 @@ The nonlinearity test asked how increasing curvature affected recovery of a nonl
 
 These tests showed lower covariance error for stochastic attention in most of the tested small, linear, rank-deficient settings. Marginal and correlation fidelity declined with fewer clinical training patients, although mechanistic overlap remained near 0.90. The nonlinear benchmark exposed a trade-off: at nonzero curvature, stochastic-attention samples remained closer to the curve on average, whereas the Gaussian generator recovered covariance more accurately. We also noted that related studies have applied the same geometry-based operating-point rule and multiplicity weighting to protein sequence generation and conditional steering. We cited those studies as prior applications in another domain, not as clinical validation. We separately framed the present clinical study as a proof of concept and stated that we did not test the method in a second clinical cohort.
 
-**Changes:** New Methods subsection "Robustness Tests," including the construction and numerical details for both generators, and a single-paragraph Results subsection "Robustness to Sample Size, Dimensionality, and Nonlinearity" that explains the three tests in plain language and identifies which generators were evaluated in each one. The Methods define the S-curve in plain language, and its first Results mention links to the full construction. The Results distinguish construction of the stochastic-attention memory matrix from estimation of the Gaussian comparator using the sample mean and covariance, describe the number of profiles in each simulated dataset, state what each test measured, retain the averaging used for the reported covariance-error ratio, and separate the decline in stochastic-attention curve recovery as curvature increased from the comparison with the Gaussian generator. The Results move from population-covariance recovery to the stochastic-attention clinical subset test and then the two-generator nonlinear-structure benchmark; revised main-text figure (`fig:sim-recovery`) and caption; added cross-domain context in the Introduction and Discussion; explicit proof-of-concept framing in the Abstract, Introduction, Discussion, and Conclusion. The Discussion also stated that the subgroup test did not establish equivalence. Violet. `\rboth{...}`
+**Changes:** New Methods subsection "Robustness Tests," including the construction and numerical details for both generators, and a single-paragraph Results subsection "Robustness to Sample Size, Dimensionality, and Nonlinearity" that explains the three tests in plain language and identifies which generators were evaluated in each one. The Methods define the S-curve in plain language, and its first Results mention links to the full construction. The Results distinguish construction of the stochastic-attention memory matrix from estimation of the Gaussian comparator using the sample mean and covariance, describe the number of profiles in each simulated dataset, state what each test measured, retain the averaging used for the reported covariance-error ratio, and separate the decline in stochastic-attention curve recovery as curvature increased from the comparison with the Gaussian generator. The Results move from population-covariance recovery to the stochastic-attention clinical subset test and then the two-generator nonlinear-structure benchmark; revised main-text figure (`fig:sim-recovery`) and caption; added cross-domain context in the Introduction and Discussion; explicit proof-of-concept framing in the Abstract, Introduction, and Discussion. The Discussion also stated that the subgroup test did not establish equivalence. Violet. `\rboth{...}`
 
 ---
 
@@ -144,9 +144,9 @@ These tests showed lower covariance error for stochastic attention in most of th
 
 *We agree that the theory needed a simpler explanation.* We revised the Methods to explain the two roles of β. In the Hopfield update, low β spread attention across many stored profiles and moved toward their weighted average. High β concentrated attention on individual profiles. In direct sampling, β did not change the probability of selecting each unit-normalized profile. Those probabilities were set by the multiplicity weights. Instead, β controlled how widely samples spread around the selected profile.
 
-We chose β\* at the point where the attention-entropy curve bent downward most strongly. We calculated this as the most negative finite-difference second derivative of normalized entropy with respect to log β. We defined the participation ratio as the number of equally weighted mixture components that would give the same concentration of sampling probability. It was not an independent patient count. We also introduced each displayed equation with a complete sentence that states what the equation gives and connects it to the preceding mathematical step. We moved the entropy definition and calculation details to a new Supplementary Methods subsection while keeping the explanation and resulting values in the main text. We did not add another figure because the main text already contained seven figures and Reviewer 2 requested figure consolidation.
+We chose β\* at the point where the attention-entropy curve bent downward most strongly. We calculated this as the most negative finite-difference second derivative of normalized entropy with respect to log β. We defined the participation ratio as the number of equally weighted mixture components that would give the same concentration of sampling probability. It was not an independent patient count. We also introduced each displayed equation with a complete sentence that states what the equation gives and connects it to the preceding mathematical step. We kept the entropy definition, calculation details, explanation, and resulting values together in the Methods. We did not add another figure because the main text already contained seven figures and Reviewer 2 requested figure consolidation.
 
-**Changes:** Methods (simplified explanation, connected lead-ins to displayed equations, and a separate concise participation-ratio paragraph); Supplement (detailed theory and calculation). Violet. `\rboth{...}`
+**Changes:** Methods (simplified explanation, entropy calculation, connected lead-ins to displayed equations, and a separate concise participation-ratio paragraph). Violet. `\rboth{...}`
 
 ---
 
@@ -186,7 +186,7 @@ The simulation benchmark did not establish how the method would perform in large
 
 *We agree and revised these claims throughout the manuscript.* The subgroup analysis was a descriptive, low-power Mann–Whitney test. A result of `p > 0.05` meant only that the test did not detect a difference in that replicate; it did not establish equivalence. We also limited the utility claim to the exploratory modeling uses tested in this proof-of-concept study.
 
-**Changes:** Abstract, Introduction, Discussion, Conclusion wording. `\rone{...}`
+**Changes:** Abstract, Introduction, and Discussion wording. `\rone{...}`
 
 ---
 
@@ -263,7 +263,7 @@ We also clarified in the Introduction that a further motivation was to support t
 ### R2.minor2: Streamline Hopfield theory exposition
 > Some sections (particularly the Hopfield network theory) could be streamlined to focus on the applied contribution.
 
-As described in **R1.9**, we moved the detailed theory to the Supplement and added a plain-language explanation to the Methods.
+As described in **R1.9**, we consolidated the theory and calculation details in the Methods and added a plain-language explanation.
 
 **Changes:** See R1.9. Violet. `\rboth{...}`
 

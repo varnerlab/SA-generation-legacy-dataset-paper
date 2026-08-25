@@ -6,7 +6,9 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{natbib}
+\usepackage{xr-hyper}
 \usepackage{hyperref}
+\hypersetup{hidelinks}
 \usepackage{xurl}   % break long URLs anywhere; keeps the repository URL visible in the preprint
 \usepackage{algorithm}
 \usepackage{algpseudocode}
@@ -14,9 +16,11 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{placeins}
+\setcounter{secnumdepth}{0}
 
 % ── paths ─────────────────────────────────────────────────────────────────────
 \graphicspath{{sections/figures/}}
+\externaldocument{supplementary}
 
 % ── macros ────────────────────────────────────────────────────────────────────
 \newcommand{\vxi}{\boldsymbol{\xi}}
@@ -69,17 +73,23 @@ Ira Bernstein$^{3}$
 \input{sections/introduction}
 \input{sections/results}
 \input{sections/discussion}
-\input{sections/conclusion}
 \input{sections/methods}
 
 % ── Data Availability ────────────────────────────────────────────────────────
 \section*{Data Availability}
-The code for synthetic patient generation, all validation scripts, and the
-generated synthetic datasets are available at
+The generated synthetic datasets and all intermediate validation outputs
+are available in the project repository at
 \url{https://github.com/varnerlab/SA-generation-legacy-dataset-paper}.
-The real patient data were collected under approval from the University of Vermont
-Institutional Review Board; de-identified
-data are available upon reasonable request to the corresponding author.
+The de-identified real patient data are available upon reasonable request to the
+corresponding author.
+
+% ── Code Availability ───────────────────────────────────────────────────────
+\section*{Code Availability}
+All code for synthetic patient generation, validation, figure reproduction,
+and mechanistic model calibration is available at
+\url{https://github.com/varnerlab/SA-generation-legacy-dataset-paper}.
+The repository includes Julia source code, experiment scripts, and a Python
+baseline script for CTGAN/TVAE comparison.
 
 \input{sections/acknowledgments}
 
@@ -90,9 +100,5 @@ data are available upon reasonable request to the corresponding author.
 % ── Tables and Figures (after references, per Nature style) ──────────────────
 \clearpage
 \input{sections/floats}
-
-% ── Supplementary Information ────────────────────────────────────────────────
-\clearpage
-\input{sections/supplementary}
 
 \end{document}

@@ -65,7 +65,7 @@ deep model provided a suitable complete-profile baseline for this $23$-patient c
 To examine the role of the shared PCA representation, we compared stochastic attention
 with a fitted two-component diagonal-covariance Gaussian mixture, a kernel-density estimator, $k$-nearest-neighbor interpolation, and a
 Gaussian copula in the same $d{=}18$ PCA subspace
-(Supplementary Methods, PCA-space ablation; Supplementary Table~\ref{stab:pca-ablation}).
+(Methods, Baseline and Validation Framework; Supplementary Table~\ref{stab:pca-ablation}).
 Nearest-neighbor samples remained close to
 stored profiles: median novelty, $1-\max_k\cos(\hat{\vxi},\hat{\mathbf{m}}_k)$, was $0.05$,
 and only $5\%$ of the synthetic patients exceeded the $0.2$ novelty cutoff.
@@ -124,7 +124,7 @@ baseline's greater scatter to variance added in directions unsupported by the co
 
 Results from a single cohort of $23$ patients could not show how stochastic attention
 would perform if the amount or structure of the available data changed. We therefore asked three
-questions in controlled tests (Methods, Sec.~\ref{sec:robustness-benchmarks}). First,
+questions in controlled tests (Methods, Robustness Tests). First,
 could generated profiles recover the true covariance? We simulated datasets in which the
 covariance was known. We varied the size of the simulated datasets from $8$ to~$80$ profiles,
 the number of variables per profile from $30$ to~$216$, and the complexity of the correlation patterns.
@@ -145,7 +145,7 @@ means increased from $2.0\%$ to $4.9\%$, and overlap with the mechanistic-model
 reference remained near $0.90$. Third, could stochastic attention and the Gaussian generator
 reproduce curved relationships? We used a noisy S-curve, a simulated path that resembled the
 letter S because it had two opposing bends. We spread this path across either $30$ or~$120$
-variables while preserving its shape (Methods, Sec.~\ref{sec:robustness-benchmarks}). For each amount of curvature and each number of variables, we created five simulated
+variables while preserving its shape (Methods, Robustness Tests). For each amount of curvature and each number of variables, we created five simulated
 datasets, each with $23$ profiles. From every dataset, we constructed a stochastic-attention
 memory matrix and estimated a Gaussian generator; each generator produced $100$ profiles. As
 curvature increased, stochastic-attention profiles moved farther from the curve. At curvature

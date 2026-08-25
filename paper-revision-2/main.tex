@@ -1,0 +1,124 @@
+\documentclass[11pt]{article}
+
+% ── packages ──────────────────────────────────────────────────────────────────
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage[super,sort&compress,comma]{natbib}
+\usepackage{xr-hyper}
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+\usepackage{xurl}
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{lineno}
+\usepackage{placeins}
+\linenumbers
+\setcounter{secnumdepth}{0}
+
+% ── paths ─────────────────────────────────────────────────────────────────────
+\graphicspath{{sections/figures/}}
+\externaldocument{supplementary-information}
+
+% ── macros ────────────────────────────────────────────────────────────────────
+\newcommand{\vxi}{\boldsymbol{\xi}}
+\newcommand{\vmu}{\boldsymbol{\mu}}
+\newcommand{\vsigma}{\boldsymbol{\sigma}}
+\newcommand{\mX}{\mathbf{X}}
+\newcommand{\mZ}{\mathbf{Z}}
+\newcommand{\mhat}[1]{\hat{\mathbf{#1}}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+
+% Equations defined in the main text. Everything is local here, so this is a plain
+% \eqref; the standalone supplementary.tex wrapper redefines it to reach into
+% main.aux via xr-hyper. sections/supplementary.tex is shared by both wrappers.
+\newcommand{\maineqref}[1]{\eqref{#1}}
+
+% --- Tracked-changes for revision (R1 blue, R2 red, both violet) ---
+\newif\ifreviewmode
+\ifdefined\cleanversion
+  \reviewmodefalse
+\else
+  \reviewmodetrue
+\fi
+\ifreviewmode
+  \newcommand{\rone}[1]{\textcolor[rgb]{0.10,0.30,0.75}{#1}}   % Reviewer 1 — blue
+  \newcommand{\rtwo}[1]{\textcolor[rgb]{0.75,0.15,0.15}{#1}}   % Reviewer 2 — red
+  \newcommand{\rboth}[1]{\textcolor[rgb]{0.50,0.15,0.65}{#1}}  % both — violet
+\else
+  \newcommand{\rone}[1]{#1}
+  \newcommand{\rtwo}[1]{#1}
+  \newcommand{\rboth}[1]{#1}
+\fi
+
+% ══════════════════════════════════════════════════════════════════════════════
+\title{Validated Synthetic Patient Generation for Small Longitudinal Cohorts: \\
+Coagulation Dynamics Across Pregnancy}
+
+\author{
+Jeffrey D.\ Varner$^{1,*}$,
+Maria Cristina Bravo$^{2}$,
+Carole McBride$^{3}$,
+\\
+Thomas Orfeo$^{2}$,
+Ira Bernstein$^{3}$
+\\[6pt]
+{\small $^{1}$Robert F.\ Smith School of Chemical and Biomolecular Engineering,} \\
+{\small Cornell University, Ithaca, NY 14850} \\
+{\small $^{2}$Department of Biochemistry, The Robert Larner, M.D.} \\
+{\small College of Medicine, University of Vermont Medical Center, Burlington, VT 05401} \\
+{\small $^{3}$Department of Obstetrics, Gynecology, and Reproductive Sciences,} \\
+{\small The Robert Larner, M.D.\ College of Medicine,} \\
+{\small University of Vermont Medical Center, Burlington, VT 05401} \\[6pt]
+{\small $^{*}$Corresponding author: jdv27@cornell.edu}
+}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+% ── Abstract ──────────────────────────────────────────────────────────────────
+\begin{abstract}
+\input{sections/abstract}
+\end{abstract}
+
+% ── Sections (Nature style: Results before Methods) ──────────────────────────
+\input{sections/introduction}
+\input{sections/results}
+\input{sections/discussion}
+\input{sections/methods}
+
+% ── Data Availability ────────────────────────────────────────────────────────
+\section*{Data Availability}
+The generated synthetic datasets and all intermediate validation outputs
+are available in the project repository at
+\url{https://github.com/varnerlab/SA-generation-legacy-dataset-paper}.
+The de-identified real patient data are available upon reasonable request to the
+corresponding author.
+
+% ── Code Availability ───────────────────────────────────────────────────────
+\section*{Code Availability}
+All code for synthetic patient generation, validation, figure reproduction,
+and mechanistic model calibration is available at
+\url{https://github.com/varnerlab/SA-generation-legacy-dataset-paper}.
+The repository includes Julia source code, experiment scripts, and a Python
+baseline script for CTGAN/TVAE comparison.
+
+\input{sections/acknowledgments}
+
+% ── Bibliography ──────────────────────────────────────────────────────────────
+\bibliographystyle{naturemag}
+\bibliography{references}
+
+% ── Tables and Figures (after references, per Nature style) ──────────────────
+\clearpage
+\input{sections/floats}
+
+\end{document}

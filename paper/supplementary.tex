@@ -14,6 +14,7 @@
 \usepackage{booktabs}
 \usepackage{xr-hyper}   % must precede hyperref; pulls equation numbers from main.tex
 \usepackage{hyperref}
+\hypersetup{hidelinks}
 \usepackage{xcolor}
 \usepackage{caption}
 \usepackage{subcaption}
@@ -40,7 +41,11 @@
 
 % --- Tracked-changes for revision (R1 blue, R2 red, both violet) ---
 \newif\ifreviewmode
-\reviewmodetrue   % set \reviewmodefalse for camera-ready (all edits render black)
+\ifdefined\cleanversion
+  \reviewmodefalse
+\else
+  \reviewmodetrue
+\fi
 \ifreviewmode
   \newcommand{\rone}[1]{\textcolor[rgb]{0.10,0.30,0.75}{#1}}   % Reviewer 1 — blue
   \newcommand{\rtwo}[1]{\textcolor[rgb]{0.75,0.15,0.15}{#1}}   % Reviewer 2 — red

@@ -5,8 +5,12 @@
 \label{sec:dataset}
 We analyzed a longitudinal dataset of coagulation, fibrinolysis, thrombin generation
 assay (TGA), and rotational thromboelastometry (ROTEM) measurements from women
-desiring a pregnancy. The study was approved by the Institutional Review Board at
-the University of Vermont. All participants gave written consent before enrollment.
+desiring a pregnancy. The dataset combined measurements from two protocols approved by the
+University of Vermont Committee for Human Research in the Medical Sciences: Pregnancy
+Phenotype and Predisposition to Preeclampsia (CHRMS M10-226) and The Interaction of Basal
+Risk, Pharmacological Ovulation Induction, Pregnancy and Delivery on Hemostatic Balance
+(CHRMS 18-0091). The research was conducted in accordance with the Declaration of Helsinki,
+and all participants provided written informed consent before enrollment.
 Blood collection, plasma processing, and assay protocols have been described
 previously~\citep{McLean2012TGA,Hale2012,Psoinos2021,Bernstein2016}. Briefly, citrated platelet-poor plasma
 was collected without tourniquet use after supine rest at three clinical visits:
@@ -148,14 +152,17 @@ shift from attention shared across profiles to attention concentrated on individ
 We selected $\beta^*$ from the transition in normalized attention entropy across a
 logarithmic sweep of $\beta$. Specifically, $\beta^*$ was the grid point where the entropy
 curve bent downward most strongly, calculated as the most negative finite-difference second
-derivative with respect to $\log\beta$ (Supplementary Methods). This choice depended on the
-relative positions of the $K$ profiles in $d$ dimensions, not on what their features
-represented. For this dataset
+derivative with respect to $\log\beta$. For each candidate $\beta$, we computed the Shannon
+entropy of $\text{softmax}(\beta\,\mhat{X}^\top\vxi)$ at $20$ stored-pattern probes, averaged
+the values, and divided by $\log K$. Zero meant that one pattern carried all attention, and
+one meant that all patterns carried equal attention. We evaluated $80$ logarithmically spaced
+values from $0.1$ to $1000$. For conditioned sampling, we repeated the calculation with the
+$\log r_k$ bias, producing $\beta^*(\rho)$. This choice depended on the relative positions of
+the $K$ profiles in $d$ dimensions, not on what their features represented. For this dataset
 ($K{=}23$, $d_{\text{PCA}}{=}18$), it gave $\beta^*\approx2.94$; the random-pattern prediction
 $\sqrt{d}\approx4.24$ served as a theoretical reference. A sensitivity analysis across
 $\beta/\beta^*\in[0.1,3.0]$ showed that the selected value balanced novelty and
-fidelity (Table~\ref{stab:beta-sweep}). For conditioned generation, we repeated the entropy
-calculation with the multiplicity bias included, giving a $\rho$-dependent $\beta^*(\rho)$.
+fidelity (Table~\ref{stab:beta-sweep}).
 
 We used the participation ratio to measure how strongly multiplicity weighting
 concentrated repeated draws around a few stored profiles. For unit-normalized memories,
@@ -274,8 +281,18 @@ eigenvalues in the 194 null dimensions.
 To examine the role of the shared PCA representation, we also evaluated a fitted
 two-component diagonal-covariance Gaussian mixture, a kernel-density estimator,
 $k$-nearest-neighbor interpolation, and a Gaussian copula in the same 18-dimensional PCA
-space. Their implementations and shared evaluation pipeline are described in Supplementary
-Methods (PCA-space ablation).
+space. Each baseline generated $100$ profiles with a separate random-number stream initialized
+using seed~42. The fitted mixture used $100$ expectation--maximization iterations and a
+variance floor of $10^{-3}$. The kernel-density sampler chose a stored PCA point uniformly and
+added Gaussian noise with the empirical PCA covariance and Scott bandwidth
+$h=K^{-1/(d+4)}$; $10^{-8}\mathbf{I}$ was added for numerical factorization. The
+nearest-neighbor sampler chose a stored point, selected one of its three nearest neighbors
+uniformly, and interpolated between them with a coefficient drawn from
+$\operatorname{Uniform}(0,1)$. The Gaussian copula transformed empirical marginal ranks to
+normal scores, estimated their correlation matrix with $10^{-6}\mathbf{I}$ added for
+factorization, and mapped sampled scores back through the empirical marginal quantiles. All
+samples were passed through the same inverse-PCA and destandardization pipeline and evaluated
+with the same marginal, cross-visit, mechanistic, and novelty calculations.
 We then evaluated both SA and MVN synthetic patients through four progressively stringent
 validation levels.
 \textbf{Level~1 (Marginal Plausibility)} tested whether individual feature

@@ -15,37 +15,6 @@
 \section*{Supplementary Information}
 
 % ══════════════════════════════════════════════════════════════════════════════
-\subsection*{Supplementary Methods}
-
-\subsubsection*{PCA-space ablation}
-
-We compared the canonical stochastic-attention cohort with four baseline generators
-operating on the same unnormalized 18-dimensional PCA coordinates. Each baseline generated
-$100$ profiles with a separate random-number stream initialized using seed~42. The fitted
-two-component Gaussian-mixture baseline used diagonal covariance matrices, $100$
-expectation--maximization iterations, and a variance floor of $10^{-3}$. The kernel-density sampler chose
-a stored PCA point uniformly and added Gaussian noise with the empirical PCA covariance and
-Scott bandwidth $h=K^{-1/(d+4)}$; $10^{-8}\mathbf{I}$ was added for numerical factorization.
-The nearest-neighbor sampler chose a stored point, selected one of its three nearest
-neighbors uniformly, and interpolated between them with a coefficient drawn from
-$\operatorname{Uniform}(0,1)$. The Gaussian copula transformed empirical marginal ranks to
-normal scores, estimated their correlation matrix with $10^{-6}\mathbf{I}$ added for
-factorization, and mapped sampled scores back through the empirical marginal quantiles. All
-samples were passed through the same inverse-PCA and destandardization pipeline and evaluated
-with the same marginal, cross-visit, mechanistic, and novelty calculations.
-
-\subsubsection*{Selecting the inverse-temperature operating point}
-
-For each candidate $\beta$, we computed the Shannon entropy of
-$\text{softmax}(\beta\,\mhat{X}^\top\vxi)$ at $20$ stored-pattern probes, averaged the values,
-and divided by $\log K$. Zero means one pattern carries all attention; one means all patterns
-have equal attention. We evaluated $80$ logarithmically spaced values from $0.1$ to $1000$ and
-selected $\beta^*$ at the most negative finite-difference second derivative with respect to
-$\log\beta$. This marked the shift from shared to concentrated attention. For conditioned
-sampling, we repeated the calculation with the $\log r_k$ bias, producing
-$\beta^*(\rho)$. The random-pattern scale $\sqrt{d}$ was the theoretical reference.
-
-% ══════════════════════════════════════════════════════════════════════════════
 \subsection*{Supplementary Tables}
 
 % ── Table S1: Beta sweep ─────────────────────────────────────────────────
@@ -602,8 +571,8 @@ rank-deficient covariance (Fig.~\ref{sfig:eigenvalue-spectrum}). Colors encode v
 
 \FloatBarrier
 
-% ── Sampling correctness and privacy diagnostics ────────────────────────
-\subsection*{Sampling correctness and privacy diagnostics}
+% ── Supplementary sampling and privacy results ──────────────────────────
+\subsection*{Supplementary Sampling and Privacy Results}
 \label{ssec:sampling-correctness}
 
 We asked whether a synthetic cohort could reveal that an already-known de-identified

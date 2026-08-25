@@ -1,0 +1,63 @@
+% ══════════════════════════════════════════════════════════════════════════════
+% Standalone supplementary build.
+%
+% This is a thin wrapper that inputs sections/supplementary.tex, the same file
+% that arxiv/main.tex uses for the supplement. There is exactly one source of
+% truth for the supplementary content; edit sections/supplementary.tex.
+% ══════════════════════════════════════════════════════════════════════════════
+
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xr-hyper}   % must precede hyperref; pulls equation numbers from main.tex
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{placeins}
+
+\graphicspath{{sections/figures/}}
+
+% Import main.tex's labels under an "M-" prefix so the equation numbers resolve
+% here. The prefix is required: main.tex also inputs sections/supplementary.tex,
+% so main.aux already carries every stab:/sfig:/ssec: label in this document and
+% an unprefixed import would multiply-define all of them. Needs main.aux, which
+% the Makefile guarantees by building main.pdf first.
+\externaldocument[M-]{manuscript-clean}
+
+% Equations defined in the main text. In main.tex this is a plain \eqref; here it
+% resolves through the M- prefix above. sections/supplementary.tex is shared by
+% both wrappers, so it must go through this macro rather than \eqref directly.
+\newcommand{\maineqref}[1]{\eqref{M-#1}}
+
+\newcommand{\vxi}{\boldsymbol{\xi}}
+\newcommand{\mhat}[1]{\hat{\mathbf{#1}}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+
+% --- Tracked-changes for revision (R1 blue, R2 red, both violet) ---
+\newif\ifreviewmode
+\ifdefined\cleanversion
+  \reviewmodefalse
+\else
+  \reviewmodetrue
+\fi
+\ifreviewmode
+  \newcommand{\rone}[1]{\textcolor[rgb]{0.10,0.30,0.75}{#1}}   % Reviewer 1 — blue
+  \newcommand{\rtwo}[1]{\textcolor[rgb]{0.75,0.15,0.15}{#1}}   % Reviewer 2 — red
+  \newcommand{\rboth}[1]{\textcolor[rgb]{0.50,0.15,0.65}{#1}}  % both — violet
+\else
+  \newcommand{\rone}[1]{#1}
+  \newcommand{\rtwo}[1]{#1}
+  \newcommand{\rboth}[1]{#1}
+\fi
+
+\begin{document}
+
+\input{sections/supplementary}
+
+\end{document}
