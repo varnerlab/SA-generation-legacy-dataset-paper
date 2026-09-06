@@ -1,0 +1,132 @@
+NPJ SYSTEMS BIOLOGY AND APPLICATIONS REVISION FILE GUIDE
+
+Manuscript title:
+Validated Synthetic Patient Generation for Small Longitudinal Cohorts:
+Coagulation Dynamics Across Pregnancy
+
+Manuscript ID:
+47fd8ad0-aff2-4c70-b4d0-dda1c90c5458 v2.1
+
+
+WHICH MANUSCRIPT FILE IS WHICH
+
+UNMARKED / CLEAN MANUSCRIPT
+  File: submission-files/manuscript-file/manuscript-clean.pdf
+  SNAPP category: MANUSCRIPT FILE
+  Description: The clean manuscript has no highlights, tracked changes, or
+  colored reviewer text. This is the primary manuscript file.
+
+MARKED MANUSCRIPT
+  File: submission-files/related-files/manuscript-marked.pdf
+  SNAPP category: RELATED FILES
+  Description: The marked manuscript contains the same wording as the clean
+  manuscript. Reviewer 1 changes are blue, Reviewer 2 changes are red, and
+  changes addressing both reviewers are violet.
+
+README
+  File: submission-files/related-files/README.txt
+  SNAPP category: RELATED FILES
+  Description: This file identifies each submission file and its category.
+
+The clean and marked manuscript PDFs contain identical manuscript text. Their
+only intended difference is the reviewer-color markup.
+
+
+OTHER SUBMISSION FILES
+
+SUPPLEMENTARY INFORMATION
+  File: submission-files/supplementary-information/
+        supplementary-information.pdf
+  SNAPP category: SUPPLEMENTARY INFORMATION
+
+MAIN FIGURES
+  Files: submission-files/figures/Figure1.pdf through Figure7.pdf
+  SNAPP category: FIGURES
+  Upload all seven PDFs individually and in numerical order. Each PDF contains
+  all panels for one main figure. The main manuscript contains the figure
+  legends after the References.
+
+REBUTTAL LETTER
+  File: submission-files/rebuttal-letter/response-to-reviewers.pdf
+  SNAPP category: REBUTTAL LETTER TO THE REVIEWERS
+
+UPLOAD CHECKLIST
+  File: submission-files/upload-checklist.md
+  Description: Author checklist for the SNAPP upload and declaration fields.
+
+
+DIRECTORY GUIDE FOR THE SOURCE REPOSITORY
+
+paper/
+  Journal-manuscript source and compiled manuscript and supplement.
+
+arxiv/
+  Synchronized clean preprint source and compiled PDFs.
+
+paper-revision-2/
+  Submission build directory. It produces the marked manuscript, clean
+  manuscript, standalone supplement, figure uploads, rebuttal, README, and the
+  organized submission-files directory.
+
+peer-review-feedback/
+  Technical-editor letters and the response-to-reviewers source and PDF.
+
+HOUSE_STYLE.md
+  Required manuscript style and repository workflow.
+
+
+HOW TO BUILD THE SUBMISSION FILES
+
+Requirements:
+  - GNU Make
+  - pdfLaTeX
+  - BibTeX
+  - zip, when building the ZIP archive
+
+From the repository root, run:
+
+  cd paper-revision-2
+  make all
+
+The command builds and stages both manuscript versions:
+
+  manuscript-marked.pdf
+    Built with reviewer-color macros enabled. This is the MARKED version.
+
+  manuscript-clean.pdf
+    Built with \cleanversion defined, which removes the reviewer colors while
+    retaining the revised wording. This is the UNMARKED / CLEAN version.
+
+It also builds:
+
+  supplementary-information.pdf
+  figures-upload/Figure1.pdf through Figure7.pdf
+  related-files/response-to-reviewers.pdf
+  submission-files/ with every file organized by its SNAPP category
+
+The Makefile performs the repeated LaTeX passes needed to resolve the
+cross-references between the manuscript and the supplement. Use `make all`
+instead of a single pdfLaTeX pass.
+
+To build the submission files and update the ZIP archive, run:
+
+  make package
+
+This creates or updates:
+
+  ../Varner-paper-technical-correction-v2.1.zip
+
+The `make clean` command deletes generated PDFs and LaTeX build files. It does
+not build the clean manuscript.
+
+
+FINAL PORTAL CHECK
+
+Before submission, confirm in the SNAPP-generated proof that:
+
+  1. manuscript-clean.pdf is listed under MANUSCRIPT FILE.
+  2. manuscript-marked.pdf and README.txt are listed under RELATED FILES.
+  3. supplementary-information.pdf is listed under SUPPLEMENTARY INFORMATION.
+  4. Figure1.pdf through Figure7.pdf are listed individually under FIGURES.
+  5. Supplementary citations contain resolved numbers and use the forms
+     "Supplementary Figure 1" and "Supplementary Table 1."

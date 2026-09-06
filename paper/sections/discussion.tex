@@ -42,10 +42,10 @@ geometric property of $K$ patterns in $d$ dimensions rather than a property of w
 features represented. For this dataset it gave $\beta^* \approx 2.94$, with the random-pattern
 scale $\sqrt{d} \approx 4.24$ serving as a theoretical reference. A sensitivity analysis
 showed gradual changes in generation quality across $\beta/\beta^* \in [0.1, 3.0]$
-(Table~\ref{stab:beta-sweep}).
+(\supptable{stab:beta-sweep}).
 Similarly, varying the PCA variance retention threshold from 85\% to 99\%
 ($d_{\text{PCA}} = 13$ to 21) had minimal impact on generation quality. Median MRE
-remained between 1.2\% and 1.8\% across all thresholds (Table~\ref{stab:pca-sensitivity}),
+remained between 1.2\% and 1.8\% across all thresholds (\supptable{stab:pca-sensitivity}),
 so the 95\% threshold was not a critical design choice. \rboth{Together, these sensitivity
 analyses showed that performance was not tied to a narrow choice of inverse temperature or
 PCA threshold within the ranges tested.}
@@ -55,7 +55,7 @@ selected subgroup was upweighted? Achieving
 80\% of finite-mixture component probability on the PCOS subgroup required
 $\rho \approx 26.7$, reducing the participation ratio to
 $K_{\text{eff}} \approx 4.6$ (multiplicity parameters
-for all three subgroups in Table~\ref{stab:multiplicity}),
+for all three subgroups in \supptable{stab:multiplicity}),
 which indicated that mixture-component probability was concentrated around a small number
 of stored profiles across repeated draws. The subgroup-specific signal still rested on only
 three real PCOS profiles, and the lower-weight background profiles pulled generated means
@@ -151,7 +151,7 @@ model, not independent biological validity.}
 The fitted rate constants also required a 50-fold reduction in intrinsic tenase
 $k_{\text{cat}}$ and a 15-fold
 increase in extrinsic tenase $k_{\text{cat}}$ relative to published values
-(Table~\ref{stab:ode-calibration}), likely because the published measurements and the
+(\supptable{stab:ode-calibration}), likely because the published measurements and the
 plasma-based assay used different experimental conditions. These fitted values should not be
 read as new biochemical estimates. \rone{The biological scope was also incomplete. The
 mechanistic test covered thrombin generation but not the fibrinolytic or viscoelastic

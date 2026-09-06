@@ -52,7 +52,7 @@ The fitted two-component mixture and copula were competitive with stochastic att
 
 We did not include a neural diffusion model because estimating one from 23 observations would not provide a credible small-sample baseline. The nearest-neighbor method provided a non-neural interpolation comparison.
 
-**Changes:** Methods (PCA-space comparison and implementation details); Results (Marginal Plausibility); Discussion (representation and sampler distinction); Supplementary Table S13 (five-generator comparison). Blue, with the shared Discussion transition in violet. `\rone{...}` `\rboth{...}`
+**Changes:** Methods (PCA-space comparison and implementation details); Results (Marginal Plausibility); Discussion (representation and sampler distinction); supplementary PCA-space ablation table (five-generator comparison). Blue, with the shared Discussion transition in violet. `\rone{...}` `\rboth{...}`
 
 ---
 

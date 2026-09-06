@@ -108,7 +108,7 @@ analyzed in this work was generated with the Langevin implementation given next,
 what the reported results describe. We added the direct sampler for the stochastic-attention
 target afterward as a check,
 using the same normalization, magnitude rescaling, and decoding steps
-(Table~\ref{stab:sampling-ladder}).
+(\supptable{stab:sampling-ladder}).
 
 We sampled from this landscape using an Unadjusted Langevin Algorithm (ULA):
 \begin{equation}
@@ -136,8 +136,8 @@ the exact stochastic-attention mixture in Eq.~\eqref{eq:exact_mixture}, without 
 chain. The fidelity and
 membership-inference results were similar across all four procedures and the direct draws.
 This agreement indicated that the original implementation reproduced the evaluated behavior
-of the sampling distribution at $\beta^*$ (Supplementary
-Fig.~\ref{sfig:sampling-ladder}).
+of the sampling distribution at $\beta^*$
+(\suppfigure{sfig:sampling-ladder}).
 
 The inverse temperature $\beta$ affects Hopfield retrieval and direct sampling in
 different ways. In the Hopfield update, small $\beta$ spreads attention across many stored
@@ -162,7 +162,7 @@ the $K$ profiles in $d$ dimensions, not on what their features represented. For 
 ($K{=}23$, $d_{\text{PCA}}{=}18$), it gave $\beta^*\approx2.94$; the random-pattern prediction
 $\sqrt{d}\approx4.24$ served as a theoretical reference. A sensitivity analysis across
 $\beta/\beta^*\in[0.1,3.0]$ showed that the selected value balanced novelty and
-fidelity (Table~\ref{stab:beta-sweep}).
+fidelity (\supptable{stab:beta-sweep}).
 
 We used the participation ratio to measure how strongly multiplicity weighting
 concentrated repeated draws around a few stored profiles. For unit-normalized memories,
@@ -213,7 +213,7 @@ $f_{\text{target}} = 0.80$ of the mixture-component probability on the designate
 while retaining 20\% probability on background patterns, via
 $\rho = f_{\text{target}} \cdot K_{\text{bg}} / (K_{\text{des}} \cdot (1 -
 f_{\text{target}}))$. Multiplicity parameters for all three subgroups are
-listed in Table~\ref{stab:multiplicity}. For the PCOS subgroup
+listed in \supptable{stab:multiplicity}. For the PCOS subgroup
 ($K_{\text{des}}{=}3$), this required $\rho \approx 26.7$, reducing the
 participation ratio to $K_{\text{eff}} \approx 4.6$. For both unconditioned and
 conditioned generation, magnitudes were drawn from the empirical distribution of all $23$
@@ -223,14 +223,14 @@ magnitudes.
 
 The complete generation pipeline is summarized in Algorithm~\ref{alg:sa-pipeline}.
 The full set of SA hyperparameters used for all experiments is listed in
-Table~\ref{stab:hyperparams}, with key operating values $\alpha = 0.01$,
+\supptable{stab:hyperparams}, with key operating values $\alpha = 0.01$,
 $T = 2{,}000$ Langevin iterations per sample, and random seed 42 for
 reproducibility. A control experiment comparing ULA with the
 Metropolis-Adjusted Langevin Algorithm (MALA) showed that the
 discretization bias is negligible at this step size. Across 10 chains of
 5{,}000 iterations the MALA acceptance rate was $99.9 \pm 0.03\%$, and mean
 post-burn-in energies and effective sample sizes were indistinguishable
-between the two samplers (Supplementary Table~\ref{tab:ula-vs-mala}). The pipeline was implemented in Julia (v1.12) using the packages listed in the code
+between the two samplers (\supptable{tab:ula-vs-mala}). The pipeline was implemented in Julia (v1.12) using the packages listed in the code
 repository. Generating 100 synthetic patients required approximately 0.1~seconds on
 a standard laptop (Apple M-series), comparable to MVN sampling ($\approx$0.15~s),
 because SA operates in the 18-dimensional PCA space rather than the full

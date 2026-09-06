@@ -8,8 +8,10 @@ RESPONSE_DIR = ../peer-review-feedback
 RELATED_DIR = related-files
 RESPONSE_TEX = $(RELATED_DIR)/response-to-reviewers.tex
 RESPONSE_PDF = $(RELATED_DIR)/response-to-reviewers.pdf
+SUBMISSION_DIR = submission-files
+ARCHIVE = ../Varner-paper-technical-correction-v2.1.zip
 
-.PHONY: all clean figures-upload response
+.PHONY: all clean figures-upload response submission-files package
 
 all:
 	$(TEX) -jobname=$(MARKED) -interaction=nonstopmode '\input{$(MAIN).tex}'
@@ -24,7 +26,7 @@ all:
 	$(TEX) -jobname=$(MARKED) -interaction=nonstopmode '\input{$(MAIN).tex}'
 	$(TEX) -jobname=$(CLEAN) -interaction=nonstopmode '\def\cleanversion{1}\input{$(MAIN).tex}'
 	$(TEX) -jobname=$(CLEAN) -interaction=nonstopmode '\def\cleanversion{1}\input{$(MAIN).tex}'
-	$(MAKE) figures-upload response
+	$(MAKE) figures-upload response submission-files
 
 figures-upload:
 	mkdir -p figures-upload
@@ -41,6 +43,23 @@ response:
 	mkdir -p $(RELATED_DIR)
 	cp $(RESPONSE_DIR)/response-to-reviewers.tex $(RESPONSE_TEX)
 	cp $(RESPONSE_DIR)/response-to-reviewers.pdf $(RESPONSE_PDF)
+
+submission-files:
+	mkdir -p $(SUBMISSION_DIR)/manuscript-file \
+	         $(SUBMISSION_DIR)/related-files \
+	         $(SUBMISSION_DIR)/supplementary-information \
+	         $(SUBMISSION_DIR)/figures \
+	         $(SUBMISSION_DIR)/rebuttal-letter
+	cp $(CLEAN).pdf $(SUBMISSION_DIR)/manuscript-file/
+	cp $(MARKED).pdf $(SUBMISSION_DIR)/related-files/
+	cp $(SUPP).pdf $(SUBMISSION_DIR)/supplementary-information/
+	cp figures-upload/Figure*.pdf $(SUBMISSION_DIR)/figures/
+	cp $(RESPONSE_PDF) $(SUBMISSION_DIR)/rebuttal-letter/
+	cp README.txt $(SUBMISSION_DIR)/related-files/
+	cp upload-checklist.md $(SUBMISSION_DIR)/
+
+package: all
+	zip -rq -FS $(ARCHIVE) $(SUBMISSION_DIR)
 
 clean:
 	rm -f $(MARKED).aux $(MARKED).bbl $(MARKED).blg $(MARKED).log $(MARKED).out \
