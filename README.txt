@@ -15,7 +15,10 @@ CLEAN LATEX SOURCE PACKAGE
   SNAPP category: MANUSCRIPT FILE
   Description: Use this ZIP when SNAPP requests LaTeX source or reports that it
   cannot determine the main LaTeX file. The archive has one root-level entry
-  point named main.tex, and it compiles the clean manuscript by default.
+  point named main.tex, and it compiles the clean manuscript by default. Its
+  supplementary label map is generated from the current standalone supplement
+  and stored as TeX source, so SNAPP does not need to retain an auxiliary .aux
+  file. Supplementary numbers are never entered manually.
 
 UNMARKED / CLEAN MANUSCRIPT PDF
   File: submission-files/manuscript-file/manuscript-clean.pdf
@@ -138,7 +141,9 @@ This creates:
   ../Varner-LaTeX-Source-Clean-v2.1.zip
 
 The source ZIP contains one root-level main file named main.tex and compiles to
-the clean manuscript with pdflatex.
+the clean manuscript with pdflatex. The build generates its supplementary
+label map from the standalone supplement; it does not hardcode those numbers in
+the manuscript or depend on SNAPP preserving a supplementary .aux file.
 
 The `make clean` command deletes generated PDFs and LaTeX build files. It does
 not build the clean manuscript.
