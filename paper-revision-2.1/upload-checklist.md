@@ -4,7 +4,8 @@ Manuscript ID: 47fd8ad0-aff2-4c70-b4d0-dda1c90c5458 v2.1
 
 ## Manuscript files
 
-- **MANUSCRIPT FILE:** `submission-files/manuscript-file/manuscript-clean.pdf`
+- **MANUSCRIPT FILE:** `Varner-LaTeX-Source-Clean-v2.1.zip` from the repository root
+- **CLEAN PDF REFERENCE COPY:** `submission-files/manuscript-file/manuscript-clean.pdf`
 - **RELATED FILES:** `submission-files/related-files/manuscript-marked.pdf`
 - **RELATED FILES:** `submission-files/related-files/README.txt`
 - **SUPPLEMENTARY INFORMATION:** `submission-files/supplementary-information/supplementary-information.pdf`
@@ -18,7 +19,8 @@ revision bundle.
 Extract the ZIP archive and upload its contents individually in SNAPP:
 
 1. Remove or replace any earlier manuscript files still attached to this revision.
-2. Upload `submission-files/manuscript-file/manuscript-clean.pdf` under **MANUSCRIPT FILE**.
+2. Upload the root-level `Varner-LaTeX-Source-Clean-v2.1.zip` under **MANUSCRIPT
+   FILE**. SNAPP should identify the root-level `main.tex` and compile the clean manuscript.
 3. Upload `submission-files/related-files/manuscript-marked.pdf` and
    `submission-files/related-files/README.txt` under **RELATED FILES**.
 4. Upload `submission-files/supplementary-information/supplementary-information.pdf` under

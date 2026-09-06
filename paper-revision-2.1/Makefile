@@ -9,9 +9,9 @@ RELATED_DIR = related-files
 RESPONSE_TEX = $(RELATED_DIR)/response-to-reviewers.tex
 RESPONSE_PDF = $(RELATED_DIR)/response-to-reviewers.pdf
 SUBMISSION_DIR = submission-files
-ARCHIVE = ../Varner-paper-technical-correction-v2.1.zip
+ARCHIVE = ../Varner-PDF-Upload-Bundle-v2.1.zip
 
-.PHONY: all clean figures-upload response submission-files package
+.PHONY: all clean figures-upload response submission-files package latex-source
 
 all:
 	$(TEX) -jobname=$(MARKED) -interaction=nonstopmode '\input{$(MAIN).tex}'
@@ -60,6 +60,9 @@ submission-files:
 
 package: all
 	zip -rq -FS $(ARCHIVE) $(SUBMISSION_DIR)
+
+latex-source: all
+	python3 scripts/build_latex_source_zip.py
 
 clean:
 	rm -f $(MARKED).aux $(MARKED).bbl $(MARKED).blg $(MARKED).log $(MARKED).out \
