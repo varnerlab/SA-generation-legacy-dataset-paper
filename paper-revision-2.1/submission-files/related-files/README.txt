@@ -63,7 +63,7 @@ paper/
 arxiv/
   Synchronized clean preprint source and compiled PDFs.
 
-paper-revision-2/
+paper-revision-2.1/
   Submission build directory. It produces the marked manuscript, clean
   manuscript, standalone supplement, figure uploads, rebuttal, README, and the
   organized submission-files directory.
@@ -85,7 +85,7 @@ Requirements:
 
 From the repository root, run:
 
-  cd paper-revision-2
+  cd paper-revision-2.1
   make all
 
 The command builds and stages both manuscript versions:

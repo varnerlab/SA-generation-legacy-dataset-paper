@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  6 SEP 2026 16:13
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  6 SEP 2026 16:37
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**\input{main.tex}
+**\def\cleanversion{1}\input{main.tex}
 (./main.tex (/usr/local/texlive/2025/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2024/06/29 v1.4n Standard LaTeX document class
 (/usr/local/texlive/2025/texmf-dist/tex/latex/base/size11.clo
@@ -433,8 +433,8 @@ File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count324
 \l__pdf_internal_box=\box57
 )
-(./manuscript-marked.aux)
-\openout1 = `manuscript-marked.aux'.
+(./manuscript-clean.aux)
+\openout1 = `manuscript-clean.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 87.
 LaTeX Font Info:    ... okay on input line 87.
@@ -513,9 +513,9 @@ e
 ))
 Package hyperref Info: Link coloring OFF on input line 87.
 
-(./manuscript-marked.out) (./manuscript-marked.out)
+(./manuscript-clean.out) (./manuscript-clean.out)
 \@outlinefile=\write3
-\openout3 = `manuscript-marked.out'.
+\openout3 = `manuscript-clean.out'.
 
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
@@ -572,7 +572,7 @@ put line 243.
 
 [17]) (./sections/acknowledgments.tex
 
-[18]) (./manuscript-marked.bbl
+[18]) (./manuscript-clean.bbl
 
 [19]
 
@@ -654,22 +654,22 @@ ed on input line 210.
 )
 
 [29 <./sections/figures/downstream_utility_scatter_v2.pdf>]
-(./manuscript-marked.aux)
+(./manuscript-clean.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-Package rerunfilecheck Info: File `manuscript-marked.out' has not changed.
+Package rerunfilecheck Info: File `manuscript-clean.out' has not changed.
 (rerunfilecheck)             Checksum: 9147F4B87AE4A5CF3C68CA75625F641E;3325.
  ) 
 Here is how much of TeX's memory you used:
- 14047 strings out of 473190
- 223192 string characters out of 5715801
- 659886 words of memory out of 5000000
- 36983 multiletter control sequences out of 15000+600000
+ 14048 strings out of 473190
+ 223182 string characters out of 5715801
+ 659812 words of memory out of 5000000
+ 36984 multiletter control sequences out of 15000+600000
  572131 words of font info for 86 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 79i,9n,82p,1894b,684s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 79i,9n,82p,1914b,684s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
@@ -690,7 +690,7 @@ xmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2025/texmf
 -dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025/texmf-
 dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on manuscript-marked.pdf (29 pages, 1457642 bytes).
+Output written on manuscript-clean.pdf (29 pages, 1456219 bytes).
 PDF statistics:
  522 PDF objects out of 1000 (max. 8388607)
  424 compressed objects within 5 object streams
