@@ -34,7 +34,13 @@ not unique to stochastic attention, although the comparison did not quantify the
 of PCA itself. Empirical correlation error and novelty differed across generators. Stochastic
 attention used the patient profiles in the PCA subspace as its memory matrix and avoided
 estimating a full $216$-dimensional covariance from $23$ patients. Its sampler still required
-a choice of inverse temperature.} A natural concern is whether the $\beta^*$
+a choice of inverse temperature.}
+\rthree{With equal weights, the stochastic-attention distribution is a Gaussian kernel-density
+estimate on the unit-normalized profiles, with kernel width $\beta^{-1/2}$. The entropy
+transition chose a wider kernel than standard bandwidth rules and gave more novel profiles and
+lower marginal error (\supptable{stab:kde-bandwidth}). With a non-quadratic constraint
+term in the energy, the target is no longer a Gaussian mixture, but
+Langevin sampling still matched exact rejection sampling (\supptable{stab:positivity}).} A natural concern is whether the $\beta^*$
 selection procedure, originally developed for protein sequence
 generation~\citep{Varner2026SAProtein}, transfers to clinical coagulation data. The entropy
 transition rule selected the point of greatest downward curvature in attention entropy, a
@@ -126,6 +132,13 @@ better follow curved or branching patterns, but it would add choices about fitti
 and converting the generated values back to patient measurements. Those choices are
 difficult to make from $23$ patients. The linear representation was practical for this
 cohort, but the results did not show that clinical trajectories are generally linear.}
+\rthree{Linear decoding also allowed negative values. Only $54$ of $100$ profiles passed the
+biological check, and every failure was a negative estradiol or progesterone value.
+Twenty-four also passed the strict mechanistic check, which only $7$ of $23$ real profiles
+passed. A positivity term in the energy removed the negative values, but
+it raised hormone error from about $5\%$ to $30\%$. A log transform of the hormones also
+removed the negative values, with no loss in fidelity (\supptable{stab:positivity}).
+Applications that use hormone values should model them on a log scale.}
 \rone{Cohort size also affects computational cost. The reported Langevin sampler required
 work proportional to $TKd$ for each profile, where $T$ was the number of Langevin steps,
 $K$ was the number of stored profiles, and $d$ was the dimension of each profile in the
@@ -158,7 +171,12 @@ mechanistic test covered thrombin generation but not the fibrinolytic or viscoel
 features. The membership-inference analysis answered a separate, narrow question: whether an
 already-known de-identified profile had been stored in the memory matrix. It distinguished
 stored from held-out profiles, but it did not identify a participant or reconstruct an
-unknown record.} Finally, we did not test clinical outcomes. Thus, the results
+unknown record.}
+\rthree{These synthetic cohorts support exploratory modeling. They are not a
+privacy-preserving release method. A cohort generated from restricted data should be shared
+under the same terms as those data. Releasing synthetic data from sensitive cohorts
+would require a formal privacy method, such as differential privacy, which
+we did not test.} Finally, we did not test clinical outcomes. Thus, the results
 did not establish biological fidelity across the full profile or clinical utility. An
 independently calibrated model, models covering the other feature classes, and prospective
 outcome validation could address these gaps. The results establish proof of concept, not

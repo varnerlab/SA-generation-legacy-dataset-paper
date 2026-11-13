@@ -100,7 +100,8 @@ finite isotropic Gaussian mixture:
 Each stored patient is the center of one component. The common component variance is
 $\beta^{-1}$, and the multiplicity weights enter the mixture probabilities directly. The
 memories used here are normalized to unit length, so the exponential factor is shared by
-every component and $q_k = r_k/\sum_j r_j$ exactly. We could therefore sample this
+every component and $q_k = r_k/\sum_j r_j$ exactly. \rthree{With equal multiplicity weights, this distribution is an isotropic Gaussian
+kernel-density estimate on the stored profiles, and $\beta^{-1/2}$ is the kernel width.} We could therefore sample this
 distribution directly: first choose $k$ from $q$ and then draw
 $\vxi\sim\mathcal{N}(\mathbf{m}_k,\beta^{-1}\mathbf{I})$. This procedure requires no Markov
 chain. The cohort
@@ -326,6 +327,23 @@ with the fraction of held-out profiles incorrectly identified as the score thres
 We calculated the area under this curve using the equivalent Mann--Whitney rank statistic,
 with ties contributing one half, and reported the mean across the $40$ partitions. An AUC of
 $0.5$ indicated chance discrimination, whereas $1.0$ indicated perfect discrimination.}
+
+\rthree{To compare the entropy transition with standard kernel-width rules, we applied
+Scott's rule, Silverman's rule, and leave-one-out likelihood to the $23$ unit-normalized
+profiles. For each rule, we set $\beta=h^{-2}$ and drew $100$ profiles directly from
+Eq.~\eqref{eq:exact_mixture}. We also applied the strict mechanistic criterion to each real
+profile, using bands built from the other $22$ real profiles. To prevent negative hormone
+values, we tested two approaches. First, we added a penalty $\lambda C(\vxi)$ to the energy.
+The penalty $C$ summed the squared negative parts of the six decoded estradiol and
+progesterone values, each divided by its real-cohort standard deviation. This penalty is not
+quadratic, so the target is no longer a Gaussian mixture. We drew each profile's magnitude
+first and sampled its direction with Langevin dynamics at $\lambda=0$, $1$, $10$, and $100$.
+For $\lambda>0$, the step size was inversely proportional to $\lambda$, and the product of
+step size and step count was $20$ in every run. As an exact reference, we drew from the
+mixture and kept each draw with probability $\exp(-\beta\lambda C)$. A hard constraint kept
+only draws with $C=0$. Second, we replaced the hormone values, or all assay values, with their
+logarithms before standardization and PCA. Decoded values were exponentiated. Each log
+representation used its own $\beta^*$ and the direct sampler.}
 
 \subsection{\rboth{Robustness Tests}}
 \label{sec:robustness-benchmarks}

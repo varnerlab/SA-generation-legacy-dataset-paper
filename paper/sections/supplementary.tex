@@ -707,10 +707,10 @@ rules.} With equal weights, the stochastic-attention distribution is an isotropi
 kernel-density estimate on the unit-normalized PCA profiles with kernel width
 $h=\beta^{-1/2}$. Each row drew $100$ profiles directly from this distribution at
 $\beta=1/h^2$, with the seeds and decoding of the direct-sampler row of
-\supptable{stab:sampling-ladder}. MRE is the median relative error of feature means.
+\supptable{stab:sampling-ladder}. The MRE column gives the median relative error of feature means.
 Cross-visit Frob.\ is the correlation error against the $23$ real profiles. Mech.\ overlap is
 the fraction of pooled predicted-to-recorded TGA ratios within the real 5th--95th percentile
-range. Novelty is $1-\max_k\cos(\hat{\vxi},\hat{\mathbf{m}}_k)$. DCR is the median distance
+range. Novelty is $1-\max_k\cos(\hat{\vxi},\hat{\mathbf{m}}_k)$. The DCR column gives the median distance
 to the closest real record in standardized $216$-dimensional space; the real-to-real value
 was $15.9$.}}
 \label{stab:kde-bandwidth}

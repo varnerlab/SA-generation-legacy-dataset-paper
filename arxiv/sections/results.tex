@@ -70,7 +70,10 @@ Nearest-neighbor samples remained close to
 stored profiles: median novelty, $1-\max_k\cos(\hat{\vxi},\hat{\mathbf{m}}_k)$, was $0.05$,
 and only $5\%$ of the synthetic patients exceeded the $0.2$ novelty cutoff.
 The kernel-density estimator had marginal error $1.9\%$ and mechanistic overlap $0.82$ (the fraction of pooled synthetic
-predicted-to-recorded TGA ratios within the real 5th--95th percentile range). The two-component mixture and
+predicted-to-recorded TGA ratios within the real 5th--95th percentile range). This estimator used the raw PCA coordinates, the full empirical covariance, and
+Scott's bandwidth. It differed from the kernel-density form of stochastic attention, which used
+unit-normalized profiles and a kernel width set by the entropy transition
+(\supptable{stab:kde-bandwidth}). The two-component mixture and
 copula matched stochastic attention more closely in marginal error ($1.1\%$ and $1.3\%$
 versus $1.2\%$) and mechanistic overlap ($0.92$ and $0.93$ versus $0.90$). All profiles from
 stochastic attention and the copula exceeded the novelty cutoff, compared with $94\%$ from
@@ -183,8 +186,10 @@ positivity in others. The second check used the BZ2012 model to test the generat
 Estradiol and progesterone were not model inputs, and all nine coagulation factor inputs were positive, so
 all $100$ profiles were included. For each TGA feature, $83$--$92\%$ of profiles had a
 predicted-to-recorded ratio within the real 5th--95th percentile range. Forty-one met this
-criterion for every feature and visit, and $24$ passed both checks. Positive-variable
-transformations or constrained decoding could prevent negative values. Together, these checks
+criterion for every feature and visit, and $24$ passed both checks. Only $7$ of the $23$ real
+profiles met the every-feature criterion when each was checked against bands built from the
+other $22$ (\supptable{stab:hull-geometry}). A log transform of the hormones removed the
+negative values without a loss in fidelity (\supptable{stab:positivity}). Together, these checks
 separated geometric extrapolation from biological plausibility. Hull distance provided no
 evidence that synthetic profiles extended farther than real profiles treated as unseen, but
 only $24$ of $100$ profiles passed both the biological and strict mechanistic criteria. Thus,
