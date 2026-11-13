@@ -1,0 +1,4 @@
+Cohort,N,Bio_Pass,Strict_Mech_Pass,Both_Pass
+Real (in-sample bands),23,23,8,8
+Real (leave-one-out bands),23,23,7,7
+Published synthetic,100,54,41,24
