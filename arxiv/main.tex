@@ -17,6 +17,14 @@
 \usepackage{placeins}
 \setcounter{secnumdepth}{0}
 
+% Page breaks: never leave the first line of a paragraph alone at the bottom of
+% a page, never leave the last one or two lines of a paragraph alone at the top
+% of a page, and never split a hyphenated word across two pages.
+\widowpenalties=3 10000 10000 0
+\clubpenalty=10000
+\displaywidowpenalty=10000
+\brokenpenalty=10000
+
 % ── paths ─────────────────────────────────────────────────────────────────────
 \graphicspath{{sections/figures/}}
 
