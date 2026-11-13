@@ -1,23 +1,19 @@
 #!/usr/bin/env python3
-"""Build the arXiv source ZIP: one main.tex with the supplement appended.
+"""Build the arXiv source ZIP from arxiv/main.tex.
 
 Usage (from arxiv/):  python3 scripts/build_arxiv_zip.py v3
 
-The local arxiv/ build makes two PDFs (main.pdf and supplementary.pdf) that
-reference each other through xr-hyper and supplementary.aux. arXiv compiles
-only the submitted source, so this script makes one self-contained document,
-as in the posted v2:
+arxiv/main.tex is one document: it includes the supplement after the main
+figures. arXiv compiles only the submitted source and does not run BibTeX, so
+this script:
 
-  1. Remove the xr-hyper package and the \\externaldocument{supplementary} line
-     from main.tex, so main.tex no longer needs supplementary.aux.
-  2. Append \\input{sections/supplementary} after the main figures. The
-     supplement resets its own table, figure, and equation counters, so its
-     numbering matches the standalone supplement.
-  3. Compile the combined document with pdflatex and BibTeX in a temporary
-     folder, so the shipped main.bbl includes the references the supplement cites.
-  4. Write .zips/arxiv-paper-<version>.zip with main.tex, main.bbl,
+  1. Checks that main.tex includes the supplement and does not depend on
+     another document's .aux file.
+  2. Compiles the document with pdflatex and BibTeX in a temporary folder, so
+     the shipped main.bbl matches the submitted source.
+  3. Writes .zips/arxiv-paper-<version>.zip with main.tex, main.bbl,
      references.bib, the section files, and only the figures the sections use.
-     Also write .zips/arxiv-paper-<version>.pdf, the PDF this source produces.
+     It also writes .zips/arxiv-paper-<version>.pdf, the PDF this source produces.
 """
 
 from pathlib import Path
@@ -42,27 +38,15 @@ SECTION_NAMES = (
     "supplementary",
 )
 
-SUPPLEMENT_INPUT = """
-% ── Supplementary Information (appended for the arXiv source) ─────────────────
-\\clearpage
-\\input{sections/supplementary}
-"""
 
-
-def replace_once(text: str, old: str, new: str) -> str:
-    """Replace one exact occurrence of old, and fail if there is not exactly one."""
-    if text.count(old) != 1:
-        raise RuntimeError(f"Expected exactly one {old!r} in arxiv/main.tex")
-    return text.replace(old, new)
-
-
-def combined_main() -> str:
-    """Return arxiv/main.tex changed into one document that includes the supplement."""
+def checked_main() -> str:
+    """Return arxiv/main.tex after checking that it is one self-contained document."""
     text = (ARXIV_DIR / "main.tex").read_text()
-    text = replace_once(text, "\\usepackage{xr-hyper}\n", "")
-    text = replace_once(text, "\\externaldocument{supplementary}\n", "")
-    text = replace_once(text, "\\input{sections/floats}\n",
-                        "\\input{sections/floats}\n" + SUPPLEMENT_INPUT)
+    if text.count("\\input{sections/supplementary}") != 1:
+        raise RuntimeError("arxiv/main.tex must include sections/supplementary exactly once")
+    for token in ("\\externaldocument", "xr-hyper"):
+        if token in text:
+            raise RuntimeError(f"arxiv/main.tex must not use {token}")
     return text
 
 
@@ -87,7 +71,7 @@ def main() -> None:
     preview = REPOSITORY_DIR / ".zips" / f"arxiv-paper-{version}.pdf"
 
     # Collect the files that go into the archive.
-    members: dict[str, bytes] = {"main.tex": combined_main().encode(),
+    members: dict[str, bytes] = {"main.tex": checked_main().encode(),
                                  "references.bib": (ARXIV_DIR / "references.bib").read_bytes()}
     section_text = ""
     for name in SECTION_NAMES:
@@ -97,7 +81,7 @@ def main() -> None:
     for name in used_figures(section_text):
         members[f"sections/figures/{name}"] = (ARXIV_DIR / "sections" / "figures" / name).read_bytes()
 
-    # Compile the combined document once to make main.bbl and the preview PDF.
+    # Compile the document once to make main.bbl and the preview PDF.
     with tempfile.TemporaryDirectory() as folder:
         build = Path(folder)
         for member, data in members.items():
@@ -109,7 +93,7 @@ def main() -> None:
         for _ in range(3):
             run(["pdflatex", "-interaction=nonstopmode", "main.tex"], build)
         if not (build / "main.bbl").is_file() or not (build / "main.pdf").is_file():
-            raise RuntimeError("The combined document did not build; see main.log")
+            raise RuntimeError("The document did not build; see main.log")
         members["main.bbl"] = (build / "main.bbl").read_bytes()
         shutil.copyfile(build / "main.pdf", preview)
 

@@ -6,7 +6,6 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{natbib}
-\usepackage{xr-hyper}
 \usepackage{hyperref}
 \hypersetup{hidelinks}
 \usepackage{xurl}   % break long URLs anywhere; keeps the repository URL visible in the preprint
@@ -20,7 +19,6 @@
 
 % ── paths ─────────────────────────────────────────────────────────────────────
 \graphicspath{{sections/figures/}}
-\externaldocument{supplementary}
 
 % ── macros ────────────────────────────────────────────────────────────────────
 \newcommand{\vxi}{\boldsymbol{\xi}}
@@ -36,8 +34,8 @@
 \newcommand{\suppfigures}[2]{Supplementary Figures~\ref{#1}--\ref{#2}}
 
 % Equations defined in the main text. Everything is local here, so this is a plain
-% \eqref; the standalone supplementary.tex wrapper redefines it to reach into
-% main.aux via xr-hyper. sections/supplementary.tex is shared by both wrappers.
+% \eqref. sections/supplementary.tex is shared with paper/, whose standalone
+% supplement wrapper redefines it to reach into the manuscript's .aux file.
 \newcommand{\maineqref}[1]{\eqref{#1}}
 
 % ══════════════════════════════════════════════════════════════════════════════
@@ -101,5 +99,9 @@ baseline script for CTGAN/TVAE comparison.
 % ── Tables and Figures (after references, per Nature style) ──────────────────
 \clearpage
 \input{sections/floats}
+
+% ── Supplementary Information (same document for the preprint) ───────────────
+\clearpage
+\input{sections/supplementary}
 
 \end{document}
