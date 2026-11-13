@@ -1,0 +1,324 @@
+\begin{thebibliography}{10}
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\providecommand{\bibinfo}[2]{#2}
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem{Toy2023WSJ}
+\bibinfo{author}{Toy, S.}
+\newblock \bibinfo{title}{{U.S.} maternal mortality hits highest level since
+  1965}.
+\newblock \bibinfo{howpublished}{The Wall Street Journal}
+  (\bibinfo{year}{2023}).
+\newblock \bibinfo{note}{March 16, 2023}.
+
+\bibitem{Harris2023}
+\bibinfo{author}{Harris, E.}
+\newblock \bibinfo{title}{{US} maternal mortality continues to worsen}.
+\newblock \emph{\bibinfo{journal}{JAMA}} \textbf{\bibinfo{volume}{329}},
+  \bibinfo{pages}{1248} (\bibinfo{year}{2023}).
+
+\bibitem{Chen2025}
+\bibinfo{author}{Chen, Y.} \emph{et~al.}
+\newblock \bibinfo{title}{Pregnancy-related deaths in the {US}, 2018--2022}.
+\newblock \emph{\bibinfo{journal}{JAMA Network Open}}
+  \textbf{\bibinfo{volume}{8}}, \bibinfo{pages}{e254325}
+  (\bibinfo{year}{2025}).
+
+\bibitem{Mann2011}
+\bibinfo{author}{Mann, K.~G.}
+\newblock \bibinfo{title}{Thrombin generation in hemorrhage control and
+  vascular occlusion}.
+\newblock \emph{\bibinfo{journal}{Circulation}} \textbf{\bibinfo{volume}{124}},
+  \bibinfo{pages}{225--235} (\bibinfo{year}{2011}).
+
+\bibitem{Butenas2009}
+\bibinfo{author}{Butenas, S.}, \bibinfo{author}{Orfeo, T.} \&
+  \bibinfo{author}{Mann, K.~G.}
+\newblock \bibinfo{title}{Tissue factor in coagulation: Which? where? when?}
+\newblock \emph{\bibinfo{journal}{Arteriosclerosis, Thrombosis, and Vascular
+  Biology}} \textbf{\bibinfo{volume}{29}}, \bibinfo{pages}{1989--1996}
+  (\bibinfo{year}{2009}).
+
+\bibitem{Hockin2002}
+\bibinfo{author}{Hockin, M.~F.}, \bibinfo{author}{Jones, K.~C.},
+  \bibinfo{author}{Everse, S.~J.} \& \bibinfo{author}{Mann, K.~G.}
+\newblock \bibinfo{title}{A model for the stoichiometric regulation of blood
+  coagulation}.
+\newblock \emph{\bibinfo{journal}{Journal of Biological Chemistry}}
+  \textbf{\bibinfo{volume}{277}}, \bibinfo{pages}{18322--18333}
+  (\bibinfo{year}{2002}).
+
+\bibitem{Bravo2012}
+\bibinfo{author}{Bravo, M.~C.}, \bibinfo{author}{Orfeo, T.},
+  \bibinfo{author}{Mann, K.~G.} \& \bibinfo{author}{Everse, S.~J.}
+\newblock \bibinfo{title}{Modeling of human factor {Va} inactivation by
+  activated protein {C}}.
+\newblock \emph{\bibinfo{journal}{BMC Systems Biology}}
+  \textbf{\bibinfo{volume}{6}}, \bibinfo{pages}{45} (\bibinfo{year}{2012}).
+
+\bibitem{Hellgren2003}
+\bibinfo{author}{Hellgren, M.}
+\newblock \bibinfo{title}{Hemostasis during normal pregnancy and puerperium}.
+\newblock \emph{\bibinfo{journal}{Seminars in Thrombosis and Hemostasis}}
+  \textbf{\bibinfo{volume}{29}}, \bibinfo{pages}{125--130}
+  (\bibinfo{year}{2003}).
+
+\bibitem{Grouzi2022}
+\bibinfo{author}{Grouzi, E.}, \bibinfo{author}{Pouliakis, A.},
+  \bibinfo{author}{Aktypi, A.} \emph{et~al.}
+\newblock \bibinfo{title}{Pregnancy and thrombosis risk for women without a
+  history of thrombotic events: a retrospective study of the real risks}.
+\newblock \emph{\bibinfo{journal}{Thrombosis Journal}}
+  \textbf{\bibinfo{volume}{20}} (\bibinfo{year}{2022}).
+
+\bibitem{Bremme2003}
+\bibinfo{author}{Bremme, K.~A.}
+\newblock \bibinfo{title}{Haemostatic changes in pregnancy}.
+\newblock \emph{\bibinfo{journal}{Best Practice \& Research Clinical
+  Haematology}} \textbf{\bibinfo{volume}{16}}, \bibinfo{pages}{153--168}
+  (\bibinfo{year}{2003}).
+
+\bibitem{Azziz2004}
+\bibinfo{author}{Azziz, R.} \emph{et~al.}
+\newblock \bibinfo{title}{The prevalence and features of the polycystic ovary
+  syndrome in an unselected population}.
+\newblock \emph{\bibinfo{journal}{Journal of Clinical Endocrinology \&
+  Metabolism}} \textbf{\bibinfo{volume}{89}}, \bibinfo{pages}{2745--2749}
+  (\bibinfo{year}{2004}).
+
+\bibitem{Palomba2015}
+\bibinfo{author}{Palomba, S.}, \bibinfo{author}{Santagni, S.},
+  \bibinfo{author}{Falbo, A.} \& \bibinfo{author}{La~Sala, G.~B.}
+\newblock \bibinfo{title}{Complications and challenges associated with
+  polycystic ovary syndrome: current perspectives}.
+\newblock \emph{\bibinfo{journal}{International Journal of Women's Health}}
+  \textbf{\bibinfo{volume}{7}}, \bibinfo{pages}{745--763}
+  (\bibinfo{year}{2015}).
+
+\bibitem{Abalos2014}
+\bibinfo{author}{Abalos, E.} \emph{et~al.}
+\newblock \bibinfo{title}{Pre-eclampsia, eclampsia and adverse maternal and
+  perinatal outcomes: a secondary analysis of the {World Health Organization}
+  multicountry survey on maternal and newborn health}.
+\newblock \emph{\bibinfo{journal}{BJOG: An International Journal of Obstetrics
+  \& Gynaecology}} \textbf{\bibinfo{volume}{121}}, \bibinfo{pages}{14--24}
+  (\bibinfo{year}{2014}).
+
+\bibitem{Dusse2011}
+\bibinfo{author}{Dusse, L.~M.}, \bibinfo{author}{Rios, D. R.~A.},
+  \bibinfo{author}{Pinheiro, M.~B.}, \bibinfo{author}{Cooper, A.~J.} \&
+  \bibinfo{author}{Lwaleed, B.~A.}
+\newblock \bibinfo{title}{Pre-eclampsia: relationship between coagulation,
+  fibrinolysis and inflammation}.
+\newblock \emph{\bibinfo{journal}{Clinica Chimica Acta}}
+  \textbf{\bibinfo{volume}{412}}, \bibinfo{pages}{17--21}
+  (\bibinfo{year}{2011}).
+
+\bibitem{Luan2007}
+\bibinfo{author}{Luan, D.}, \bibinfo{author}{Zai, M.} \&
+  \bibinfo{author}{Varner, J.~D.}
+\newblock \bibinfo{title}{Computationally derived points of fragility of a
+  human cascade are consistent with current therapeutic strategies}.
+\newblock \emph{\bibinfo{journal}{PLoS Computational Biology}}
+  \textbf{\bibinfo{volume}{3}}, \bibinfo{pages}{e142} (\bibinfo{year}{2007}).
+
+\bibitem{Luan2010}
+\bibinfo{author}{Luan, D.}, \bibinfo{author}{Szlam, F.},
+  \bibinfo{author}{Tanaka, K.~A.}, \bibinfo{author}{Barie, P.~S.} \&
+  \bibinfo{author}{Varner, J.~D.}
+\newblock \bibinfo{title}{Ensembles of uncertain mathematical models can
+  identify network response to therapeutic interventions}.
+\newblock \emph{\bibinfo{journal}{Molecular BioSystems}}
+  \textbf{\bibinfo{volume}{6}}, \bibinfo{pages}{2272--2286}
+  (\bibinfo{year}{2010}).
+
+\bibitem{BrummelZiedins2012}
+\bibinfo{author}{Brummel-Ziedins, K.~E.} \emph{et~al.}
+\newblock \bibinfo{title}{The prothrombotic phenotypes in familial protein c
+  deficiency are differentiated by computational modeling of thrombin
+  generation}.
+\newblock \emph{\bibinfo{journal}{PLoS ONE}} \textbf{\bibinfo{volume}{7}},
+  \bibinfo{pages}{e44378} (\bibinfo{year}{2012}).
+
+\bibitem{Hastie2009}
+\bibinfo{author}{Hastie, T.}, \bibinfo{author}{Tibshirani, R.} \&
+  \bibinfo{author}{Friedman, J.}
+\newblock \emph{\bibinfo{title}{The Elements of Statistical Learning: Data
+  Mining, Inference, and Prediction}} (\bibinfo{publisher}{Springer},
+  \bibinfo{year}{2009}), \bibinfo{edition}{2nd} edn.
+
+\bibitem{Gonzales2023}
+\bibinfo{author}{Gonzales, A.}, \bibinfo{author}{Guruswamy, G.} \&
+  \bibinfo{author}{Smith, S.~R.}
+\newblock \bibinfo{title}{Synthetic data in health care: A narrative review}.
+\newblock \emph{\bibinfo{journal}{PLOS Digital Health}}
+  \textbf{\bibinfo{volume}{2}}, \bibinfo{pages}{e0000082}
+  (\bibinfo{year}{2023}).
+
+\bibitem{Kuhnel2024}
+\bibinfo{author}{K{\"u}hnel, L.} \emph{et~al.}
+\newblock \bibinfo{title}{Synthetic data generation for a longitudinal cohort
+  study -- evaluation, method extension and reproduction of published data
+  analysis results}.
+\newblock \emph{\bibinfo{journal}{Scientific Reports}}
+  \textbf{\bibinfo{volume}{14}}, \bibinfo{pages}{14412} (\bibinfo{year}{2024}).
+
+\bibitem{Ledoit2004}
+\bibinfo{author}{Ledoit, O.} \& \bibinfo{author}{Wolf, M.}
+\newblock \bibinfo{title}{A well-conditioned estimator for large-dimensional
+  covariance matrices}.
+\newblock \emph{\bibinfo{journal}{Journal of Multivariate Analysis}}
+  \textbf{\bibinfo{volume}{88}}, \bibinfo{pages}{365--411}
+  (\bibinfo{year}{2004}).
+
+\bibitem{Goodfellow2014}
+\bibinfo{author}{Goodfellow, I.} \emph{et~al.}
+\newblock \bibinfo{title}{Generative adversarial nets}.
+\newblock In \emph{\bibinfo{booktitle}{Advances in Neural Information
+  Processing Systems}}, vol.~\bibinfo{volume}{27}, \bibinfo{pages}{2672--2680}
+  (\bibinfo{year}{2014}).
+
+\bibitem{Kingma2014}
+\bibinfo{author}{Kingma, D.~P.} \& \bibinfo{author}{Welling, M.}
+\newblock \bibinfo{title}{Auto-encoding variational {B}ayes}.
+\newblock In \emph{\bibinfo{booktitle}{International Conference on Learning
+  Representations (ICLR)}} (\bibinfo{year}{2014}).
+
+\bibitem{Xu2019CTGAN}
+\bibinfo{author}{Xu, L.}, \bibinfo{author}{Skoularidou, M.},
+  \bibinfo{author}{Cuesta-Infante, A.} \& \bibinfo{author}{Veeramachaneni, K.}
+\newblock \bibinfo{title}{Modeling tabular data using conditional {GAN}}.
+\newblock In \emph{\bibinfo{booktitle}{Advances in Neural Information
+  Processing Systems}}, vol.~\bibinfo{volume}{32}, \bibinfo{pages}{7335--7345}
+  (\bibinfo{year}{2019}).
+
+\bibitem{DeMitri2025}
+\bibinfo{author}{De~Mitri, O.}, \bibinfo{author}{Wang, R.} \&
+  \bibinfo{author}{Huber, M.~F.}
+\newblock \bibinfo{title}{Generative adversarial networks with limited data: A
+  survey and benchmarking}.
+\newblock \emph{\bibinfo{journal}{arXiv preprint arXiv:2504.05456}}
+  (\bibinfo{year}{2025}).
+
+\bibitem{Ramsauer2021}
+\bibinfo{author}{Ramsauer, H.} \emph{et~al.}
+\newblock \bibinfo{title}{Hopfield networks is all you need}.
+\newblock In \emph{\bibinfo{booktitle}{International Conference on Learning
+  Representations (ICLR)}} (\bibinfo{year}{2021}).
+
+\bibitem{Varner2026Multiplicity}
+\bibinfo{author}{Varner, J.~D.}
+\newblock \bibinfo{title}{Conditioning protein generation via {Hopfield}
+  pattern multiplicity}.
+\newblock \emph{\bibinfo{journal}{arXiv preprint arXiv:2603.20115}}
+  (\bibinfo{year}{2026}).
+
+\bibitem{Varner2023JuliaCon}
+\bibinfo{author}{Bravo, M.} \emph{et~al.}
+\newblock \bibinfo{title}{{BSTModelKit.jl}: Building biochemical systems theory
+  models of individualized coagulation dynamics during pregnancy}.
+\newblock \bibinfo{howpublished}{JuliaCon 2023,
+  \url{https://www.youtube.com/watch?v=IGtUqMLHBvQ}} (\bibinfo{year}{2023}).
+\newblock \bibinfo{note}{Conference proceedings talk}.
+
+\bibitem{Ghetmiri2021}
+\bibinfo{author}{Ghetmiri, D.~E.}, \bibinfo{author}{Cohen, M.~J.} \&
+  \bibinfo{author}{Menezes, A.~A.}
+\newblock \bibinfo{title}{Personalized modulation of coagulation factors using
+  a thrombin dynamics model to treat trauma-induced coagulopathy}.
+\newblock \emph{\bibinfo{journal}{npj Systems Biology and Applications}}
+  \textbf{\bibinfo{volume}{7}}, \bibinfo{pages}{44} (\bibinfo{year}{2021}).
+
+\bibitem{Varner2026SAProtein}
+\bibinfo{author}{Varner, J.~D.}
+\newblock \bibinfo{title}{Training-free generation of protein sequences from
+  small family alignments via stochastic attention}.
+\newblock \emph{\bibinfo{journal}{arXiv preprint arXiv:2603.14717}}
+  (\bibinfo{year}{2026}).
+
+\bibitem{Alswaidan2026SA}
+\bibinfo{author}{Alswaidan, A.} \& \bibinfo{author}{Varner, J.~D.}
+\newblock \bibinfo{title}{Stochastic attention via {Langevin} dynamics on the
+  modern {Hopfield} energy}.
+\newblock \emph{\bibinfo{journal}{arXiv preprint arXiv:2603.06875}}
+  (\bibinfo{year}{2026}).
+
+\bibitem{MouldUpton2013}
+\bibinfo{author}{Mould, D.~R.} \& \bibinfo{author}{Upton, R.~N.}
+\newblock \bibinfo{title}{Basic concepts in population modeling, simulation,
+  and model-based drug development---part 2: introduction to pharmacokinetic
+  modeling methods}.
+\newblock \emph{\bibinfo{journal}{CPT: Pharmacometrics \& Systems
+  Pharmacology}} \textbf{\bibinfo{volume}{2}}, \bibinfo{pages}{e38}
+  (\bibinfo{year}{2013}).
+
+\bibitem{Chase2011}
+\bibinfo{author}{Chase, J.~G.} \emph{et~al.}
+\newblock \bibinfo{title}{Physiological modeling, tight glycemic control, and
+  the {ICU} clinician: what are models and how can they affect practice?}
+\newblock \emph{\bibinfo{journal}{Annals of Intensive Care}}
+  \textbf{\bibinfo{volume}{1}}, \bibinfo{pages}{11} (\bibinfo{year}{2011}).
+
+\bibitem{Ribba2012}
+\bibinfo{author}{Ribba, B.} \emph{et~al.}
+\newblock \bibinfo{title}{A tumor growth inhibition model for low-grade glioma
+  treated with chemotherapy or radiotherapy}.
+\newblock \emph{\bibinfo{journal}{Clinical Cancer Research}}
+  \textbf{\bibinfo{volume}{18}}, \bibinfo{pages}{5071--5080}
+  (\bibinfo{year}{2012}).
+
+\bibitem{Yizhak2015}
+\bibinfo{author}{Yizhak, K.}, \bibinfo{author}{Chaneton, B.},
+  \bibinfo{author}{Gottlieb, E.} \& \bibinfo{author}{Ruppin, E.}
+\newblock \bibinfo{title}{Modeling cancer metabolism on a genome scale}.
+\newblock \emph{\bibinfo{journal}{Molecular Systems Biology}}
+  \textbf{\bibinfo{volume}{11}}, \bibinfo{pages}{817} (\bibinfo{year}{2015}).
+
+\bibitem{Shan2018}
+\bibinfo{author}{Shan, M.}, \bibinfo{author}{Dai, D.}, \bibinfo{author}{Vudem,
+  A.}, \bibinfo{author}{Varner, J.~D.} \& \bibinfo{author}{Stroock, A.~D.}
+\newblock \bibinfo{title}{Multi-scale computational study of the {W}arburg
+  effect, reverse {W}arburg effect and glutamine addiction in solid tumors}.
+\newblock \emph{\bibinfo{journal}{PLoS Computational Biology}}
+  \textbf{\bibinfo{volume}{14}}, \bibinfo{pages}{e1006584}
+  (\bibinfo{year}{2018}).
+
+\bibitem{McLean2012TGA}
+\bibinfo{author}{McLean, K.~C.}, \bibinfo{author}{Bernstein, I.~M.} \&
+  \bibinfo{author}{Brummel-Ziedins, K.}
+\newblock \bibinfo{title}{Tissue factor dependent thrombin generation across
+  pregnancy}.
+\newblock \emph{\bibinfo{journal}{American Journal of Obstetrics and
+  Gynecology}} \textbf{\bibinfo{volume}{207}}, \bibinfo{pages}{135.e1--135.e6}
+  (\bibinfo{year}{2012}).
+
+\bibitem{Hale2012}
+\bibinfo{author}{Hale, S.~A.} \emph{et~al.}
+\newblock \bibinfo{title}{Coagulation and fibrinolytic system protein profiles
+  in women with normal pregnancies and pregnancies complicated by
+  hypertension}.
+\newblock \emph{\bibinfo{journal}{Pregnancy Hypertension}}
+  \textbf{\bibinfo{volume}{2}}, \bibinfo{pages}{152--157}
+  (\bibinfo{year}{2012}).
+
+\bibitem{Psoinos2021}
+\bibinfo{author}{Psoinos, R. B.~C.}, \bibinfo{author}{Morris, E.~A.},
+  \bibinfo{author}{McBride, C.~A.} \& \bibinfo{author}{Bernstein, I.~M.}
+\newblock \bibinfo{title}{Association of pre-pregnancy subclinical insulin
+  resistance with cardiac dysfunction in healthy nulliparous women}.
+\newblock \emph{\bibinfo{journal}{Pregnancy Hypertension}}
+  \textbf{\bibinfo{volume}{26}}, \bibinfo{pages}{11--16}
+  (\bibinfo{year}{2021}).
+
+\bibitem{Bernstein2016}
+\bibinfo{author}{Bernstein, I.~M.}, \bibinfo{author}{Hale, S.~A.} \&
+  \bibinfo{author}{Badger, G.~J.}
+\newblock \bibinfo{title}{Differences in cardiovascular function comparing
+  prior preeclamptics with nulliparous controls}.
+\newblock \emph{\bibinfo{journal}{Pregnancy Hypertension}}
+  \textbf{\bibinfo{volume}{6}}, \bibinfo{pages}{320--326}
+  (\bibinfo{year}{2016}).
+
+\end{thebibliography}
