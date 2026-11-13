@@ -488,3 +488,117 @@ function kde_bandwidths(X̂::Matrix{Float64})
     loo = exp((lo + hi) / 2)
     return (sigma=sigma, scott=scott, silverman=silverman, loo=loo)
 end
+
+# ──────────────────────────────────────────────────────────────────────────────
+# W3b: log-transform check
+# ──────────────────────────────────────────────────────────────────────────────
+
+"""
+    build_representation(ref, log_idx) -> NamedTuple (X̂, pca, std_params, pca_norms, β_star, log_idx)
+
+Rebuild the memory matrix from the 23 x 216 real matrix with the natural log
+applied to the concatenated columns in `log_idx`. Mirrors
+run_full_longitudinal.jl: z-score, PCA at 95% variance, unit-normalized
+memories, and beta* from the entropy-transition rule. With an empty `log_idx`
+this reproduces the canonical memory.
+"""
+function build_representation(ref, log_idx::Vector{Int})
+    X = build_concat_matrix(ref.df_clean, :SubjectID, ref.complete_subjects, ref.kept_cols, ref.n_assays)
+    for j in log_idx
+        X[:, j] = log.(X[:, j])
+    end
+    K = size(X, 1)
+    μ = vec(mean(X, dims=1))
+    σ = vec(std(X, dims=1))
+    for i in eachindex(σ)
+        if σ[i] < 1e-12
+            σ[i] = 1.0
+        end
+    end
+    Z = (X .- μ') ./ σ'
+    std_params = StandardizationParams(μ, σ, ref.std_params_concat.col_names)
+    pca = MultivariateStats.fit(PCA, Z'; pratio=0.95)
+    X_pca = MultivariateStats.transform(pca, Z')
+    pca_norms = [norm(X_pca[:, k]) for k in 1:K]
+    X̂ = copy(X_pca)
+    for k in 1:K
+        X̂[:, k] ./= (norm(X̂[:, k]) + 1e-12)
+    end
+    phase = find_entropy_inflection(X̂; α=0.01, n_betas=80, β_range=(0.1, 1000.0))
+    return (X̂=X̂, pca=pca, std_params=std_params, pca_norms=pca_norms,
+            β_star=phase.β_star, log_idx=log_idx)
+end
+
+"""
+    decode_rep(rep, y) -> Vector{Float64}
+
+Invert the PCA and the z-score, then exponentiate the logged columns.
+"""
+function decode_rep(rep, y::Vector{Float64})
+    z = vec(MultivariateStats.reconstruct(rep.pca, y))
+    x = z .* rep.std_params.σ .+ rep.std_params.μ
+    for j in rep.log_idx
+        x[j] = exp(x[j])
+    end
+    return x
+end
+
+"""
+    decode_cohort_rep(ref, rep, dirs, mags) -> DataFrame
+
+Same long format as `decode_cohort`, using `decode_rep`.
+"""
+function decode_cohort_rep(ref, rep, dirs::Matrix{Float64}, mags::Vector{Float64})
+    n = size(dirs, 2)
+    n_assays = ref.n_assays
+    concat = Matrix{Float64}(undef, n, n_assays * R2_N_VISITS)
+    for i in 1:n
+        concat[i, :] = decode_rep(rep, dirs[:, i] .* mags[i])
+    end
+    df_visits = DataFrame[]
+    for v in 1:R2_N_VISITS
+        offset = (v - 1) * n_assays
+        df_v = DataFrame(concat[:, (offset + 1):(offset + n_assays)], ref.kept_cols)
+        df_v.SyntheticID = 1:n
+        df_v.Visit = fill(v, n)
+        push!(df_visits, df_v)
+    end
+    df = vcat(df_visits...)
+    sort!(df, [:SyntheticID, :Visit])
+    return df
+end
+
+"""
+    plausibility_summary(ref, df) -> NamedTuple
+
+Biological pass count, profiles with any negative hormone value, median
+hormone MRE (6 hormone columns), strict mechanistic pass count, and joint pass
+count for a decoded long-format cohort with a `SyntheticID` column.
+"""
+function plausibility_summary(ref, df::DataFrame)
+    bands = strict_bands(ref)
+    ratios = bz2012_ratios(df, TF_TGA_COLS; TM=0.0)
+    bio_pass = 0
+    neg_profiles = 0
+    strict_pass = 0
+    both_pass = 0
+    for id in unique(df.SyntheticID)
+        rows = df[df.SyntheticID .== id, :]
+        bio = bio_plausible_patient(rows, ref)
+        neg = any(rows.Estradiol .< 0) || any(rows.Progesterone .< 0)
+        strict = strict_mech_pass(ratios[ratios.PatientID .== string(id), :], bands, R2_N_VISITS)
+        bio_pass += bio
+        neg_profiles += neg
+        strict_pass += strict
+        both_pass += (bio && strict)
+    end
+    hormone_mre = Float64[]
+    for v in 1:R2_N_VISITS
+        comp = feature_summary_comparison(
+            ref.df_real_complete[ref.df_real_complete.Visit .== v, :],
+            df[df.Visit .== v, :], [:Estradiol, :Progesterone])
+        append!(hormone_mre, comp.Mean_Rel_Error)
+    end
+    return (Bio_Pass=bio_pass, Hormone_Neg_Profiles=neg_profiles,
+            Hormone_MRE=median(hormone_mre), Strict_Mech_Pass=strict_pass, Both_Pass=both_pass)
+end

@@ -102,6 +102,38 @@ end
     @test isapprox(bw.silverman, bw.sigma * (4 / (d + 2))^(1 / (d + 4)) * K^(-1 / (d + 4)); rtol=1e-12)
 end
 
+@testset "untransformed representation reproduces the canonical memory" begin
+    rep = build_representation(ref, Int[])
+    @test size(rep.X̂) == size(ref.X̂)
+    @test isapprox(rep.X̂, ref.X̂; rtol=1e-10, atol=1e-10)
+    @test isapprox(rep.pca_norms, ref.pca_norms; rtol=1e-10)
+    @test isapprox(rep.β_star, ref.β_star; rtol=1e-10)
+    rng = MersenneTwister(23)
+    for _ in 1:10
+        y = randn(rng, size(ref.X̂, 1)) .* 10
+        @test isapprox(decode_rep(rep, y), decode_sample(y, ref.pca_concat, ref.std_params_concat); rtol=1e-10, atol=1e-8)
+    end
+end
+
+@testset "plausibility summary reproduces the published counts" begin
+    s = plausibility_summary(ref, published_cohort_long(ref))
+    @test s.Bio_Pass == 54
+    @test s.Hormone_Neg_Profiles == 46
+    @test s.Strict_Mech_Pass == 41
+    @test s.Both_Pass == 24
+end
+
+@testset "log-hormone representation decodes to positive hormones" begin
+    A = hormone_affine(ref)
+    rep = build_representation(ref, A.idx)
+    rng = MersenneTwister(29)
+    for _ in 1:200
+        u = normalize(randn(rng, size(rep.X̂, 1)))
+        x = decode_rep(rep, rand(rng, rep.pca_norms) .* u)
+        @test all(x[A.idx] .> 0)
+    end
+end
+
 @testset "λ = 0 constrained ULA matches the exact mixture" begin
     A = hormone_affine(ref)
     n = 1000

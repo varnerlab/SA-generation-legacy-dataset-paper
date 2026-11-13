@@ -229,7 +229,36 @@ git commit -m "Add round-2 revision helpers and tests"
 - [ ] **Step 3: Run it.** Run: `cd code && julia experiments/run_constrained_positivity_demo.jl`. Expected: the agreement assertion passes and both CSVs are written. Runtime is about 30-45 minutes, mostly the BZ2012 runs. Record pass rates, acceptance rates, and any loss in fidelity.
 - [ ] **Step 4: Commit** the script and both CSVs.
 
-**Checkpoint after Task 4:** Show the author the three CSVs as a short table before any prose
+### Task 4b: Log-transform check (spec W3b)
+
+**Files:**
+- Modify: `code/experiments/revision2_helpers.jl` (add the functions below)
+- Modify: `code/experiments/test_revision2_helpers.jl` (add testsets)
+- Create: `code/experiments/run_log_transform_check.jl`
+- Output: `code/data/log_transform_check.csv`
+
+**Interfaces:**
+- Produces:
+  - `build_representation(ref, log_idx::Vector{Int}) -> NamedTuple (X̂, pca, std_params, pca_norms, β_star, log_idx)`.
+    It mirrors `run_full_longitudinal.jl:96-111` on `log.(X_real)` in the `log_idx` columns.
+  - `decode_rep(rep, y::Vector{Float64}) -> Vector{Float64}`. This is reconstruct, then
+    destandardize, then `exp` on the `log_idx` entries.
+  - `decode_cohort_rep(ref, rep, dirs, mags) -> DataFrame`. The same long format as
+    `decode_cohort`.
+  - `plausibility_summary(ref, df) -> NamedTuple (Bio_Pass, Hormone_Neg_Profiles, Hormone_MRE, Strict_Mech_Pass, Both_Pass)`.
+- Testsets:
+  - `build_representation(ref, Int[])` reproduces `ref.X̂`, `ref.pca_norms`, and `ref.β_star` (rtol 1e-10).
+  - `decode_rep` with empty `log_idx` equals `decode_sample`.
+  - `plausibility_summary(ref, published_cohort_long(ref))` gives Bio 54, Neg 46, Strict 41, Both 24.
+  - A log-hormone representation decodes to strictly positive hormones for 200 random directions.
+- CSV columns: `Representation, d, Beta_star, Median_MRE, Hormone_MRE, CrossVisit_Frob, Mech_Overlap_TFonly, Bio_Pass, Hormone_Neg_Profiles, Strict_Mech_Pass, Both_Pass, Median_Novelty, DCR_synth_to_real_median`.
+  Rows: `Untransformed`, `Log hormones`, `Log all assays`. The script asserts that the
+  `Untransformed` row reproduces `exact_sampler_reference.csv` (MRE, Frob, overlap, novelty,
+  and DCR, rtol 1e-10).
+
+- [ ] Write the testsets, run them, and watch them fail. Implement the functions, then run the tests and watch them pass. Write and run the script, then commit.
+
+**Checkpoint after Task 4b:** Show the author the three CSVs as a short table before any prose
 is written. The prose depends on these numbers.
 
 ### Task 5: Supplement tables and results text

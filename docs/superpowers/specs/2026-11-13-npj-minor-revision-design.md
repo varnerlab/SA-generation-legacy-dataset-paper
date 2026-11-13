@@ -147,6 +147,31 @@ Methods (see W4). No main-text figure.
 per-profile magnitudes. The lambda = 0 arm must then reproduce 54/100, and the beta* row of W1
 must reproduce the existing exact-sampler row. Treat either mismatch as a bug.
 
+### W3b. Log-transform check (comment 3, Supplement only; added 2026-11-13 at the author's request)
+
+The constraint demonstration (W3) removed negative hormone values. It also raised hormone
+error from about 5% to about 30%, because removing the negative tail pushes the hormone means
+up. The author asked to also test a positive representation, so the answer is complete.
+
+All 72 assays are strictly positive at every visit. The hormones are right-skewed at visits 1
+and 2 (skewness 2-4). Test two representations against the untransformed one:
+
+- **Log hormones.** Take the natural log of the 6 estradiol and progesterone columns.
+- **Log all assays.** Take the natural log of all 216 concatenated columns.
+
+Each representation follows the canonical pipeline (`run_full_longitudinal.jl`). The log
+transform is applied to the selected columns of the 23 x 216 real matrix. Then: z-score, PCA
+at 95% variance, unit-normalized memories, its own beta* from the entropy-transition rule,
+100 profiles from the exact sampler (latent seed 42), and magnitudes from its own PCA norms
+(seed 424242). To decode, invert the PCA, invert the z-score, and exponentiate the logged
+columns. Evaluate in original units against the real cohort with the same metrics as W3.
+Compute novelty in each representation's own PCA space. The untransformed row must reproduce
+`exact_sampler_reference.csv`.
+
+Script: `code/experiments/run_log_transform_check.jl`. Output:
+`code/data/log_transform_check.csv`. Combine with the W3 results in one supplement table of
+ways to keep hormone values positive. The method goes in the main Methods paragraph.
+
 ### W4. Manuscript text
 
 All new text follows the author's prose rule: short, plain, direct sentences that say exactly
