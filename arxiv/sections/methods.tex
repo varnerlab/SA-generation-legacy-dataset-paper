@@ -101,7 +101,7 @@ Each stored patient is the center of one component. The common component varianc
 $\beta^{-1}$, and the multiplicity weights enter the mixture probabilities directly. The
 memories used here are normalized to unit length, so the exponential factor is shared by
 every component and $q_k = r_k/\sum_j r_j$ exactly. With equal multiplicity weights, this distribution is an isotropic Gaussian
-kernel-density estimate on the stored profiles, and $\beta^{-1/2}$ is the kernel width. We could therefore sample this
+kernel-density estimate on the stored profiles, and $h=\beta^{-1/2}$ is the kernel width. We could therefore sample this
 distribution directly: first choose $k$ from $q$ and then draw
 $\vxi\sim\mathcal{N}(\mathbf{m}_k,\beta^{-1}\mathbf{I})$. This procedure requires no Markov
 chain. The cohort

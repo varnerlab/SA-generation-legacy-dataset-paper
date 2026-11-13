@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  13 NOV 2026 15:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  13 NOV 2026 16:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -583,7 +583,7 @@ put line 244.
 [22] (./sections/floats.tex
 
 [23]
-<sections/figures/validate_bio_correlations.pdf, id=367, 1003.75pt x 853.1875pt
+<sections/figures/validate_bio_correlations.pdf, id=365, 1003.75pt x 853.1875pt
 >
 File: sections/figures/validate_bio_correlations.pdf Graphic file (type pdf)
 <use sections/figures/validate_bio_correlations.pdf>
@@ -593,7 +593,7 @@ n input line 78.
 
 
 [24 <./sections/figures/validate_bio_correlations.pdf>]
-<sections/figures/validate_pregnancy_progression.pdf, id=373, 1003.75pt x 602.2
+<sections/figures/validate_pregnancy_progression.pdf, id=371, 1003.75pt x 602.2
 5pt>
 File: sections/figures/validate_pregnancy_progression.pdf Graphic file (type pd
 f)
@@ -604,7 +604,7 @@ sed on input line 97.
 
 
 [25 <./sections/figures/validate_pregnancy_progression.pdf>]
-<sections/figures/validate_cross_visit_corr.pdf, id=381, 1405.25pt x 903.375pt>
+<sections/figures/validate_cross_visit_corr.pdf, id=378, 1405.25pt x 903.375pt>
 
 File: sections/figures/validate_cross_visit_corr.pdf Graphic file (type pdf)
 <use sections/figures/validate_cross_visit_corr.pdf>
@@ -614,7 +614,7 @@ n input line 111.
 
 
 [26 <./sections/figures/validate_cross_visit_corr.pdf>]
-<sections/figures/sim_phase_diagram.pdf, id=401, 1204.5pt x 501.875pt>
+<sections/figures/sim_phase_diagram.pdf, id=399, 1204.5pt x 501.875pt>
 File: sections/figures/sim_phase_diagram.pdf Graphic file (type pdf)
 <use sections/figures/sim_phase_diagram.pdf>
 Package pdftex.def Info: sections/figures/sim_phase_diagram.pdf  used on input 
@@ -623,7 +623,7 @@ line 137.
 
 
 [27 <./sections/figures/sim_phase_diagram.pdf>]
-<sections/figures/validate_conditioned_features_v2.pdf, id=409, 1806.75pt x 602
+<sections/figures/validate_conditioned_features_v2.pdf, id=407, 1806.75pt x 602
 .25pt>
 File: sections/figures/validate_conditioned_features_v2.pdf Graphic file (type 
 pdf)
@@ -634,7 +634,7 @@ Package pdftex.def Info: sections/figures/validate_conditioned_features_v2.pdf
 
 
 [28 <./sections/figures/validate_conditioned_features_v2.pdf>]
-<sections/figures/validate_mechanistic_combined_tf_only_v2.pdf, id=415, 2208.25
+<sections/figures/validate_mechanistic_combined_tf_only_v2.pdf, id=413, 2208.25
 pt x 903.375pt>
 File: sections/figures/validate_mechanistic_combined_tf_only_v2.pdf Graphic fil
 e (type pdf)
@@ -645,7 +645,7 @@ _v2.pdf  used on input line 184.
 
 
 [29 <./sections/figures/validate_mechanistic_combined_tf_only_v2.pdf>]
-<sections/figures/downstream_utility_scatter_v2.pdf, id=421, 2409.0pt x 602.25p
+<sections/figures/downstream_utility_scatter_v2.pdf, id=419, 2409.0pt x 602.25p
 t>
 File: sections/figures/downstream_utility_scatter_v2.pdf Graphic file (type pdf
 )
@@ -666,12 +666,12 @@ Package rerunfilecheck Info: File `manuscript-clean.out' has not changed.
  ) 
 Here is how much of TeX's memory you used:
  14053 strings out of 473190
- 223259 string characters out of 5715801
- 666323 words of memory out of 5000000
+ 223261 string characters out of 5715801
+ 666362 words of memory out of 5000000
  36988 multiletter control sequences out of 15000+600000
  572131 words of font info for 86 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 79i,9n,82p,2184b,704s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 79i,9n,82p,1914b,696s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
@@ -692,10 +692,10 @@ xmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2025/texmf
 -dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025/texmf-
 dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on manuscript-clean.pdf (30 pages, 1460092 bytes).
+Output written on manuscript-clean.pdf (30 pages, 1460162 bytes).
 PDF statistics:
- 535 PDF objects out of 1000 (max. 8388607)
- 436 compressed objects within 5 object streams
+ 533 PDF objects out of 1000 (max. 8388607)
+ 434 compressed objects within 5 object streams
  108 named destinations out of 1000 (max. 500000)
  172 words of extra memory for PDF output out of 10000 (max. 10000000)
 
