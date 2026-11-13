@@ -387,7 +387,9 @@ Hormones were closer to zero relative to their observed variation than the coagu
 which explained why only hormones crossed zero in these draws but did not guarantee positive
 factors in other draws. All nine factor inputs to BZ2012 were positive, so all $100$ profiles
 entered the mechanistic check. The unconstrained MVN baseline produced negative hormones in
-$43$ profiles, compared with $46$ for stochastic attention.}
+$43$ profiles, compared with $46$ for stochastic attention. In the real column, each real profile was checked against mechanistic bands built
+without its own ratios. With the bands built from all $23$ real profiles, which were the bands
+applied to the synthetic profiles, $8$ of $23$ real profiles met the all-features criterion.}
 \label{stab:hull-geometry}
 {\small
 \setlength{\tabcolsep}{5pt}
@@ -404,11 +406,11 @@ Median patient radius                       & \multicolumn{2}{c}{$13.8$} \\
 Median hull extent, generic direction       & \multicolumn{2}{c}{$2.0$} \\
 Largest $t^{*}$ attained on the unit sphere & \multicolumn{2}{c}{$0.231$} \\
 \midrule
-\multicolumn{3}{l}{\emph{Plausibility of the out-of-hull synthetic patients}} \\
-Biological constraints satisfied            & \multicolumn{2}{c}{$54/100$} \\
-Mechanistic band, per feature               & \multicolumn{2}{c}{$83$ to $92\%$} \\
-Mechanistic band, all features and visits   & \multicolumn{2}{c}{$41/100$} \\
-Both biological and strict mechanistic criteria & \multicolumn{2}{c}{$24/100$} \\
+\multicolumn{3}{l}{\emph{Plausibility of the out-of-hull synthetic patients}\emph{ and the real patients}} \\
+Biological constraints satisfied            & $54/100$ & $23/23$ \\
+Mechanistic band, per feature               & $83$ to $92\%$ & n/a \\
+Mechanistic band, all features and visits   & $41/100$ & $7/23$ \\
+Both biological and strict mechanistic criteria & $24/100$ & $7/23$ \\
 \bottomrule
 \end{tabular}
 }
@@ -660,3 +662,111 @@ each stored pattern. Metropolis acceptance near $0.999$ indicated negligible dis
 bias.}
 \label{sfig:mixing-diagnostic}
 \end{figure}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\subsection*{Supplementary Bandwidth and Positivity Results}
+\label{ssec:bandwidth-positivity}
+
+With equal multiplicity weights, the stochastic-attention distribution was an isotropic
+Gaussian kernel-density estimate on the $23$ unit-normalized profiles. Its kernel width was
+$h=\beta^{-1/2}$, and the entropy transition gave $h=0.58$. Three standard bandwidth rules gave
+narrower kernels: $0.29$ for leave-one-out likelihood, $0.21$ for Scott's rule, and $0.19$ for
+Silverman's rule (\supptable{stab:kde-bandwidth}). These widths corresponded to $4.1$ to $9.0$
+times $\beta^*$. Profiles drawn with the narrower kernels stayed closer to the stored profiles.
+Median novelty fell from $0.50$ to $0.21$--$0.34$, and the median distance to the closest real
+record fell from $13.9$ to $9.9$--$11.9$. Cross-visit correlation error fell from $0.60$ to
+$0.43$--$0.50$, and median relative error rose from $1.7\%$ to $2.1$--$2.2\%$. Mechanistic
+overlap was $0.91$--$0.92$ for every width. Of the four widths, the entropy transition gave
+the widest kernel, the most novel profiles, and the lowest marginal error.
+
+Linear decoding allowed negative hormone values, so we compared two ways to prevent
+them (\supptable{stab:positivity}). The first added a positivity constraint term to the
+energy. With this term, the target distribution was no longer a Gaussian mixture. Langevin
+sampling agreed with exact rejection sampling from the same target at every constraint weight
+$\lambda$. As $\lambda$ increased, the number of profiles with a negative hormone value fell
+from about $50$ at $\lambda=0$ to $4$--$6$ at $\lambda=100$. A hard constraint removed every
+negative value and kept $51\%$ of exact draws. The constraint also changed the hormone
+distributions. Removing the negative tail raised the hormone means, so the median hormone
+error rose from about $5\%$ to $30\%$. Median relative error across all features rose from
+$1.2$--$1.3\%$ to $2.5\%$.
+
+The second approach modeled the logarithm of each hormone value, so every decoded
+hormone value was positive. With log-transformed hormones, all $100$ profiles passed the
+biological check, and $45$ also passed the strict mechanistic check. Median relative error was
+$1.4\%$, compared with $1.7\%$ without the transform. Median hormone error was $6.2\%$, compared
+with $6.4\%$. Cross-visit correlation error, mechanistic overlap, and novelty changed little.
+Log-transforming all $72$ assays also removed the negative values and gave median relative
+error $1.3\%$, but mechanistic overlap fell to $0.88$. In this cohort, the log transform of the
+hormones prevented negative values without a loss in fidelity. The constraint term prevented
+them at a cost in hormone fidelity.
+
+\begin{table}[ht]
+\centering
+\caption{\textbf{Kernel width from the entropy transition and from standard bandwidth
+rules.} With equal weights, the stochastic-attention distribution is an isotropic Gaussian
+kernel-density estimate on the unit-normalized PCA profiles with kernel width
+$h=\beta^{-1/2}$. Each row drew $100$ profiles directly from this distribution at
+$\beta=1/h^2$, with the seeds and decoding of the direct-sampler row of
+\supptable{stab:sampling-ladder}. MRE is the median relative error of feature means.
+Cross-visit Frob.\ is the correlation error against the $23$ real profiles. Mech.\ overlap is
+the fraction of pooled predicted-to-recorded TGA ratios within the real 5th--95th percentile
+range. Novelty is $1-\max_k\cos(\hat{\vxi},\hat{\mathbf{m}}_k)$. DCR is the median distance
+to the closest real record in standardized $216$-dimensional space; the real-to-real value
+was $15.9$.}
+\label{stab:kde-bandwidth}
+{\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccccccc}
+\toprule
+Width rule & $h$ & $\beta/\beta^*$ & MRE (\%) & Cross-visit Frob. & Mech.\ overlap & Novelty & DCR \\
+\midrule
+Entropy transition ($\beta^*$) & $0.58$ & $1.0$ & $1.68$ & $0.60$ & $0.91$ & $0.50$ & $13.87$ \\
+Leave-one-out likelihood       & $0.29$ & $4.1$ & $2.07$ & $0.50$ & $0.92$ & $0.34$ & $11.90$ \\
+Scott                          & $0.21$ & $7.8$ & $2.15$ & $0.44$ & $0.92$ & $0.23$ & $10.31$ \\
+Silverman                      & $0.19$ & $9.0$ & $2.20$ & $0.43$ & $0.92$ & $0.21$ & $9.92$ \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{\textbf{Two ways to keep hormone values positive.} Each row has $100$
+profiles. Bio.\ counts profiles that met the biological check. Neg.\ counts profiles with
+a negative estradiol or progesterone value. Hormone MRE is the median relative error of the
+six hormone means (two hormones at three visits). Both MRE columns are percentages. Frob.\ is the cross-visit correlation error, and Overlap is the mechanistic overlap. Strict counts profiles whose $15$ TGA ratios
+all fell within the real 5th--95th percentile bands; $8$ of $23$ real profiles met this
+criterion. Constraint-term rows added $\lambda$ times the positivity penalty to the energy.
+Langevin and exact rows targeted the same distribution. Exact rows used rejection from the
+stochastic-attention mixture, and Acc.\ is the fraction of draws kept. Two-sample
+Kolmogorov--Smirnov tests on $1{,}000$ draws per sampler compared the six hormone values at
+each $\lambda$; all $p\ge0.002$, above the Bonferroni threshold of $0.0004$ for $24$ tests.
+Log-representation rows used the direct sampler with the seeds of the direct-sampler row of
+\supptable{stab:sampling-ladder}. Each log representation kept $d{=}18$ and gave
+$\beta^*=2.94$.}
+\label{stab:positivity}
+{\small
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{llcccccccc}
+\toprule
+Approach & Sampler & Bio. & Neg. & MRE & Horm.\ MRE & Frob. & Overlap & Strict & Acc. \\
+\midrule
+\multicolumn{10}{l}{\emph{Constraint term in the energy}} \\
+$\lambda=0$     & Langevin & $51$  & $49$ & $1.19$ & $4.4$  & $0.62$ & $0.91$ & $39$ & n/a \\
+                & Exact    & $50$  & $50$ & $1.34$ & $5.3$  & $0.55$ & $0.91$ & $35$ & $1.00$ \\
+$\lambda=1$     & Langevin & $66$  & $34$ & $1.47$ & $8.1$  & $0.58$ & $0.91$ & $36$ & n/a \\
+                & Exact    & $70$  & $30$ & $1.50$ & $13.0$ & $0.58$ & $0.91$ & $33$ & $0.72$ \\
+$\lambda=10$    & Langevin & $87$  & $11$ & $2.35$ & $15.8$ & $0.63$ & $0.91$ & $41$ & n/a \\
+                & Exact    & $85$  & $15$ & $1.96$ & $20.3$ & $0.58$ & $0.89$ & $36$ & $0.57$ \\
+$\lambda=100$   & Langevin & $94$  & $6$  & $2.54$ & $21.8$ & $0.55$ & $0.90$ & $35$ & n/a \\
+                & Exact    & $96$  & $4$  & $2.42$ & $26.8$ & $0.58$ & $0.90$ & $42$ & $0.50$ \\
+Hard constraint & Exact    & $100$ & $0$  & $2.47$ & $29.6$ & $0.53$ & $0.93$ & $42$ & $0.51$ \\
+\midrule
+\multicolumn{10}{l}{\emph{Log representation}} \\
+None            & Exact    & $48$  & $52$ & $1.68$ & $6.4$  & $0.60$ & $0.91$ & $37$ & n/a \\
+Log hormones    & Exact    & $100$ & $0$  & $1.41$ & $6.2$  & $0.58$ & $0.90$ & $45$ & n/a \\
+Log all assays  & Exact    & $100$ & $0$  & $1.28$ & $3.1$  & $0.64$ & $0.88$ & $32$ & n/a \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
