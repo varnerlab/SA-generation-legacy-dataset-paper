@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  18 NOV 2026 16:01
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  18 NOV 2026 17:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -564,19 +564,19 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 [14]
 
 [15]
+
+[16]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 245.
 
-
-[16]
 
 [17]
 
 [18])
 
-[19] (./sections/acknowledgments.tex) (./manuscript-clean.bbl
+[19] (./sections/acknowledgments.tex)
 
-[20]
+[20] (./manuscript-clean.bbl
 
 [21]
 
@@ -669,11 +669,11 @@ Package rerunfilecheck Info: File `manuscript-clean.out' has not changed.
 Here is how much of TeX's memory you used:
  14054 strings out of 473190
  223268 string characters out of 5715801
- 666977 words of memory out of 5000000
+ 661966 words of memory out of 5000000
  36988 multiletter control sequences out of 15000+600000
  572131 words of font info for 86 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 79i,9n,82p,1914b,728s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 79i,9n,82p,1914b,712s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
@@ -694,7 +694,7 @@ xmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2025/texmf
 -dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025/texmf-
 dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on manuscript-clean.pdf (31 pages, 1464477 bytes).
+Output written on manuscript-clean.pdf (31 pages, 1465908 bytes).
 PDF statistics:
  546 PDF objects out of 1000 (max. 8388607)
  446 compressed objects within 5 object streams

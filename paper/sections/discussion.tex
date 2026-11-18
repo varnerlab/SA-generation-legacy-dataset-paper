@@ -132,8 +132,11 @@ difficult to make from $23$ patients. The linear representation was practical fo
 cohort, but the results did not show that clinical trajectories are generally linear.}
 \rthree{Linear decoding also allowed negative hormone values. Only $54$ of $100$ profiles
 passed the biological check, and every failing profile had a negative estradiol or
-progesterone value. Twenty-four profiles also passed the strict mechanistic check, which only
-$7$ of $23$ real profiles passed. A positivity penalty in the energy reduced the number of
+progesterone value. Twenty-four profiles passed both the biological check and the strict
+mechanistic check. The strict mechanistic check was not the main cause of this low rate. That check failed
+a profile if any one of its predicted-to-recorded TGA ratios fell outside the real 5th--95th
+percentile range, and only $8$ of the $23$ real profiles passed it, compared with $41$ of $100$
+synthetic profiles. A positivity penalty in the energy reduced the number of
 profiles with a negative hormone value to $4$--$6$ of $100$, but the median hormone error rose
 from about $5\%$ to $22$--$27\%$. With this penalty, the target was no longer a Gaussian
 mixture, and the hormone values from Langevin sampling did not differ detectably from those

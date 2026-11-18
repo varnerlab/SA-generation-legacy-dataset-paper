@@ -345,10 +345,14 @@ same way at $\beta^*$. Only the kernel width differed between these four cohorts
 kernel-density baseline in the $18$-dimensional PCA space was a different estimator. That
 baseline applied Scott's rule to the raw PCA coordinates with the full empirical covariance.}
 
-\rthree{Only $24$ of the $100$ synthetic profiles passed both the biological and the strict
-mechanistic checks (Results, Interpolation and Extrapolation). To learn how often real
-patients passed the strict mechanistic check, we applied it to each real profile. Each real
-profile was compared with percentile bands built from the other $22$ real profiles.}
+\rthree{To learn how often real patients passed the strict mechanistic check, we applied it to
+each of the $23$ real patients. For each patient and visit, the BZ2012 model used the patient's
+coagulation-factor levels to predict five TGA features, and we divided each predicted value by
+the patient's TGA value for that feature. Each patient therefore had $15$ predicted-to-recorded
+ratios (five features at three visits). For each feature, the range ran from the 5th to the
+95th percentile of the real ratios, pooled over the $23$ patients and the three visits. A
+patient passed only if all $15$ ratios fell inside their ranges. Real and synthetic patients
+were checked against the same ranges.}
 
 \rthree{Linear decoding can return negative values. Every synthetic profile that failed the
 biological check had a negative estradiol or progesterone value. We tested two ways to keep

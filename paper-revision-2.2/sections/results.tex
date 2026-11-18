@@ -185,11 +185,23 @@ unconstrained multivariate-normal baseline produced negative hormones in $43$ pr
 Neither method enforced positivity, and positive factors in these draws did not guarantee
 positivity in others. The second check used the BZ2012 model to test the generated factor combinations.
 Estradiol and progesterone were not model inputs, and all nine coagulation factor inputs were positive, so
-all $100$ profiles were included. For each TGA feature, $83$--$92\%$ of profiles had a
+all $100$ profiles were included. \rthree{For each patient, real or synthetic,
+the model used the patient's coagulation-factor levels to predict five TGA features at each
+visit. We divided each predicted value by the patient's TGA value for that feature and visit.
+The model was not exact, so the ratios of real patients also differed from $1$. The check
+therefore asked whether the ratios of a synthetic patient fell within the range of the real
+ratios.} For each TGA feature, $83$--$92\%$ of profiles had a
 predicted-to-recorded ratio within the real 5th--95th percentile range. Forty-one met this
-criterion for every feature and visit, and $24$ passed both checks. \rthree{Only $7$ of the $23$ real
-profiles passed the strict mechanistic check when each real profile was checked against bands
-built from the other $22$. When the hormones were modeled on a log scale, all $100$ profiles
+criterion for every feature and visit, and $24$ passed both checks. \rthree{To judge whether this pass
+rate for the strict mechanistic check ($41$ of $100$) was low, we applied the check to the $23$
+real profiles. The check compared the predicted-to-recorded ratio for each TGA feature at each
+visit with the real 5th--95th percentile range for that feature, and it failed a profile if any
+one ratio fell outside its range (Methods, Baseline and Validation Framework). Each range left
+out the most extreme real values, so most real profiles had at least one ratio outside: only
+$8$ of the $23$ real profiles ($35\%$) passed. The synthetic profiles therefore
+passed the strict mechanistic check at a rate similar to that of the real profiles. The drop
+from $41$ to $24$ profiles came from the negative hormone values that failed the biological
+check. When the hormones were modeled on a log scale, all $100$ profiles
 passed the biological check, and $45$ passed both checks. Marginal error, cross-visit
 correlation error, and mechanistic overlap stayed close to their values without the log scale
 (\supptable{stab:positivity}).} Together, these checks

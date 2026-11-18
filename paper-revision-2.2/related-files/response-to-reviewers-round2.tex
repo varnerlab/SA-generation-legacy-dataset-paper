@@ -110,8 +110,9 @@ of Supplementary Figure 1). We corrected the Methods, Results,
 Discussion, and figure legends that stated otherwise. No previously
 reported number changed.
 
-We also corrected 13 citations, and corrected author names and issue
-numbers in the reference list.
+We also corrected several citations in the Introduction, Methods, and
+Discussion, and corrected author names and issue numbers in the
+reference list.
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
@@ -280,18 +281,27 @@ reviewer named, the log transform worked better in our tests.} The
 results are in paragraphs 2--4 of the new Supplement section and in
 Supplementary Table 18.
 
-Every profile that failed the biological check had a negative estradiol
-or progesterone value. Linear decoding can return negative values. The
-hormone values also lie closer to zero, relative to their spread across
-patients, than the coagulation factor values do. The strict mechanistic
-check rejects most real patients as well. This check requires all \(15\)
-predicted-to-recorded TGA ratios (five features at three visits) to fall
-within the real 5th to 95th percentile bands. With the bands built from
-all \(23\) real profiles, which were the bands applied to the synthetic
-profiles, \(8\) of \(23\) real profiles passed. When each real profile
-was checked against bands built from the other \(22\), \(7\) of \(23\)
-passed. The \(24\%\) of synthetic profiles that passed both checks
-should be compared with this real-patient rate of \(30\)--\(35\%\).
+The \(24\%\) combines two checks, and the two checks fail for different
+reasons. The strict mechanistic check rejects most real patients as
+well. This check compares the predicted-to-recorded ratio for each TGA
+feature at each visit (the TGA value that the BZ2012 coagulation model
+predicted from the patient's coagulation-factor levels, divided by the
+patient's TGA value) with the real 5th to 95th percentile range for that
+feature, and it fails a profile if any one ratio falls outside its
+range. Each range leaves out the most extreme real values, so most real
+profiles have at least one ratio outside. With the ranges that were
+applied to the synthetic profiles, only \(8\) of the \(23\) real
+profiles (\(35\%\)) passed, compared with \(41\) of \(100\) synthetic
+profiles. The synthetic profiles therefore passed the strict mechanistic
+check at about the real-patient rate.
+
+The drop from \(41\) to \(24\) came from the biological check. Every
+profile that failed the biological check had a negative estradiol or
+progesterone value. Linear decoding can return negative values, and the
+hormone values lie closer to zero, relative to their spread across
+patients, than the coagulation factor values do. The Results, the
+Discussion, and the Supplement now explain the strict check and give the
+real-patient rate, and the Methods give the details of the ranges.
 
 We first tested constrained reconstruction. We added a positivity
 penalty \(\lambda C\) to the energy. The penalty \(C\) sums the squared
@@ -337,11 +347,12 @@ Discussion recommends it for future applications.
 new paragraphs describing the real-patient check, the positivity
 penalty, and the log representations); Results, ``Interpolation and
 Extrapolation'' (replaced the first-round sentence on positive-variable
-transformations with the real-patient pass rate and the log-transform
-result); Discussion (new sentences in the paragraph on the linear
-representation, stating the \(54/100\) and \(24/100\) rates, the
-real-patient rate, both remedies, and the recommendation); new
-Supplement section ``Supplementary Bandwidth and Plausibility Results,''
-paragraphs 2--4 and Supplementary Table 18.
+transformations with an explanation of the strict check, the
+real-patient pass rate, and the log-transform result); Discussion (new
+sentences in the paragraph on the linear representation, stating the
+\(54/100\) and \(24/100\) rates, the real-patient rate, both remedies,
+and the recommendation); new Supplement section ``Supplementary
+Bandwidth and Plausibility Results,'' paragraphs 2--4 and Supplementary
+Table 18.
 
 \end{document}

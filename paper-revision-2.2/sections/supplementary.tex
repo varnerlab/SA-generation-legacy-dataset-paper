@@ -676,13 +676,18 @@ Mechanistic overlap was $0.91$--$0.92$ for every width. Of the four widths, the 
 transition gave the widest kernel, the most novel profiles, and the lowest marginal error, but
 the highest cross-visit correlation error.}
 
-\rthree{The strict mechanistic check required all $15$ predicted-to-recorded TGA ratios (five
-features at three visits) to fall within the real 5th--95th percentile bands. To see how strict
-this check was, we applied it to the $23$ real profiles. With the bands built from all $23$
-real profiles, which were the bands applied to the synthetic profiles, $8$ of $23$ real
-profiles passed. When each real profile was checked against bands built from the other $22$,
-$7$ of $23$ passed. Every real profile passed the biological check. Thus $30$--$35\%$ of the
-real profiles passed both checks, compared with $24\%$ of the reported synthetic profiles.}
+\rthree{The strict mechanistic check compared the predicted-to-recorded ratio for each TGA
+feature at each visit (the TGA value that the BZ2012 model
+predicted from the patient's coagulation-factor levels, divided by the patient's TGA value) with the real 5th--95th percentile range for that feature, and it failed
+a profile if any one ratio fell outside its range (main-text Methods, Baseline and Validation
+Framework). Each range left out the most extreme real values, so a real profile failed the
+check if any of its ratios was among these extremes. To see what pass rate to expect, we
+applied the check to the $23$ real profiles, using the ranges that were applied to the
+synthetic profiles. Only $8$ of the $23$ real profiles
+($35\%$) passed. The synthetic profiles passed at a similar rate ($41$ of $100$). The fraction
+that passed both checks fell to $24$ of $100$ because of the biological check: every synthetic
+profile that failed it had a negative hormone value. Every real profile passed the biological
+check.}
 
 \rthree{Linear decoding allowed negative hormone values, so we compared two ways to prevent
 them (\supptable{stab:positivity}). The first way added a positivity penalty to the energy.
@@ -746,9 +751,9 @@ counts profiles that met the biological check. Neg.\ counts profiles with a nega
 or progesterone value. Hormone MRE is the median relative error of the six hormone means (two
 hormones at three visits). The two MRE columns are percentages. Frob.\ is the cross-visit
 correlation error, and Overlap is the mechanistic overlap. Both counts profiles that met the
-biological check and whose $15$ TGA ratios all fell within the real 5th--95th percentile
-bands. With the same bands, $8$ of $23$ real profiles passed both checks; with bands built from
-the other $22$ real profiles, $7$ of $23$ passed. Penalty rows added the
+biological check and whose $15$ TGA ratios (five features at three visits) all fell within the
+real 5th--95th percentile ranges (main-text Methods). With these ranges, only $8$ of the $23$
+real profiles passed both checks. Penalty rows added the
 positivity penalty $\lambda C$ to the energy. Langevin and exact rows targeted the same distribution.
 Exact penalty rows used rejection from the stochastic-attention mixture, and Acc.\ is
 the fraction of draws kept. Two-sample
