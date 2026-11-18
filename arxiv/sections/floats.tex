@@ -120,11 +120,8 @@ Stochastic attention preserves both the within-visit and cross-visit block
 structure. Bottom row: pairwise residual matrices (element-wise subtraction),
 all plotted on the same $\pm 1$ color scale as the top row. The SA$-$Real
 residual shows small, unstructured deviations. The MVN$-$Real residual is
-smoother, particularly in the off-diagonal blocks, reflecting the Ledoit--Wolf
-regularization that systematically shrinks cross-visit correlations toward zero.
-The SA$-$MVN residual shows the largest differences in these
-off-diagonal blocks, where SA retains longitudinal dependencies that MVN's
-rank-deficient covariance estimate cannot represent. A version with amplified
+smaller, because the MVN samples were drawn from the sample covariance of the same $23$
+patients. A version with amplified
 residual color scale ($\pm 0.5$) and Frobenius norms is provided in
 \suppfigure{sfig:cross-visit-corr-supp}.}
 \label{fig:cross-visit-corr}

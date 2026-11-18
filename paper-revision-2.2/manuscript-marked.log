@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  13 NOV 2026 16:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  18 NOV 2026 16:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -565,25 +565,27 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 [15]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 244.
+put line 245.
 
 
 [16]
 
-[17])
+[17]
 
-[18] (./sections/acknowledgments.tex
+[18])
 
-[19]) (./manuscript-marked.bbl
+[19] (./sections/acknowledgments.tex) (./manuscript-marked.bbl
 
 [20]
 
-[21])
+[21]
 
-[22] (./sections/floats.tex
+[22])
 
-[23]
-<sections/figures/validate_bio_correlations.pdf, id=365, 1003.75pt x 853.1875pt
+[23] (./sections/floats.tex
+
+[24]
+<sections/figures/validate_bio_correlations.pdf, id=375, 1003.75pt x 853.1875pt
 >
 File: sections/figures/validate_bio_correlations.pdf Graphic file (type pdf)
 <use sections/figures/validate_bio_correlations.pdf>
@@ -592,8 +594,8 @@ n input line 78.
 (pdftex.def)             Requested size: 469.75502pt x 399.29276pt.
 
 
-[24 <./sections/figures/validate_bio_correlations.pdf>]
-<sections/figures/validate_pregnancy_progression.pdf, id=371, 1003.75pt x 602.2
+[25 <./sections/figures/validate_bio_correlations.pdf>]
+<sections/figures/validate_pregnancy_progression.pdf, id=383, 1003.75pt x 602.2
 5pt>
 File: sections/figures/validate_pregnancy_progression.pdf Graphic file (type pd
 f)
@@ -603,8 +605,8 @@ sed on input line 97.
 (pdftex.def)             Requested size: 469.75502pt x 281.8537pt.
 
 
-[25 <./sections/figures/validate_pregnancy_progression.pdf>]
-<sections/figures/validate_cross_visit_corr.pdf, id=378, 1405.25pt x 903.375pt>
+[26 <./sections/figures/validate_pregnancy_progression.pdf>]
+<sections/figures/validate_cross_visit_corr.pdf, id=389, 1405.25pt x 903.375pt>
 
 File: sections/figures/validate_cross_visit_corr.pdf Graphic file (type pdf)
 <use sections/figures/validate_cross_visit_corr.pdf>
@@ -613,49 +615,49 @@ n input line 111.
 (pdftex.def)             Requested size: 469.75502pt x 301.98808pt.
 
 
-[26 <./sections/figures/validate_cross_visit_corr.pdf>]
-<sections/figures/sim_phase_diagram.pdf, id=399, 1204.5pt x 501.875pt>
+[27 <./sections/figures/validate_cross_visit_corr.pdf>]
+<sections/figures/sim_phase_diagram.pdf, id=409, 1204.5pt x 501.875pt>
 File: sections/figures/sim_phase_diagram.pdf Graphic file (type pdf)
 <use sections/figures/sim_phase_diagram.pdf>
 Package pdftex.def Info: sections/figures/sim_phase_diagram.pdf  used on input 
-line 137.
+line 134.
 (pdftex.def)             Requested size: 469.75502pt x 195.73045pt.
 
 
-[27 <./sections/figures/sim_phase_diagram.pdf>]
-<sections/figures/validate_conditioned_features_v2.pdf, id=407, 1806.75pt x 602
+[28 <./sections/figures/sim_phase_diagram.pdf>]
+<sections/figures/validate_conditioned_features_v2.pdf, id=417, 1806.75pt x 602
 .25pt>
 File: sections/figures/validate_conditioned_features_v2.pdf Graphic file (type 
 pdf)
 <use sections/figures/validate_conditioned_features_v2.pdf>
 Package pdftex.def Info: sections/figures/validate_conditioned_features_v2.pdf 
- used on input line 158.
+ used on input line 155.
 (pdftex.def)             Requested size: 469.75502pt x 156.5813pt.
 
 
-[28 <./sections/figures/validate_conditioned_features_v2.pdf>]
-<sections/figures/validate_mechanistic_combined_tf_only_v2.pdf, id=413, 2208.25
+[29 <./sections/figures/validate_conditioned_features_v2.pdf>]
+<sections/figures/validate_mechanistic_combined_tf_only_v2.pdf, id=423, 2208.25
 pt x 903.375pt>
 File: sections/figures/validate_mechanistic_combined_tf_only_v2.pdf Graphic fil
 e (type pdf)
 <use sections/figures/validate_mechanistic_combined_tf_only_v2.pdf>
 Package pdftex.def Info: sections/figures/validate_mechanistic_combined_tf_only
-_v2.pdf  used on input line 184.
+_v2.pdf  used on input line 181.
 (pdftex.def)             Requested size: 469.75502pt x 192.16797pt.
 
 
-[29 <./sections/figures/validate_mechanistic_combined_tf_only_v2.pdf>]
-<sections/figures/downstream_utility_scatter_v2.pdf, id=419, 2409.0pt x 602.25p
+[30 <./sections/figures/validate_mechanistic_combined_tf_only_v2.pdf>]
+<sections/figures/downstream_utility_scatter_v2.pdf, id=429, 2409.0pt x 602.25p
 t>
 File: sections/figures/downstream_utility_scatter_v2.pdf Graphic file (type pdf
 )
 <use sections/figures/downstream_utility_scatter_v2.pdf>
 Package pdftex.def Info: sections/figures/downstream_utility_scatter_v2.pdf  us
-ed on input line 210.
+ed on input line 207.
 (pdftex.def)             Requested size: 469.75502pt x 117.43367pt.
 )
 
-[30 <./sections/figures/downstream_utility_scatter_v2.pdf>]
+[31 <./sections/figures/downstream_utility_scatter_v2.pdf>]
 (./manuscript-marked.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
@@ -665,13 +667,13 @@ Package rerunfilecheck Info: File `manuscript-marked.out' has not changed.
 (rerunfilecheck)             Checksum: 9147F4B87AE4A5CF3C68CA75625F641E;3325.
  ) 
 Here is how much of TeX's memory you used:
- 14052 strings out of 473190
- 223271 string characters out of 5715801
- 666388 words of memory out of 5000000
+ 14053 strings out of 473190
+ 223278 string characters out of 5715801
+ 667003 words of memory out of 5000000
  36987 multiletter control sequences out of 15000+600000
  572131 words of font info for 86 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 79i,9n,82p,1894b,696s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 79i,9n,82p,1894b,728s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
@@ -692,10 +694,10 @@ xmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2025/texmf
 -dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025/texmf-
 dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on manuscript-marked.pdf (30 pages, 1460464 bytes).
+Output written on manuscript-marked.pdf (31 pages, 1465172 bytes).
 PDF statistics:
- 533 PDF objects out of 1000 (max. 8388607)
- 434 compressed objects within 5 object streams
- 108 named destinations out of 1000 (max. 500000)
+ 546 PDF objects out of 1000 (max. 8388607)
+ 446 compressed objects within 5 object streams
+ 109 named destinations out of 1000 (max. 500000)
  172 words of extra memory for PDF output out of 10000 (max. 10000000)
 

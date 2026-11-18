@@ -4,8 +4,8 @@
 This study asked whether a geometry-based method could generate synthetic profiles from a
 very small longitudinal cohort while preserving statistical and modeled biological
 relationships. Median feature MRE was 1.2\%, which the MVN baseline also achieved.
-Stochastic attention also retained cross-visit covariance, whereas MVN introduced variance in
-194 null dimensions. Conditioned generation preserved the subgroup patterns represented by
+Stochastic attention also kept the block structure of the cross-visit correlations,
+although the MVN baseline reproduced the real correlation matrix more closely. Conditioned generation preserved the subgroup patterns represented by
 three PCOS and five Developed~PE patients. Finally, a separately specified,
 generator-blind coagulation model calibrated on the same cohort placed real and synthetic
 profiles in the same factor-to-thrombin-generation envelope. Cloud overlap was 83--92\%, and
@@ -37,10 +37,10 @@ estimating a full $216$-dimensional covariance from $23$ patients. Its sampler s
 a choice of inverse temperature.
 With equal weights, the stochastic-attention distribution is a Gaussian kernel-density
 estimate on the unit-normalized profiles, with kernel width $\beta^{-1/2}$. The entropy
-transition chose a wider kernel than standard bandwidth rules. The wider kernel gave more novel
+transition chose a wider kernel than three standard bandwidth rules. The wider kernel gave more novel
 profiles and lower marginal error, but higher cross-visit correlation error
-(\supptable{stab:kde-bandwidth}). A natural concern is whether the $\beta^*$
-selection procedure, originally developed for protein sequence
+(\supptable{stab:kde-bandwidth}). A natural concern is whether selecting $\beta^*$ from the attention entropy, an
+approach originally developed for protein sequence
 generation~\citep{Varner2026SAProtein}, transfers to clinical coagulation data. The entropy
 transition rule selected the point of greatest downward curvature in attention entropy, a
 geometric property of $K$ patterns in $d$ dimensions rather than a property of what the
@@ -69,7 +69,7 @@ count. Magnitudes were drawn from all $23$ empirical PCA-space norms, so conditi
 through the weighted directions rather than a subgroup-specific magnitude distribution.
 Thus, weighting concentrated sampling toward the subgroup directions while retaining some
 influence from the full cohort.
-Related studies have applied the same geometry-based operating-point rule
+Related studies have applied entropy-based operating-point rules
 and multiplicity weighting to protein sequence generation and conditional
 steering~\citep{Varner2026SAProtein,Varner2026Multiplicity,Alswaidan2026SA}.
 
@@ -78,9 +78,8 @@ larger-data setting~\citep{Kuhnel2024}. It combines
 expert-defined modules, Bayesian-network constraints, and LSTM-augmented variational
 autoencoders. The authors evaluated it on the DONALD nutritional cohort and the Alzheimer's
 Disease Neuroimaging Initiative. DONALD included $1{,}312$ participants and 33 longitudinal
-variables, compared with 23 patients and 216 features here. Its best variant had cross-visit
-correlation error near 0.70, and weaker time trends were not reproduced at the tested sample
-sizes. The methods address different regimes. The VAMBN-MT model uses a trained modular architecture
+variables, compared with 23 patients and 216 features here. Its best variant had a correlation error near 0.70 across all variables and
+visits. The methods address different regimes. The VAMBN-MT model uses a trained modular architecture
 for moderate cohorts. Stochastic attention uses PCA geometry when $n<p$, applies a generic
 generator-blind mechanistic check instead of domain-specific rules, and uses multiplicity
 weights for conditional generation. This was a regime comparison, not a head-to-head test.
@@ -131,16 +130,19 @@ better follow curved or branching patterns, but it would add choices about fitti
 and converting the generated values back to patient measurements. Those choices are
 difficult to make from $23$ patients. The linear representation was practical for this
 cohort, but the results did not show that clinical trajectories are generally linear.
-Linear decoding also allowed negative values. Only $54$ of $100$ profiles passed the
-biological check, and every failure was a negative estradiol or progesterone value.
-Twenty-four also passed the strict mechanistic check, which only $7$ of $23$ real profiles
-passed. A positivity term in the energy reduced the profiles with a negative hormone value
-to $4$--$6$ of $100$, but hormone error rose from about $5\%$ to $22$--$27\%$.
-With this term, the target was no longer a Gaussian mixture, and Langevin sampling matched
-exact rejection sampling. Rejection was cheaper here because about half of the draws passed,
-but it slows as fewer draws pass. A log transform of the hormones removed every negative value
-with similar fidelity (\supptable{stab:positivity}). Future applications that use hormone
-values should model them on a log scale.
+Linear decoding also allowed negative hormone values. Only $54$ of $100$ profiles
+passed the biological check, and every failing profile had a negative estradiol or
+progesterone value. Twenty-four profiles also passed the strict mechanistic check, which only
+$7$ of $23$ real profiles passed. A positivity penalty in the energy reduced the number of
+profiles with a negative hormone value to $4$--$6$ of $100$, but the median hormone error rose
+from about $5\%$ to $22$--$27\%$. With this penalty, the target was no longer a Gaussian
+mixture, and the hormone values from Langevin sampling did not differ detectably from those
+from exact rejection sampling. Rejection sampling was
+cheaper here because it kept about half of the draws, while the number of Langevin steps grew
+in proportion to the penalty strength. Modeling the hormones on a log scale removed every
+negative hormone value and kept marginal error, correlation error, and mechanistic overlap close to
+their values without the log scale (\supptable{stab:positivity}). Future applications that use
+hormone values should model them on a log scale.
 Cohort size also affects computational cost. The reported Langevin sampler required
 work proportional to $TKd$ for each profile, where $T$ was the number of Langevin steps,
 $K$ was the number of stored profiles, and $d$ was the dimension of each profile in the
@@ -174,8 +176,9 @@ features. The membership-inference analysis answered a separate, narrow question
 already-known de-identified profile had been stored in the memory matrix. It distinguished
 stored from held-out profiles, but it did not identify a participant or reconstruct an
 unknown record.
-Synthetic cohorts generated in this way support exploratory modeling. Stochastic
-attention does not provide privacy-preserving data release. A cohort generated from restricted data should be shared
+Synthetic cohorts generated with stochastic attention can support exploratory work,
+such as hypothesis generation and mechanistic modeling. Stochastic attention does not provide
+privacy-preserving data release. A cohort generated from restricted data should be shared
 under the same terms as those data. Releasing synthetic data from sensitive cohorts
 would require a formal privacy method, such as differential privacy, which
 we did not test. Finally, we did not test clinical outcomes. Thus, the results

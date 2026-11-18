@@ -5,42 +5,42 @@ The style file: naturemag.bst
 Database file #1: references.bib
 You've used 40 entries,
             2348 wiz_defined-function locations,
-            1248 strings with 17820 characters,
-and the built_in function-call counts, 15809 in all, are:
-= -- 1096
-> -- 416
+            1248 strings with 17811 characters,
+and the built_in function-call counts, 15965 in all, are:
+= -- 1100
+> -- 432
 < -- 2
-+ -- 208
-- -- 104
-* -- 1937
-:= -- 1740
++ -- 216
+- -- 108
+* -- 1967
+:= -- 1751
 add.period$ -- 121
 call.type$ -- 40
 change.case$ -- 50
 chr.to.int$ -- 0
 cite$ -- 40
-duplicate$ -- 1428
-empty$ -- 1470
-format.name$ -- 137
-if$ -- 3167
+duplicate$ -- 1438
+empty$ -- 1476
+format.name$ -- 141
+if$ -- 3194
 int.to.chr$ -- 0
 int.to.str$ -- 40
-missing$ -- 337
+missing$ -- 342
 newline$ -- 209
 num.names$ -- 40
-pop$ -- 280
+pop$ -- 284
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 271
+skip$ -- 275
 stack$ -- 0
 substring$ -- 682
-swap$ -- 1416
+swap$ -- 1438
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 90
+while$ -- 91
 width$ -- 42
 write$ -- 443

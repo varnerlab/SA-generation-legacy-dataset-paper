@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  13 NOV 2026 16:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  18 NOV 2026 16:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -571,17 +571,17 @@ alidate_mechanistic_generalization_tf_tm.pdf>]
 figures/validate_mechanistic_rankcorr_tf_tm.pdf>]
 
 [13 <./sections/figures/sa_vs_mvn_pca_by_visit_v2.pdf>]
-<sections/figures/mcmc_ladder.pdf, id=143, 2107.875pt x 582.175pt>
+<sections/figures/mcmc_ladder.pdf, id=141, 2107.875pt x 582.175pt>
 File: sections/figures/mcmc_ladder.pdf Graphic file (type pdf)
 <use sections/figures/mcmc_ladder.pdf>
 Package pdftex.def Info: sections/figures/mcmc_ladder.pdf  used on input line 6
-43.
+40.
 (pdftex.def)             Requested size: 469.75502pt x 129.74007pt.
-<sections/figures/mcmc_mixing_diagnostic.pdf, id=144, 1806.75pt x 481.8pt>
+<sections/figures/mcmc_mixing_diagnostic.pdf, id=142, 1806.75pt x 481.8pt>
 File: sections/figures/mcmc_mixing_diagnostic.pdf Graphic file (type pdf)
 <use sections/figures/mcmc_mixing_diagnostic.pdf>
 Package pdftex.def Info: sections/figures/mcmc_mixing_diagnostic.pdf  used on i
-nput line 655.
+nput line 652.
 (pdftex.def)             Requested size: 469.75502pt x 125.26503pt.
 
 
@@ -606,7 +606,7 @@ ed.
 Here is how much of TeX's memory you used:
  12481 strings out of 473190
  200334 string characters out of 5715801
- 698111 words of memory out of 5000000
+ 697726 words of memory out of 5000000
  35530 multiletter control sequences out of 15000+600000
  570951 words of font info for 81 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -625,10 +625,10 @@ exlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/tex
 live/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texli
 ve/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texliv
 e/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on supplementary-information.pdf (17 pages, 1927904 bytes).
+Output written on supplementary-information.pdf (17 pages, 1928046 bytes).
 PDF statistics:
- 250 PDF objects out of 1000 (max. 8388607)
- 171 compressed objects within 2 object streams
+ 248 PDF objects out of 1000 (max. 8388607)
+ 170 compressed objects within 2 object streams
  51 named destinations out of 1000 (max. 500000)
  61 words of extra memory for PDF output out of 10000 (max. 10000000)
 

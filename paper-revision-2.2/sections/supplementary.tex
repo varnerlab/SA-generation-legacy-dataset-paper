@@ -480,9 +480,9 @@ shown in the panel titles.}
 $216 \times 216$ sample covariance for real ($K{=}23$, rank~22), SA ($N{=}100$,
 rank~18), and MVN ($N{=}100$) populations. Dashed vertical lines mark the SA
 PCA truncation point (component~18) and the data rank limit (component~22).
-Ledoit--Wolf regularization for MVN inflates eigenvalues beyond component~22
-(green shaded region), introducing spurious variance in 194 dimensions where the
-data contain no signal.}
+\rthree{Beyond component~22 (green shaded region), the MVN eigenvalues come only from the
+$10^{-6}$ added to each diagonal element of the MVN covariance, and together they hold $0.3\%$
+of the total variance.}}
 \label{sfig:eigenvalue-spectrum}
 \end{figure}
 
@@ -562,11 +562,8 @@ and MVN panel (bottom) share identical axis ranges, so the relative dispersion
 of the two methods can be read against the same real data cloud. Top row:
 SA-generated patients (circles)
 cluster tightly around the real data cloud at all three visits. Bottom row:
-MVN-generated patients (diamonds) show greater dispersion, particularly at
-Visits~2 (first trimester) and~3 (third trimester), where MVN patients extend
-beyond the convex hull of the real data. This excess scatter reflects the
-spurious variance introduced by Ledoit--Wolf regularization of the
-rank-deficient covariance (\suppfigure{sfig:eigenvalue-spectrum}). Colors encode visit: blue
+MVN-generated patients (diamonds) \rthree{spread more widely than SA-generated patients, and
+their spread is closer to that of the real patients.} Colors encode visit: blue
 (V1, not pregnant), green (V2, first trimester), orange (V3, third trimester).}
 \label{sfig:pca-by-visit}
 \end{figure}
@@ -665,17 +662,19 @@ bias.}}
 \subsection*{\rthree{Supplementary Bandwidth and Plausibility Results}}
 \label{ssec:bandwidth-plausibility}
 
-\rthree{With equal multiplicity weights, the stochastic-attention distribution was an isotropic
-Gaussian kernel-density estimate on the $23$ unit-normalized profiles. Its kernel width was
-$h=\beta^{-1/2}$, and the entropy transition gave $h=0.58$. Three standard bandwidth rules gave
-narrower kernels: $0.29$ for leave-one-out likelihood, $0.21$ for Scott's rule, and $0.19$ for
+\rthree{With equal multiplicity weights, the stochastic-attention distribution is an isotropic
+Gaussian kernel-density estimate on the $23$ unit-normalized profiles, with kernel width
+$h=\beta^{-1/2}$. We asked whether the entropy transition chose the same kernel width as three
+standard bandwidth rules. The entropy transition gave $h=0.58$. The three rules gave narrower
+kernels: $0.29$ for leave-one-out likelihood, $0.21$ for Scott's rule, and $0.19$ for
 Silverman's rule (\supptable{stab:kde-bandwidth}). These widths corresponded to $\beta$ values
-$4.1$ to $9.0$ times $\beta^*$. Profiles drawn with the narrower kernels stayed closer to the stored profiles.
-Median novelty fell from $0.50$ to $0.21$--$0.34$, and the median distance to the closest real
-record fell from $13.9$ to $9.9$--$11.9$. Cross-visit correlation error fell from $0.60$ to
-$0.43$--$0.50$, and median relative error rose from $1.7\%$ to $2.1$--$2.2\%$. Mechanistic
-overlap was $0.91$--$0.92$ for every width. Of the four widths, the entropy transition gave
-the widest kernel, the most novel profiles, and the lowest marginal error.}
+$4.1$ to $9.0$ times $\beta^*$. Profiles drawn with the narrower kernels stayed closer to the
+stored profiles. Median novelty fell from $0.50$ to $0.21$--$0.34$, and the median distance to
+the closest real record fell from $13.9$ to $9.9$--$11.9$. Cross-visit correlation error fell
+from $0.60$ to $0.43$--$0.50$, and median relative error rose from $1.7\%$ to $2.1$--$2.2\%$.
+Mechanistic overlap was $0.91$--$0.92$ for every width. Of the four widths, the entropy
+transition gave the widest kernel, the most novel profiles, and the lowest marginal error, but
+the highest cross-visit correlation error.}
 
 \rthree{The strict mechanistic check required all $15$ predicted-to-recorded TGA ratios (five
 features at three visits) to fall within the real 5th--95th percentile bands. To see how strict
@@ -683,19 +682,18 @@ this check was, we applied it to the $23$ real profiles. With the bands built fr
 real profiles, which were the bands applied to the synthetic profiles, $8$ of $23$ real
 profiles passed. When each real profile was checked against bands built from the other $22$,
 $7$ of $23$ passed. Every real profile passed the biological check. Thus $30$--$35\%$ of the
-real profiles passed both checks, compared with $24\%$ of the published synthetic profiles.}
+real profiles passed both checks, compared with $24\%$ of the reported synthetic profiles.}
 
 \rthree{Linear decoding allowed negative hormone values, so we compared two ways to prevent
-them (\supptable{stab:positivity}). The first added a positivity constraint term to the
-energy. With this term, the target distribution was no longer a Gaussian mixture. Langevin
-sampling agreed with exact rejection sampling from the same target at every constraint weight
-$\lambda$. As $\lambda$ increased, the number of profiles with a negative hormone value fell
+them (\supptable{stab:positivity}). The first way added a positivity penalty to the energy.
+With this penalty, the target distribution was no longer a Gaussian mixture. At every penalty
+strength $\lambda$, the six hormone values from Langevin sampling did not differ detectably
+from those from exact rejection sampling of the same target. As $\lambda$ increased, the number of profiles with a negative hormone value fell
 from about $50$ at $\lambda=0$ to $4$--$6$ at $\lambda=100$. A hard constraint removed every
-negative value and kept $51\%$ of exact draws. Rejection was cheaper than Langevin sampling
-here because about half of the draws passed. Rejection slows as fewer draws pass, but the cost
-of Langevin sampling does not depend on that pass rate. The constraint also changed the hormone
-distributions. Removing the negative tail raised the hormone means, so the median hormone
-error rose from about $5\%$ at $\lambda=0$ to $22$--$27\%$ at $\lambda=100$ and $30\%$ with the
+negative hormone value and kept $51\%$ of exact draws. Rejection sampling was cheaper than Langevin
+sampling here. Rejection sampling kept $50$ to $100\%$ of the draws, while the number of
+Langevin steps grew in proportion to $\lambda$. The penalty also changed the hormone
+distributions, and the median hormone error rose from about $5\%$ at $\lambda=0$ to $22$--$27\%$ at $\lambda=100$ and $30\%$ with the
 hard constraint. Median relative error across all features rose from $1.2$--$1.3\%$ to
 $2.4$--$2.5\%$.}
 
@@ -706,9 +704,9 @@ $1.4\%$, compared with $1.7\%$ without the transform. Median hormone error was $
 with $6.4\%$. Cross-visit correlation error was $0.58$, compared with $0.60$, and mechanistic
 overlap was $0.90$, compared with $0.91$.
 Log-transforming all $72$ assays also removed the negative values and gave median relative
-error $1.3\%$, but mechanistic overlap fell to $0.88$. In this cohort, the log transform of the
-hormones prevented negative values with similar fidelity. The constraint term reduced them at a
-cost in hormone fidelity.}
+error $1.3\%$, but mechanistic overlap fell to $0.88$. In this cohort, modeling the hormones
+on a log scale removed the negative hormone values, and the other measures stayed close to their values
+without the log scale. The penalty reduced the negative hormone values but raised the hormone error.}
 
 \begin{table}[ht]
 \centering
@@ -741,21 +739,22 @@ Silverman                      & $0.19$ & $9.0$ & $2.20$ & $0.43$ & $0.92$ & $0.
 
 \begin{table}[ht]
 \centering
-\caption{\rthree{\textbf{Two ways to keep hormone values positive.} Each row is an
-independent draw of $100$ profiles, so the unconstrained rows ($48$--$51$ profiles passing the
-biological check) differ from the $54$ of the published cohort by sampling variation. Bio.\
+\caption{\rthree{\textbf{Two ways to keep hormone values positive.} Each row is a
+separate cohort of $100$ profiles, so the unconstrained rows ($48$--$51$ profiles passing the
+biological check) differ from the $54$ of the reported cohort by sampling variation. Bio.\
 counts profiles that met the biological check. Neg.\ counts profiles with a negative estradiol
 or progesterone value. Hormone MRE is the median relative error of the six hormone means (two
 hormones at three visits). The two MRE columns are percentages. Frob.\ is the cross-visit
 correlation error, and Overlap is the mechanistic overlap. Both counts profiles that met the
 biological check and whose $15$ TGA ratios all fell within the real 5th--95th percentile
 bands. With the same bands, $8$ of $23$ real profiles passed both checks; with bands built from
-the other $22$ real profiles, $7$ of $23$ passed. Constraint-term rows added $\lambda$ times the
-positivity penalty to the energy. Langevin and exact rows targeted the same distribution.
-Exact constraint-term rows used rejection from the stochastic-attention mixture, and Acc.\ is
+the other $22$ real profiles, $7$ of $23$ passed. Penalty rows added the
+positivity penalty $\lambda C$ to the energy. Langevin and exact rows targeted the same distribution.
+Exact penalty rows used rejection from the stochastic-attention mixture, and Acc.\ is
 the fraction of draws kept. Two-sample
-Kolmogorov--Smirnov tests on $1{,}000$ draws per sampler compared the six hormone values at
-each $\lambda$; all $p\ge0.002$, above the Bonferroni threshold of $0.0004$ for $24$ tests.
+Kolmogorov--Smirnov tests on $1{,}000$ draws per sampler, with the same magnitudes for both
+samplers, compared the six hormone values at each $\lambda$. No test detected a difference:
+all $p\ge0.002$, above the Bonferroni threshold of $0.0004$ for $24$ tests.
 Log-representation rows used the direct sampler with the seeds of the direct-sampler row of
 \supptable{stab:sampling-ladder}. Each log representation kept $d{=}18$ and gave
 $\beta^*=2.94$.}}
@@ -766,7 +765,7 @@ $\beta^*=2.94$.}}
 \toprule
 Approach & Sampler & Bio. & Neg. & MRE & Horm.\ MRE & Frob. & Overlap & Both & Acc. \\
 \midrule
-\multicolumn{10}{l}{\emph{Constraint term in the energy}} \\
+\multicolumn{10}{l}{\emph{Positivity penalty in the energy}} \\
 $\lambda=0$     & Langevin & $51$  & $49$ & $1.19$ & $4.4$  & $0.62$ & $0.91$ & $24$ & n/a \\
                 & Exact    & $50$  & $50$ & $1.34$ & $5.3$  & $0.55$ & $0.91$ & $22$ & $1.00$ \\
 $\lambda=1$     & Langevin & $66$  & $34$ & $1.47$ & $8.1$  & $0.58$ & $0.91$ & $26$ & n/a \\
